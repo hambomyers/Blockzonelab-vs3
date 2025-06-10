@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Money? | BlockZone Academy</title>
+    <link rel="stylesheet" href="../../assets/css/core-variables.css">
+    <link rel="stylesheet" href="../../assets/css/academy-learning.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Enhanced Interactive Lesson Styles */
+        body {
+            background: linear-gradient(135deg, var(--background-dark) 0%, #0a0a0a 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+            position: relative;
+        }
+
+        .lesson-nav {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .lesson-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-nav a:hover {
+            background: var(--accent-color);
+            color: var(--background-dark);
+        }
+
+        .progress {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Story-Driven Content Styles */
+        .story-section {
+            padding: 4rem 2rem;
+            margin: 2rem 0;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .story-intro {
+            font-size: 1.4rem;
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .interactive-scenario {
+            background: linear-gradient(135deg, var(--surface-color), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-scenario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .scenario-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scenario-emoji {
+            font-size: 2rem;
+        }
+
+        .expandable-content {
+            margin-top: 1.5rem;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .expandable-content.expanded {
+            opacity: 1;
+            max-height: 1000px;
+        }
+
+        .hover-trigger {
+            color: var(--accent-color);
+            cursor: pointer;
+            position: relative;
+            border-bottom: 1px dashed var(--accent-color);
+        }
+
+        .hover-trigger:hover {
+            color: var(--neon-cyan);
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--accent-color);
+            font-size: 0.9rem;
+            width: 300px;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .hover-trigger:hover .tooltip {
+            opacity: 1;
+        }
+
+        .timeline-container {
+            position: relative;
+            margin: 3rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-color), var(--primary-color));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 52%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-right: 52%;
+        }
+
+        .timeline-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: scale(1.02);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-marker {
+            left: -62px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-marker {
+            right: -62px;
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, var(--surface-color), rgba(16, 185, 129, 0.1));
+            border-left: 4px solid var(--accent-green);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .quote-author {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .insight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--background-dark);
+            padding: 0 10px;
+            font-size: 1.5rem;
+        }
+
+        .rabbit-hole {
+            display: inline-block;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+
+        .rabbit-hole:hover {
+            color: var(--neon-pink);
+        }
+
+        /* Full Screen Starfield Quiz */
+        .quiz-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quiz-container.hidden {
+            display: none;
+        }
+
+        #starfield-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .quiz-ui {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 2rem;
+        }
+
+        .quiz-header {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .question-card {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease;
+        }
+
+        .question-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-text {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .answer-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .answer-option.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .answer-option:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: var(--accent-color);
+            transform: translateX(10px);
+        }
+
+        .quiz-controls {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+        }
+
+        .quiz-btn {
+            background: var(--accent-color);
+            color: var(--background-dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                margin-right: 0;
+                margin-bottom: 2rem;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-marker {
+                left: 11px !important;
+                right: auto !important;
+            }
+        }
+    </style>
+</head>
+            font-style: italic;
+            position: relative;
+        }
+        
+        .lesson-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--accent-color);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            opacity: 0.3;
+        }
+        
+        .lesson-quote cite {
+            display: block;
+            text-align: right;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .lesson-insight {
+            background: var(--background-dark);
+            border: 1px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .lesson-exercise {
+            background: var(--surface-color);
+            border: 2px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .lesson-exercise h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        /* Quiz Styles */
+        .quiz-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quiz-container.hidden {
+            display: none;
+        }
+        
+        .quiz-header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .quiz-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .question-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .question-number {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .options-container {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .option-letter {
+            background: var(--accent-color);
+            color: black;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .option-btn.correct {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.2);
+        }
+        
+        .option-btn.incorrect {
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.2);
+        }
+        
+        .explanation {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .quiz-progress {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .quiz-results {
+            text-align: center;
+            color: white;
+        }
+        
+        .score-circle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+        }
+        
+        .score-percentage {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stardust-reward {
+            font-size: 1.5rem;
+            margin: 2rem 0;
+            color: var(--accent-color);
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .retry-btn, .continue-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .retry-btn:hover, .continue-btn:hover {
+            background: var(--accent-color);
+            color: black;
+        }
+        
+        /* Starfield Animation */
+        #starfield-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .back-arrow {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">BlockZone Lab</div>
+            <nav>
+                <a href="../../index.html">Home</a>
+                <a href="../../games/">Games</a>
+                <a href="../">Academy</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="lesson-container">
+        <div class="lesson-nav">
+            <a href="../" class="back">← Academy Hub</a>
+            <div class="progress">Lesson 1 • What is Money?</div>
+            <a href="../lesson-02/" class="forward">Lesson 2 →</a>
+        </div>
+
+        <article class="lesson-content">
+            <div class="lesson-header">
+                <h1>What is Money? 💰</h1>
+                <p class="lesson-intro">Money is more than just coins and bills. It's a system of trust, a tool for measuring value, and a cornerstone of civilization. To truly understand money, we need to explore its physics, history, and evolution.</p>
+            </div>
+
+            <section class="lesson-section">
+                <h2>The Physics of Trust ⚡</h2>
+                <p>At its core, money is about trust. But trust isn't just a social concept—it's a physical one. Imagine a system where energy, information, and entropy collide:</p>
+                
+                <ul>
+                    <li><strong>Energy:</strong> Money represents stored energy. A farmer's labor, a miner's effort, or a programmer's code—all are forms of energy converted into value. Think of it as a battery, storing the economic energy of a civilization.</li>
+                    <li><strong>Information:</strong> Money is a ledger, a record of who owes what to whom. It's a way to encode and transmit value across time and space.</li>
+                    <li><strong>Entropy:</strong> Without trust, systems decay. Money reduces the chaos of bartering by providing a universal standard.</li>
+                </ul>
+                
+                <p>This energy theory of money becomes clearer when we consider how Bitcoin works. Every transaction requires computational energy to verify and record. This isn't waste—it's the physical manifestation of trust.</p>
+                
+                <p>But here's where things get dark. In 1910, a group of the world's most powerful bankers met in secret on Jekyll Island, Georgia. G. Edward Griffin's masterwork 'The Creature from Jekyll Island' exposes how this clandestine meeting birthed the Federal Reserve—a private banking cartel masquerading as a government institution.</p>
+                
+                <blockquote class="lesson-quote">
+                    <p>The first lesson of economics is scarcity: there is never enough of anything to fully satisfy all those who want it. The first lesson of politics is to disregard the first lesson of economics.</p>
+                    <cite>— Thomas Sowell</cite>
+                </blockquote>
+            </section>
+
+            <section class="lesson-section">
+                <h2>The Evolution of Money 📈</h2>
+                <p>Understanding money requires tracing its evolution from primitive barter systems to today's complex financial instruments.</p>
+                
+                <div class="lesson-insight">
+                    💡 <strong>Key Insight:</strong> Every form of money throughout history has solved specific problems while creating new ones. Bitcoin represents the latest evolution in this ongoing story.
+                </div>
+                
+                <p>From seashells to gold coins, from paper currency to digital transactions—each step has been driven by the need for better ways to store and transfer value. But with each innovation came new vulnerabilities and new forms of control.</p>
+            </section>
+
+            <section class="lesson-section">
+                <h2>The Bitcoin Revolution 🚀</h2>
+                <p>Bitcoin isn't just digital money—it's a complete reimagining of what money can be. For the first time in history, we have a form of money that:</p>
+                
+                <ul>
+                    <li>Cannot be controlled by any government or institution</li>
+                    <li>Has a fixed, predictable supply</li>
+                    <li>Can be sent anywhere in the world without permission</li>
+                    <li>Is backed by cryptographic proof rather than political promises</li>
+                </ul>
+                
+                <div class="lesson-exercise">
+                    <h4>🎯 Exercise: The Mars Economy</h4>
+                    <p>Imagine you're establishing a colony on Mars. What kind of money system would you create? Consider:</p>
+                    <ol>
+                        <li>How would you establish trust without Earth-based institutions?</li>
+                        <li>What would back your currency's value?</li>
+                        <li>How would you prevent counterfeiting or manipulation?</li>
+                        <li>How would this system interact with Earth's economy?</li>
+                    </ol>
+                    <p>This thought experiment reveals why Bitcoin's design is so revolutionary—it solves these problems without requiring traditional institutions.</p>
+                </div>
+            </section>
+        </article>
+
+        <div class="lesson-footer">
+            <a href="../" class="prev-lesson">← Back to Academy</a>
+            <button class="start-quiz" onclick="showQuiz()">Take Quiz & Earn STARDUST ⭐</button>
+            <a href="../lesson-02/" class="next-lesson">Next Lesson →</a>
+        </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <div id="quiz-container" class="quiz-container hidden">
+        <canvas id="starfield-canvas"></canvas>
+        
+        <div class="quiz-header">
+            <h1>What is Money? Quiz</h1>
+            <div class="quiz-nav">
+                <a href="#" onclick="hideQuiz()" class="back-arrow">← Back to Lesson</a>
+            </div>
+        </div>
+        
+        <div class="quiz-content">
+            <div class="question-card" id="questionCard">
+                <!-- Questions will be loaded here -->
+            </div>
+            
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-results hidden" id="quizResults">
+            <!-- Results will show here -->
+        </div>
+    </div>
+
+    <script>
+        // Embedded Quiz Data
+        const QUIZ_DATA = {
+            title: "What is Money?",
+            questions: [
+                {
+                    question: "According to the lesson, what is money fundamentally about?",
+                    options: [
+                        "Physical coins and bills",
+                        "Government control",
+                        "Trust and value exchange",
+                        "Banking institutions"
+                    ],
+                    correct: 2,
+                    explanation: "Money is fundamentally about trust - it's a system that allows people to store and exchange value based on mutual confidence."
+                },
+                {
+                    question: "What does the 'energy theory' of money suggest?",
+                    options: [
+                        "Money should be made from batteries",
+                        "Money represents stored human energy and labor",
+                        "Money requires electricity to function",
+                        "Money is powered by solar energy"
+                    ],
+                    correct: 1,
+                    explanation: "The energy theory suggests that money represents stored energy from human labor, effort, and productive work - like a battery storing economic energy."
+                },
+                {
+                    question: "What happened at Jekyll Island in 1910?",
+                    options: [
+                        "A vacation resort was built",
+                        "The first bank was established",
+                        "Secret meeting that led to the Federal Reserve",
+                        "Bitcoin was invented"
+                    ],
+                    correct: 2,
+                    explanation: "As exposed in 'The Creature from Jekyll Island', powerful bankers met secretly to plan what became the Federal Reserve system."
+                },
+                {
+                    question: "What makes Bitcoin different from traditional money?",
+                    options: [
+                        "It's faster for all transactions",
+                        "It's completely anonymous",
+                        "No single entity controls it",
+                        "It's backed by gold"
+                    ],
+                    correct: 2,
+                    explanation: "Bitcoin's decentralized nature means no single government or institution can control its supply or rules, unlike traditional currencies."
+                },
+                {
+                    question: "In the Mars colony thought experiment, what key problem does Bitcoin solve?",
+                    options: [
+                        "Faster space travel",
+                        "Establishing trust without traditional institutions",
+                        "Growing food in space",
+                        "Communicating with Earth"
+                    ],
+                    correct: 1,
+                    explanation: "Bitcoin enables trustworthy money systems without requiring traditional institutions like banks or governments, perfect for new colonies."
+                }
+            ]
+        };
+
+        // Quiz Engine
+        class QuizEngine {
+            constructor() {
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.answers = [];
+                this.isActive = false;
+            }
+
+            start() {
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.answers = [];
+                this.isActive = true;
+                this.showQuestion();
+            }
+
+            showQuestion() {
+                if (this.currentQuestion >= QUIZ_DATA.questions.length) {
+                    this.showResults();
+                    return;
+                }
+
+                const question = QUIZ_DATA.questions[this.currentQuestion];
+                const questionCard = document.getElementById('questionCard');
+                
+                questionCard.innerHTML = `
+                    <span class="question-number">Question ${this.currentQuestion + 1} of ${QUIZ_DATA.questions.length}</span>
+                    <h3 class="question-text">${question.question}</h3>
+                    <div class="options-container">
+                        ${question.options.map((option, index) => `
+                            <button class="option-btn" onclick="quiz.selectAnswer(${index})">
+                                <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                                <span class="option-text">${option}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+                this.updateProgress();
+            }
+
+            selectAnswer(answerIndex) {
+                const question = QUIZ_DATA.questions[this.currentQuestion];
+                const isCorrect = answerIndex === question.correct;
+                
+                this.answers.push({
+                    questionIndex: this.currentQuestion,
+                    answer: answerIndex,
+                    correct: isCorrect
+                });
+
+                if (isCorrect) this.score++;
+
+                // Show feedback
+                this.showFeedback(answerIndex, isCorrect, question);
+                
+                // Auto-advance
+                setTimeout(() => {
+                    this.currentQuestion++;
+                    this.showQuestion();
+                }, 2500);
+            }
+
+            showFeedback(selectedIndex, isCorrect, question) {
+                const options = document.querySelectorAll('.option-btn');
+                
+                options.forEach((btn, index) => {
+                    if (index === selectedIndex) {
+                        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    }
+                    if (index === question.correct) {
+                        btn.classList.add('correct');
+                    }
+                    btn.disabled = true;
+                });
+
+                // Show explanation
+                const questionCard = document.getElementById('questionCard');
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `
+                    <strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</strong>
+                    <p>${question.explanation}</p>
+                `;
+                questionCard.appendChild(explanationDiv);
+            }
+
+            updateProgress() {
+                const progressFill = document.getElementById('progressFill');
+                const progress = ((this.currentQuestion + 1) / QUIZ_DATA.questions.length) * 100;
+                progressFill.style.width = `${progress}%`;
+            }
+
+            showResults() {
+                const percentage = Math.round((this.score / QUIZ_DATA.questions.length) * 100);
+                const stardustEarned = Math.floor(percentage * 1.5); // 1.5 STARDUST per percentage point
+                
+                const resultsContainer = document.getElementById('quizResults');
+                const questionCard = document.getElementById('questionCard');
+                
+                questionCard.style.display = 'none';
+                resultsContainer.classList.remove('hidden');
+                
+                resultsContainer.innerHTML = `
+                    <h2>🎉 Quiz Complete!</h2>
+                    <div class="score-circle">
+                        <span class="score-percentage">${percentage}%</span>
+                        <span class="score-fraction">${this.score}/${QUIZ_DATA.questions.length}</span>
+                    </div>
+                    <div class="stardust-reward">
+                        ⭐ ${stardustEarned} STARDUST Earned!
+                    </div>
+                    <div class="results-actions">
+                        <button onclick="quiz.retry()" class="retry-btn">Try Again</button>
+                        <button onclick="hideQuiz()" class="continue-btn">Continue Learning</button>
+                    </div>
+                `;
+
+                // Save progress to localStorage
+                this.saveProgress(percentage, stardustEarned);
+            }
+
+            retry() {
+                const resultsContainer = document.getElementById('quizResults');
+                const questionCard = document.getElementById('questionCard');
+                
+                resultsContainer.classList.add('hidden');
+                questionCard.style.display = 'block';
+                
+                this.start();
+            }
+
+            saveProgress(percentage, stardust) {
+                const progress = JSON.parse(localStorage.getItem('academyProgress') || '{}');
+                progress.lesson01 = { completed: true, score: percentage, stardust: stardust };
+                localStorage.setItem('academyProgress', JSON.stringify(progress));
+            }
+        }
+
+        // Starfield Animation
+        class Starfield {
+            constructor() {
+                this.canvas = document.getElementById('starfield-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.stars = [];
+                this.animationId = null;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createStars();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createStars() {
+                this.stars = [];
+                for (let i = 0; i < 200; i++) {
+                    this.stars.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        z: Math.random() * 1000,
+                        speed: 0.5 + Math.random() * 2
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+
+                this.stars.forEach(star => {
+                    star.z -= star.speed;
+                    
+                    if (star.z <= 0) {
+                        star.x = Math.random() * this.canvas.width;
+                        star.y = Math.random() * this.canvas.height;
+                        star.z = 1000;
+                    }
+
+                    const x = (star.x - centerX) * (1000 / star.z) + centerX;
+                    const y = (star.y - centerY) * (1000 / star.z) + centerY;
+                    const size = (1000 - star.z) / 1000 * 3;
+                    const opacity = (1000 - star.z) / 1000;
+
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                    this.ctx.fillRect(x, y, size, size);
+                });
+
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+
+            start() {
+                if (!this.animationId) {
+                    this.animate();
+                }
+            }
+
+            stop() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+            }
+        }
+
+        // Global instances
+        let quiz = new QuizEngine();
+        let starfield = new Starfield();
+
+        // Global functions
+        function showQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            const lessonContainer = document.querySelector('.lesson-container');
+            
+            quizContainer.classList.remove('hidden');
+            lessonContainer.style.display = 'none';
+            
+            starfield.start();
+            quiz.start();
+        }
+
+        function hideQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            const lessonContainer = document.querySelector('.lesson-container');
+            
+            quizContainer.classList.add('hidden');
+            lessonContainer.style.display = 'block';
+            
+            starfield.stop();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎓 Lesson 01: What is Money? - Loaded Successfully');
+        });
+    </script>
+</body>
+</html>

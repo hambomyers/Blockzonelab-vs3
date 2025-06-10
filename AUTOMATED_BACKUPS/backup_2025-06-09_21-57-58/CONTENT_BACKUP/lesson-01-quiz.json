@@ -1,0 +1,194 @@
+{
+  "lessonId": "01",
+  "title": "What is Money?",
+  "description": "Test your understanding of money fundamentals, trust, and blockchain technology",
+  "questions": [
+    {
+      "id": 1,
+      "question": "According to the lesson, what is money fundamentally about?",
+      "options": [
+        "Physical coins and bills",
+        "Government control",
+        "Trust and value exchange",
+        "Banking institutions"
+      ],
+      "correct": 2,
+      "explanation": "Money is fundamentally about trust - it's a system that allows people to store and exchange value based on mutual confidence."
+    },
+    {
+      "id": 2,
+      "question": "In the 'Physics of Trust' section, money is compared to which of these?",
+      "options": [
+        "A battery storing economic energy",
+        "A computer processing data",
+        "A factory producing goods",
+        "A library storing books"
+      ],
+      "correct": 0,
+      "explanation": "Money represents stored energy - like a battery storing the economic energy of civilization through labor, effort, and creativity."
+    },
+    {
+      "id": 3,
+      "question": "What is the 'double coincidence of wants' problem in bartering?",
+      "options": [
+        "Two people wanting the same item",
+        "Finding someone who has what you want AND wants what you have",
+        "Wanting two different things at once",
+        "Having double the amount needed"
+      ],
+      "correct": 1,
+      "explanation": "The double coincidence of wants means you need to find someone who not only has what you want, but also wants what you have - making bartering very inefficient."
+    },
+    {
+      "id": 4,
+      "question": "Which stage of money evolution came FIRST according to the lesson?",
+      "options": [
+        "Digital Money",
+        "Fiat Money",
+        "Commodity Money",
+        "Barter"
+      ],
+      "correct": 3,
+      "explanation": "Barter was the first stage - direct exchange of goods and services before any form of money was developed."
+    },
+    {
+      "id": 5,
+      "question": "What makes Bitcoin different from fiat money?",
+      "options": [
+        "It's faster to use",
+        "It requires real work to create",
+        "It's cheaper to store",
+        "It's government controlled"
+      ],
+      "correct": 1,
+      "explanation": "Bitcoin requires proof-of-work - actual energy expenditure and computational effort - unlike fiat money which can be created with keystrokes."
+    },
+    {
+      "id": 6,
+      "question": "According to the lesson, the Federal Reserve was created through:",
+      "options": [
+        "A democratic vote by the American people",
+        "A secret meeting of bankers on Jekyll Island",
+        "An executive order by the President",
+        "A natural evolution of banking"
+      ],
+      "correct": 1,
+      "explanation": "The Jekyll Island conspiracy reveals how the Federal Reserve was designed in secret by powerful bankers to benefit the banking elite."
+    },
+    {
+      "id": 7,
+      "question": "What is proof-of-work in Bitcoin?",
+      "options": [
+        "A document proving you worked",
+        "Energy expenditure to secure the network",
+        "A government employment record",
+        "A digital signature"
+      ],
+      "correct": 1,
+      "explanation": "Proof-of-work is the computational energy required to mine Bitcoin and secure the network, making it impossible to fake."
+    },
+    {
+      "id": 8,
+      "question": "The Yap island money system used:",
+      "options": [
+        "Gold coins",
+        "Paper currency",
+        "Large stone disks",
+        "Digital tokens"
+      ],
+      "correct": 2,
+      "explanation": "Yap islanders used massive stone disks called Rai as money, demonstrating consensus-based ownership without physical possession."
+    },
+    {
+      "id": 9,
+      "question": "According to Thomas Sowell, what is the first lesson of economics?",
+      "options": [
+        "Supply and demand",
+        "Scarcity",
+        "Inflation",
+        "Government regulation"
+      ],
+      "correct": 1,
+      "explanation": "Sowell teaches that scarcity is the fundamental economic reality - there is never enough of anything to satisfy all those who want it."
+    },
+    {
+      "id": 10,
+      "question": "What ended the gold standard in the United States?",
+      "options": [
+        "World War I",
+        "The Great Depression",
+        "Nixon closing the 'gold window' in 1971",
+        "The creation of the Federal Reserve"
+      ],
+      "correct": 2,
+      "explanation": "President Nixon ended the last vestiges of the gold standard in 1971, unleashing decades of monetary expansion."
+    },
+    {
+      "id": 11,
+      "question": "Blockchain solves which fundamental problem with digital money?",
+      "options": [
+        "Speed of transactions",
+        "Double-spending",
+        "Storage costs",
+        "User interfaces"
+      ],
+      "correct": 1,
+      "explanation": "The double-spending problem - ensuring you can't spend the same digital money twice - is solved by blockchain's distributed consensus."
+    },
+    {
+      "id": 12,
+      "question": "According to George Gilder, real wealth comes from:",
+      "options": [
+        "Government redistribution",
+        "Printing more money",
+        "Human creativity and productive effort",
+        "Natural resources"
+      ],
+      "correct": 2,
+      "explanation": "Gilder argues that real wealth comes from human creativity and productive effort, not from printing money or redistribution."
+    },
+    {
+      "id": 13,
+      "question": "What is the maximum number of Bitcoin that will ever exist?",
+      "options": [
+        "100 million",
+        "21 million",
+        "1 billion",
+        "Unlimited"
+      ],
+      "correct": 1,
+      "explanation": "Bitcoin is scarce by design - only 21 million will ever exist, enforced by mathematics rather than political promises."
+    },
+    {
+      "id": 14,
+      "question": "The lesson compares every transaction to:",
+      "options": [
+        "A phone call",
+        "A message being broadcast",
+        "A handshake",
+        "A contract signing"
+      ],
+      "correct": 1,
+      "explanation": "Every transaction is really a message being broadcast - like 'Alice paid Bob $10 for coffee at 2:15 PM.'"
+    },
+    {
+      "id": 15,
+      "question": "For a Mars colony money system, the lesson emphasizes the importance of:",
+      "options": [
+        "Earth government backing",
+        "Lightweight physical coins",
+        "Energy-based value and honest prices",
+        "Fast communication with Earth"
+      ],
+      "correct": 2,
+      "explanation": "A Mars colony would need money tied to energy expenditure and honest price signals reflecting real scarcity, just like Bitcoin."
+    }
+  ],
+  "passingScore": 80,
+  "stardustReward": {
+    "perfect": 50,
+    "good": 30,
+    "passing": 20,
+    "participation": 10
+  }
+}
