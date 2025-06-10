@@ -1,0 +1,432 @@
+/* ==================================================================
+   BLOCKZONE LAB - GAMING/ARCADE STYLES
+   Neon-themed gaming interface for arcade section
+   ================================================================== */
+
+@import url('./core-variables.css');
+
+/* ===== ARCADE CONTAINER & BASE ===== */
+.arcade-container {
+    position: relative;
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: var(--white);
+    font-family: var(--font-gaming);
+}
+
+/* ===== FLOATING GAMING EFFECTS ===== */
+.floating-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 15s infinite linear;
+}
+
+.shape.circle {
+    width: 20px;
+    height: 20px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+    top: 20%;
+    left: 10%;
+}
+
+.shape.square {
+    width: 30px;
+    height: 30px;
+    background: var(--neon-purple);
+    transform: rotate(45deg);
+    top: 80%;
+    left: 30%;
+}
+
+.shape.triangle {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 25px solid var(--neon-pink);
+    top: 50%;
+    right: 20%;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+    }
+}
+
+/* ===== ARCADE HERO SECTION ===== */
+.arcade-hero {
+    position: relative;
+    z-index: 2;
+    padding: 150px 20px 100px;
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(255, 0, 128, 0.1) 0%, transparent 70%);
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.arcade-title {
+    font-family: var(--font-gaming);
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 900;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.title-main {
+    display: block;
+    color: var(--neon-cyan);
+    text-shadow: var(--shadow-neon);
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+.title-sub {
+    display: block;
+    color: var(--neon-pink);
+    font-size: 0.6em;
+    margin-top: -20px;
+    text-shadow: var(--shadow-neon);
+    animation: pulse-glow 2s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes pulse-glow {
+    0% {
+        text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+    }
+    100% {
+        text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 80px currentColor;
+    }
+}
+
+.arcade-subtitle {
+    font-family: var(--font-gaming);
+    font-size: 1.5rem;
+    color: var(--neon-green);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.arcade-description {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 50px;
+    color: #cccccc;
+    line-height: 1.8;
+}
+
+/* ===== ARCADE STATS ===== */
+.arcade-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto 50px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all var(--anim-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.stat-card:hover::before {
+    left: 100%;
+}
+
+.stat-card:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.stat-number {
+    font-family: var(--font-gaming);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #aaaaaa;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* ===== NEON BUTTONS ===== */
+.neon-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    font-family: var(--font-gaming);
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 2px solid;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--anim-medium);
+    background: transparent;
+    cursor: pointer;
+}
+
+.neon-btn.primary {
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+}
+
+.neon-btn.primary:hover {
+    background: var(--neon-pink);
+    color: #000000;
+    box-shadow: 0 0 40px rgba(255, 0, 128, 0.6);
+    text-shadow: none;
+}
+
+.neon-btn.secondary {
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.neon-btn.secondary:hover {
+    background: var(--neon-cyan);
+    color: #000000;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+    text-shadow: none;
+}
+
+.neon-btn.large {
+    padding: 20px 40px;
+    font-size: 1.2rem;
+}
+
+/* ===== GAME CARDS ===== */
+.games-section {
+    position: relative;
+    z-index: 2;
+    padding: 100px 20px;
+    background: var(--bg-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.game-card {
+    background: var(--bg-card);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--anim-medium);
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+}
+
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(255, 0, 128, 0.1) 0%,
+        rgba(0, 255, 255, 0.1) 50%,
+        rgba(128, 0, 255, 0.1) 100%);
+    opacity: 0;
+    transition: opacity var(--anim-medium);
+    z-index: -1;
+}
+
+.game-card:hover::before {
+    opacity: 1;
+}
+
+.game-card.featured {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 40px rgba(255, 0, 128, 0.3);
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.game-status {
+    background: var(--neon-pink);
+    color: #000000;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.game-visual {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.game-icon {
+    font-size: 5rem;
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    animation: icon-float 3s ease-in-out infinite;
+}
+
+@keyframes icon-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.game-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.game-description {
+    color: #cccccc;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.game-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.feature {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-btn {
+    display: block;
+    text-align: center;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+    color: #000000;
+    text-decoration: none;
+    font-family: var(--font-gaming);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    transition: all var(--anim-medium);
+    margin-top: auto;
+}
+
+.game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 0, 128, 0.4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .arcade-hero {
+        padding: 120px 20px 80px;
+    }
+
+    .arcade-stats {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .neon-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 10px;
+    }
+
+    .game-card {
+        padding: 20px;
+        min-height: auto;
+    }
+}
