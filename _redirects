@@ -1,0 +1,3 @@
+# Main redirects
+/games/neondrop/* https://neondrop5.pages.dev/:splat 200
+/learn/* /learn/index.html 200

@@ -1,0 +1,17 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/games/neondrop5/*
+  Cache-Control: public, max-age=31536000
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+
+/*.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000
+
+/*.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=31536000

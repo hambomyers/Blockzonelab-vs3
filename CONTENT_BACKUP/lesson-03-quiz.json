@@ -1,0 +1,43 @@
+{
+  "lessonId": "03",
+  "title": "Austrian Economics",
+  "description": "Test your understanding of Austrian economic principles and sound money theory",
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the Austrian School of Economics known for?",
+      "options": [
+        "Heavy government intervention",
+        "Central planning advocacy",
+        "Free market principles and individual liberty",
+        "Socialist economic theory"
+      ],
+      "correct": 2,
+      "explanation": "The Austrian School emphasizes free market principles, individual liberty, and minimal government intervention in the economy."
+    },
+    {
+      "id": 2,
+      "question": "Who is considered the founder of the Austrian School?",
+      "options": [
+        "John Maynard Keynes",
+        "Carl Menger",
+        "Adam Smith",
+        "Karl Marx"
+      ],
+      "correct": 1,
+      "explanation": "Carl Menger founded the Austrian School of Economics with his work 'Principles of Economics' in 1871."
+    },
+    {
+      "id": 3,
+      "question": "What do Austrian economists believe about price controls?",
+      "options": [
+        "They help stabilize markets",
+        "They create shortages and surpluses",
+        "They are necessary for fair distribution",
+        "They have no economic impact"
+      ],
+      "correct": 1,
+      "explanation": "Austrian economists argue that price controls distort market signals and create artificial shortages or surpluses."
+    }
+  ]
+}

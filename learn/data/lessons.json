@@ -1,0 +1,91 @@
+[
+  {
+    "id": "01",
+    "title": "What is Money?",
+    "emoji": "",
+    "introduction": "Money is more than just coins and bills. It's a system of trust, a tool for measuring value, and a cornerstone of civilization. To truly understand money, we need to explore its physics, history, and evolution.",
+    "sections": [
+      {
+        "title": "The Physics of Trust",
+        "emoji": "",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "At its core, money is about trust. But trust isn't just a social conceptit's a physical one. Imagine a system where energy, information, and entropy collide:"
+          },
+          {
+            "type": "list",
+            "ordered": false,
+            "items": [
+              {
+                "title": "Energy",
+                "description": "Money represents stored energy. A farmer's labor, a miner's effort, or a programmer's codeall are forms of energy converted into value. Think of it as a battery, storing the economic energy of a civilization."
+              },
+              {
+                "title": "Information",
+                "description": "Money is a ledger, a record of who owes what to whom. It's a way to encode and transmit value across time and space."
+              },
+              {
+                "title": "Entropy",
+                "description": "Without trust, systems decay. Money reduces the chaos of bartering by providing a universal standard."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "This energy theory of money becomes clearer when we consider how Bitcoin works. Every transaction requires computational energy to verify and record. This isn't wasteit's the physical manifestation of trust."
+          },
+          {
+            "type": "paragraph",
+            "text": "But here's where things get dark. In 1910, a group of the world's most powerful bankers met in secret on Jekyll Island, Georgia. G. Edward Griffin's masterwork 'The Creature from Jekyll Island' exposes how this clandestine meeting birthed the Federal Reservea private banking cartel masquerading as a government institution."
+          },
+          {
+            "type": "quote",
+            "text": "The first lesson of economics is scarcity: there is never enough of anything to fully satisfy all those who want it. The first lesson of politics is to disregard the first lesson of economics.",
+            "author": "Thomas Sowell"
+          }
+        ]
+      },
+      {
+        "title": "The Evolution of Money",
+        "emoji": "",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "Money has evolved through four major stages, each representing humanity's attempt to solve the fundamental problems of trade, value storage, and economic coordination:"
+          },
+          {
+            "type": "list",
+            "ordered": true,
+            "items": [
+              {
+                "title": "Barter",
+                "description": "Direct exchange of goods and services. Inefficient and limited by the 'double coincidence of wants.'"
+              },
+              {
+                "title": "Commodity Money",
+                "description": "Items like gold and silver that have intrinsic value. Durable, divisible, and widely accepted."
+              },
+              {
+                "title": "Fiat Money",
+                "description": "Government-issued currency with no intrinsic value. Relies entirely on trust in the issuer."
+              },
+              {
+                "title": "Digital Money",
+                "description": "Cryptocurrencies like Bitcoin. Decentralized, trustless, and powered by blockchain technology."
+              }
+            ]
+          },
+          {
+            "type": "insight",
+            "text": "Bitcoin represents a return to sound money principles while leveraging modern cryptographic technology. Like the Yap stones, Bitcoin is scarce by designonly 21 million will ever exist."
+          }
+        ]
+      }
+    ],
+    "keyInsight": {
+      "title": "The 'Aha!' Moment",
+      "content": "Money is a tool that evolves with society's needs, but that evolution isn't always in humanity's best interest. The transition from sound money (gold) to fiat money was designed to benefit a small banking elite at the expense of everyone else. Bitcoin represents the first practical implementation of honest moneya monetary system where wealth flows to those who provide real value rather than those who control the money supply."
+    }
+  }
+]

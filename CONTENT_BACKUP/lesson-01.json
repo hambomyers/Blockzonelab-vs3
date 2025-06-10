@@ -1,0 +1,62 @@
+{
+    "title": "Introduction to Blockchain",
+    "subtitle": "Understanding the fundamentals of blockchain technology",
+    "description": "Learn what blockchain is, how it works, and why it's revolutionary",
+    "questions": [
+        {
+            "question": "What is a blockchain?",
+            "options": [
+                "A digital ledger that records transactions across multiple computers",
+                "A type of cryptocurrency like Bitcoin",
+                "A mining tool used to create new coins",
+                "A wallet application for storing crypto"
+            ],
+            "correct": 0,
+            "explanation": "A blockchain is a distributed digital ledger that maintains a continuously growing list of records, called blocks, which are cryptographically linked and resistant to modification."
+        },
+        {
+            "question": "What makes blockchain secure?",
+            "options": [
+                "Traditional password protection systems",
+                "Cryptographic hashing and consensus mechanisms",
+                "Standard firewall and antivirus systems",
+                "Central authority verification"
+            ],
+            "correct": 1,
+            "explanation": "Blockchain security comes from cryptographic hashing, which creates unique fingerprints for each block, and consensus mechanisms that require network agreement for changes."
+        },
+        {
+            "question": "What is decentralization in blockchain?",
+            "options": [
+                "Having one central authority control everything",
+                "Distributing control across multiple network participants",
+                "Government regulation of all transactions",
+                "Corporate oversight and management"
+            ],
+            "correct": 1,
+            "explanation": "Decentralization means no single entity controls the network. Instead, control is distributed among many participants, making the system more resistant to censorship and failure."
+        },
+        {
+            "question": "What is a 'block' in blockchain?",
+            "options": [
+                "A physical storage device",
+                "A group of transactions bundled together",
+                "A type of cryptocurrency coin",
+                "A security barrier"
+            ],
+            "correct": 1,
+            "explanation": "A block is a collection of transaction data that gets bundled together and added to the blockchain. Each block contains a cryptographic hash of the previous block, creating the 'chain'."
+        },
+        {
+            "question": "What is mining in blockchain?",
+            "options": [
+                "Digging for physical coins underground",
+                "The process of validating transactions and adding new blocks",
+                "Stealing cryptocurrency from others",
+                "Creating fake transactions"
+            ],
+            "correct": 1,
+            "explanation": "Mining is the computational process where network participants (miners) compete to validate transactions and add new blocks to the blockchain, earning rewards for their work."
+        }
+    ]
+}

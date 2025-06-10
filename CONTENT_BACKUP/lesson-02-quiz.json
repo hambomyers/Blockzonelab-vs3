@@ -1,0 +1,195 @@
+{
+  "lessonId": "02",
+  "title": "The Technology Revolution",
+  "description": "Test your understanding of blockchain technology, cryptography, and consensus mechanisms",
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is cryptographic hashing primarily used for in blockchain?",
+      "options": [
+        "Storing large amounts of data",
+        "Creating unique digital fingerprints for data",
+        "Encrypting user passwords",
+        "Compressing file sizes"
+      ],
+      "correct": 1,
+      "explanation": "Cryptographic hashing creates unique digital fingerprints for data - like DNA for digital information. Any change in the input produces a completely different hash."
+    },
+    {
+      "id": 2,
+      "question": "What breakthrough does blockchain represent in computer science?",
+      "options": [
+        "Faster computing speeds",
+        "Better user interfaces",
+        "Distributed consensus without trusted third parties",
+        "More efficient data storage"
+      ],
+      "correct": 2,
+      "explanation": "Blockchain enables the first practical implementation of distributed consensus without requiring trusted third parties - a breakthrough that enables true digital scarcity."
+    },
+    {
+      "id": 3,
+      "question": "How does proof-of-work secure the Bitcoin network?",
+      "options": [
+        "By requiring government approval",
+        "By transforming energy into security",
+        "By limiting the number of users",
+        "By encrypting all transactions"
+      ],
+      "correct": 1,
+      "explanation": "Proof-of-work transforms energy expenditure into network security. The more energy spent securing Bitcoin, the more secure the network becomes."
+    },
+    {
+      "id": 4,
+      "question": "What do Merkle trees enable in blockchain systems?",
+      "options": [
+        "Faster transaction speeds",
+        "Efficient verification without examining every transaction",
+        "Better user privacy",
+        "Lower transaction fees"
+      ],
+      "correct": 1,
+      "explanation": "Merkle trees create efficient, tamper-proof data structures that enable rapid verification with O(log n) complexity - you don't need to check every transaction."
+    },
+    {
+      "id": 5,
+      "question": "Digital signatures in blockchain provide:",
+      "options": [
+        "Faster transaction processing",
+        "Mathematical proof of ownership without revealing private keys",
+        "Lower fees",
+        "Better user interfaces"
+      ],
+      "correct": 1,
+      "explanation": "Digital signatures provide mathematical proof that you own and authorized a transaction without revealing your private key to anyone."
+    },
+    {
+      "id": 6,
+      "question": "What was the 'double-spending problem' before Bitcoin?",
+      "options": [
+        "Spending too much money",
+        "The inability to prevent digital money from being copied and spent multiple times",
+        "Having two bank accounts",
+        "Making duplicate payments by accident"
+      ],
+      "correct": 1,
+      "explanation": "The double-spending problem was the challenge of preventing digital money from being copied and spent multiple times, which Bitcoin solved through distributed consensus."
+    },
+    {
+      "id": 7,
+      "question": "According to the lesson, what do cypherpunks believe?",
+      "options": [
+        "Government should control all cryptography",
+        "Cryptography is the ultimate tool for individual sovereignty",
+        "Technology should be regulated heavily",
+        "Privacy is not important"
+      ],
+      "correct": 1,
+      "explanation": "Cypherpunks like Tim May, Nick Szabo, and Hal Finney believed cryptography is the ultimate tool for individual sovereignty and predicted its use in creating privacy technology."
+    },
+    {
+      "id": 8,
+      "question": "What makes blockchain different from traditional databases?",
+      "options": [
+        "It's faster",
+        "It's cheaper to operate",
+        "It's distributed and doesn't require trust in a central authority",
+        "It has better user interfaces"
+      ],
+      "correct": 2,
+      "explanation": "Unlike traditional databases controlled by single entities, blockchain is distributed across many computers and doesn't require trust in any central authority."
+    },
+    {
+      "id": 9,
+      "question": "Smart contracts are best described as:",
+      "options": [
+        "Legal documents stored digitally",
+        "Self-executing code that eliminates intermediaries",
+        "Traditional contracts that are signed electronically",
+        "Government regulations for blockchain"
+      ],
+      "correct": 1,
+      "explanation": "Smart contracts are self-executing code that automatically enforce agreements without requiring trusted intermediaries or manual intervention."
+    },
+    {
+      "id": 10,
+      "question": "What does 'trustless' mean in blockchain context?",
+      "options": [
+        "No one can be trusted",
+        "The system is unreliable",
+        "You don't need to trust any individual or institution to use the system",
+        "Trust is manually verified"
+      ],
+      "correct": 2,
+      "explanation": "Trustless means you don't need to trust any individual, company, or government to use the system - the cryptographic protocols handle verification automatically."
+    },
+    {
+      "id": 11,
+      "question": "According to George Gilder's 'quantum revolution' concept:",
+      "options": [
+        "Quantum computers will replace blockchain",
+        "Information itself becomes a store of value through cryptographic proof",
+        "Physics principles don't apply to economics",
+        "Traditional money will become quantum-encrypted"
+      ],
+      "correct": 1,
+      "explanation": "Gilder's quantum revolution refers to information itself becoming a store of value through cryptographic proof rather than requiring central authority backing."
+    },
+    {
+      "id": 12,
+      "question": "What Austrian economic principle does public-key cryptography demonstrate?",
+      "options": [
+        "Central planning",
+        "Government regulation",
+        "Methodological individualism",
+        "Collective ownership"
+      ],
+      "correct": 2,
+      "explanation": "Public-key cryptography embodies Mises' methodological individualism - each person controls their own private keys without requiring collective consensus about their identity."
+    },
+    {
+      "id": 13,
+      "question": "Why is blockchain considered 'immutable'?",
+      "options": [
+        "It never changes",
+        "Government laws protect it",
+        "Changing past records requires enormous computational effort",
+        "It's stored in secure vaults"
+      ],
+      "correct": 2,
+      "explanation": "Blockchain immutability comes from the computational cost - changing past records would require redoing all the proof-of-work since that point, making it economically unfeasible."
+    },
+    {
+      "id": 14,
+      "question": "What was Nick Szabo's contribution to Bitcoin's development?",
+      "options": [
+        "He created Bitcoin",
+        "He designed the 'Bit Gold' concept that influenced Bitcoin",
+        "He invented proof-of-work",
+        "He created the first exchange"
+      ],
+      "correct": 1,
+      "explanation": "Nick Szabo's 'Bit Gold' paper (1998) described many concepts that later appeared in Bitcoin, making him a key intellectual precursor to Satoshi Nakamoto's work."
+    },
+    {
+      "id": 15,
+      "question": "The lesson describes mining as:",
+      "options": [
+        "Digging for digital coins",
+        "Competitive computational work to secure the network and validate transactions",
+        "A way to create new cryptocurrencies",
+        "Stealing computing power from others"
+      ],
+      "correct": 1,
+      "explanation": "Mining is the competitive computational process where participants race to validate transactions and secure the network, earning rewards for their energy expenditure."
+    }
+  ],
+  "passingScore": 80,
+  "stardustReward": {
+    "perfect": 60,
+    "good": 40,
+    "passing": 25,
+    "participation": 15
+  }
+}
+
