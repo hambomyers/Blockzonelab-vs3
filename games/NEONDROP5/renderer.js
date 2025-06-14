@@ -475,7 +475,13 @@ export class Renderer {
 
                 // Apply per-block opacity
                 this.ctx.save();
-                this.ctx.globalAlpha = blockOpacity;
+                if (isGhost) {
+                    // For ghost pieces, multiply the current global alpha (set by renderGhostPiece)
+                    // with the block opacity to preserve the ghost opacity setting
+                    this.ctx.globalAlpha = this.ctx.globalAlpha * blockOpacity;
+                } else {
+                    this.ctx.globalAlpha = blockOpacity;
+                }
 
                 this.chicletRenderer.drawBlock(
                     this.ctx, pixelX, pixelY, color, y, x,

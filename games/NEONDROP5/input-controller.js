@@ -307,6 +307,11 @@ export class InputController {
         if (action.type === 'MOVE' && isPlayingPhase(this.getState().phase)) {
             this.startAutoRepeat(e.code, action);
         }
+
+        // Setup auto-repeat for ghost piece opacity adjustment
+        if (action.type === 'ADJUST_GHOST') {
+            this.startAutoRepeat(e.code, action);
+        }
     }
 
     /**
@@ -350,8 +355,8 @@ export class InputController {
             'KeyP': { type: 'PAUSE' },
 
             // Ghost piece opacity
-            'Equal': { type: 'ADJUST_GHOST', delta: 0.05 },
-            'Minus': { type: 'ADJUST_GHOST', delta: -0.05 }
+            'Equal': { type: 'ADJUST_GHOST', delta: 0.02 },
+            'Minus': { type: 'ADJUST_GHOST', delta: -0.02 }
         };
 
         return mapping[keyCode];
@@ -661,8 +666,8 @@ export class InputController {
 
         // Handle ghost piece opacity adjustment
         if (action.type === 'ADJUST_GHOST') {
-            const current = this.config.get('graphics.ghostPieceOpacity') || 0.15;
-            const newOpacity = Math.max(0.05, Math.min(0.5, current + action.delta));
+            const current = this.config.get('graphics.ghostPieceOpacity') || 0.5;
+            const newOpacity = Math.max(0.01, Math.min(1.0, current + action.delta));
             this.config.set('graphics.ghostPieceOpacity', newOpacity);
             return;
         }
@@ -724,8 +729,13 @@ export class InputController {
                 if (this.keys.has(keyCode)) {
                     // Re-check if action is still valid
                     const state = this.getState();
-                    if (isPlayingPhase(state.phase)) {
-                        this.onAction(action);
+                    if (isPlayingPhase(state.phase) || action.type === 'ADJUST_GHOST') {
+                        if (action.type === 'ADJUST_GHOST') {
+                            // Process ghost adjustment directly
+                            this.processAction(action);
+                        } else {
+                            this.onAction(action);
+                        }
                     } else {
                         // Stop if phase changed
                         clearInterval(arrTimer);

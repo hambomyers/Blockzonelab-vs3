@@ -159,7 +159,7 @@ export class Config {
            graphics: {
                particles: true,
                ghostPiece: true,
-               ghostPieceOpacity: 0.5,
+               ghostPieceOpacity: 0.25,
                showFPS: false,
                showGrid: false,
                edgeGlow: true,
