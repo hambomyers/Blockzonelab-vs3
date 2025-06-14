@@ -6,98 +6,20 @@
     <title>BlockZone Lab - Learn, Play, Earn Stardust</title>
     <link rel="stylesheet" href="academy/core/academy-styles.css">
     <style>
-        /* Password Protection Overlay */
-        .password-overlay {
+        /* Simple beta access banner */
+        .beta-banner {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a1a 100%);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .password-card {
-            background: rgba(37, 40, 54, 0.9);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .password-title {
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 10px 15px;
+            z-index: 1000;
             color: #d4af37;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .password-subtitle {
-            color: #a0a0a0;
             font-size: 0.9rem;
-            margin-bottom: 2rem;
-            line-height: 1.5;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            font-family: monospace;
-            letter-spacing: 0.3em;
-            margin-bottom: 1.5rem;
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: rgba(212, 175, 55, 0.6);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-        }
-
-        .password-btn {
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            color: #000;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .password-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .password-error {
-            color: #ff4444;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .password-error.show {
-            opacity: 1;
-        }
-
-        .hidden {
-            display: none !important;
+            backdrop-filter: blur(10px);
         }
 
         /* Portal-specific enhancements */
@@ -192,298 +114,62 @@
         .primary-btn {
             background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
             color: var(--color-background);
-            padding: var(--space-4) var(--space-6);
+            padding: var(--space-3) var(--space-6);
             border-radius: var(--radius-lg);
-            text-decoration: none;
+            font-size: 1rem;
             font-weight: 600;
-            font-size: 1.05rem;
             transition: all var(--transition-base);
-            display: flex;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
             gap: var(--space-2);
         }
         
         .primary-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
-        }
-        
-        .secondary-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--color-text);
-            padding: var(--space-3) var(--space-5);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: var(--radius-lg);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all var(--transition-base);
-        }
-        
-        .secondary-btn:hover {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: rgba(212, 175, 55, 0.5);
-        }
-        
-        .global-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-6);
-            margin: var(--space-8) 0;
-        }
-        
-        .global-stat-card {
-            text-align: center;
-            padding: var(--space-6);
-            background: rgba(37, 40, 54, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: var(--radius-xl);
-            transition: all var(--transition-base);
-        }
-        
-        .global-stat-card:hover {
-            border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-2px);
-        }
-        
-        .global-stat-icon {
-            font-size: 3rem;
-            margin-bottom: var(--space-3);
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
-        }
-        
-        .global-stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            font-family: var(--font-mono);
-            color: var(--color-gold);
-            margin-bottom: var(--space-2);
-        }
-        
-        .global-stat-label {
-            font-size: 1rem;
-            color: var(--color-text);
-            font-weight: 500;
-        }
-        
-        .global-stat-sublabel {
-            font-size: 0.875rem;
-            color: var(--color-text-secondary);
-            margin-top: var(--space-1);
-        }        /* === MASSIVE CHOICE BUTTONS === */
-        .hero-choices {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-8);
-            margin: var(--space-8) 0;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-          .choice-btn {
-            background: rgba(37, 40, 54, 0.8);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: var(--radius-xl);
-            padding: var(--space-8) var(--space-6);
-            text-decoration: none;
-            color: var(--color-text);
-            text-align: center;
-            transition: all var(--transition-base);
-            position: relative;
-            overflow: hidden;
-            min-height: 380px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: var(--space-3);
-        }
-        
-        .choice-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
-            transform: translateX(-100%);
-            transition: transform var(--transition-slow);
-        }
-        
-        .choice-btn:hover {
-            transform: translateY(-8px);
-            border-color: rgba(212, 175, 55, 0.6);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--shadow-glow);
-        }
-        
-        .choice-btn:hover::before {
-            transform: translateX(0);
-        }
-        
-        .choice-icon {
-            font-size: 4rem;
-            margin-bottom: var(--space-2);
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
-        }
-        
-        .choice-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            font-family: var(--font-serif);
-            color: var(--color-gold);
-            margin-bottom: var(--space-2);
-            letter-spacing: 0.05em;
-        }
-        
-        .choice-subtitle {
-            font-size: 1.1rem;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-4);
-            line-height: 1.4;
-        }
-        
-        .choice-details {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-2);
-            margin-bottom: var(--space-4);
-            text-align: left;
-            width: 100%;
-            max-width: 280px;
-        }
-        
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            font-size: 0.9rem;
-            color: var(--color-text);
-            padding: var(--space-2);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-        
-        .choice-cta {
-            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
-            color: var(--color-background);
-            padding: var(--space-3) var(--space-6);
-            border-radius: var(--radius-lg);
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all var(--transition-base);
-        }
-        
-        .choice-btn:hover .choice-cta {
-            background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
-            transform: translateY(-2px);
-        }
-        
-        .hero-note {
-            text-align: center;
-            color: var(--color-text-secondary);
-            font-size: 0.9rem;
-            font-style: italic;
-            margin-top: var(--space-4);
-            margin-bottom: 0;
-        }        @media (max-width: 768px) {
-            .hero-choices {
-                grid-template-columns: 1fr;
-                gap: var(--space-6);
-                margin: var(--space-6) 0;
-            }
-            
-            .choice-btn {
-                min-height: 320px;
-                padding: var(--space-6) var(--space-4);
-            }
-            
-            .choice-title {
-                font-size: 2rem;
-            }
-            
-            .choice-icon {
-                font-size: 3rem;
-            }
-            
-            .choice-details {
-                max-width: 100%;
-            }
-            
-            .detail-item {
-                font-size: 0.85rem;
-            }
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
         }
     </style>
 </head>
 <body>
-    <!-- Password Protection Overlay -->
-    <div id="passwordOverlay" class="password-overlay">
-        <div class="password-card">
-            <div class="password-title">🎮 BlockZone Lab</div>
-            <div class="password-subtitle">
-                Private Beta Access<br>
-                Enter access code to continue
-            </div>            <input 
-                type="text" 
-                id="passwordInput" 
-                class="password-input" 
-                placeholder="4321"
-                maxlength="4"
-                autocomplete="off"
-                pattern="[0-9]*"
-                inputmode="numeric"
-            >
-            <button onclick="checkPassword()" class="password-btn">
-                Enter Portal
-            </button>
-            <div id="passwordError" class="password-error">
-                Incorrect access code. Try again.
-            </div>
-        </div>
+    <!-- Simple Beta Banner -->
+    <div class="beta-banner">
+        🚀 Private Beta
     </div>
 
-    <!-- Main Content (hidden initially) -->
-    <div id="mainContent" class="hidden">
-        <!-- Animated Starfield Background -->
-        <div class="starfield" aria-hidden="true">
-            <div class="stars"></div>
-            <div class="stars2"></div>
-            <div class="stars3"></div>
-        </div>    <!-- Main Navigation -->
-        <nav class="main-nav" role="navigation">
-            <div class="nav-container">
-                <div class="nav-brand">
-                    <a href="index.html" class="logo">
-                        <span class="logo-icon">✧</span>
-                        <span class="logo-text">BlockZone Lab</span>
-                    </a>
-                    <div class="tagline">Premium Crypto Edutainment</div>
-                </div>
-                <div class="nav-actions">
-                    <div class="stardust-counter" role="status" aria-live="polite">
-                        <span class="stardust-icon">💫</span>
-                        <span class="stardust-amount" id="totalStardust">0</span>
-                        <span class="stardust-label">Stardust</span>
-                    </div>
-                    <button class="nav-menu-toggle" aria-label="Toggle navigation menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
+    <!-- Animated Starfield Background -->
+    <div class="starfield" aria-hidden="true">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" role="navigation">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">✧</span>
+                    <span class="logo-text">BlockZone Lab</span>
+                </a>
+                <div class="tagline">Premium Crypto Edutainment</div>
             </div>
-        </nav>    <!-- Password Protection Overlay -->
-    <div class="password-overlay" id="passwordOverlay">
-        <div class="password-card">
-            <div class="password-title">Access BlockZone Lab</div>
-            <div class="password-subtitle">Enter the access code to continue</div>
-            <input type="password" id="accessCode" class="password-input" placeholder="Enter code 4321" aria-label="Access code">
-            <div class="password-error" id="passwordError">Incorrect code, please try again.</div>
-            <button class="password-btn" id="unlockButton">Unlock</button>
+            <div class="nav-actions">
+                <div class="stardust-counter" role="status" aria-live="polite">
+                    <span class="stardust-icon">💫</span>
+                    <span class="stardust-amount" id="totalStardust">0</span>
+                    <span class="stardust-label">Stardust</span>
+                </div>
+                <button class="nav-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
-    </div>    <!-- Hero Section -->
+    </nav>
+
+    <!-- Hero Section -->
     <header class="hero-section">
         <div class="hero-content">
             <div class="hero-badge">
@@ -529,7 +215,9 @@
                 </a>
             </div>
         </div>
-    </header><!-- Optional: More Details Below the Fold -->
+    </header>
+
+    <!-- Optional: More Details Below the Fold -->
     <main class="main-content" style="margin-top: var(--space-12);">
         <!-- Simplified Platform Overview -->
         <section style="text-align: center; margin-bottom: var(--space-10);">
@@ -551,18 +239,20 @@
                     <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Skill-based games with leaderboards and competitions</p>
                 </div>
                 <div style="text-align: center; padding: var(--space-4);">
-                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">�</div>
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">💫</div>
                     <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Unified Rewards</h3>
                     <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Earn Stardust across all activities and experiences</p>
                 </div>
                 <div style="text-align: center; padding: var(--space-4);">
-                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">�</div>
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">📊</div>
                     <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Track Progress</h3>
                     <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Portfolio dashboard coming Q4 2025</p>
                 </div>
             </div>
         </section>
-    </main><!-- Footer -->
+    </main>
+
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -601,62 +291,9 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 BlockZone Lab. Learn, Play, Earn in the Digital Economy.</p>
-        </div>    </footer>
-    
-    </div> <!-- Close main content div -->
+        </div>
+    </footer>
 
-    <script src="academy/shared/academy-main.js"></script>    <script>
-        // Password protection script
-        const correctCode = '4321';
-        const passwordOverlay = document.getElementById('passwordOverlay');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordError = document.getElementById('passwordError');
-        const mainContent = document.getElementById('mainContent');        // Check password function
-        function checkPassword() {
-            const enteredCode = passwordInput.value.trim();
-            console.log('Entered:', enteredCode, 'Expected:', correctCode); // Debug
-            
-            if (enteredCode === correctCode || enteredCode === '4321') {
-                passwordOverlay.classList.add('hidden');
-                mainContent.classList.remove('hidden');
-                document.body.style.overflow = 'auto';
-                // Save access for session
-                sessionStorage.setItem('blockzone_access', 'granted');
-            } else {
-                passwordError.classList.add('show');
-                passwordInput.value = '';
-                passwordInput.focus();
-                setTimeout(() => {
-                    passwordError.classList.remove('show');
-                }, 3000);
-            }
-        }        // Enter key support
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        // Only allow numbers
-        passwordInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            // Auto-submit when 4 digits entered
-            if (e.target.value.length === 4) {
-                setTimeout(checkPassword, 100);
-            }
-        });
-
-        // Check if already accessed this session
-        if (sessionStorage.getItem('blockzone_access') === 'granted') {
-            passwordOverlay.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-        } else {
-            // Disable body scrolling when overlay is active
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Focus password input on load
-        passwordInput.focus();
-    </script>
+    <script src="academy/shared/academy-main.js"></script>
 </body>
 </html>
