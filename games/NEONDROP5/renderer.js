@@ -8,6 +8,8 @@
  * - Particle system integration
  */
 
+import * as Physics from './physics-pure.js';
+
 import { PIECE_DEFINITIONS } from './config.js';
 import { ChicletRenderer } from './chiclet.js';
 import { createStarfieldRenderer } from './starfield.js';
@@ -414,12 +416,14 @@ export class Renderer {
             }
         }
 
+        // Per-block spawn opacity is now handled in drawPieceWithSpawn
+
         // Locking pulse effect
-        if (state.phase === 'LOCKING' && state.lockTimer) {
+        if (state.phase === 'LOCKING' && state.lockTimer && !state.isSpawning) {
             const lockDelay = this.getLockDelay(state.current.type);
             const progress = Math.min(1, state.lockTimer / lockDelay);
             const pulseSpeed = 3 + progress * 12;
-            opacity = Math.sin(Date.now() * 0.001 * pulseSpeed) * 0.3 + 0.7;
+            opacity *= Math.sin(Date.now() * 0.001 * pulseSpeed) * 0.3 + 0.7;
         }
 
         this.ctx.globalAlpha = opacity;
@@ -451,6 +455,12 @@ export class Renderer {
 
                 let color = piece.color;
 
+                // Calculate per-block spawn opacity for smooth fade
+                let blockOpacity = 1.0;
+                if (!isGhost) {
+                    blockOpacity = Physics.getBlockSpawnOpacity(piece, gridY, pixelYOffset, dy);
+                }
+
                 if (isGhost) {
                     color = '#404040';
                 } else if (piece.type === 'FLOAT' && piece.upMovesUsed > 0) {
@@ -463,10 +473,16 @@ export class Renderer {
                 const pixelX = this.dimensions.boardX + x * this.dimensions.blockSize;
                 const pixelY = this.dimensions.boardY + y * this.dimensions.blockSize + pixelYOffset;
 
+                // Apply per-block opacity
+                this.ctx.save();
+                this.ctx.globalAlpha = blockOpacity;
+
                 this.chicletRenderer.drawBlock(
                     this.ctx, pixelX, pixelY, color, y, x,
                     isGhost ? null : piece
                 );
+
+                this.ctx.restore();
             });
         });
     }
@@ -699,13 +715,11 @@ export class Renderer {
                 this.renderPaused(state);
                 break;
             case 'GAME_OVER_SEQUENCE':
-                this.renderGameOverSequence(state);
-                break;
             case 'GAME_OVER':
-                this.renderGameOver(state);
-                break;
             case 'GAME_OVER_TO_MENU':
-                this.renderGameOverTransition(state);
+                // Clean game over - just render the board normally
+                // Our GameOverSequence overlay will handle the UI
+                this.renderBoard(state);
                 break;
         }
     }

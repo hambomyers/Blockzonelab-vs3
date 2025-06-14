@@ -1,4 +1,19 @@
 <!DOCTYPE html>
+<!--
+NEONDROP5 - BlockZone Lab Game
+
+CURRENT STATUS:
+- Core game fully functional
+- Japanese MA-inspired game over UI implemented
+- Web3/Crypto integration planned for Phase 2
+
+PLANNED INTEGRATIONS:
+- Sonic Labs Testnet for blockchain features
+- QUARTERS and STARDUST token integration
+- Cross-game wallet and identity system
+
+For now, game runs in standalone mode with full functionality.
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +25,8 @@
     
     <!-- Enhanced Styles for AAA Quality -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="../shared/wallet-ui.css">
+    <!-- Leaderboard CSS Fix for Sonic Labs Gaming Platform -->
+    <link rel="stylesheet" href="leaderboard-fix.css">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,16 +34,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
-    <!-- Sonic Labs Web3 Dependencies -->
-    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <!-- Web3 Dependencies - Ready for future Sonic Labs integration -->
+    <!-- 
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js" 
+            onerror="console.log('Web3 CDN unavailable - running in standalone mode')"></script>
+    -->
 </head>
 <body>
-    <!-- Wallet Connection Overlay -->
-    <div class="wallet-compact">
+    <!-- Future: Wallet Connection UI for Sonic Labs integration -->
+    <!-- Currently hidden - will be activated when Web3 integration is complete -->
+    <div class="wallet-compact" style="display: none;">
         <div class="network-indicator sonic-testnet"></div>
-        <button class="wallet-connect-btn" onclick="window.BlockZoneWeb3.connect()">
-            Connect Wallet
-        </button>
+        <button class="wallet-connect-btn">Connect Wallet</button>
         <div class="wallet-status">Disconnected</div>
     </div>
 
@@ -56,20 +74,13 @@
         </div>
     </div>
 
-    <!-- Load Web3 first, then game -->
+    <!-- Load the game directly -->
     <script type="module">
-        // Load Sonic config
-        const configScript = document.createElement('script');
-        configScript.src = '../../core-systems/sonic-config.js';
-        document.head.appendChild(configScript);
-        
-        // Load Web3 integration
-        const { BlockZoneWeb3 } = await import('../shared/blockzone-web3.js');
-        
-        // Load main game after Web3 is ready
-        setTimeout(() => {
-            import('./main.js');
-        }, 1000);
+        // Just load the game - no Web3 complications
+        import('./main.js').catch(e => {
+            console.error('Failed to load game:', e);
+            document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px;">Game failed to load. Please refresh the page.</div>';
+        });
     </script>
 </body>
 </html>

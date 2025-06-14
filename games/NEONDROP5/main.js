@@ -54,7 +54,7 @@ class NeonDrop {
         this.leaderboard = new LeaderboardSystem();
         window.leaderboard = this.leaderboard; // Make globally accessible
         window.leaderboardUI = new ArcadeLeaderboardUI(this.leaderboard);
-        window.gameOverSequence = new GameOverSequence(this.renderer, this.audio);
+        window.gameOverSequence = new GameOverSequence();
     }
 
     /**
@@ -366,18 +366,10 @@ class NeonDrop {
      * Setup Game Over Sequence Event Listeners
      */
     setupGameOverSequenceEvents() {
-        // Listen for game over choices
-        document.addEventListener('gameOverChoice', (e) => {
-            switch(e.detail.action) {
-                case 'leaderboard':
-                    window.leaderboardUI.show(e.detail.score);
-                    break;
-                case 'play-again':
-                    this.engine.handleInput({ type: 'START_GAME' });
-                    break;
-                case 'menu':
-                    this.engine.returnToMenu();
-                    break;
+        // Listen for restart events from GameOverSequence
+        window.addEventListener('gameOver', (e) => {
+            if (e.detail.action === 'restart') {
+                this.engine.handleInput({ type: 'START_GAME' });
             }
         });
     }

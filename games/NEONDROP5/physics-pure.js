@@ -235,5 +235,41 @@ export const removeClearedLines = (board, lines) => {
    return newBoard;
 };
 
+/**
+* Calculate spawn opacity for individual blocks as piece crosses boundary
+* Rule: Smooth pixel-by-pixel fade as piece enters game board
+*/
+export const getBlockSpawnOpacity = (piece, pieceY, yOffset, blockDy) => {
+   if (!piece || !piece.shape) return 1.0;
+   
+   const blockSize = 24; // Standard block size
+   const realPixelY = (pieceY * blockSize) + yOffset;
+   const blockPixelY = realPixelY + (blockDy * blockSize);
+   const gameBoardTopPixel = 0; // Y=0 is top of main game board
+   
+   // Calculate how far this block has crossed into the game board
+   const pixelsIntoBoard = blockPixelY - gameBoardTopPixel;
+   
+   if (pixelsIntoBoard <= 0) {
+       // Block is above board - opaque
+       return 0.25;
+   } else if (pixelsIntoBoard >= blockSize) {
+       // Block is fully on board - bright
+       return 1.0;
+   } else {
+       // Block is crossing the boundary - smooth fade
+       const fadeProgress = pixelsIntoBoard / blockSize;
+       return 0.25 + (fadeProgress * 0.75); // Smooth transition from 25% to 100%
+   }
+};
+
+/**
+* Legacy function for whole-piece opacity (kept for compatibility)
+*/
+export const getSpawnOpacity = (piece, pieceY, yOffset = 0) => {
+   // Use the block opacity for the piece origin as fallback
+   return getBlockSpawnOpacity(piece, pieceY, yOffset, 0);
+};
+
 // Export constants
 export { PHYSICS_CONSTANTS };

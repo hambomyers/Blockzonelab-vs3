@@ -300,41 +300,42 @@ export class GameEngine {
     }
 
     /**
-     * Game over sequence
+     * Clean game over - directly trigger our GameOverSequence
      */
     updateGameOverSequence(deltaTime) {
-        const progress = this.getTransitionProgress();
+        // Skip the old complex animation - go straight to our professional game over
+        this.state.gameState = GameState.GAME_OVER;
+        this.transitions.active = false;
+        this.timeDilation = 1.0;
 
-        // Different phases of game over
-        if (this.state.gameOverSequencePhase === 0) {
-            // Phase 1: Slow down time
-            this.timeDilation = 1 - (progress * 0.9);
-
-            if (progress >= 1) {
-                this.state.gameOverSequencePhase = 1;
-                this.startTransition('game-over-fade', 500);
-            }
-        } else if (this.state.gameOverSequencePhase === 1) {
-            // Phase 2: Fade to black
-            if (progress >= 1) {
-                this.state.gameState = GameState.GAME_OVER;
-                this.transitions.active = false;
-                this.timeDilation = 1.0;
-
-                // Update stats
-                const highScore = this.config.get('game.highScore') || 0;
-                if (this.state.score > highScore) {
-                    this.config.set('game.highScore', this.state.score);
-                }
-
-                this.config.incrementStat('game.gamesPlayed');
-                this.config.incrementStat('game.totalScore', this.state.score);
-                this.config.incrementStat('game.totalLines', this.state.lines);
-
-                // Submit score to leaderboard system
-                this.submitScoreToLeaderboard();
-            }
+        // Update stats
+        const highScore = this.config.get('game.highScore') || 0;
+        const isNewHighScore = this.state.score > highScore;
+        if (isNewHighScore) {
+            this.config.set('game.highScore', this.state.score);
         }
+
+        this.config.incrementStat('game.gamesPlayed');
+
+        // Trigger our professional GameOverSequence immediately
+        setTimeout(() => {
+            if (window.gameOverSequence) {
+                window.gameOverSequence.start({
+                    score: this.state.score,
+                    isNewHighScore: isNewHighScore,
+                    linesCleared: this.state.lines,
+                    level: this.state.level,
+                    gameTime: Date.now() - this.state.gameStartTime
+                });
+            }
+        }, 500); // Brief pause for the game to settle
+
+        // Update additional stats
+        this.config.incrementStat('game.totalScore', this.state.score);
+        this.config.incrementStat('game.totalLines', this.state.lines);
+
+        // Submit score to leaderboard system
+        this.submitScoreToLeaderboard();
     }
 
     /**
@@ -525,6 +526,15 @@ export class GameEngine {
         if (!this.state.currentPiece) {
             this.gameOver();
             return;
+        }
+
+        // Update spawn fade effect
+        if (this.state.isSpawning) {
+            this.state.spawnTimer += deltaTime;
+            if (this.state.spawnTimer >= CONSTANTS.TIMING.SPAWN_FADE_TIME) {
+                this.state.isSpawning = false;
+                this.state.spawnTimer = 0;
+            }
         }
 
         // Update gravity
@@ -856,7 +866,9 @@ export class GameEngine {
             const scoringState = this.scoring.getState();
             this.state.combo = scoringState.combo; // Will be 0
 
-            if (this.audio) {
+            // Play lock sound only if the piece was visible when it locked
+            // This prevents the staccato pop from pieces locking at the top
+            if (this.audio && this.state.currentPosition.y >= 0) {
                 this.audio.playSound('lock');
             }
         }
@@ -948,6 +960,11 @@ export class GameEngine {
             y: this.state.currentPiece.spawn.y
         };
         this.state.canHold = true;
+
+        // Initialize spawn fade effect
+        this.state.spawnTimer = 0;
+        this.state.isSpawning = true;
+        this.state.pieceSpawnTime = Date.now(); // Track when piece spawned
 
         // Mark shadow as invalid for new piece
         this.state.shadowValid = false;

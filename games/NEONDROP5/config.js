@@ -32,6 +32,7 @@ export class Config {
            LOCK_DELAY_DANGER: 1500,
            MAX_LOCK_TIME: 5000,
            CLEAR_ANIMATION_TIME: 200,
+           SPAWN_FADE_TIME: 400,
            GRAVITY_BASE: 1000,
            GRAVITY_MIN: 100,
            // Centralized lock delay logic

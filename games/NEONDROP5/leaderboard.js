@@ -1,21 +1,32 @@
 /**
- * leaderboard.js - Professional Leaderboard System
+ * leaderboard.js - Professional Leaderboard System for Sonic Labs Integration
  *
- * This is what AAA games use BEFORE blockchain
- * - Works without wallets
- * - Validates scores server-side
- * - Ready to upgrade to blockchain later
+ * Scalable leaderboard system that works:
+ * - Without wallets (anonymous play)
+ * - With Sonic Labs wallet integration
+ * - Ready for cross-game leaderboards
  */
 
 export class LeaderboardSystem {
     constructor() {
-        // Update this to your actual backend URL when ready
-        // For now, let's make it work without backend
-        this.API_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api'
-            : 'https://leaderboard.hambomyers.workers.dev/api';
+        // Backend endpoints - ready for Sonic Labs integration
+        this.API_URL = this.getAPIEndpoint();
         this.cache = new Map();
         this.cacheTimeout = 30000; // 30 seconds
+        
+        // Player identity - will integrate with Sonic Labs wallet
+        this.playerId = this.getPlayerId();
+        this.isWalletConnected = false; // Future: detect Sonic Labs wallet
+    }
+
+    /**
+     * Get the appropriate API endpoint based on environment
+     */
+    getAPIEndpoint() {
+        const hostname = window.location.hostname;
+        
+        // Always use your Cloudflare Worker for now
+        return 'https://leaderboard.hambomyers.workers.dev/api';
     }
 
     /**
@@ -66,8 +77,9 @@ export class LeaderboardSystem {
 
     /**
      * Get leaderboard (cached for performance)
+     * Supports up to 1000 entries for competitive gaming
      */
-    async getLeaderboard(period = 'daily', limit = 100) {
+    async getLeaderboard(period = 'daily', limit = 1000) {
         const cacheKey = `${period}-${limit}`;
         const cached = this.cache.get(cacheKey);
 
@@ -76,8 +88,13 @@ export class LeaderboardSystem {
         }
 
         try {
+            // For large requests, use different endpoint optimizations
+            const endpoint = limit > 100 
+                ? `${this.API_URL}/leaderboard/large`
+                : `${this.API_URL}/leaderboard`;
+                
             const response = await fetch(
-                `${this.API_URL}/leaderboard?period=${period}&limit=${limit}`
+                `${endpoint}?period=${period}&limit=${limit}&game=neon_drop`
             );
 
             const data = await response.json();
@@ -89,12 +106,14 @@ export class LeaderboardSystem {
                 score: entry.score,
                 metrics: entry.metrics,
                 isMe: entry.player_id === this.getPlayerId(),
-                player_id: entry.player_id, // Add player_id for compatibility
-                // Future: will have wallet address here
-                wallet: entry.wallet_address || null
+                player_id: entry.player_id,
+                // Future Sonic Labs integration
+                wallet: entry.wallet_address || null,
+                sonicAddress: entry.sonic_address || null
             }));
 
-            // Cache it
+            // Cache large requests for longer (5 minutes vs 30 seconds)
+            const cacheTime = limit > 100 ? 300000 : this.cacheTimeout;
             this.cache.set(cacheKey, {
                 data: leaderboard,
                 timestamp: Date.now()
@@ -103,7 +122,8 @@ export class LeaderboardSystem {
             return leaderboard;
 
         } catch (error) {
-            // Failed to fetch leaderboard - return empty array
+            // Backend unavailable - return empty leaderboard
+            console.log('Backend unavailable, returning empty leaderboard');
             return [];
         }
     }
@@ -223,6 +243,70 @@ export class LeaderboardSystem {
         }
 
         return false;
+    }
+
+    /**
+     * Generate mock leaderboard data for development
+     */
+    getMockLeaderboard(limit = 100) {
+        const mockPlayers = [
+            'HAMBO', 'CRYPTOKING', 'TETRISGOD', 'SONICFAN', 'BLOCKMASTER',
+            'NEONLORD', 'PUZZLEPRO', 'GAMEHERO', 'CHAMPION', 'LEGEND',
+            'DROPKING', 'STACKPRO', 'LINEKING', 'GEOMANCER', 'CODEWIZ',
+            'PIXELGOD', 'SYNTHWAVE', 'CYBERPUNK', 'MATRICES', 'GRIDLORD',
+            'TETRAMAX', 'BLOCKZONE', 'NEONDROP', 'GLOWMASTER', 'LUMINARY'
+        ];
+
+        const mockData = [];
+        const playerCount = Math.min(limit, 1000);
+        
+        for (let i = 0; i < playerCount; i++) {
+            const baseScore = 50000 - (i * 500) + Math.floor(Math.random() * 1000);
+            const score = Math.max(baseScore, 100);
+            
+            mockData.push({
+                rank: i + 1,
+                displayName: mockPlayers[i % mockPlayers.length] + (i >= mockPlayers.length ? (Math.floor(i / mockPlayers.length) + 1).toString() : ''),
+                score: score,
+                metrics: {
+                    apm: Math.floor(Math.random() * 150) + 50,
+                    pps: Math.floor(Math.random() * 5) + 1,
+                    gameTime: Math.floor(Math.random() * 600000) + 60000
+                },
+                isMe: i === 0 && this.playerScore, // Make first entry the player if they just played
+                player_id: `mock_player_${i}`,
+                wallet: null,
+                sonicAddress: null
+            });
+        }
+
+        // If player just played, insert their score at the right position
+        if (this.playerScore) {
+            const playerEntry = {
+                rank: 1,
+                displayName: localStorage.getItem('neon_drop_username') || 'YOU',
+                score: this.playerScore,
+                metrics: { apm: 100, pps: 2, gameTime: 120000 },
+                isMe: true,
+                player_id: this.getPlayerId(),
+                wallet: null,
+                sonicAddress: null
+            };
+
+            // Insert player at correct rank position
+            mockData.push(playerEntry);
+            mockData.sort((a, b) => b.score - a.score);
+            
+            // Update ranks
+            mockData.forEach((entry, index) => {
+                entry.rank = index + 1;
+            });
+            
+            // Keep only the requested limit
+            mockData.splice(limit);
+        }
+
+        return mockData;
     }
 }
 

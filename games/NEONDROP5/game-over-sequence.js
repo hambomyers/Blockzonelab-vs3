@@ -24,32 +24,55 @@ export class GameOverSequence {
     }
 
     setupUI() {
-        // Create the main overlay container
+        // Create the main overlay container using Japanese MA-inspired design
         this.container = document.createElement('div');
-        this.container.className = 'clean-game-over-overlay';
+        this.container.className = 'game-over-overlay';
         this.container.innerHTML = `
-            <!-- Fade overlay that dims everything except death piece -->
-            <div class="game-fade-overlay"></div>
-
-            <!-- Clean score display -->
-            <div class="clean-score-display">
-                <div class="score-label">FINAL SCORE</div>
-                <div class="score-value">0</div>
-                <div class="high-score-indicator">NEW HIGH SCORE!</div>
-            </div>
-
-            <!-- Black fade overlay -->
-            <div class="black-fade-overlay"></div>
-
-            <!-- Leaderboard container -->
-            <div class="leaderboard-container">
-                <div class="leaderboard-header">LEADERBOARD</div>
-                <div class="leaderboard-list">
-                    <!-- Scores will be populated here -->
+            <!-- Japanese MA-inspired game over content -->
+            <div class="game-over-content">
+                <!-- Final score display with breathing room -->
+                <div class="final-score-display">
+                    <div class="final-score-label">Final Score</div>
+                    <div class="final-score-value">0</div>
+                    <div class="high-score-indicator">✦ NEW HIGH SCORE ✦</div>
                 </div>
-                <button class="play-again-btn" data-action="play-again">
-                    PLAY AGAIN
-                </button>
+
+                <!-- Choice buttons with generous spacing -->
+                <div class="game-over-choices">
+                    <button class="game-over-btn primary-btn" data-action="play-again">
+                        <span class="btn-icon">↻</span>
+                        <span class="btn-text">Play Again</span>
+                        <span class="btn-shortcut">ENTER</span>
+                    </button>
+                    
+                    <button class="game-over-btn secondary-btn" data-action="leaderboard">
+                        <span class="btn-icon">👑</span>
+                        <span class="btn-text">View Leaderboard</span>
+                        <span class="btn-shortcut">L</span>
+                    </button>
+                    
+                    <button class="game-over-btn tertiary-btn" data-action="menu">
+                        <span class="btn-icon">🏠</span>
+                        <span class="btn-text">Main Menu</span>
+                        <span class="btn-shortcut">ESC</span>
+                    </button>
+                </div>
+
+                <!-- Game stats with MA spacing -->
+                <div class="game-stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-label">Lines</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Level</span>
+                        <span class="stat-value">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Time</span>
+                        <span class="stat-value">0:00</span>
+                    </div>
+                </div>
             </div>
         `;
 
@@ -58,23 +81,42 @@ export class GameOverSequence {
     }
 
     setupEventListeners() {
-        // Handle play again button
-        this.container.querySelector('.play-again-btn').addEventListener('click', () => {
-            this.handleChoice('play-again');
+        // Handle all game over button clicks
+        this.container.addEventListener('click', (e) => {
+            console.log('Game over container clicked', e.target);
+            const button = e.target.closest('.game-over-btn');
+            if (button) {
+                const action = button.getAttribute('data-action');
+                console.log('Button clicked with action:', action);
+                this.handleChoice(action);
+            }
         });
 
-        // Handle keyboard input
+        // Handle keyboard input with MA-inspired graceful interactions
         this.keyHandler = (e) => {
-            if (!this.isActive) return;
+            if (!this.isActive || this.phase !== 'choices') return;
 
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (this.phase === 'leaderboard') {
+            switch (e.key) {
+                case 'Enter':
+                case ' ':
                     this.handleChoice('play-again');
-                }
-            }
-
-            if (e.key === 'Escape') {
-                this.handleChoice('menu');
+                    break;
+                case 'l':
+                case 'L':
+                    this.handleChoice('leaderboard');
+                    break;
+                case 'Escape':
+                    this.handleChoice('menu');
+                    break;
+                case '1':
+                    this.handleChoice('play-again');
+                    break;
+                case '2':
+                    this.handleChoice('leaderboard');
+                    break;
+                case '3':
+                    this.handleChoice('menu');
+                    break;
             }
         };
 
@@ -94,143 +136,75 @@ export class GameOverSequence {
             this.setupUI();
         }
 
-        // Update score display
-        this.container.querySelector('.score-value').textContent = this.finalScore.toLocaleString();
+        // Update score display with Japanese MA spacing
+        this.container.querySelector('.final-score-value').textContent = this.finalScore.toLocaleString();
         this.container.querySelector('.high-score-indicator').style.display =
             this.isNewHighScore ? 'block' : 'none';
 
-        // Start the clean sequence
-        await this.executeCleanSequence();
+        // Update game stats
+        this.updateGameStats(gameState);
+
+        // Start the Japanese MA-inspired sequence
+        await this.executeMASequence();
     }
 
-    async executeCleanSequence() {
-        const gameCanvas = document.querySelector('canvas') || document.getElementById('game');
-        const gameFadeOverlay = this.container.querySelector('.game-fade-overlay');
-        const scoreDisplay = this.container.querySelector('.clean-score-display');
-        const blackOverlay = this.container.querySelector('.black-fade-overlay');
-        const leaderboardContainer = this.container.querySelector('.leaderboard-container');
-
-        // Show the overlay
-        this.container.style.display = 'block';
-
-        // Phase 1: Game freezes, everything fades except death piece (3 seconds)
-        this.phase = 'death-piece';
-
-        // Freeze the game canvas
-        if (gameCanvas) {
-            gameCanvas.style.filter = 'none';
-            gameCanvas.style.transform = 'none';
-            gameCanvas.style.transition = 'none';
+    updateGameStats(gameState) {
+        const statElements = this.container.querySelectorAll('.stat-value');
+        
+        // Update lines cleared
+        if (statElements[0]) {
+            statElements[0].textContent = (gameState.linesCleared || 0).toString();
         }
-
-        // Show fade overlay and score
-        gameFadeOverlay.style.display = 'block';
-        gameFadeOverlay.classList.add('fade-in');
-        scoreDisplay.style.display = 'block';
-        scoreDisplay.classList.add('fade-in');
-
-        await this.wait(this.timings.deathPieceDisplay);
-
-        // Phase 2: Smooth fade to black (1 second)
-        this.phase = 'fade-to-black';
-        blackOverlay.style.display = 'block';
-        blackOverlay.classList.add('fade-in');
-
-        await this.wait(this.timings.fadeToBlack);
-
-        // Phase 3: Show leaderboard (0.5 seconds)
-        this.phase = 'leaderboard';
-
-        // Populate leaderboard
-        await this.populateLeaderboard();
-
-        // Show leaderboard
-        leaderboardContainer.style.display = 'block';
-        leaderboardContainer.classList.add('fade-in');
-
-        // Focus the play again button
-        setTimeout(() => {
-            this.container.querySelector('.play-again-btn').focus();
-        }, 200);
-
-        await this.wait(this.timings.showLeaderboard);
-    }
-
-    async populateLeaderboard() {
-        const leaderboardList = this.container.querySelector('.leaderboard-list');
-
-        try {
-            // Get leaderboard data
-            const scores = await this.getLeaderboardScores();
-
-            // Clear existing content
-            leaderboardList.innerHTML = '';
-
-            // Add scores
-            scores.slice(0, 10).forEach((scoreEntry, index) => {
-                const scoreItem = document.createElement('div');
-                scoreItem.className = 'leaderboard-item';
-                if (scoreEntry.score === this.finalScore && this.isNewHighScore) {
-                    scoreItem.classList.add('current-score');
-                }
-
-                scoreItem.innerHTML = `
-                    <span class="rank">${index + 1}</span>
-                    <span class="name">${scoreEntry.name || 'Anonymous'}</span>
-                    <span class="score">${scoreEntry.score.toLocaleString()}</span>
-                `;
-
-                leaderboardList.appendChild(scoreItem);
-            });
-
-            // If no scores, show placeholder
-            if (scores.length === 0) {
-                leaderboardList.innerHTML = `
-                    <div class="leaderboard-item current-score">
-                        <span class="rank">1</span>
-                        <span class="name">You</span>
-                        <span class="score">${this.finalScore.toLocaleString()}</span>
-                    </div>
-                `;
-            }
-
-        } catch (error) {
-            // Error loading leaderboard - show fallback display
-            // Fallback display
-            leaderboardList.innerHTML = `
-                <div class="leaderboard-item current-score">
-                    <span class="rank">1</span>
-                    <span class="name">You</span>
-                    <span class="score">${this.finalScore.toLocaleString()}</span>
-                </div>
-            `;
+        
+        // Update level
+        if (statElements[1]) {
+            statElements[1].textContent = (gameState.level || 1).toString();
+        }
+        
+        // Update time (format as MM:SS)
+        if (statElements[2] && gameState.gameTime) {
+            const minutes = Math.floor(gameState.gameTime / 60000);
+            const seconds = Math.floor((gameState.gameTime % 60000) / 1000);
+            statElements[2].textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
     }
 
-    async getLeaderboardScores() {
-        // Try to get scores from leaderboard system
-        if (window.leaderboard && window.leaderboard.getTopScores) {
-            return await window.leaderboard.getTopScores(10);
-        }
+    async executeMASequence() {
+        // Japanese MA (間) principle: beauty through thoughtful pauses and space
+        
+        // Phase 1: Gentle appearance with death pulse
+        this.phase = 'death-pulse';
+        this.container.style.display = 'flex';
+        this.container.classList.add('death-pulse');
+        
+        // Brief moment to absorb the game over state
+        await this.wait(800);
+        
+        // Phase 2: Reveal score with breathing space
+        this.phase = 'score';
+        this.container.classList.add('show-score');
+        
+        // Let the score settle with generous time for reflection
+        await this.wait(2000);
+        
+        // Phase 3: Present choices with MA spacing
+        this.phase = 'choices';
+        this.container.classList.remove('death-pulse');
+        this.container.classList.add('show-choices');
+    }
 
-        // Fallback to localStorage
-        const stored = localStorage.getItem('neondrop5-scores');
-        if (stored) {
-            try {
-                const scores = JSON.parse(stored);
-                return scores.sort((a, b) => b.score - a.score);
-            } catch (e) {
-                return [];
-            }
-        }
-
-        return [];
+    wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     handleChoice(action) {
-        if (!this.isActive) return;
+        console.log('handleChoice called with action:', action);
+        if (!this.isActive) {
+            console.log('GameOverSequence not active, ignoring choice');
+            return;
+        }
 
-        // Add button feedback
+        // Add button feedback with Japanese MA consideration for interaction
         const clickedBtn = this.container.querySelector(`[data-action="${action}"]`);
         if (clickedBtn) {
             clickedBtn.classList.add('clicked');
@@ -243,13 +217,62 @@ export class GameOverSequence {
     }
 
     executeChoice(action) {
+        console.log('executeChoice called with action:', action);
         switch(action) {
             case 'play-again':
+                console.log('Executing play-again');
                 this.restartGame();
                 break;
+            case 'leaderboard':
+                console.log('Executing leaderboard');
+                this.showLeaderboard();
+                break;
             case 'menu':
+                console.log('Executing menu');
                 this.returnToMenu();
                 break;
+            default:
+                console.log('Unknown action:', action);
+        }
+    }
+
+    async showLeaderboard() {
+        console.log('showLeaderboard called');
+        try {
+            // Hide the game over choices first
+            console.log('Hiding game over container');
+            this.container.style.display = 'none';
+            
+            // Import modules
+            console.log('Importing leaderboard modules...');
+            const [leaderboardModule, uiModule] = await Promise.all([
+                import('./leaderboard.js'),
+                import('./arcade-leaderboard-ui.js')
+            ]);
+            console.log('Modules imported successfully');
+            
+            // Create leaderboard system and UI
+            const leaderboardSystem = new leaderboardModule.LeaderboardSystem();
+            const arcadeUI = new uiModule.ArcadeLeaderboardUI(leaderboardSystem);
+            console.log('Leaderboard components created');
+            
+            // Show the leaderboard with the current score context
+            console.log('Calling arcadeUI.show with score:', this.finalScore);
+            await arcadeUI.show(this.finalScore);
+            console.log('Leaderboard should now be visible');
+            
+            // Override the hide method to show our choices again
+            const originalHide = arcadeUI.hide.bind(arcadeUI);
+            arcadeUI.hide = () => {
+                console.log('Leaderboard hiding, returning to game over choices');
+                originalHide();
+                this.container.style.display = 'flex';
+            };
+            
+        } catch (error) {
+            console.error('Failed to load leaderboard:', error);
+            // Fall back to showing game over choices again
+            this.container.style.display = 'flex';
         }
     }
 
@@ -266,36 +289,21 @@ export class GameOverSequence {
     }
 
     returnToMenu() {
-        // Emit event for main game to handle
-        window.dispatchEvent(new CustomEvent('gameOver', {
-            detail: {
-                action: 'menu',
-                score: this.finalScore,
-                isNewHighScore: this.isNewHighScore
-            }
-        }));
-        this.hide();
-    }
-
-    wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        // Navigate back to the main portal
+        window.location.href = '../../index.html';
     }
 
     hide() {
         this.isActive = false;
         this.phase = 'none';
-        this.container.style.display = 'none';
-
-        // Reset all states
-        this.container.querySelectorAll('.game-fade-overlay, .clean-score-display, .black-fade-overlay, .leaderboard-container').forEach(el => {
-            el.style.display = 'none';
-            el.classList.remove('fade-in');
-        });
-
-        // Reset button states
-        this.container.querySelectorAll('.play-again-btn').forEach(btn => {
-            btn.classList.remove('clicked');
-        });
+        
+        // Graceful fade out following MA principles
+        this.container.classList.add('fade-out');
+        
+        setTimeout(() => {
+            this.container.style.display = 'none';
+            this.container.classList.remove('fade-out', 'show-score', 'show-choices', 'death-pulse');
+        }, 300);
     }
 
     cleanup() {
@@ -309,247 +317,4 @@ export class GameOverSequence {
     }
 }
 
-// Clean minimal CSS
-const CLEAN_GAME_OVER_CSS = `
-/* ============ CLEAN GAME OVER OVERLAY ============ */
-.clean-game-over-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    z-index: 100;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
 
-/* Game fade overlay - dims everything except death piece */
-.game-fade-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    opacity: 0;
-    transition: opacity 0.8s ease-out;
-    display: none;
-}
-
-.game-fade-overlay.fade-in {
-    opacity: 1;
-}
-
-/* Clean score display */
-.clean-score-display {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.8s ease-out;
-    display: none;
-}
-
-.clean-score-display.fade-in {
-    opacity: 1;
-}
-
-.score-label {
-    font-size: 18px;
-    font-weight: 300;
-    color: #ffffff;
-    margin-bottom: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.score-value {
-    font-size: 48px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 16px;
-    line-height: 1;
-}
-
-.high-score-indicator {
-    display: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: #4CAF50;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Black fade overlay */
-.black-fade-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000000;
-    opacity: 0;
-    transition: opacity 1s ease-out;
-    display: none;
-}
-
-.black-fade-overlay.fade-in {
-    opacity: 1;
-}
-
-/* Leaderboard container */
-.leaderboard-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 500px;
-    padding: 0 20px;
-    opacity: 0;
-    transition: opacity 0.6s ease-out;
-    display: none;
-}
-
-.leaderboard-container.fade-in {
-    opacity: 1;
-}
-
-.leaderboard-header {
-    font-size: 24px;
-    font-weight: 600;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.leaderboard-list {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
-}
-
-.leaderboard-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    font-size: 16px;
-}
-
-.leaderboard-item:last-child {
-    border-bottom: none;
-}
-
-.leaderboard-item.current-score {
-    background: rgba(76, 175, 80, 0.1);
-    border-radius: 4px;
-    padding: 12px 16px;
-    margin: 4px -16px;
-    color: #4CAF50;
-    font-weight: 600;
-}
-
-.leaderboard-item .rank {
-    width: 40px;
-    font-weight: 600;
-    text-align: center;
-}
-
-.leaderboard-item .name {
-    flex: 1;
-    margin-left: 16px;
-}
-
-.leaderboard-item .score {
-    font-weight: 600;
-    font-family: 'Courier New', monospace;
-}
-
-/* Play again button */
-.play-again-btn {
-    display: block;
-    width: 100%;
-    padding: 16px 24px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.play-again-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.play-again-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-.play-again-btn.clicked {
-    transform: translateY(0);
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .score-value {
-        font-size: 36px;
-    }
-
-    .leaderboard-header {
-        font-size: 20px;
-    }
-
-    .leaderboard-item {
-        font-size: 14px;
-    }
-
-    .play-again-btn {
-        font-size: 14px;
-        padding: 14px 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .score-label {
-        font-size: 16px;
-    }
-
-    .score-value {
-        font-size: 32px;
-    }
-
-    .leaderboard-container {
-        padding: 0 16px;
-    }
-
-    .leaderboard-list {
-        padding: 16px;
-    }
-}
-`;
-
-// Inject the CSS into the document
-if (typeof document !== 'undefined') {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = CLEAN_GAME_OVER_CSS;
-    document.head.appendChild(styleElement);
-}

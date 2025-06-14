@@ -1580,3 +1580,115 @@ body {
 #decimalInputRow .label-center-container.flex-label {
     top: calc(-1.7em - 1px); /* previously -1.7em - 3px, now 2px lower */
 }
+
+/* ===== HERO CHOICE BUTTONS FOR MAIN LANDING PAGE ===== */
+.hero-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    margin: var(--space-8) 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.choice-btn {
+    background: rgba(37, 40, 54, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8) var(--space-6);
+    text-decoration: none;
+    color: var(--color-text);
+    text-align: center;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.choice-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
+}
+
+.choice-btn:hover {
+    transform: translateY(-8px);
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+}
+
+.choice-btn:hover::before {
+    transform: translateX(0);
+}
+
+.choice-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-4);
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+}
+
+.choice-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    margin-bottom: var(--space-2);
+    font-family: var(--font-display);
+}
+
+.choice-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-6);
+    font-weight: 300;
+}
+
+.choice-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    text-align: left;
+    width: 100%;
+    max-width: 280px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    padding: var(--space-2);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.choice-cta {
+    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+    color: var(--color-background);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-lg);
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+}
+
+.choice-btn:hover .choice-cta {
+    background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
+    transform: translateY(-2px);
+}
+
+/* === END OF STYLESHEET === */

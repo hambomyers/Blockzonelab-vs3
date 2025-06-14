@@ -1553,8 +1553,8 @@ body {
     50% { transform: scale(1.1); }
 }
 
-/* ============ AAA GAME OVER SEQUENCE ============ */
-/* Game Over Overlay */
+/* ============ JAPANESE MA (間) INSPIRED GAME OVER ============ */
+/* Clean overlay with perfect negative space */
 .game-over-overlay {
     position: fixed;
     top: 0;
@@ -1566,34 +1566,46 @@ body {
     justify-content: center;
     z-index: 100;
     pointer-events: none;
+    /* Subtle backdrop blur for depth */
+    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .game-over-content {
     position: relative;
     text-align: center;
     pointer-events: auto;
+    max-width: 500px;
+    padding: 60px 40px;
+    /* Clean card with generous spacing */
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* Death pulse animation */
+/* Death pulse animation - more subtle */
 .death-pulse {
-    animation: deathPulse 0.5s ease-in-out infinite alternate;
+    animation: deathPulse 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes deathPulse {
     from {
-        filter: brightness(1) hue-rotate(0deg);
+        filter: brightness(0.95);
     }
     to {
-        filter: brightness(1.2) hue-rotate(10deg);
+        filter: brightness(1.05);
     }
 }
 
-/* Final score display */
+/* Final score with breathing room */
 .final-score-display {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.8s ease-out;
-    margin-bottom: 40px;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    margin-bottom: 80px; /* More space */
 }
 
 .game-over-overlay.show-score .final-score-display {
@@ -1603,49 +1615,51 @@ body {
 
 .final-score-label {
     font-family: 'Press Start 2P', monospace;
-    font-size: 20px;
-    color: #888;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
 }
 
 .final-score-value {
     font-family: 'Press Start 2P', monospace;
-    font-size: 48px;
+    font-size: 42px;
     color: #FFD700;
-    text-shadow:
-        0 0 20px rgba(255, 215, 0, 0.5),
-        0 0 40px rgba(255, 215, 0, 0.3);
-    margin-bottom: 20px;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
 }
 
 .high-score-indicator {
     display: none;
     font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
-    color: #00FF00;
-    animation: newHighScore 1s ease-in-out infinite alternate;
+    font-size: 12px;
+    color: #00FF88;
+    animation: newHighScore 2s ease-in-out infinite alternate;
+    margin-top: 20px;
 }
 
 @keyframes newHighScore {
     from {
-        opacity: 0.7;
-        transform: scale(1);
+        opacity: 0.6;
+        transform: translateY(0);
     }
     to {
         opacity: 1;
-        transform: scale(1.05);
+        transform: translateY(-2px);
     }
 }
 
-/* Choice buttons */
+/* Choice buttons with MA spacing */
 .game-over-choices {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s ease-out;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-delay: 0.4s;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* Generous spacing between buttons */
     align-items: center;
 }
 
@@ -1654,20 +1668,22 @@ body {
     transform: translateY(0);
 }
 
+/* Minimal button design with perfect spacing */
 .game-over-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    padding: 20px 40px;
-    min-width: 300px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #444;
-    color: #FFF;
+    gap: 20px;
+    padding: 24px 48px;
+    min-width: 280px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.9);
     font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
+    font-size: 11px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
 }
@@ -1679,75 +1695,85 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s ease;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transition: left 0.6s ease;
 }
 
 .game-over-btn:hover:before {
     left: 100%;
 }
 
+/* Primary action - subtle gold accent */
 .primary-btn {
-    border-color: #FFD700;
-    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.3);
+    background: rgba(255, 215, 0, 0.02);
+    color: rgba(255, 215, 0, 0.9);
 }
 
 .primary-btn:hover {
-    border-color: #FFD700;
-    background: rgba(255, 215, 0, 0.2);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    transform: scale(1.05);
+    border-color: rgba(255, 215, 0, 0.5);
+    background: rgba(255, 215, 0, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
 }
 
+/* Secondary action - subtle purple */
 .secondary-btn {
-    border-color: #8A2BE2;
-    background: rgba(138, 43, 226, 0.1);
+    border-color: rgba(138, 43, 226, 0.3);
+    background: rgba(138, 43, 226, 0.02);
+    color: rgba(138, 43, 226, 0.9);
 }
 
 .secondary-btn:hover {
-    border-color: #8A2BE2;
-    background: rgba(138, 43, 226, 0.2);
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
-    transform: scale(1.05);
+    border-color: rgba(138, 43, 226, 0.5);
+    background: rgba(138, 43, 226, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.1);
 }
 
+/* Tertiary action - minimal */
 .tertiary-btn {
-    border-color: #666;
-    background: rgba(100, 100, 100, 0.1);
-    font-size: 12px;
-    padding: 15px 30px;
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.01);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 10px;
+    padding: 18px 36px;
     min-width: 200px;
 }
 
 .tertiary-btn:hover {
-    border-color: #888;
-    background: rgba(100, 100, 100, 0.2);
-    transform: scale(1.02);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
 }
 
 .btn-icon {
-    font-size: 24px;
+    font-size: 16px;
+    opacity: 0.7;
 }
 
 .btn-text {
     flex: 1;
+    letter-spacing: 1px;
 }
 
 .btn-shortcut {
-    font-size: 10px;
-    color: #888;
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.5px;
 }
 
-/* Stats summary */
+/* Stats summary with generous spacing */
 .game-stats-summary {
     display: flex;
-    gap: 40px;
+    gap: 60px; /* More breathing room */
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 60px;
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.8s ease-out;
-    transition-delay: 0.3s;
+    transform: translateY(30px);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-delay: 0.6s;
 }
 
 .game-over-overlay.show-choices .game-stats-summary {
@@ -1797,5 +1823,86 @@ body {
 
     .btn-icon {
         font-size: 20px;
+    }
+}
+
+/* Large Leaderboard Pagination Styles */
+.leaderboard-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 20px;
+    font-size: 12px;
+    color: #888;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.page-btn {
+    background: #222;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+    padding: 8px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #FFD700;
+    color: #000;
+    box-shadow: 0 0 10px #FFD700;
+}
+
+.page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.page-btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+/* Update score entry for 3-digit ranks */
+.score-entry .rank {
+    min-width: 50px;
+    font-size: 14px;
+}
+
+/* Enhanced player highlighting for large lists */
+.score-entry.player-score {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    border-left: 4px solid #FFD700;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .leaderboard-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .pagination-controls {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .page-btn {
+        padding: 6px 12px;
+        font-size: 8px;
     }
 }
