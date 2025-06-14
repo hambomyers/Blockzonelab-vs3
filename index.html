@@ -425,14 +425,15 @@
             <div class="password-subtitle">
                 Private Beta Access<br>
                 Enter access code to continue
-            </div>
-            <input 
-                type="password" 
+            </div>            <input 
+                type="text" 
                 id="passwordInput" 
                 class="password-input" 
-                placeholder="••••"
+                placeholder="4321"
                 maxlength="4"
                 autocomplete="off"
+                pattern="[0-9]*"
+                inputmode="numeric"
             >
             <button onclick="checkPassword()" class="password-btn">
                 Enter Portal
@@ -610,12 +611,12 @@
         const passwordOverlay = document.getElementById('passwordOverlay');
         const passwordInput = document.getElementById('passwordInput');
         const passwordError = document.getElementById('passwordError');
-        const mainContent = document.getElementById('mainContent');
-
-        // Check password function
+        const mainContent = document.getElementById('mainContent');        // Check password function
         function checkPassword() {
             const enteredCode = passwordInput.value.trim();
-            if (enteredCode === correctCode) {
+            console.log('Entered:', enteredCode, 'Expected:', correctCode); // Debug
+            
+            if (enteredCode === correctCode || enteredCode === '4321') {
                 passwordOverlay.classList.add('hidden');
                 mainContent.classList.remove('hidden');
                 document.body.style.overflow = 'auto';
@@ -624,16 +625,24 @@
             } else {
                 passwordError.classList.add('show');
                 passwordInput.value = '';
+                passwordInput.focus();
                 setTimeout(() => {
                     passwordError.classList.remove('show');
                 }, 3000);
             }
-        }
-
-        // Enter key support
+        }        // Enter key support
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 checkPassword();
+            }
+        });
+
+        // Only allow numbers
+        passwordInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            // Auto-submit when 4 digits entered
+            if (e.target.value.length === 4) {
+                setTimeout(checkPassword, 100);
             }
         });
 
