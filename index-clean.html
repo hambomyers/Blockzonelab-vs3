@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockZone Lab - Learn, Play, Earn Stardust</title>
+    <link rel="stylesheet" href="academy/core/academy-styles.css">
+    <style>
+        /* Simple beta access banner */
+        .beta-banner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 10px 15px;
+            z-index: 1000;
+            color: #d4af37;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Portal-specific enhancements */
+        .portal-section {
+            background: rgba(37, 40, 54, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            transform: translateX(-100%);
+            transition: transform var(--transition-slow);
+        }
+        
+        .portal-section:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), var(--shadow-glow);
+        }
+        
+        .portal-section:hover::before {
+            transform: translateX(0);
+        }
+        
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            color: var(--color-background);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-4);
+        }
+        
+        .section-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        
+        .mini-stat {
+            text-align: center;
+            padding: var(--space-3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .mini-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--color-gold);
+            margin-bottom: var(--space-1);
+        }
+        
+        .mini-stat-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .section-cta {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+            justify-content: space-between;
+            margin-top: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            color: var(--color-background);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all var(--transition-base);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple Beta Banner -->
+    <div class="beta-banner">
+        🚀 Private Beta
+    </div>
+
+    <!-- Animated Starfield Background -->
+    <div class="starfield" aria-hidden="true">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" role="navigation">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">✧</span>
+                    <span class="logo-text">BlockZone Lab</span>
+                </a>
+                <div class="tagline">Premium Crypto Edutainment</div>
+            </div>
+            <div class="nav-actions">
+                <div class="stardust-counter" role="status" aria-live="polite">
+                    <span class="stardust-icon">💫</span>
+                    <span class="stardust-amount" id="totalStardust">0</span>
+                    <span class="stardust-label">Stardust</span>
+                </div>
+                <button class="nav-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">🌟</span>
+                <span class="badge-text">BlockZone Lab</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="hero-line1">Master the</span>
+                <span class="hero-line2">Digital Economy</span>
+            </h1>
+            
+            <p class="hero-description">
+                Choose your learning style. Both paths teach the same valuable skills and reward your progress.
+            </p>
+            
+            <!-- Massive Choice Buttons with More Details -->
+            <div class="hero-choices">
+                <a href="academy/index.html" class="choice-btn academy">
+                    <div class="choice-icon">🎓</div>
+                    <div class="choice-title">ACADEMY</div>
+                    <div class="choice-subtitle">Interactive Lessons & Stories</div>
+                    <div class="choice-details">
+                        <div class="detail-item">📚 6 comprehensive lessons</div>
+                        <div class="detail-item">🧠 Learn by understanding</div>
+                        <div class="detail-item">📈 Track your progress</div>
+                        <div class="detail-item">💫 Earn up to 12,600 Stardust</div>
+                    </div>
+                    <div class="choice-cta">Start Learning →</div>
+                </a>
+                
+                <a href="games/index.html" class="choice-btn arcade">
+                    <div class="choice-icon">🎮</div>
+                    <div class="choice-title">ARCADE</div>
+                    <div class="choice-subtitle">Games & Challenges</div>
+                    <div class="choice-details">
+                        <div class="detail-item">🕹️ 5 skill-based games</div>
+                        <div class="detail-item">🏆 Compete & improve</div>
+                        <div class="detail-item">⚡ Learn by playing</div>
+                        <div class="detail-item">💫 Unlimited Stardust earning</div>
+                    </div>
+                    <div class="choice-cta">Start Playing →</div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Optional: More Details Below the Fold -->
+    <main class="main-content" style="margin-top: var(--space-12);">
+        <!-- Simplified Platform Overview -->
+        <section style="text-align: center; margin-bottom: var(--space-10);">
+            <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: var(--space-4);">One Ecosystem, Infinite Possibilities</h2>
+            <p class="section-subtitle" style="max-width: 600px; margin: 0 auto var(--space-8) auto;">
+                Whether you choose Academy or Arcade, you're building the same valuable skills. 
+                Austrian economics, blockchain technology, and digital literacy - all while earning Stardust rewards.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); max-width: 800px; margin: 0 auto;">
+                <div style="text-align: center; padding: var(--space-4);">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">🎓</div>
+                    <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Academy Experience</h3>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Story-driven lessons from binary basics to DeFi mastery</p>
+                </div>
+                <div style="text-align: center; padding: var(--space-4);">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">🎮</div>
+                    <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Arcade Experience</h3>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Skill-based games with leaderboards and competitions</p>
+                </div>
+                <div style="text-align: center; padding: var(--space-4);">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">💫</div>
+                    <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Unified Rewards</h3>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Earn Stardust across all activities and experiences</p>
+                </div>
+                <div style="text-align: center; padding: var(--space-4);">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">📊</div>
+                    <h3 style="color: var(--color-text); margin-bottom: var(--space-2); font-size: 1.1rem;">Track Progress</h3>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Portfolio dashboard coming Q4 2025</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">BlockZone Lab</h3>
+                <p class="footer-text">
+                    The complete ecosystem for learning Austrian economics and blockchain technology. 
+                    Earn Stardust through education and gaming while building real-world skills.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Ecosystem</h3>
+                <ul class="footer-list">
+                    <li><a href="academy/index.html" style="color: var(--color-text-secondary); text-decoration: none;">🎓 Academy Portal</a></li>
+                    <li><a href="games/index.html" style="color: var(--color-text-secondary); text-decoration: none;">🎮 Gaming Arcade</a></li>
+                    <li><span style="color: var(--color-text-secondary);">📊 Portfolio (Coming Soon)</span></li>
+                    <li><span style="color: var(--color-text-secondary);">🤝 Community (Coming Soon)</span></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Stardust Rewards</h3>
+                <div class="progress-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Academy Rewards:</span>
+                        <span class="summary-value" style="color: var(--color-gold);">12,600 💫</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Gaming Rewards:</span>
+                        <span class="summary-value" style="color: var(--color-gold);">Unlimited 💫</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Your Total:</span>
+                        <span class="summary-value" id="footerStardust" style="color: var(--color-gold);">0 💫</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BlockZone Lab. Learn, Play, Earn in the Digital Economy.</p>
+        </div>
+    </footer>
+
+    <script src="academy/shared/academy-main.js"></script>
+</body>
+</html>
