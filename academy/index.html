@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Academy - Austrian Economics & Digital Innovation</title>
+    <link rel="stylesheet" href="core/academy-styles.css">
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <div class="starfield" aria-hidden="true">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>    <!-- Main Navigation -->
+    <nav class="main-nav" role="navigation">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="../index.html" class="logo">
+                    <span class="logo-icon">✧</span>
+                    <span class="logo-text">BlockZone Lab</span>
+                </a>
+                <div class="tagline">Academy Portal</div>
+            </div>
+            <div class="nav-actions">
+                <div class="stardust-counter" role="status" aria-live="polite">
+                    <span class="stardust-icon">💫</span>
+                    <span class="stardust-amount" id="totalStardust">0</span>
+                    <span class="stardust-label">Stardust</span>
+                </div>
+                <a href="../games/index.html" class="nav-link" style="color: var(--color-text-secondary); text-decoration: none; margin-right: var(--space-4); font-size: 0.875rem;">🎮 Games</a>
+                <button class="nav-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav><!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">🎓</span>
+                <span class="badge-text">BlockZone Lab Academy</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="hero-line1">Master the Economics</span>
+                <span class="hero-line2">of Digital Innovation</span>
+            </h1>
+            
+            <p class="hero-description">
+                Journey from fundamental computing principles to cutting-edge blockchain technology. 
+                Each lesson exponentially builds toward understanding how Austrian economic theory 
+                drives technological innovation and shapes the future of money.
+            </p>
+            
+            <div class="hero-highlights">
+                <div class="highlight-item">
+                    <span class="highlight-icon">⚡</span>
+                    <span class="highlight-text">Progressive Difficulty</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-icon">🔗</span>
+                    <span class="highlight-text">Real-World Applications</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-icon">💎</span>
+                    <span class="highlight-text">Earn Stardust Rewards</span>
+                </div>
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Core Lessons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">120</div>
+                    <div class="stat-label">Quiz Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12,600</div>
+                    <div class="stat-label">Total Stardust</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Curriculum Overview -->
+    <main class="main-content">        <section class="curriculum-section" aria-labelledby="curriculum-title">
+            <div class="section-header">
+                <h2 id="curriculum-title" class="section-title">Core Curriculum</h2>
+                <p class="section-subtitle">
+                    Each lesson exponentially builds on previous knowledge, creating a comprehensive understanding 
+                    of how mathematical certainty enables voluntary exchange and technological innovation.
+                </p>
+            </div>
+
+            <div class="lessons-container">
+                <div class="lessons-grid">
+                    <!-- Lesson 1 -->
+                    <article class="lesson-card available" data-lesson="1">
+                        <div class="lesson-status">
+                            <span class="status-indicator available">Available</span>
+                        </div>
+                        <div class="lesson-header">
+                            <div class="lesson-number">01</div>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">200</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            <h3 class="lesson-title">Computing & Binary Fundamentals</h3>
+                            <p class="lesson-description">
+                                Discover how zeros and ones created the digital revolution. Master information theory, 
+                                binary systems, and the mathematical foundations that enable digital scarcity.
+                            </p>
+                            <div class="lesson-topics">
+                                <span class="topic-tag">Information Theory</span>
+                                <span class="topic-tag">Binary Systems</span>
+                                <span class="topic-tag">Digital Scarcity</span>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Ready to Start</span>
+                            </div>
+                            <a href="lessons/01-computing-binary/index.html" class="lesson-link primary">
+                                Begin Lesson
+                                <span class="link-arrow">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Lesson 2 -->
+                    <article class="lesson-card locked" data-lesson="2">
+                        <div class="lesson-status">
+                            <span class="status-indicator locked">🔒 Locked</span>
+                        </div>
+                        <div class="lesson-header">
+                            <div class="lesson-number">02</div>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">400</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            <h3 class="lesson-title">Money as Information Technology</h3>
+                            <p class="lesson-description">
+                                From Jekyll Island to Bitcoin - The secret meeting that created the Federal Reserve and 
+                                how mathematical money solves fiat manipulation through Austrian principles.
+                            </p>
+                            <div class="lesson-topics">
+                                <span class="topic-tag">Jekyll Island</span>
+                                <span class="topic-tag">Federal Reserve</span>
+                                <span class="topic-tag">Austrian Theory</span>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Complete Lesson 1 First</span>
+                            </div>
+                            <button class="lesson-link disabled" disabled>
+                                Complete Previous Lesson
+                                <span class="link-arrow">→</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Lesson 3 -->
+                    <article class="lesson-card locked" data-lesson="3">
+                        <div class="lesson-status">
+                            <span class="status-indicator locked">🔒 Locked</span>
+                        </div>
+                        <div class="lesson-header">
+                            <div class="lesson-number">03</div>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">800</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            <h3 class="lesson-title">Network Effects & Digital Scarcity</h3>
+                            <p class="lesson-description">
+                                Why Facebook is worth trillions while MySpace died. Understanding network 
+                                economics and platform monopolies through Austrian economic theory.
+                            </p>
+                            <div class="lesson-topics">
+                                <span class="topic-tag">Metcalfe's Law</span>
+                                <span class="topic-tag">Network Value</span>
+                                <span class="topic-tag">Platform Economics</span>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Complete Lesson 2 First</span>
+                            </div>
+                            <button class="lesson-link disabled" disabled>
+                                Complete Previous Lesson
+                                <span class="link-arrow">→</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Lesson 4 -->
+                    <article class="lesson-card locked" data-lesson="4">
+                        <div class="lesson-status">
+                            <span class="status-indicator locked">🔒 Locked</span>
+                        </div>
+                        <div class="lesson-header">
+                            <div class="lesson-number">04</div>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">1,600</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            <h3 class="lesson-title">Cryptographic Consensus & Trust</h3>
+                            <p class="lesson-description">
+                                The $500 million pizza that proved mathematical trust beats institutional trust. 
+                                Byzantine Generals, proof-of-work, and the birth of trustless systems.
+                            </p>
+                            <div class="lesson-topics">
+                                <span class="topic-tag">Byzantine Generals</span>
+                                <span class="topic-tag">Proof-of-Work</span>
+                                <span class="topic-tag">Bitcoin Mining</span>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Complete Lesson 3 First</span>
+                            </div>
+                            <button class="lesson-link disabled" disabled>
+                                Complete Previous Lesson
+                                <span class="link-arrow">→</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Lesson 5 -->
+                    <article class="lesson-card locked" data-lesson="5">
+                        <div class="lesson-status">
+                            <span class="status-indicator locked">🔒 Locked</span>
+                        </div>
+                        <div class="lesson-header">
+                            <div class="lesson-number">05</div>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">3,200</span>
+                            </div>
+                        </div>
+                        <div class="lesson-content">
+                            <h3 class="lesson-title">Smart Contracts & Programmable Economics</h3>
+                            <p class="lesson-description">
+                                Nick Szabo's "lawyer killers" now secure $100+ billion. How code replaces law 
+                                and enables pure voluntary exchange through decentralized finance.
+                            </p>
+                            <div class="lesson-topics">
+                                <span class="topic-tag">Smart Contracts</span>
+                                <span class="topic-tag">DeFi Protocols</span>
+                                <span class="topic-tag">Yield Farming</span>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Complete Lesson 4 First</span>
+                            </div>
+                            <button class="lesson-link disabled" disabled>
+                                Complete Previous Lesson
+                                <span class="link-arrow">→</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Lesson 6: Sonic Labs - Featured Card with Special Layout -->
+                <div class="featured-lesson-container">
+                    <article class="lesson-card featured locked" data-lesson="6">
+                        <div class="featured-badge">
+                            <span class="badge-icon">⚡</span>
+                            <span class="badge-text">Capstone Course</span>
+                        </div>
+                        <div class="lesson-status">
+                            <span class="status-indicator locked">🔒 Complete All Previous Lessons</span>
+                        </div>
+                        
+                        <div class="featured-content">
+                            <div class="featured-left">
+                                <div class="lesson-header">
+                                    <div class="lesson-number">06</div>
+                                    <div class="lesson-reward mega">
+                                        <span class="reward-icon">💫</span>
+                                        <span class="reward-amount">6,400</span>
+                                        <span class="reward-bonus">+Bonus</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-content">
+                                    <h3 class="lesson-title">Sonic Labs: Next-Generation DeFi Infrastructure</h3>
+                                    <p class="lesson-description">
+                                        Andre Cronje's triumphant return from exile with the blockchain that solves every problem 
+                                        that made him quit DeFi. The perfect synthesis of Austrian economics and cutting-edge technology.
+                                    </p>
+                                    
+                                    <div class="featured-highlights">
+                                        <div class="highlight">
+                                            <span class="highlight-icon">🚀</span>
+                                            <div class="highlight-content">
+                                                <h4>Revolutionary Scaling</h4>
+                                                <p>4,000+ TPS with instant finality</p>
+                                            </div>
+                                        </div>
+                                        <div class="highlight">
+                                            <span class="highlight-icon">🔥</span>
+                                            <div class="highlight-content">
+                                                <h4>Minimal Gas Fees</h4>
+                                                <p>Transactions cost fractions of a penny</p>
+                                            </div>
+                                        </div>
+                                        <div class="highlight">
+                                            <span class="highlight-icon">🌟</span>
+                                            <div class="highlight-content">
+                                                <h4>Andre Cronje's Vision</h4>
+                                                <p>DeFi done right, finally</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="featured-right">
+                                <div class="sonic-visual">
+                                    <div class="sonic-logo">⚡</div>
+                                    <div class="sonic-rings">
+                                        <div class="ring ring-1"></div>
+                                        <div class="ring ring-2"></div>
+                                        <div class="ring ring-3"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="lesson-topics featured-topics">
+                                    <span class="topic-tag premium">Andre Cronje</span>
+                                    <span class="topic-tag premium">Sonic Labs</span>
+                                    <span class="topic-tag premium">Layer 2 Scaling</span>
+                                    <span class="topic-tag premium">DeFi 3.0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="lesson-footer featured-footer">
+                            <div class="lesson-progress">
+                                <div class="progress-bar featured">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">Complete All Previous Lessons First</span>
+                            </div>
+                            <button class="lesson-link disabled mega" disabled>
+                                Unlock with 5 Lessons Complete
+                                <span class="link-arrow">→</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Path Visualization -->
+        <section class="learning-path" aria-labelledby="path-title">
+            <div class="section-header">
+                <h2 id="path-title" class="section-title">Your Learning Journey</h2>
+                <p class="section-subtitle">
+                    Follow the exponential progression from binary basics to blockchain mastery
+                </p>
+            </div>
+            <div class="path-visualization">
+                <div class="path-line"></div>
+                <div class="path-nodes">
+                    <div class="path-node active" data-lesson="1">
+                        <div class="node-icon">🔢</div>
+                        <div class="node-label">Binary</div>
+                    </div>
+                    <div class="path-node" data-lesson="2">
+                        <div class="node-icon">💰</div>
+                        <div class="node-label">Money</div>
+                    </div>
+                    <div class="path-node" data-lesson="3">
+                        <div class="node-icon">🌐</div>
+                        <div class="node-label">Networks</div>
+                    </div>
+                    <div class="path-node" data-lesson="4">
+                        <div class="node-icon">🔐</div>
+                        <div class="node-label">Consensus</div>
+                    </div>
+                    <div class="path-node" data-lesson="5">
+                        <div class="node-icon">📜</div>
+                        <div class="node-label">Contracts</div>
+                    </div>
+                    <div class="path-node" data-lesson="6">
+                        <div class="node-icon">⚡</div>
+                        <div class="node-label">Sonic</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">The Academy</h3>
+                <p class="footer-text">
+                    Bridging Austrian economic theory with cutting-edge blockchain technology 
+                    through exponential learning.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Core Principles</h3>
+                <ul class="footer-list">
+                    <li>Voluntary Exchange</li>
+                    <li>Sound Money</li>
+                    <li>Spontaneous Order</li>
+                    <li>Mathematical Certainty</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Progress Tracking</h3>
+                <div class="progress-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Lessons Completed:</span>
+                        <span class="summary-value" id="lessonsCompleted">0/6</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Stardust:</span>
+                        <span class="summary-value" id="footerStardust">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 The Academy. Educational content for the digital age.</p>
+        </div>
+    </footer>
+
+    <script src="shared/academy-main.js"></script>
+</body>
+</html>

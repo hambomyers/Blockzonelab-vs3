@@ -63,7 +63,7 @@ export class BlockchainBridge {
             return address;
 
         } catch (error) {
-            // console.error('Connection failed:', error);
+            // Connection failed - update config and propagate error
             this.config.set('wallet.connected', false);
             this.config.set('wallet.address', null);
             throw error;
@@ -138,7 +138,7 @@ export class BlockchainBridge {
 
         // Ensure provider is initialized
         if (!this.provider) {
-            // console.error("Provider is not initialized. Aborting contract initialization.");
+            // Provider not initialized - aborting contract initialization
             return;
         }
 
@@ -184,7 +184,7 @@ export class BlockchainBridge {
         });
 
         if (!this.provider) {
-            // console.error("Provider is not initialized. Retrying...");
+            // Provider not initialized - retrying in 1 second
             setTimeout(() => this.startGameSession(initialState), 1000);
             return;
         }
@@ -276,7 +276,7 @@ export class BlockchainBridge {
             return receipt;
 
         } catch (error) {
-            // console.error('Score submission failed:', error);
+            // Score submission failed - emit event and propagate error
             this.emit('scoreSubmissionFailed', { score, error });
             throw error;
         }
@@ -340,7 +340,7 @@ export class BlockchainBridge {
             }));
 
         } catch (error) {
-            // console.error('Failed to fetch leaderboard:', error);
+            // Failed to fetch leaderboard - return empty array
             return [];
         }
     }
@@ -363,7 +363,7 @@ export class BlockchainBridge {
             };
 
         } catch (error) {
-            // console.error('Failed to fetch player stats:', error);
+            // Failed to fetch player stats - return null
             return null;
         }
     }
@@ -397,7 +397,7 @@ export class BlockchainBridge {
             }
 
         } catch (error) {
-            // console.error('NFT check failed:', error);
+            // NFT check failed - continue silently
         }
     }
 

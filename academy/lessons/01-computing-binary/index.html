@@ -1,0 +1,1265 @@
+﻿<a href="../../index.html" class="lesson-link">Return to Dashboard</a><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Computing & Binary Fundamentals - The Academy</title>
+    <link rel="stylesheet" href="../../core/academy-styles.css">
+    <style>        /* Redesigned Hero Section */
+        .lesson-hero-redesigned {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(212, 175, 55, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+            padding: var(--space-8) var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-hero-redesigned::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: var(--space-3);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--color-white), var(--color-gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-6);
+            font-weight: 400;
+        }
+
+        .hero-story-hook {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4) var(--space-5);
+            margin: var(--space-6) auto;
+            max-width: 600px;
+            font-style: italic;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            transition: all var(--transition-base);
+        }
+
+        .hero-stat:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        .stat-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-gold);
+            line-height: 1;
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+            
+            .hero-stats-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-3);
+            }
+            
+            .hero-stat {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .stat-info {
+                text-align: center;
+            }
+        }
+
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            padding: var(--space-3);
+            background: rgba(37, 40, 54, 0.5);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-button {
+            padding: var(--space-2) var(--space-3);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--color-gold);
+            text-decoration: none;
+            transition: all var(--transition-base);
+        }
+
+        .nav-button:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            background: rgba(37, 40, 54, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .key-concept {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 4px solid var(--color-gold);
+            padding: var(--space-3);
+            margin: var(--space-4) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .binary-demo {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: center;
+            margin: var(--space-4) 0;
+            font-family: var(--font-mono);
+            font-size: 2rem;
+        }
+
+        .bit {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 29, 41, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .bit:hover {
+            border-color: var(--color-gold);
+            transform: scale(1.1);
+        }
+
+        .bit.active {
+            background: var(--color-gold);
+            color: var(--color-navy);
+            border-color: var(--color-gold);
+        }
+
+        .formula-box {
+            background: rgba(26, 29, 41, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            text-align: center;
+            font-family: var(--font-mono);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: var(--space-8);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--color-gold), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-4);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: var(--space-1);
+        }
+
+        /* --- REFACTORED CONVERTER SECTION STYLES --- */
+        .converter-section {
+            margin: var(--space-8) 0;
+            text-align: center;
+        }
+
+        .decimal-input-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        .decimal-digit {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 2px solid var(--color-gray-300); /* neutral border */
+            border-radius: var(--radius-md);
+            background: var(--color-white); /* true white background */
+            color: var(--color-gray-800); /* dark text for contrast */
+            box-shadow: 0 1px 4px 0 rgba(0,0,0,0.06);
+            transition: border-color var(--transition-base), box-shadow var(--transition-base);
+        }
+
+        .decimal-digit:focus {
+            outline: none;
+            border-color: var(--color-gray-500);
+            box-shadow: 0 0 0 2px var(--color-gray-200);
+        }
+
+        .decimal-comma {
+            font-size: 1.5rem;
+            line-height: 40px;
+            color: var(--color-gray-400);
+        }
+
+        .binary-input-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        .bit-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-md);
+            background: rgba(26, 29, 41, 0.8);
+            color: var(--color-gold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .bit-btn:hover {
+            border-color: var(--color-gold);
+            transform: scale(1.1);
+        }
+        /* --- END REFACTORED CONVERTER SECTION --- */
+
+        /* Wider container for converter section */
+        .converter-container.wide {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Single row for binary buttons */
+        .binary-input-row.single-row {
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
+        /* Organic cloud visualization styles */
+        .dot-visualization-row {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            height: 180px;
+        }
+
+        .dot-visualization-row canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .legend-row {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--space-2);
+        }
+
+        .legend-label {
+            color: var(--color-gold);
+            font-size: 0.875rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .input-with-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .exponent-label {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin-top: var(--space-1);
+        }
+
+        /* Make decimal exponents crisp, clean, and white */
+        .decimal-input-row .exponent-label {
+            color: var(--color-white) !important;
+            font-size: 0.875rem;
+            font-family: var(--font-mono);
+            font-weight: 400;
+            margin-top: var(--space-1);
+            text-shadow: none;
+        }
+
+        /* New styles for info card */
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-body {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--color-text);
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-card a {
+            display: inline-block;
+            margin-top: var(--space-4);
+            padding: var(--space-2) var(--space-4);
+            background: var(--color-gold);
+            color: var(--color-navy);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: background var(--transition-base);
+        }
+
+        .info-card a:hover {
+            background: rgba(212, 175, 55, 0.8);
+        }
+
+        /* Dynamic sentence styles */
+        .dot-info-sentence {
+            font-size: 1rem;
+            color: var(--color-white);
+            margin-bottom: var(--space-2);
+            text-align: center;
+        }
+        .dot-info-sentence .binary,
+        .dot-info-sentence .binary-label {
+            color: var(--color-gold);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+        @keyframes pulse-opacity-sentence {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .dot-info-sentence .binary,
+        .dot-info-sentence .decimal {
+            animation: pulse-opacity-sentence 2s infinite;
+            text-shadow: none;
+        }
+
+        /* New: AAA-Quality Claude Shannon Info Card with Hot Links and Interactive Prompts */
+        .rich-shannon-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rich-shannon-card::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 120px;
+            height: 120px;
+            background: rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* === HOT LINK EXPANSION STYLES === */
+.hot-link {
+    color: var(--color-gold);
+    text-decoration: underline dotted;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+    font-weight: 600;
+}
+.hot-link:hover,
+.hot-link:focus {
+    color: var(--color-gold-light);
+}
+.hotlink-expansion-container {
+    position: relative;
+    width: 100%;
+    z-index: 10;
+}
+.hotlink-expansion {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 29, 41, 0.98);
+    border: 2px solid var(--color-gold);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 32px 0 rgba(212,175,55,0.13), 0 0 24px 0 #0008;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 420px;
+    min-width: 260px;
+    text-align: center;
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 1.08rem;
+    line-height: 1.6;
+    z-index: 1000;
+    transition: opacity 0.2s, visibility 0.2s;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.hotlink-expansion.active {
+    display: block;
+    animation: fadeIn 0.25s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.hotlink-expansion h3 {
+    color: var(--color-gold);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    margin-bottom: 0.5em;
+}
+.hotlink-expansion p {
+    color: var(--color-white);
+    font-size: 1.05rem;
+    margin-bottom: 0;
+}
+.exercise-title {
+    color: var(--color-gold-light);
+    font-size: 1.1em;
+    font-family: var(--font-serif);
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+.exercise-list {
+    margin: 0 0 0.5em 0;
+    padding-left: 1.2em;
+    color: var(--color-white);
+    font-size: 1em;
+}
+.exercise-note {
+    color: var(--color-gold-dim);
+    font-size: 0.98em;
+    text-align: center;
+    margin-top: 0.5em;
+}
+    </style>
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <div class="starfield" aria-hidden="true">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" role="navigation">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="../../index.html" class="logo">
+                    <span class="logo-icon">✧</span>
+                    <span class="logo-text">The Academy</span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <div class="stardust-counter" role="status">
+                    <span class="stardust-icon">💫</span>
+                    <span class="stardust-amount" id="lessonStardust">0</span>
+                    <span class="stardust-label">/ 200 Stardust</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Lesson Content -->
+    <main class="main-content">
+        <!-- Lesson Navigation -->
+        <div class="lesson-navigation">
+            <a href="../../index.html" class="nav-button">← Back to Dashboard</a>
+            <span class="lesson-indicator">Lesson 1 of 6</span>
+            <button class="nav-button" disabled>Next Lesson →</button>
+        </div>        <!-- Lesson Hero -->
+        <div class="lesson-hero-redesigned">
+            <div class="hero-content">
+                <div class="hero-icon">🔢</div>
+                <h1 class="hero-title">Computing & Binary Fundamentals</h1>
+                <p class="hero-subtitle">How Zeros and Ones Created the Digital Revolution</p>
+                
+                <div class="hero-story-hook">
+                    <p>In 2010, a programmer bought two pizzas for 10,000 Bitcoin—now worth $600 million. This simple transaction proved that pure information could have real economic value. But how did we get here?</p>
+                </div>
+                
+                <div class="hero-stats-grid">
+                    <div class="hero-stat">
+                        <div class="stat-icon">💫</div>
+                        <div class="stat-info">
+                            <div class="stat-number">200</div>
+                            <div class="stat-label">Stardust Reward</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Story Cards</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <div class="stat-number">25</div>
+                            <div class="stat-label">Minutes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Binary/Decimal Converter Section -->
+        <section class="converter-section">
+            <!-- New: AAA-Quality Claude Shannon Info Card with Hot Links and Interactive Prompts -->
+            <div class="info-card shannon-card rich-shannon-card">
+                <h2 class="info-title">Claude Shannon: The Playful Genius Who Invented the Digital Age</h2>
+                <p class="info-body">
+                    <b>1948:</b> Claude Shannon revolutionized the world by proving that any information—words, images, even music—could be encoded using just two symbols: 0 and 1. His work launched the digital age, making everything from computers to cryptocurrencies possible. Shannon’s insight was that all digital data is, at its core, a series of on/off switches—just like the electricity running through a circuit.
+                </p>
+                <p class="info-body">
+                    Imagine a world without computers, smartphones, or the internet. That world would still exist—if not for <span class="hot-link" data-hot="info-theory">Claude Shannon</span>, the brilliant mind who showed us how to turn information into zeros and ones.<br><br>
+                    As a boy, Shannon strung a <span class="hot-link" data-hot="telegraph">telegraph wire</span> between his house and a friend's, sending secret messages in true binary style. He built model airplanes and a <span class="hot-link" data-hot="rc-boat">radio-controlled boat</span> before he was a teenager, always tinkering, always curious.
+                </p>
+                <p class="info-body">
+                    At <span class="hot-link" data-hot="bell-labs">Bell Labs</span>, Shannon became legendary—not just for inventing <span class="hot-link" data-hot="info-theory">information theory</span>, but for riding a <span class="hot-link" data-hot="unicycle">unicycle</span> down the hallways (sometimes while juggling!). His office was a playground of invention, from a juggling machine to a maze-solving mouse named <span class="hot-link" data-hot="theseus">Theseus</span>—an early ancestor of artificial intelligence.
+                </p>
+                <p class="info-body">
+                    Below, you’ll find a hands-on binary/decimal converter. It’s a digital tool that instantly shows how numbers are represented in both systems. As you experiment—typing in your age, your favorite number, or even the current year—pay close attention to the exponents and place values above each digit. Notice how, in decimal, each place is a power of 10, while in binary, each place is a power of 2. See if you can spot the patterns and differences between the two systems as you play with it!
+                </p>
+                <div class="shannon-exercises">
+                    <div class="exercise-title">Try These Fun Binary Challenges:</div>
+                    <ul class="exercise-list">
+                        <li>Enter your <b>age</b> in decimal—what does it look like in binary?</li>
+                        <li>Type your <b>birth year</b> and see its binary form.</li>
+                        <li>Find the <b>largest number</b> you can make with all 1s in the binary converter.</li>
+                        <li>Can you find a number that’s a <b>palindrome</b> in both decimal and binary?</li>
+                    </ul>
+                    <div class="exercise-note">Tip: Click the binary bits or type in the decimal fields to experiment!</div>
+                </div>
+            </div>
+            <!-- Hot Link Expansions -->
+            <div class="hotlink-expansion-container">
+                <div class="hotlink-expansion" id="exp-info-theory">
+                    <h3>Information Theory</h3>
+                    <p>Shannon’s 1948 theory proved that any message—words, images, even music—can be encoded as a sequence of bits. This breakthrough launched the digital age and made everything from computers to cryptocurrencies possible.</p>
+                </div>
+                <div class="hotlink-expansion" id="exp-telegraph">
+                    <h3>The Backyard Telegraph</h3>
+                    <p>As a kid, Shannon built a working telegraph line using barbed wire and homemade switches. He and his friend sent secret messages between their houses—his first real binary system!</p>
+                </div>
+                <div class="hotlink-expansion" id="exp-rc-boat">
+                    <h3>Radio-Controlled Boat</h3>
+                    <p>Shannon’s early inventions included a model airplane and a radio-controlled boat, showing his knack for engineering and foreshadowing his later work in robotics and control systems.</p>
+                </div>
+                <div class="hotlink-expansion" id="exp-bell-labs">
+                    <h3>Bell Labs</h3>
+                    <p>Bell Labs was the Silicon Valley of its day—a hub of innovation where Shannon worked alongside other legends to invent the future. It was here that he developed information theory and inspired generations of scientists.</p>
+                </div>
+                <div class="hotlink-expansion" id="exp-unicycle">
+                    <h3>Unicycling Down the Hall</h3>
+                    <p>Shannon was famous for riding his unicycle through Bell Labs, sometimes while juggling! His playful approach to life and work made him a legend among his colleagues.</p>
+                </div>
+                <div class="hotlink-expansion" id="exp-theseus">
+                    <h3>Theseus the Maze Mouse</h3>
+                    <p>Shannon built a mechanical mouse named Theseus that could solve a maze and “learn” the correct path. This was one of the earliest examples of machine learning and artificial intelligence.</p>
+                </div>
+            </div>
+
+            <div class="converter-container wide">
+                <!-- Decimal Label -->
+                <div class="converter-label decimal-label">Decimal (Base 10)</div>
+                <!-- Decimal Input (Top, Centered, Inline Container) -->
+                <div class="decimal-input-row" id="decimalInputRow">
+                    <div class="input-with-label">
+                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-0">
+                        <span class="exponent-label">10<sup>3</sup></span>
+                    </div>
+                    <span class="decimal-comma">,</span>
+                    <div class="input-with-label">
+                        <span class="place-label brighter label-center-container flex-label">
+                            <span class="arrow-label" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="14,3 4,9 14,15 14,11 8,9 14,7 14,3" />
+                                </svg>
+                            </span>
+                            <span class="label-text">Hundreds</span>
+                        </span>
+                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-1">
+                        <span class="exponent-label">10<sup>2</sup></span>
+                    </div>
+                    <div class="input-with-label">
+                        <span class="place-label brighter">Tens</span>
+                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-2">
+                        <span class="exponent-label">10<sup>1</sup></span>
+                    </div>
+                    <div class="input-with-label">
+                        <span class="place-label brighter">Ones</span>
+                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-3">
+                        <span class="exponent-label">10<sup>0</sup></span>
+                    </div>
+                </div>
+                <!-- Binary Label -->
+                <div class="converter-label binary-label">Binary (Base 2)</div>
+                <!-- Binary Input (Single Row, Centered, Inline Container) -->
+                <div class="binary-input-row single-row">
+                    <div class="input-with-label"><button class="bit-btn" data-pos="12">0</button><span class="exponent-label">2<sup>12</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="11">0</button><span class="exponent-label">2<sup>11</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="10">0</button><span class="exponent-label">2<sup>10</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="9">0</button><span class="exponent-label">2<sup>9</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="8">0</button><span class="exponent-label">2<sup>8</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="7">0</button><span class="exponent-label">2<sup>7</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="6">0</button><span class="exponent-label">2<sup>6</sup></span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="5">0</button><span class="exponent-label">2<sup>5</sup></span><span class="place-label brighter label-center-container flex-label">
+                            <span class="arrow-label" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="14,3 4,9 14,15 14,11 8,9 14,7 14,3" />
+                                </svg>
+                            </span>
+                            <span class="label-text">32s</span>
+                        </span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="4">0</button><span class="exponent-label">2<sup>4</sup></span><span class="place-label brighter">16s</span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="3">0</button><span class="exponent-label">2<sup>3</sup></span><span class="place-label brighter">8s</span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="2">0</button><span class="exponent-label">2<sup>2</sup></span><span class="place-label brighter">4s</span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="1">0</button><span class="exponent-label">2<sup>1</sup></span><span class="place-label brighter">2s</span></div>
+                    <div class="input-with-label"><button class="bit-btn" data-pos="0">0</button><span class="exponent-label">2<sup>0</sup></span><span class="place-label brighter">Ones</span></div>
+                </div>
+                <!-- Dynamic Dot Info Sentence -->
+                <div id="dotInfoSentence" class="dot-info-sentence"></div>
+                <!-- Dot Visualization (Organic Cloud, Bottom, Centered) -->
+                <div class="dot-visualization-row">
+                    <canvas id="dotCanvas" width="900" height="260" aria-label="Dot Visualization"></canvas>
+                </div>
+            </div>        </section>
+        <!-- End Converter Section -->        <!-- === CARD 2: The Binary Universe === -->
+        <div class="info-card big-card">
+            <div class="card-header">
+                <h2>🌌 The Binary Universe: From Leibniz to Blockchain</h2>
+                <p class="subtitle">How brilliant minds across centuries built the foundation of digital reality</p>
+            </div>
+            
+            <div class="card-content">                <div class="story-section">
+                    <h3>The Philosopher's Vision (1679)</h3>
+                    <p>
+                        Picture a brilliant German philosopher sitting in his study three centuries ago, contemplating the nature of existence itself. <span class="hot-link" data-popup="leibniz">Gottfried Leibniz</span> wasn't just creating a number system—he was discovering what he believed to be the language of creation. To Leibniz, 0 represented the void, nothingness, while 1 represented divine perfection. His binary system wasn't just mathematics; it was theology made manifest in symbols.
+                    </p>
+                    <p>
+                        Leibniz wrote excitedly to a friend: "This arithmetic using only 0 and 1 represents one of the most beautiful proofs of the supreme excellence of God." He imagined showing this system to the Emperor of China as evidence that Christian creation theology was encoded in the very fabric of mathematics. Little did he know that his mystical insight would one day power smartphones, satellites, and digital currencies.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>The Logician's Revolution (1847)</h3>
+                    <p>
+                        Nearly two centuries later, an English mathematician named <span class="hot-link" data-popup="boole">George Boole</span> was grappling with a different puzzle: how to make logic itself mathematical. Boole's wife Mary would later recall how George would pace their garden for hours, muttering about "the laws of thought" and scribbling equations that seemed to capture the very essence of reasoning.
+                    </p>
+                    <p>
+                        Boole's breakthrough was revolutionary—he showed that logical statements could be reduced to binary operations. "True" became 1, "false" became 0, and suddenly all of human reasoning could be expressed in Leibniz's mystical language. When Boole published "An Investigation of the Laws of Thought" in 1854, he wrote that he aimed to "investigate the fundamental laws of those operations of the mind by which reasoning is performed." He had no idea he was laying the groundwork for every computer chip that would ever be built.
+                    </p>
+                </div>                <div class="story-section">
+                    <h3>The Codebreaker's Machine (1937)</h3>
+                    <p>
+                        Fast forward to 1937, and a young Cambridge mathematician named <span class="hot-link" data-popup="turing">Alan Turing</span> was asking a deceptively simple question: what problems can be computed? His answer would change everything. Turing imagined a theoretical machine—infinitely long tape divided into squares, each containing either a 0 or a 1, with a simple head that could read, write, and move according to basic rules.
+                    </p>
+                    <p>
+                        This wasn't just an academic exercise. Turing's machine, operating purely on binary symbols, could theoretically solve any problem that was computationally solvable. It was the first formal definition of what we now call a computer. Years later, during World War II, Turing would use these insights to crack the Nazi Enigma code, shortening the war and saving countless lives—all through the power of binary logic.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>The Information Theorist's Revelation (1948)</h3>
+                    <p>
+                        But it was Claude Shannon who truly unlocked the door between the physical and digital worlds. In his landmark 1948 paper, Shannon proved that any information—a love letter, a photograph, a symphony—could be perfectly encoded using just 0s and 1s. He called the fundamental unit of information a <span class="hot-link" data-popup="bit">bit</span>, short for "binary digit."
+                    </p>
+                    <p>
+                        Shannon's insight was breathtaking in its simplicity and profound in its implications. He showed that information had a mathematical structure, that it could be measured, compressed, and transmitted with perfect fidelity. Every email you send, every photo you take, every video you stream exists because Shannon proved that the continuous, analog world could be perfectly captured in discrete, digital symbols.
+                    </p>
+                </div>
+                <p class="info-body">
+                    <strong>The Mysterious Coder's Legacy (2009)</strong><br>
+                    And then, sixty years after Shannon's revelation, a figure emerged from the shadows of the internet. <span class="hot-link" data-popup="bitcoin">Satoshi Nakamoto</span>—whoever they were—took all these mathematical insights and created something unprecedented: truly scarce digital money. On January 3, 2009, Satoshi mined the first Bitcoin block, embedding a message about banking bailouts and proving that binary code could create not just information, but genuine economic value.
+                </p>
+                <p class="info-body">
+                    <strong>The Unbroken Chain</strong><br>
+                    From Leibniz's mystical vision to Satoshi's revolutionary blockchain, each genius built upon the last. Leibniz gave us the language. Boole gave us the logic. Turing gave us the machine. Shannon gave us the theory. And Satoshi gave us the economy. Today, every cryptocurrency transaction, every smart contract, every decentralized application runs on the same binary foundation that Leibniz first glimpsed in his philosophical meditations.
+                </p>                <p class="info-body">
+                    Every piece of digital information—from this text you're reading to the Bitcoin in digital wallets—is ultimately just a sequence of 0s and 1s. The bit truly is the atom of our digital universe, and these five visionaries gave us the tools to build an entire civilization from those atoms.
+                </p>
+                <div class="thinking-prompt">
+                    <h4>🤔 Historical Reflection Question</h4>
+                    <p>
+                        Looking at this 330-year journey from Leibniz to Bitcoin, which breakthrough do you think was the most crucial? Was it Leibniz's philosophical insight, Boole's logical framework, Turing's computational theory, Shannon's information mathematics, or Satoshi's economic application? How might history have unfolded differently if any one of these minds had never made their contribution?                    </p>
+                </div>            </div>
+        </div>
+        </section>
+        
+        <!-- Hot Link Expansions for Binary Universe Card -->
+        <div class="hotlink-expansion-container">
+            <div class="hotlink-expansion" id="exp-leibniz">
+                <h3>Gottfried Leibniz (1646-1716)</h3>
+                <p>German polymath who invented calculus (alongside Newton), founded symbolic logic, and designed one of the first mechanical calculators. His binary insights came from studying ancient Chinese I Ching hexagrams, which he believed encoded universal wisdom.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-boole">
+                <h3>George Boole (1815-1864)</h3>
+                <p>Self-taught English mathematician whose father was a cobbler. Despite no formal university education, he became a professor at Queen's College Cork and revolutionized logic. His daughter Ethel Lilian would later marry Ernest Voynich, whose mysterious Voynich Manuscript remains undeciphered.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-turing">
+                <h3>Alan Turing (1912-1954)</h3>
+                <p>A child prodigy who taught himself to read in just 3 weeks at age 4. His first-day teacher declared "I have had clever boys and hardworking boys, but Alan has genius." By his teens, he could derive advanced mathematical theorems independently and famously rode his bicycle 60 miles to school during a railway strike.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-bit">
+                <h3>The Bit: Information's Atom</h3>
+                <p>Shannon's greatest insight: all information, no matter how complex, reduces to binary choices. A bit represents the information gained by learning the answer to a yes/no question. Everything digital—from this text to Netflix videos—is just elaborate arrangements of bits.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-bitcoin">
+                <h3>Satoshi Nakamoto: The Digital Ghost</h3>
+                <p>The pseudonymous creator whose true identity remains one of technology's greatest mysteries. Estimates suggest they own about 1 million bitcoins (worth billions) that have never moved. They vanished in 2011, leaving behind only forum posts and emails.</p>
+            </div>
+        </div>
+        
+        <!-- Card 4: Digital Scarcity: From Pizza to Programmable Money -->
+        <div class="info-card big-card">
+            <div class="card-header">
+                <h2>🍕 Digital Scarcity: From Pizza to Programmable Money</h2>
+                <p class="subtitle">How binary made money truly digital for the first time in history</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="story-section">
+                    <h3>The Most Expensive Pizza in History</h3>
+                    <p>
+                        On May 22, 2010, a programmer named <span class="hot-link" data-popup="laszlo-hanyecz">Laszlo Hanyecz</span> 
+                        made history by purchasing two Papa John's pizzas for 10,000 bitcoins. At the time, those bitcoins were worth about $41. 
+                        Today? Those same bitcoins would be worth hundreds of millions of dollars.
+                    </p>
+                    
+                    <p>
+                        But this wasn't just an expensive lunch mistake. It was the first real-world transaction that proved 
+                        <span class="hot-link" data-popup="digital-scarcity">digital scarcity</span> could work. For the first time in human history, 
+                        we had created something that was both digital AND scarce—something that couldn't be copied, 
+                        duplicated, or counterfeited like a regular computer file.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>The Ghost in the Machine</h3>
+                    <p>
+                        Behind this revolution was a mysterious figure known only as 
+                        <span class="hot-link" data-popup="satoshi-nakamoto">Satoshi Nakamoto</span>. In 2008, they published 
+                        a nine-page paper that would change everything: "Bitcoin: A Peer-to-Peer Electronic Cash System."
+                    </p>
+                    
+                    <p>
+                        Satoshi solved the <span class="hot-link" data-popup="double-spending">double-spending problem</span>—how to prevent 
+                        digital money from being spent twice without a central authority. The solution? Use binary math and 
+                        cryptographic proofs to create a distributed ledger where everyone agrees on who owns what.
+                    </p>
+                    
+                    <blockquote>
+                        "The root problem with conventional currency is all the trust that's required to make it work."
+                        <cite>— Satoshi Nakamoto</cite>
+                    </blockquote>
+                </div>
+
+                <div class="story-section">
+                    <h3>Programming Scarcity Into Reality</h3>
+                    <p>
+                        Traditional money is just numbers in a database that banks can change at will. But Bitcoin's scarcity 
+                        is <span class="hot-link" data-popup="mathematical-scarcity">mathematically guaranteed</span>. The binary code 
+                        literally hardcodes the rule: only 21 million bitcoins will ever exist.
+                    </p>
+                    
+                    <p>
+                        This isn't enforced by governments or banks—it's enforced by math itself. Every ten minutes, 
+                        miners around the world compete to solve complex binary puzzles, and the winner gets to add the next 
+                        block of transactions to the chain. The reward for this work decreases by half every four years, 
+                        creating predictable, programmatic scarcity.
+                    </p>
+                </div>
+
+                <div class="thinking-prompt">
+                    <h4>💭 Economic Philosophy Question</h4>
+                    <p>
+                        If money can now be programmed with binary logic, what other aspects of economics could be automated? 
+                        Could we program inflation rates, universal basic income, or even democratic voting directly into 
+                        digital currencies? What are the implications of removing human discretion from monetary policy?
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>From Digital Gold to Programmable Money</h3>
+                    <p>
+                        Bitcoin proved that digital scarcity was possible, but it was just the beginning. Soon came 
+                        <span class="hot-link" data-popup="smart-contracts">smart contracts</span>—programs that automatically 
+                        execute when certain conditions are met. Now we don't just have programmable money; we have 
+                        programmable economies.
+                    </p>
+                    
+                    <p>
+                        Every transaction, every contract, every economic rule is ultimately just binary code executing 
+                        mathematical logic. The same 1s and 0s that Claude Shannon used to describe information theory 
+                        now govern trillion-dollar markets and reshape global finance.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Hot Link Expansions for Digital Scarcity Card -->
+        <div class="hotlink-expansion-container">
+            <div class="hotlink-expansion" id="exp-laszlo-hanyecz">
+                <h3>Laszlo Hanyecz</h3>
+                <p>The programmer who made the first real-world Bitcoin transaction on May 22, 2010. He paid 10,000 bitcoins for two Papa John's pizzas, proving that digital currency could have real economic value. May 22 is now celebrated as "Bitcoin Pizza Day."</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-digital-scarcity">
+                <h3>Digital Scarcity</h3>
+                <p>The ability to create genuinely limited digital resources through cryptographic proofs rather than legal restrictions. Unlike traditional digital files that can be copied infinitely, cryptocurrencies use mathematics to ensure only a fixed supply can ever exist.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-satoshi-nakamoto">
+                <h3>Satoshi Nakamoto</h3>
+                <p>The pseudonymous creator of Bitcoin whose true identity remains unknown. They published the Bitcoin whitepaper in 2008, implemented the first blockchain, and then mysteriously disappeared in 2011, leaving behind a revolutionary technology.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-double-spending">
+                <h3>The Double-Spending Problem</h3>
+                <p>The fundamental challenge of digital money: how to prevent someone from spending the same digital coin twice without a central authority. Bitcoin solved this using a distributed ledger verified by network consensus.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-mathematical-scarcity">
+                <h3>Mathematical Scarcity</h3>
+                <p>Bitcoin's supply is hardcoded into its protocol—only 21 million bitcoins will ever exist. This isn't enforced by law or trust, but by mathematical rules that no single entity can change without network consensus.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-smart-contracts">
+                <h3>Smart Contracts</h3>
+                <p>Self-executing programs that automatically enforce agreements when conditions are met. They enable programmable money and decentralized applications, turning blockchain into a global computer rather than just a payment system.</p>
+            </div>
+        </div>
+
+        <!-- Card 5: Binary: The Engine of Modern Technology -->
+        <div class="info-card big-card">
+            <div class="card-header">
+                <h2>⚙️ Binary: The Engine of Modern Technology</h2>
+                <p class="subtitle">How 1s and 0s power everything from your phone to global finance</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="story-section">
+                    <h3>The Invisible Foundation</h3>
+                    <p>
+                        Every time you unlock your phone with your fingerprint, send a message, or make an online purchase, 
+                        you're relying on binary mathematics working perfectly behind the scenes. These simple 1s and 0s 
+                        have become the foundation of modern civilization—yet most people never think about them.
+                    </p>
+                    
+                    <p>
+                        Let's pull back the curtain and see how binary powers the technologies that define our digital age, 
+                        from the cryptographic signatures that secure your bank account to the consensus algorithms 
+                        that power global blockchain networks.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>Digital Signatures: Your Binary Identity</h3>
+                    <p>
+                        When you sign a document with a pen, anyone can forge your signature. But when you create a 
+                        <span class="hot-link" data-popup="digital-signatures">digital signature</span>, you're using binary mathematics 
+                        that's virtually impossible to forge. Here's how it works:
+                    </p>
+                    
+                    <p>
+                        Your device generates two massive binary numbers—a <span class="hot-link" data-popup="private-key">private key</span> 
+                        (kept secret) and a <span class="hot-link" data-popup="public-key">public key</span> (shared with everyone). 
+                        These numbers are mathematically related but finding the private key from the public key would 
+                        take longer than the age of the universe, even with the world's most powerful computers.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>Hash Functions: Digital Fingerprints</h3>
+                    <p>
+                        Every piece of digital data—from a simple text message to a 4K movie—can be reduced to a unique 
+                        binary "fingerprint" using <span class="hot-link" data-popup="hash-functions">hash functions</span>. 
+                        Change even a single bit in the original data, and the fingerprint changes completely.
+                    </p>
+                    
+                    <p>
+                        This is how blockchain networks verify that data hasn't been tampered with. Every block contains 
+                        the hash of the previous block, creating an unbreakable chain of binary proof. It's also how 
+                        password systems work without actually storing your password—they store its hash instead.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>Consensus: Agreement Without Authority</h3>
+                    <p>
+                        Perhaps most remarkably, binary logic has solved one of humanity's oldest problems: how to reach 
+                        agreement without a central authority. <span class="hot-link" data-popup="consensus-algorithms">Consensus algorithms</span> 
+                        use mathematical proofs to ensure thousands of computers around the world agree on the same version of truth.
+                    </p>
+                    
+                    <p>
+                        Whether it's <span class="hot-link" data-popup="proof-of-work">Proof of Work</span> (Bitcoin's energy-intensive 
+                        puzzle-solving) or <span class="hot-link" data-popup="proof-of-stake">Proof of Stake</span> (where economic 
+                        incentives ensure honest behavior), these systems use binary mathematics to create trust 
+                        without trusted authorities.
+                    </p>
+                </div>
+
+                <div class="thinking-prompt">
+                    <h4>🤔 Future Technology Question</h4>
+                    <p>
+                        If binary logic can create trustless consensus between strangers, what other human institutions 
+                        could be replaced by mathematical algorithms? Courts? Governments? International treaties? 
+                        Where should we draw the line between human judgment and algorithmic rule?
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>Smart Contracts: Code as Law</h3>
+                    <p>
+                        The logical endpoint of this binary revolution is <span class="hot-link" data-popup="smart-contracts-deep">smart contracts</span>—
+                        programs that automatically execute agreements without human intervention. When certain binary 
+                        conditions are met (payment received, deadline reached, oracle data verified), the contract 
+                        automatically executes its binary instructions.
+                    </p>
+                    
+                    <p>
+                        This isn't science fiction—it's happening right now. Billions of dollars flow through smart contracts 
+                        every day, from simple payment automation to complex financial derivatives and decentralized 
+                        autonomous organizations (DAOs) that operate entirely through code.
+                    </p>
+                </div>
+
+                <div class="story-section">
+                    <h3>The Binary Future</h3>
+                    <p>
+                        We've come full circle from Leibniz's philosophical musings about binary to a world where 
+                        binary logic governs global finance, secures our communications, and increasingly automates 
+                        our decisions. The same mathematical principles that Claude Shannon discovered in the 1940s 
+                        now power artificial intelligence, quantum computing, and the emerging metaverse.
+                    </p>
+                    
+                    <p>
+                        Understanding binary isn't just about understanding computers—it's about understanding the 
+                        mathematical foundation of modern reality. In a world where code is becoming law and 
+                        algorithms are making decisions that affect billions of lives, binary literacy is becoming 
+                        as important as traditional literacy.
+                    </p>
+                </div>
+            </div>        </div>
+
+        <!-- Hot Link Expansions for Binary Technology Card -->
+        <div class="hotlink-expansion-container">
+            <div class="hotlink-expansion" id="exp-digital-signatures">
+                <h3>Digital Signatures</h3>
+                <p>Cryptographic proofs that verify the authenticity and integrity of digital messages. Using binary mathematics, they provide stronger security than handwritten signatures and are virtually impossible to forge.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-private-key">
+                <h3>Private Key</h3>
+                <p>A secret binary number that only you know, used to create digital signatures and control your cryptocurrency. Losing your private key means losing access to your funds forever—there's no "forgot password" button.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-public-key">
+                <h3>Public Key</h3>
+                <p>A binary number derived from your private key that you can share with anyone. Others use it to verify your digital signatures and send you encrypted messages, but it reveals nothing about your private key.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-hash-functions">
+                <h3>Hash Functions</h3>
+                <p>Mathematical algorithms that turn any input into a fixed-size binary fingerprint. Change even one character in a document, and its hash changes completely—making it perfect for detecting tampering.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-consensus-algorithms">
+                <h3>Consensus Algorithms</h3>
+                <p>Mathematical protocols that help thousands of computers agree on a single version of truth without trusting each other. They solve the ancient problem of reaching agreement in distributed systems.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-proof-of-work">
+                <h3>Proof of Work</h3>
+                <p>Bitcoin's consensus mechanism where miners compete to solve computationally difficult puzzles. The winner gets to add the next block and earn rewards, but cheating requires more computing power than the rest of the network combined.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-proof-of-stake">
+                <h3>Proof of Stake</h3>
+                <p>An energy-efficient alternative to Proof of Work where validators are chosen to create blocks based on their stake in the network. Malicious behavior results in losing your staked tokens—economics instead of energy.</p>
+            </div>
+            <div class="hotlink-expansion" id="exp-smart-contracts-deep">
+                <h3>Smart Contracts Deep Dive</h3>
+                <p>Programs that live on the blockchain and execute automatically when conditions are met. They enable decentralized finance, NFTs, and DAOs—turning blockchain into a global, unstoppable computer.</p>
+            </div>
+        </div>
+
+        <!-- Quiz Section (Placeholder) -->
+        <section class="content-section">
+            <h2 class="section-title">Test Your Knowledge</h2>
+            <p class="section-subtitle">Quiz coming soon! This lesson will include questions about:</p>
+            
+            <div class="key-concept">
+                <h4>📚 Quiz Topics</h4>
+                <ul>
+                    <li>Claude Shannon's contributions to information theory</li>
+                    <li>Binary number system and place values</li>
+                    <li>Historical timeline from Leibniz to Bitcoin</li>
+                    <li>Digital scarcity and the Bitcoin pizza story</li>
+                    <li>How binary powers modern technology (signatures, hashes, consensus)</li>
+                    <li>Smart contracts and programmable economics</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center; margin-top: 2rem; color: var(--color-text-secondary);">
+                Complete the quiz to earn <strong>200 Stardust</strong> and unlock the next lesson!
+            </p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">Lesson 1 Complete</h3>
+                <p class="footer-text">
+                    You've mastered the binary foundations of digital economics. Next, discover how 
+                    Jekyll Island changed money forever.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="lesson-script.js"></script>    <script>
+// Enhanced hot link expansion logic for all cards
+(function() {
+    const hotLinks = document.querySelectorAll('.hot-link');
+    const expansions = document.querySelectorAll('.hotlink-expansion');
+    let active = null;
+    let overHotLink = false;
+    let overExpansion = false;
+    
+    function closeExpansion() {
+        if (!overHotLink && !overExpansion && active) {
+            active.classList.remove('active');
+            active = null;
+        }
+    }
+    
+    function showExpansion(link) {
+        // Check both data-hot and data-popup attributes for compatibility
+        const dataId = link.getAttribute('data-hot') || link.getAttribute('data-popup');
+        if (!dataId) return;
+        
+        const id = 'exp-' + dataId;
+        const exp = document.getElementById(id);
+        if (exp) {
+            if (active && active !== exp) active.classList.remove('active');
+            exp.classList.add('active');
+            active = exp;
+        }
+    }
+    
+    hotLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            overHotLink = true;
+            showExpansion(this);
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            overHotLink = false;
+            setTimeout(closeExpansion, 80);
+        });
+        
+        link.addEventListener('focus', function() {
+            overHotLink = true;
+            showExpansion(this);
+        });
+        
+        link.addEventListener('blur', function() {
+            overHotLink = false;
+            setTimeout(closeExpansion, 80);
+        });
+        
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            overHotLink = true;
+            const dataId = this.getAttribute('data-hot') || this.getAttribute('data-popup');
+            if (!dataId) return;
+            
+            const id = 'exp-' + dataId;
+            const exp = document.getElementById(id);
+            if (exp) {
+                if (active === exp) {
+                    exp.classList.remove('active');
+                    active = null;
+                } else {
+                    if (active && active !== exp) active.classList.remove('active');
+                    exp.classList.add('active');
+                    active = exp;
+                }
+            }
+        });
+    });
+    
+    expansions.forEach(exp => {
+        exp.addEventListener('mouseenter', function() {
+            overExpansion = true;
+        });
+        exp.addEventListener('mouseleave', function() {
+            overExpansion = false;
+            setTimeout(closeExpansion, 80);
+        });
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            overHotLink = false;
+            overExpansion = false;
+            closeExpansion();
+        }
+    });
+    
+    // Close on click outside
+    document.addEventListener('mousedown', function(e) {
+        if (active && !active.contains(e.target) && !e.target.classList.contains('hot-link')) {
+            overHotLink = false;
+            overExpansion = false;
+            closeExpansion();
+        }
+    });
+})();
+    </script>
+</body>
+</html>

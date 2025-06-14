@@ -29,9 +29,8 @@ class UnifiedQuizEngine {
     }
 
     async loadLesson(lessonNumber) {
-        try {
-            // Load lesson data from JSON
-            const response = await fetch(`/learn/data/lesson-${lessonNumber}.json`);
+        try {            // Load lesson data from JSON
+            const response = await fetch(`/academy/lessons/${String(lessonNumber).padStart(2, '0')}-*/lesson-data.json`);
             const lessonData = await response.json();
             this.currentLesson = lessonData;
             
@@ -141,7 +140,7 @@ class UnifiedQuizEngine {
                 </div>
                 
                 <div class="quiz-nav back-arrow">
-                    <a href="/learn/" class="back-link">← Back to Lessons</a>
+                    <a href="/academy/" class="back-link">← Back to Lessons</a>
                 </div>
             </div>
         `;
@@ -243,13 +242,13 @@ class UnifiedQuizEngine {
                     </div>
                     
                     <div class="quiz-actions">
-                        <a href="/learn/" class="quiz-nav primary">Back to Lessons</a>
+                        <a href="/academy/" class="quiz-nav primary">Back to Lessons</a>
                         <button class="quiz-nav secondary" onclick="window.location.reload()">Retake Quiz</button>
                     </div>
                 </div>
                 
                 <div class="quiz-nav back-arrow">
-                    <a href="/learn/" class="back-link">← Back to Lessons</a>
+                    <a href="/academy/" class="back-link">← Back to Lessons</a>
                 </div>
             </div>
         `;
