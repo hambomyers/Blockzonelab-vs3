@@ -1,0 +1,8 @@
+# Cloudflare Pages Build Configuration
+# This file forces cache invalidation on every deployment
+
+# Add timestamp to CSS to force cache refresh
+echo "/* Build: $(date) */" >> assets/css/main.css
+
+# Alternative: Add version parameter to HTML
+sed -i 's/main\.css/main.css?v='$(date +%s)'/g' index.html
