@@ -182,37 +182,37 @@ export class AudioSystem {
    playLandSound() {
        const now = this.ctx.currentTime;
 
-       // Low frequency thud
+       // Low frequency thud with more bass
        const osc = this.ctx.createOscillator();
        const gain = this.ctx.createGain();
 
        osc.type = 'sine';
-       osc.frequency.setValueAtTime(60, now);
+       osc.frequency.setValueAtTime(45, now); // Deeper frequency (was 60)
 
-       gain.gain.setValueAtTime(this.volume * 0.3, now);
-       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+       gain.gain.setValueAtTime(this.volume * 0.5, now); // Louder (was 0.3)
+       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12); // Longer duration (was 0.08)
 
        osc.connect(gain);
        gain.connect(this.ctx.destination);
 
        osc.start(now);
-       osc.stop(now + 0.1);
+       osc.stop(now + 0.15); // Longer stop time (was 0.1)
 
-       // Add a click for impact
+       // Add a deeper click for impact
        const click = this.ctx.createOscillator();
        const clickGain = this.ctx.createGain();
 
        click.type = 'square';
-       click.frequency.setValueAtTime(200, now);
+       click.frequency.setValueAtTime(150, now); // Deeper click (was 200)
 
-       clickGain.gain.setValueAtTime(this.volume * 0.1, now);
-       clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
+       clickGain.gain.setValueAtTime(this.volume * 0.15, now); // Louder click (was 0.1)
+       clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015); // Slightly longer (was 0.01)
 
        click.connect(clickGain);
        clickGain.connect(this.ctx.destination);
 
        click.start(now);
-       click.stop(now + 0.02);
+       click.stop(now + 0.025); // Longer click (was 0.02)
    }
 
    /**

@@ -8,9 +8,22 @@ export class StatsPanel {
         this.container = null;
         this.isVisible = false;
         this.isMobile = window.innerWidth < 1200;
+        this.updateInterval = null;
+        
+        // Session tracking (resets when page loads)
+        this.sessionStats = {
+            gamesPlayed: 0,
+            highScore: 0,
+            totalScore: 0,
+            totalLines: 0,
+            maxCombo: 0,
+            startTime: Date.now()
+        };
 
         this.setupPanel();
         this.setupEventListeners();
+        this.startAutoUpdate();
+        this.setupGameEventListeners();
 
         // Wait to position until game is ready
         if (!this.isMobile) {
@@ -171,44 +184,60 @@ export class StatsPanel {
     }
 
     updateStats() {
-        if (!window.neonDrop) return;
+        if (!window.neonDrop) {
+            console.log('StatsPanel: window.neonDrop not available');
+            return;
+        }
 
-        const state = window.neonDrop.state();
-        const config = window.neonDrop.config();
-        const stats = config.getStats();
+        try {
+            const state = window.neonDrop.state();
+            const config = window.neonDrop.config();
+            
+            if (!state) {
+                console.log('StatsPanel: game state not available');
+                return;
+            }
 
-        // Current game
-        this.updateSection('current-stats', {
-            'Score': state.score || 0,
-            'Lines': state.lines || 0,
-            'Level': state.level || 1,
-            'Pieces': state.pieces || 0
-        });
+            console.log('StatsPanel: Updating with state:', state);
 
-        // Session best
-        this.updateSection('session-stats', {
-            'High Score': Math.max(state.score || 0, stats.highScore || 0),
-            'Max Combo': state.maxCombo || 0,
-            'Most Lines': state.lines || 0
-        });
+            const stats = config?.getStats ? config.getStats() : {};
 
-        // All time
-        this.updateSection('alltime-stats', {
-            'Games Played': stats.gamesPlayed || 0,
-            'Total Score': stats.totalScore || 0,
-            'Total Lines': stats.totalLines || 0,
-            'Avg Score': stats.averageScore || 0
-        });
+            // Current game
+            this.updateSection('current-stats', {
+                'Score': state.score || 0,
+                'Lines': state.lines || 0,
+                'Level': state.level || 1,
+                'Pieces': state.pieces || 0
+            });
 
-        // Performance
-        const apm = this.calculateAPM(state);
-        const pps = this.calculatePPS(state);
+            // Session best (uses our session tracking)
+            this.updateSection('session-stats', {
+                'High Score': Math.max(state.score || 0, this.sessionStats.highScore),
+                'Games Played': this.sessionStats.gamesPlayed,
+                'Max Combo': Math.max(state.maxCombo || 0, this.sessionStats.maxCombo),
+                'Total Lines': this.sessionStats.totalLines
+            });
 
-        this.updateSection('performance-stats', {
-            'APM': Math.round(apm),
-            'PPS': pps.toFixed(1),
-            'Efficiency': Math.round((state.score / Math.max(1, state.pieces * 100)) * 100) + '%'
-        });
+            // All time
+            this.updateSection('alltime-stats', {
+                'Games Played': stats.gamesPlayed || 0,
+                'Total Score': stats.totalScore || 0,
+                'Total Lines': stats.totalLines || 0,
+                'Avg Score': stats.averageScore || 0
+            });
+
+            // Performance
+            const apm = this.calculateAPM(state);
+            const pps = this.calculatePPS(state);
+
+            this.updateSection('performance-stats', {
+                'APM': Math.round(apm),
+                'PPS': pps.toFixed(1),
+                'Efficiency': Math.round((state.score / Math.max(1, state.pieces * 100)) * 100) + '%'
+            });
+        } catch (error) {
+            console.error('StatsPanel: Error updating stats:', error);
+        }
     }
 
     updateSection(sectionId, data) {
@@ -235,7 +264,66 @@ export class StatsPanel {
         return seconds > 0 ? (state.pieces || 0) / seconds : 0;
     }
 
+    /**
+     * Start automatic stats updates during gameplay
+     */
+    startAutoUpdate() {
+        // Update stats every 500ms when visible
+        this.updateInterval = setInterval(() => {
+            if (this.container && this.container.classList.contains('visible')) {
+                this.updateStats();
+            }
+        }, 500);
+    }
+
+    /**
+     * Stop automatic updates (cleanup)
+     */
+    stopAutoUpdate() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+    }
+
+    /**
+     * Setup listeners for game events to track session stats
+     */
+    setupGameEventListeners() {
+        // Listen for game over events to update session stats
+        window.addEventListener('gameOver', (e) => {
+            this.updateSessionStats(e.detail);
+        });
+        
+        // Listen for custom game events if available
+        document.addEventListener('gameCompleted', (e) => {
+            this.updateSessionStats(e.detail);
+        });
+    }
+
+    /**
+     * Update session statistics when a game ends
+     */
+    updateSessionStats(gameData) {
+        console.log('StatsPanel: Updating session stats with:', gameData);
+        
+        this.sessionStats.gamesPlayed++;
+        this.sessionStats.totalScore += gameData.score || 0;
+        this.sessionStats.totalLines += gameData.linesCleared || 0;
+        
+        if ((gameData.score || 0) > this.sessionStats.highScore) {
+            this.sessionStats.highScore = gameData.score || 0;
+        }
+        
+        if ((gameData.maxCombo || 0) > this.sessionStats.maxCombo) {
+            this.sessionStats.maxCombo = gameData.maxCombo || 0;
+        }
+        
+        console.log('StatsPanel: Session stats updated:', this.sessionStats);
+    }
+
     destroy() {
+        this.stopAutoUpdate();
         this.container?.remove();
     }
 }

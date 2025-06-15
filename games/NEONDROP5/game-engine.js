@@ -765,6 +765,11 @@ export class GameEngine {
             this.state.score = this.scoring.score;
         }
 
+        // Play the land sound for hard drop
+        if (this.audio && this.state.currentPosition.y > this.state.currentPiece.spawn.y) {
+            this.audio.playSound('land');
+        }
+
         // Immediately lock the piece
         this.lockPiece();
     }

@@ -113,16 +113,18 @@ export class ArcadeLeaderboardUI {
             this.goToPage(maxPage);
         });
 
-        // Dismiss on any key or click
-        const dismissHandler = (e) => {
+        // Dismiss on any key or click - PROFESSIONAL EVENT HANDLING
+        this.dismissHandler = (e) => {
             if (this.isVisible && (e.type === 'click' || e.code === 'Space' || e.code === 'Enter' || e.code === 'Escape')) {
                 e.preventDefault();
+                e.stopPropagation();
                 this.hide();
             }
         };
 
-        document.addEventListener('keydown', dismissHandler);
-        this.container.addEventListener('click', dismissHandler);
+        // Store reference for proper cleanup
+        this.keydownHandler = this.dismissHandler;
+        this.clickHandler = this.dismissHandler;
     }
 
     async show(playerScore = null) {
@@ -130,6 +132,10 @@ export class ArcadeLeaderboardUI {
         this.playerScore = playerScore;
         this.currentPeriod = 'daily';
         this.updatePeriodSelector();
+
+        // PROFESSIONAL EVENT MANAGEMENT: Register handlers when showing
+        document.addEventListener('keydown', this.keydownHandler);
+        this.container.addEventListener('click', this.clickHandler);
 
         console.log('Setting container display to flex');
         this.container.style.display = 'flex';
@@ -151,10 +157,20 @@ export class ArcadeLeaderboardUI {
     }
 
     hide() {
+        // PROFESSIONAL EVENT MANAGEMENT: Remove handlers when hiding
+        document.removeEventListener('keydown', this.keydownHandler);
+        this.container.removeEventListener('click', this.clickHandler);
+        
         this.container.classList.remove('visible');
         setTimeout(() => {
             this.container.style.display = 'none';
-        ; const gameCanvas = document.getElementById("game"); if (gameCanvas) { gameCanvas.style.filter = "none"; gameCanvas.style.opacity = "1"; }}, 300);
+            // Clear any game canvas filters
+            const gameCanvas = document.getElementById("game");
+            if (gameCanvas) {
+                gameCanvas.style.filter = "none";
+                gameCanvas.style.opacity = "1";
+            }
+        }, 300);
         this.isVisible = false;
         document.getElementById('game')?.focus();
     }

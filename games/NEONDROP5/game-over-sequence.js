@@ -131,6 +131,21 @@ export class GameOverSequence {
         this.isNewHighScore = gameState.isNewHighScore || false;
         this.deathPiecePosition = gameState.deathPiecePosition || null;
 
+        // Notify stats panel about game completion
+        window.dispatchEvent(new CustomEvent('gameCompleted', {
+            detail: {
+                score: this.finalScore,
+                linesCleared: gameState.linesCleared || 0,
+                level: gameState.level || 1,
+                gameTime: gameState.gameTime || 0,
+                maxCombo: gameState.maxCombo || 0,
+                isNewHighScore: this.isNewHighScore
+            }
+        }));
+
+        // Automatically submit score to leaderboard
+        await this.submitScoreToLeaderboard(gameState);
+
         // Ensure UI is set up
         if (!this.container) {
             this.setupUI();
@@ -236,42 +251,88 @@ export class GameOverSequence {
         }
     }
 
+    /**
+     * Submit score to leaderboard automatically when game ends
+     */
+    async submitScoreToLeaderboard(gameState) {
+        try {
+            console.log('Auto-submitting score to leaderboard:', this.finalScore);
+            
+            // Import leaderboard module
+            const leaderboardModule = await import('./leaderboard.js');
+            const leaderboardSystem = new leaderboardModule.LeaderboardSystem();
+            
+            // Prepare score data that matches what the leaderboard expects
+            const scoreData = {
+                score: this.finalScore,
+                finalHash: gameState.finalHash || 'no-hash', // From anti-cheat system
+                metrics: {
+                    apm: gameState.apm || 0,
+                    pps: gameState.pps || 0,
+                    gameTime: gameState.gameTime || 0,
+                    linesCleared: gameState.linesCleared || 0,
+                    level: gameState.level || 1
+                }
+            };
+            
+            // Submit to leaderboard
+            const result = await leaderboardSystem.submitScore(scoreData);
+            console.log('Score submitted successfully:', result);
+            
+            // Check if this is a new high score based on leaderboard response
+            if (result && (result.isHighScore || result.isNewRecord)) {
+                this.isNewHighScore = true;
+            }
+            
+        } catch (error) {
+            console.error('Failed to submit score to leaderboard:', error);
+            // Continue with game over sequence even if submission fails
+        }
+    }
+
     async showLeaderboard() {
         console.log('showLeaderboard called');
         try {
-            // Hide the game over choices first
-            console.log('Hiding game over container');
+            // PROFESSIONAL FIX: Use the main.js leaderboard system instead of creating duplicate
+            console.log('Using existing global leaderboard system');
+            
+            // Disable game over key handler to prevent conflicts
+            if (this.keyHandler) {
+                document.removeEventListener('keydown', this.keyHandler);
+            }
+            
+            // Hide the game over choices
             this.container.style.display = 'none';
             
-            // Import modules
-            console.log('Importing leaderboard modules...');
-            const [leaderboardModule, uiModule] = await Promise.all([
-                import('./leaderboard.js'),
-                import('./arcade-leaderboard-ui.js')
-            ]);
-            console.log('Modules imported successfully');
-            
-            // Create leaderboard system and UI
-            const leaderboardSystem = new leaderboardModule.LeaderboardSystem();
-            const arcadeUI = new uiModule.ArcadeLeaderboardUI(leaderboardSystem);
-            console.log('Leaderboard components created');
-            
-            // Show the leaderboard with the current score context
-            console.log('Calling arcadeUI.show with score:', this.finalScore);
-            await arcadeUI.show(this.finalScore);
-            console.log('Leaderboard should now be visible');
-            
-            // Override the hide method to show our choices again
-            const originalHide = arcadeUI.hide.bind(arcadeUI);
-            arcadeUI.hide = () => {
-                console.log('Leaderboard hiding, returning to game over choices');
-                originalHide();
-                this.container.style.display = 'flex';
-            };
+            // Use the global leaderboard UI from main.js
+            if (window.leaderboardUI) {
+                console.log('Showing global leaderboard with score:', this.finalScore);
+                await window.leaderboardUI.show(this.finalScore);
+                
+                // Override the hide method to restore game over screen
+                const originalHide = window.leaderboardUI.hide.bind(window.leaderboardUI);
+                window.leaderboardUI.hide = () => {
+                    console.log('Leaderboard hiding, returning to game over choices');
+                    originalHide();
+                    // Re-enable game over key handler
+                    if (this.keyHandler) {
+                        document.addEventListener('keydown', this.keyHandler);
+                    }
+                    this.container.style.display = 'flex';
+                    // Restore original hide method
+                    window.leaderboardUI.hide = originalHide;
+                };
+            } else {
+                console.error('Global leaderboard UI not found');
+                throw new Error('Leaderboard system not available');
+            }
             
         } catch (error) {
             console.error('Failed to load leaderboard:', error);
-            // Fall back to showing game over choices again
+            // Re-enable key handler on error
+            if (this.keyHandler) {
+                document.addEventListener('keydown', this.keyHandler);
+            }
             this.container.style.display = 'flex';
         }
     }
