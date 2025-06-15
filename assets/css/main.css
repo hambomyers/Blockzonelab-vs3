@@ -139,42 +139,139 @@ a:hover {
     padding: 0 var(--space-4);
 }
 
+/* === NAVIGATION === */
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(10, 13, 19, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-gold);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.tagline {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.stardust-counter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: rgba(212, 175, 55, 0.1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius);
+    color: var(--color-gold);
+    font-weight: 600;
+}
+
+/* === HERO SECTION === */
 .hero-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: var(--space-8) 0;
+    padding: var(--space-8) var(--space-4);
+    position: relative;
 }
 
-.portal-grid {
+.hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius-lg);
+    padding: var(--space-1) var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--color-gold);
+    font-weight: 600;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: var(--space-4);
+    line-height: 1.1;
+}
+
+.hero-line1, .hero-line2 {
+    display: block;
+}
+
+.hero-line2 {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* === CHOICE BUTTONS (MAIN CARDS) === */
+.hero-choices {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: var(--space-6);
     margin: var(--space-8) 0;
 }
 
-/* === PORTAL SECTIONS === */
-.portal-section {
+.choice-btn {
     background: rgba(37, 40, 54, 0.8);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 2px solid rgba(212, 175, 55, 0.2);
     border-radius: var(--radius-xl);
     padding: var(--space-6);
+    text-decoration: none;
+    color: inherit;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    display: block;
 }
 
-.portal-section:hover {
-    border-color: rgba(212, 175, 55, 0.4);
-    background: rgba(37, 40, 54, 0.9);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+.choice-btn:hover {
+    border-color: rgba(212, 175, 55, 0.6);
+    background: rgba(37, 40, 54, 0.95);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.portal-section::before {
+.choice-btn::before {
     content: '';
     position: absolute;
     top: 0;
@@ -186,50 +283,191 @@ a:hover {
     transition: opacity 0.3s ease;
 }
 
-.portal-section:hover::before {
+.choice-btn:hover::before {
     opacity: 1;
 }
 
-.portal-content {
+.choice-btn > * {
     position: relative;
     z-index: 1;
 }
 
-.portal-icon {
+.choice-icon {
     font-size: 3rem;
-    color: var(--color-gold);
     margin-bottom: var(--space-3);
     display: block;
 }
 
-.portal-title {
-    font-size: 1.5rem;
-    margin-bottom: var(--space-2);
+.choice-title {
+    font-size: 1.8rem;
+    font-weight: 700;
     color: var(--color-gold);
+    margin-bottom: var(--space-2);
+    font-family: var(--font-serif);
 }
 
-.portal-description {
+.choice-subtitle {
+    font-size: 1.1rem;
     color: var(--color-text-secondary);
+    margin-bottom: var(--space-4);
+    font-weight: 500;
+}
+
+.choice-details {
     margin-bottom: var(--space-4);
 }
 
-.portal-cta {
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+.choice-cta {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    padding: var(--space-2) var(--space-4);
     background: var(--gradient-gold);
     color: var(--color-deep-space);
+    padding: var(--space-2) var(--space-4);
     border-radius: var(--radius);
     font-weight: 600;
-    text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.portal-cta:hover {
+.choice-btn:hover .choice-cta {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-    color: var(--color-deep-space);
+}
+
+/* === MAIN CONTENT SECTIONS === */
+.main-content {
+    padding: var(--space-8) var(--space-4);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--color-gold);
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+.section-subtitle {
+    color: var(--color-text-secondary);
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* === FOOTER === */
+.main-footer {
+    background: rgba(10, 13, 19, 0.95);
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    padding: var(--space-8) var(--space-4) var(--space-4);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-6);
+}
+
+.footer-section {
+    margin-bottom: var(--space-4);
+}
+
+.footer-title {
+    color: var(--color-gold);
+    font-size: 1.2rem;
+    margin-bottom: var(--space-3);
+}
+
+.footer-text {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-3);
+}
+
+.footer-list {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-list li {
+    margin-bottom: var(--space-2);
+}
+
+.progress-summary {
+    margin-top: var(--space-2);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-1);
+}
+
+.summary-label {
+    color: var(--color-text-secondary);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    color: var(--color-text-muted);
+    margin-top: var(--space-6);
+}
+
+/* === STARFIELD BACKGROUND === */
+.starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.stars, .stars2, .stars3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, var(--color-gold), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--color-gold-light), transparent),
+        radial-gradient(1px 1px at 90px 40px, var(--color-white), transparent);
+    background-size: 200px 100px;
+    animation: zoom 10s linear infinite;
+}
+
+.stars2 {
+    background-size: 400px 200px;
+    animation: zoom 20s linear infinite;
+    opacity: 0.5;
+}
+
+.stars3 {
+    background-size: 600px 300px;
+    animation: zoom 30s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes zoom {
+    from {
+        transform: translateZ(0px);
+    }
+    to {
+        transform: translateZ(1000px);
+    }
 }
 
 /* === BETA BANNER === */
@@ -256,25 +494,34 @@ a:hover {
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
-    h1 {
+    .hero-title {
         font-size: 2.5rem;
     }
     
-    h2 {
-        font-size: 2rem;
+    .hero-description {
+        font-size: 1rem;
     }
     
-    .container {
-        padding: 0 var(--space-2);
-    }
-    
-    .portal-grid {
+    .hero-choices {
         grid-template-columns: 1fr;
         gap: var(--space-4);
     }
     
-    .portal-section {
+    .choice-btn {
         padding: var(--space-4);
+    }
+    
+    .choice-title {
+        font-size: 1.5rem;
+    }
+    
+    .nav-container {
+        padding: var(--space-2) var(--space-4);
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
     }
     
     .beta-banner {
@@ -284,17 +531,26 @@ a:hover {
     }
     
     .hero-section {
-        padding: var(--space-6) 0;
+        padding: var(--space-6) var(--space-2);
     }
 }
 
 @media (max-width: 480px) {
-    h1 {
+    .hero-title {
         font-size: 2rem;
     }
     
-    .portal-grid {
-        grid-template-columns: 1fr;
+    .choice-icon {
+        font-size: 2.5rem;
+    }
+    
+    .choice-btn {
+        padding: var(--space-3);
+    }
+    
+    .nav-container {
+        flex-direction: column;
+        gap: var(--space-2);
     }
 }
 
