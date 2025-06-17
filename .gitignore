@@ -1,3 +1,6 @@
+# AGGRESSIVE ZOMBIE FILE PREVENTION
+# =================================
+
 # Dependencies
 node_modules/
 npm-debug.log*
@@ -13,6 +16,33 @@ dist/
 .env.local
 .env.production
 
+# ZOMBIE FILE PREVENTION
+# ======================
+
+# All backup files
+*.backup
+*.old
+*.copy
+*-copy.*
+*-backup.*
+*_backup.*
+*.bak
+*.orig
+*.save
+
+# All temp files
+*.tmp
+*.temp
+*~
+.#*
+#*#
+
+# VS Code zombie folders
+.vscode/history/
+.history/
+.vs/
+*.code-workspace
+
 # OS generated files
 .DS_Store
 .DS_Store?
@@ -21,6 +51,13 @@ dist/
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
+
+# Windows system files
+[Tt]humbs.db
+*.tmp
+$RECYCLE.BIN/
+*.lnk
 
 # IDE files
 .vscode/settings.json
@@ -49,3 +86,24 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+
+# SPECIFIC ZOMBIE FILES WE'VE SEEN
+index-clean.html
+index-minimal.html
+main-minimal.js
+main-clean.js
+main-legacy.js
+main-optimized.js
+
+# Any files ending in numbers (often auto-generated)
+*-[0-9].*
+*-[0-9][0-9].*
+
+# Any duplicate detection patterns
+*(1).*
+*(2).*
+*-copy-*
+*-duplicate-*
+
+# Modules folders that shouldn't exist
+*/modules/
