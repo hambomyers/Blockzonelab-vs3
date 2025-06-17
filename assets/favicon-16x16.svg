@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <defs>
+    <!-- Red chiclet gradient -->
+    <radialGradient id="chicletGradient16" cx="50%" cy="50%" r="90%">
+      <stop offset="0%" style="stop-color:#FF7F7F;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#FF0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#BF0000;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Highlight gradient -->
+    <radialGradient id="highlightGradient16" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <style>
+      .arcade-text-16 {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 3.5px;
+        fill: #404040;
+        text-anchor: middle;
+        dominant-baseline: central;
+      }
+    </style>
+  </defs>
+  
+  <!-- Main chiclet body -->
+  <path d="M 2 4 
+           Q 2 2 4 2 
+           L 12 2 
+           Q 14 2 14 4 
+           L 14 12 
+           Q 14 14 12 14 
+           L 4 14 
+           Q 2 14 2 12 
+           Z" 
+        fill="url(#chicletGradient16)" 
+        stroke="#BF0000" 
+        stroke-width="0.25"/>
+  
+  <!-- 3D highlight -->
+  <path d="M 2 4 
+           Q 2 2 4 2 
+           L 12 2 
+           Q 14 2 14 4 
+           L 14 6
+           L 4 6
+           Q 3 6 3 5
+           L 3 4
+           Q 3 3 4 3
+           L 12 3
+           Q 13 3 13 4
+           Z" 
+        fill="url(#highlightGradient16)"/>
+  
+  <!-- Shine spots -->
+  <ellipse cx="5.5" cy="4.5" rx="0.7" ry="0.4" fill="rgba(255,255,255,0.7)"/>
+  <ellipse cx="10.5" cy="6" rx="0.5" ry="0.3" fill="rgba(255,255,255,0.5)"/>
+  <ellipse cx="7" cy="11" rx="0.4" ry="0.4" fill="rgba(255,255,255,0.4)"/>
+  
+  <!-- BZL text centered -->
+  <text x="8" y="8" class="arcade-text-16">BZL</text>
+</svg>
