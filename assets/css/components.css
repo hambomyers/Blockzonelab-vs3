@@ -75,44 +75,149 @@
   font-size: 0.75rem;
 }
 
-/* === CARD COMPONENTS === */
+/* === ENHANCED CARD COMPONENTS === */
 
-/* Playing Card Base - Elegant proportions (2.5" x 3.5" ratio) */
+/* Base Card - Universal with elegant hover effects */
 .bz-card {
-  background: var(--bz-dark-800);
-  border: 1px solid var(--bz-dark-600);
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--bz-radius-lg);
   padding: var(--bz-space-6);
   box-shadow: var(--bz-shadow-md);
-  transition: all var(--bz-transition-smooth);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  width: 100%;
+  max-width: 400px;
 }
 
-.bz-card:hover {
-  border-color: var(--bz-primary);
-  box-shadow: var(--bz-shadow-xl), 0 0 20px rgba(212, 175, 55, 0.3);
-  transform: translateY(-4px);
-}
-
-.bz-card:hover::before {
-  opacity: 1;
-}
-
+/* Subtle flash effect on first hover - Elegant and understated */
 .bz-card::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, 
-    rgba(212, 175, 55, 0.05) 0%, 
-    rgba(230, 199, 87, 0.08) 50%, 
-    rgba(212, 175, 55, 0.05) 100%);
-  opacity: 0;
-  transition: opacity var(--bz-transition-smooth);
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 100%);
+  transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 1;
   pointer-events: none;
+}
+
+.bz-card:hover::before {
+  left: 100%;
+}
+
+.bz-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(var(--bz-primary-rgb, 212, 175, 55), 0.2);
+}
+
+/* Card content positioning above flash effect */
+.bz-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* === GAMING VARIANT - More Fun & Energetic === */
+.bz-card-gaming {
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.12) 0%, 
+    rgba(255, 0, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.bz-card-gaming::before {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 255, 255, 0.15) 50%, 
+    transparent 100%);
+}
+
+.bz-card-gaming:hover {
+  border-color: rgba(0, 255, 255, 0.4);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 255, 255, 0.3),
+    0 0 20px rgba(255, 0, 255, 0.2);
+  transform: translateY(-10px) scale(1.03);
+}
+
+/* Gaming card subtle pulse animation */
+.bz-card-gaming:hover {
+  animation: gaming-pulse 2s infinite;
+}
+
+@keyframes gaming-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.4),
+      0 0 50px rgba(0, 255, 255, 0.3),
+      0 0 20px rgba(255, 0, 255, 0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.4),
+      0 0 60px rgba(0, 255, 255, 0.4),
+      0 0 30px rgba(255, 0, 255, 0.3);
+  }
+}
+
+/* === ACADEMY VARIANT - Studious & Professional === */
+.bz-card-academy {
+  background: linear-gradient(135deg, 
+    rgba(100, 200, 255, 0.08) 0%, 
+    rgba(200, 150, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(100, 200, 255, 0.15);
+}
+
+.bz-card-academy::before {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(100, 200, 255, 0.12) 50%, 
+    transparent 100%);
+}
+
+.bz-card-academy:hover {
+  border-color: rgba(100, 200, 255, 0.3);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(100, 200, 255, 0.25),
+    0 0 15px rgba(200, 150, 255, 0.15);
+  transform: translateY(-6px) scale(1.015);
+}
+
+/* Academy card subtle glow - More refined */
+.bz-card-academy:hover {
+  animation: academy-glow 3s infinite;
+}
+
+@keyframes academy-glow {
+  0%, 100% { 
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(100, 200, 255, 0.25),
+      0 0 15px rgba(200, 150, 255, 0.15);
+  }
+  50% { 
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 50px rgba(100, 200, 255, 0.35),
+      0 0 25px rgba(200, 150, 255, 0.25);
+  }
 }
 
 /* Playing Card Sizes */
@@ -249,7 +354,7 @@
   border: 1px solid rgba(156, 163, 175, 0.3);
 }
 
-/* Card Grid Layout System */
+/* Card Grid Layout System - AAA Production Quality */
 .bz-card-grid {
   display: grid;
   gap: var(--bz-space-6);
@@ -258,32 +363,101 @@
 }
 
 .bz-card-grid-sm {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--bz-space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--bz-space-5);
+  justify-content: center;
+  justify-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 var(--bz-space-4);
 }
 
 .bz-card-grid-md {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
   gap: var(--bz-space-6);
+  justify-content: center;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--bz-space-4);
 }
 
 .bz-card-grid-lg {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 450px));
   gap: var(--bz-space-8);
+  justify-content: center;
+  justify-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--bz-space-4);
 }
 
-/* Responsive card grids */
+/* Responsive card grids - AAA Production Quality */
 @media (max-width: 768px) {
-  .bz-card-grid-md {
+  .bz-card-grid-sm,
+  .bz-card-grid-md,
+  .bz-card-grid-lg {
     grid-template-columns: 1fr;
-    gap: var(--bz-space-4);
+    gap: var(--bz-space-5);
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 var(--bz-space-3);
   }
   
+  .bz-card,
   .bz-game-card {
     width: 100%;
-    max-width: 320px;
-    height: auto;
-    min-height: 300px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .bz-card-grid-md {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    gap: var(--bz-space-5);
+  }
+  
+  .bz-card-grid-lg {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .bz-card-grid-md {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
+    max-width: 1200px;
+  }
+  
+  .bz-card-grid-lg {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 450px));
+    max-width: 1400px;
+  }
+  
+  /* Perfect centering for exactly 2 cards */
+  .bz-card-grid-md:has(.bz-card:nth-child(2):last-child),
+  .bz-card-grid-md:has(.bz-game-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 400px);
+    max-width: 850px;
+  }
+  
+  /* Perfect centering for exactly 3 cards */
+  .bz-card-grid-md:has(.bz-card:nth-child(3):last-child),
+  .bz-card-grid-md:has(.bz-game-card:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, 380px);
+    max-width: 1200px;
+  }
+  
+  /* Perfect centering for exactly 4 cards */
+  .bz-card-grid-md:has(.bz-card:nth-child(4):last-child),
+  .bz-card-grid-md:has(.bz-game-card:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, 400px);
+    max-width: 850px;
   }
 }
 
