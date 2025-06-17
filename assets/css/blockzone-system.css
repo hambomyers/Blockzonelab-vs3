@@ -1,0 +1,158 @@
+/* ==========================================================================
+   BLOCKZONE LAB - MASTER STYLESHEET
+   AAA-Quality CSS System for 30+ Games
+   ========================================================================== */
+
+/* Import design system components */
+@import url('design-system.css');
+@import url('utilities.css');
+@import url('components.css');
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&display=swap');
+
+/* === GLOBAL RESET & BASE STYLES === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--bz-font-primary);
+  background: var(--bz-dark-900);
+  color: var(--bz-light-100);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* === SELECTION STYLING === */
+::selection {
+  background: var(--bz-primary);
+  color: var(--bz-dark-900);
+}
+
+::-moz-selection {
+  background: var(--bz-primary);
+  color: var(--bz-dark-900);
+}
+
+/* === SCROLLBAR STYLING === */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bz-dark-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bz-primary);
+  border-radius: var(--bz-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bz-secondary);
+}
+
+/* === FOCUS STYLES === */
+:focus {
+  outline: 2px solid var(--bz-primary);
+  outline-offset: 2px;
+}
+
+/* === MAIN LAYOUT === */
+.bz-main-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* === HEADER STYLES === */
+.bz-header {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bz-dark-600);
+  position: sticky;
+  top: 0;
+  z-index: var(--bz-z-tooltip);
+}
+
+.bz-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bz-space-4) 0;
+}
+
+.bz-logo {
+  font-family: var(--bz-font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--bz-primary), var(--bz-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+/* === FOOTER STYLES === */
+.bz-footer {
+  background: var(--bz-dark-800);
+  border-top: 1px solid var(--bz-dark-600);
+  padding: var(--bz-space-8) 0;
+  text-align: center;
+  color: var(--bz-light-300);
+}
+
+/* === GAME-SPECIFIC THEMES === */
+.game-neon-drop {
+  --bz-primary: #00d4ff;
+  --bz-secondary: #ff0080;
+  --bz-accent: #39ff14;
+}
+
+.game-crypto-runner {
+  --bz-primary: #ffaa00;
+  --bz-secondary: #ff6b35;
+  --bz-accent: #a855f7;
+}
+
+.game-block-breaker {
+  --bz-primary: #39ff14;
+  --bz-secondary: #00d4ff;
+  --bz-accent: #ff0080;
+}
+
+/* === ANIMATIONS === */
+@keyframes bz-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bz-bounce {
+  0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+  40%, 43% { transform: translateY(-10px); }
+  70% { transform: translateY(-5px); }
+  90% { transform: translateY(-2px); }
+}
+
+@keyframes bz-glow {
+  0%, 100% { box-shadow: 0 0 20px currentColor; }
+  50% { box-shadow: 0 0 40px currentColor; }
+}
+
+.bz-animate-pulse { animation: bz-pulse 2s infinite; }
+.bz-animate-bounce { animation: bz-bounce 1s infinite; }
+.bz-animate-glow { animation: bz-glow 2s infinite; }

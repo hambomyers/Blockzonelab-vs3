@@ -1,0 +1,357 @@
+/* ==========================================================================
+   BLOCKZONE LAB - COMPONENT LIBRARY
+   Reusable components for all games
+   ========================================================================== */
+
+/* === BUTTON COMPONENTS === */
+.bz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bz-space-2);
+  padding: var(--bz-space-3) var(--bz-space-6);
+  font-family: var(--bz-font-gaming);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: var(--bz-radius-md);
+  cursor: pointer;
+  transition: all var(--bz-transition-normal);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bz-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--bz-glow-sm);
+}
+
+.bz-btn:active {
+  transform: translateY(0);
+}
+
+.bz-btn-primary {
+  background: linear-gradient(135deg, var(--bz-primary), var(--bz-electric-blue));
+  color: var(--bz-dark-900);
+}
+
+.bz-btn-secondary {
+  background: linear-gradient(135deg, var(--bz-secondary), var(--bz-neon-pink));
+  color: var(--bz-light-100);
+}
+
+.bz-btn-accent {
+  background: linear-gradient(135deg, var(--bz-accent), var(--bz-neon-pink));
+  color: var(--bz-light-100);
+}
+
+.bz-btn-outline {
+  background: transparent;
+  border: 2px solid var(--bz-primary);
+  color: var(--bz-primary);
+}
+
+.bz-btn-outline:hover {
+  background: var(--bz-primary);
+  color: var(--bz-dark-900);
+}
+
+.bz-btn-ghost {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--bz-light-100);
+}
+
+.bz-btn-lg {
+  padding: var(--bz-space-4) var(--bz-space-8);
+  font-size: 1rem;
+}
+
+.bz-btn-sm {
+  padding: var(--bz-space-2) var(--bz-space-4);
+  font-size: 0.75rem;
+}
+
+/* === CARD COMPONENTS === */
+.bz-card {
+  background: var(--bz-dark-800);
+  border: 1px solid var(--bz-dark-600);
+  border-radius: var(--bz-radius-lg);
+  padding: var(--bz-space-6);
+  box-shadow: var(--bz-shadow-md);
+  transition: all var(--bz-transition-normal);
+}
+
+.bz-card:hover {
+  border-color: var(--bz-primary);
+  box-shadow: var(--bz-shadow-lg);
+}
+
+.bz-card-header {
+  margin-bottom: var(--bz-space-4);
+  padding-bottom: var(--bz-space-4);
+  border-bottom: 1px solid var(--bz-dark-600);
+}
+
+.bz-card-title {
+  font-family: var(--bz-font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--bz-light-100);
+  margin: 0;
+}
+
+.bz-card-subtitle {
+  font-size: 0.875rem;
+  color: var(--bz-light-300);
+  margin: var(--bz-space-1) 0 0 0;
+}
+
+.bz-card-body {
+  color: var(--bz-light-200);
+  line-height: 1.6;
+}
+
+.bz-card-footer {
+  margin-top: var(--bz-space-6);
+  padding-top: var(--bz-space-4);
+  border-top: 1px solid var(--bz-dark-600);
+}
+
+/* === TOURNAMENT COMPONENTS === */
+.bz-tournament-card {
+  background: linear-gradient(135deg, var(--bz-dark-800), var(--bz-dark-700));
+  border: 2px solid var(--bz-primary);
+  border-radius: var(--bz-radius-xl);
+  padding: var(--bz-space-8);
+  position: relative;
+  overflow: hidden;
+}
+
+.bz-tournament-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--bz-primary), var(--bz-secondary), var(--bz-accent));
+}
+
+.bz-tournament-header {
+  text-align: center;
+  margin-bottom: var(--bz-space-6);
+}
+
+.bz-tournament-title {
+  font-family: var(--bz-font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--bz-primary), var(--bz-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.bz-tournament-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bz-space-2);
+  margin: var(--bz-space-4) 0;
+  padding: var(--bz-space-3) var(--bz-space-6);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid var(--bz-primary);
+  border-radius: var(--bz-radius-full);
+  font-family: var(--bz-font-gaming);
+  font-weight: 600;
+  color: var(--bz-primary);
+}
+
+.bz-prize-pool {
+  text-align: center;
+  margin: var(--bz-space-6) 0;
+  padding: var(--bz-space-4);
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid var(--bz-secondary);
+  border-radius: var(--bz-radius-lg);
+}
+
+.bz-prize-amount {
+  font-family: var(--bz-font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--bz-secondary);
+  margin: 0;
+}
+
+.bz-prize-label {
+  font-size: 0.875rem;
+  color: var(--bz-light-300);
+  margin: var(--bz-space-1) 0 0 0;
+}
+
+/* === LEADERBOARD COMPONENTS === */
+.bz-leaderboard {
+  background: var(--bz-dark-800);
+  border-radius: var(--bz-radius-lg);
+  overflow: hidden;
+}
+
+.bz-leaderboard-header {
+  background: linear-gradient(135deg, var(--bz-primary), var(--bz-electric-blue));
+  color: var(--bz-dark-900);
+  padding: var(--bz-space-4) var(--bz-space-6);
+  font-family: var(--bz-font-display);
+  font-weight: 700;
+  text-align: center;
+}
+
+.bz-leaderboard-entry {
+  display: flex;
+  align-items: center;
+  padding: var(--bz-space-3) var(--bz-space-6);
+  border-bottom: 1px solid var(--bz-dark-600);
+  transition: all var(--bz-transition-fast);
+}
+
+.bz-leaderboard-entry:hover {
+  background: var(--bz-dark-700);
+}
+
+.bz-leaderboard-entry.current-player {
+  background: rgba(0, 212, 255, 0.1);
+  border-color: var(--bz-primary);
+}
+
+.bz-leaderboard-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--bz-radius-full);
+  background: var(--bz-dark-600);
+  color: var(--bz-light-100);
+  font-family: var(--bz-font-gaming);
+  font-weight: 700;
+  margin-right: var(--bz-space-4);
+}
+
+.bz-leaderboard-rank.top-3 {
+  background: linear-gradient(135deg, var(--bz-secondary), var(--bz-accent));
+}
+
+.bz-leaderboard-player {
+  flex: 1;
+  font-weight: 600;
+  color: var(--bz-light-100);
+}
+
+.bz-leaderboard-score {
+  font-family: var(--bz-font-gaming);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--bz-primary);
+}
+
+/* === ENTRY OPTIONS === */
+.bz-entry-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--bz-space-4);
+  margin: var(--bz-space-6) 0;
+}
+
+.bz-entry-option {
+  background: var(--bz-dark-700);
+  border: 2px solid var(--bz-dark-600);
+  border-radius: var(--bz-radius-lg);
+  padding: var(--bz-space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--bz-transition-normal);
+}
+
+.bz-entry-option:hover {
+  border-color: var(--bz-primary);
+  background: var(--bz-dark-600);
+  transform: translateY(-2px);
+}
+
+.bz-entry-option.selected {
+  border-color: var(--bz-primary);
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.bz-entry-price {
+  font-family: var(--bz-font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--bz-primary);
+  margin: 0;
+}
+
+.bz-entry-label {
+  font-size: 0.875rem;
+  color: var(--bz-light-300);
+  margin: var(--bz-space-1) 0 0 0;
+}
+
+/* === STATUS INDICATORS === */
+.bz-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bz-space-2);
+  padding: var(--bz-space-2) var(--bz-space-4);
+  border-radius: var(--bz-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bz-status-success {
+  background: rgba(0, 255, 136, 0.1);
+  color: var(--bz-success);
+  border: 1px solid var(--bz-success);
+}
+
+.bz-status-warning {
+  background: rgba(255, 170, 0, 0.1);
+  color: var(--bz-warning);
+  border: 1px solid var(--bz-warning);
+}
+
+.bz-status-error {
+  background: rgba(255, 68, 68, 0.1);
+  color: var(--bz-error);
+  border: 1px solid var(--bz-error);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  .bz-tournament-card {
+    padding: var(--bz-space-4);
+  }
+  
+  .bz-tournament-title {
+    font-size: 1.5rem;
+  }
+  
+  .bz-entry-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .bz-leaderboard-entry {
+    padding: var(--bz-space-2) var(--bz-space-4);
+  }
+  
+  .bz-prize-amount {
+    font-size: 2rem;
+  }
+}

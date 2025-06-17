@@ -31,7 +31,7 @@
     </div>
 
     <script>
-        const apiBase = 'https://blockzone-api.hambo.workers.dev';
+        const apiBase = 'http://127.0.0.1:8787';
         const playerId = 'test_player_' + Date.now();
 
         async function testLeaderboard() {
@@ -43,12 +43,10 @@
             } catch (error) {
                 showResult('Leaderboard Error', error.message);
             }
-        }
-
-        async function testSubmitScore() {
+        }        async function testSubmitScore() {
             const score = Math.floor(Math.random() * 10000) + 1000;
             try {
-                const response = await fetch(`${apiBase}/api/submit-score`, {
+                const response = await fetch(`${apiBase}/api/scores`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ playerId, score })
@@ -59,12 +57,23 @@
             } catch (error) {
                 showResult('Submit Score Error', error.message);
             }
-        }
-
-        async function testTournamentStatus() {
+        }        async function testTournamentStatus() {
             try {
-                const response = await fetch(`${apiBase}/api/tournament-status`);
-                const data = await response.json();
+                // Since we don't have this endpoint yet, let's simulate it
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 0, 0);
+                if (now > today) today.setDate(today.getDate() + 1);
+                
+                const diff = today - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                
+                const data = {
+                    isActive: true,
+                    timeUntilEnd: `${hours}h ${minutes}m`,
+                    currentDate: now.toISOString().split('T')[0],
+                    note: "Simulated - endpoint not implemented yet"
+                };
                 showResult('Tournament Status', data);
             } catch (error) {
                 showResult('Tournament Status Error', error.message);
