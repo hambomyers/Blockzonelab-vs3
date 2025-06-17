@@ -35,10 +35,16 @@ export class GameOverSequence {
                     <div class="final-score-label">Final Score</div>
                     <div class="final-score-value">0</div>
                     <div class="high-score-indicator">✦ NEW HIGH SCORE ✦</div>
-                </div>
-
-                <!-- Choice buttons with generous spacing -->
+                </div>                <!-- Choice buttons with generous spacing -->
                 <div class="game-over-choices">
+                    <!-- Tournament Entry - The Money Game! -->
+                    <button class="game-over-btn tournament-btn" data-action="enter-tournament">
+                        <span class="btn-icon">💰</span>
+                        <span class="btn-text">Play for Money!</span>
+                        <span class="btn-subtitle">Daily Tournament • $2.50 entry</span>
+                        <span class="btn-shortcut">T</span>
+                    </button>
+                    
                     <button class="game-over-btn primary-btn" data-action="play-again">
                         <span class="btn-icon">↻</span>
                         <span class="btn-text">Play Again</span>
@@ -90,13 +96,15 @@ export class GameOverSequence {
                 console.log('Button clicked with action:', action);
                 this.handleChoice(action);
             }
-        });
-
-        // Handle keyboard input with MA-inspired graceful interactions
+        });        // Handle keyboard input with MA-inspired graceful interactions
         this.keyHandler = (e) => {
             if (!this.isActive || this.phase !== 'choices') return;
 
             switch (e.key) {
+                case 't':
+                case 'T':
+                    this.handleChoice('enter-tournament');
+                    break;
                 case 'Enter':
                 case ' ':
                     this.handleChoice('play-again');
@@ -109,9 +117,12 @@ export class GameOverSequence {
                     this.handleChoice('menu');
                     break;
                 case '1':
-                    this.handleChoice('play-again');
+                    this.handleChoice('enter-tournament');
                     break;
                 case '2':
+                    this.handleChoice('play-again');
+                    break;
+                case '3':
                     this.handleChoice('leaderboard');
                     break;
                 case '3':
@@ -161,27 +172,16 @@ export class GameOverSequence {
 
         // Start the Japanese MA-inspired sequence
         await this.executeMASequence();
-    }
-
-    updateGameStats(gameState) {
-        const statElements = this.container.querySelectorAll('.stat-value');
+    }    updateGameStats(gameState) {
+        const stats = [
+            (gameState.linesCleared || 0).toString(),
+            (gameState.level || 1).toString(),
+            gameState.gameTime ? `${Math.floor(gameState.gameTime / 60000)}:${Math.floor((gameState.gameTime % 60000) / 1000).toString().padStart(2, '0')}` : '0:00'
+        ];
         
-        // Update lines cleared
-        if (statElements[0]) {
-            statElements[0].textContent = (gameState.linesCleared || 0).toString();
-        }
-        
-        // Update level
-        if (statElements[1]) {
-            statElements[1].textContent = (gameState.level || 1).toString();
-        }
-        
-        // Update time (format as MM:SS)
-        if (statElements[2] && gameState.gameTime) {
-            const minutes = Math.floor(gameState.gameTime / 60000);
-            const seconds = Math.floor((gameState.gameTime % 60000) / 1000);
-            statElements[2].textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
+        this.container.querySelectorAll('.stat-value').forEach((el, i) => {
+            if (el && stats[i]) el.textContent = stats[i];
+        });
     }
 
     async executeMASequence() {
@@ -229,11 +229,13 @@ export class GameOverSequence {
         setTimeout(() => {
             this.executeChoice(action);
         }, 150);
-    }
-
-    executeChoice(action) {
+    }    executeChoice(action) {
         console.log('executeChoice called with action:', action);
         switch(action) {
+            case 'enter-tournament':
+                console.log('Executing enter-tournament');
+                this.enterTournament();
+                break;
             case 'play-again':
                 console.log('Executing play-again');
                 this.restartGame();
@@ -249,6 +251,185 @@ export class GameOverSequence {
             default:
                 console.log('Unknown action:', action);
         }
+    }
+
+    /**
+     * NEW: Enter Tournament - The Money Game!
+     */
+    async enterTournament() {
+        console.log('🎯 Entering tournament with score:', this.finalScore);
+        
+        try {
+            // Show loading state
+            this.showTournamentEntryFlow();
+            
+            // Check if already entered today
+            const playerId = this.getPlayerId();
+            const today = new Date().toISOString().split('T')[0];
+            const entryKey = `entry_${playerId}_${today}`;
+            
+            // For now, show the tournament entry options
+            this.showTournamentOptions();
+            
+        } catch (error) {
+            console.error('Tournament entry failed:', error);
+            this.showError('Tournament entry failed. Please try again.');
+        }
+    }
+
+    getPlayerId() {
+        // Generate or get existing player ID
+        let playerId = localStorage.getItem('blockzone_player_id');
+        if (!playerId) {
+            playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('blockzone_player_id', playerId);
+        }
+        return playerId;
+    }
+
+    showTournamentEntryFlow() {
+        // Replace game over content with tournament entry
+        const content = this.container.querySelector('.game-over-content');
+        content.innerHTML = `
+            <div class="tournament-entry-flow">
+                <div class="tournament-header">
+                    <h2>🏆 Daily Tournament</h2>
+                    <p>Compete for real money prizes!</p>
+                </div>
+                
+                <div class="score-highlight">
+                    <div class="score-label">Your Score</div>
+                    <div class="score-value">${this.finalScore.toLocaleString()}</div>
+                </div>
+                
+                <div class="tournament-options">
+                    <div class="entry-option" data-entry="daily">
+                        <div class="option-price">$2.50</div>
+                        <div class="option-label">All Day Pass</div>
+                        <div class="option-desc">Play unlimited games today</div>
+                    </div>
+                    
+                    <div class="entry-option" data-entry="single">
+                        <div class="option-price">$0.25</div>
+                        <div class="option-label">Single Game</div>
+                        <div class="option-desc">Just this one score</div>
+                    </div>
+                </div>
+                
+                <div class="tournament-actions">
+                    <button class="tournament-btn primary" onclick="gameOverSequence.confirmTournamentEntry()">
+                        Enter Tournament
+                    </button>
+                    <button class="tournament-btn secondary" onclick="gameOverSequence.cancelTournament()">
+                        Maybe Later
+                    </button>
+                </div>
+                
+                <div class="prize-preview">
+                    <p>Current Prize Pool: <span class="prize-amount">$45.00</span></p>
+                    <p>Your potential winnings: <span class="potential-prize">$18.00</span> (1st place)</p>
+                </div>
+            </div>
+        `;
+    }
+
+    showTournamentOptions() {
+        // Add event listeners for tournament options
+        const options = this.container.querySelectorAll('.entry-option');
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+    }
+
+    confirmTournamentEntry() {
+        const selectedOption = this.container.querySelector('.entry-option.selected');
+        if (!selectedOption) {
+            this.showError('Please select an entry option');
+            return;
+        }
+        
+        const entryType = selectedOption.dataset.entry;
+        console.log('Tournament entry confirmed:', entryType);
+        
+        // Here you would integrate with payment system
+        this.processTournamentEntry(entryType);
+    }
+
+    async processTournamentEntry(entryType) {
+        try {
+            // Show processing state
+            this.showProcessing('Processing payment...');
+            
+            // Simulate payment processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Submit score to tournament
+            await this.submitToTournament(entryType);
+            
+            // Show success and redirect to leaderboard
+            this.showTournamentSuccess();
+            
+        } catch (error) {
+            console.error('Tournament processing failed:', error);
+            this.showError('Payment failed. Please try again.');
+        }
+    }
+
+    async submitToTournament(entryType) {
+        const playerId = this.getPlayerId();
+        const score = this.finalScore;
+        
+        // This would connect to your tournament API
+        console.log('Submitting to tournament:', { playerId, score, entryType });
+        
+        // For demo, just log success
+        return { success: true, rank: 3 };
+    }    showTournamentSuccess() {
+        const content = this.container.querySelector('.game-over-content, .tournament-entry-flow');
+        content.innerHTML = `
+            <div class="tournament-success">
+                <div class="success-icon">🎉</div>
+                <h2>Tournament Entry Successful!</h2>
+                <p>Your score has been submitted to the daily leaderboard.</p>
+                
+                <div class="success-actions">
+                    <button class="tournament-btn primary" data-action="leaderboard">View Leaderboard</button>
+                    <button class="tournament-btn secondary" data-action="restart">Play Again</button>
+                </div>
+            </div>
+        `;
+    }
+
+    cancelTournament() {
+        this.setupUI();
+        this.updateDisplay();
+    }showMessage(type, message, duration = 3000) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `tournament-${type}`;
+        messageDiv.textContent = message;
+        this.container.appendChild(messageDiv);
+        
+        if (duration > 0) {
+            setTimeout(() => messageDiv.remove(), duration);
+        }
+        return messageDiv;
+    }
+
+    showProcessing(message) {
+        const content = this.container.querySelector('.tournament-entry-flow');
+        content.innerHTML = `
+            <div class="processing-state">
+                <div class="spinner"></div>
+                <p>${message}</p>
+            </div>
+        `;
+    }
+
+    showError(message) {
+        return this.showMessage('error', message);
     }
 
     /**
