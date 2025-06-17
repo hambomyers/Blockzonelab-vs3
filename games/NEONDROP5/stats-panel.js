@@ -3,12 +3,13 @@
  * Mirrors the guide panel but on the right side
  */
 
-export class StatsPanel {
-    constructor() {
+export class StatsPanel {    constructor() {
         this.container = null;
         this.isVisible = false;
         this.isMobile = window.innerWidth < 1200;
         this.updateInterval = null;
+        this.retryCount = 0;  // Add retry counter
+        this.maxRetries = 20; // Max retries before giving up
         
         // Session tracking (resets when page loads)
         this.sessionStats = {
@@ -32,14 +33,18 @@ export class StatsPanel {
     }
 
     positionPanel() {
-        if (this.isMobile) return;
-
-        const getZones = () => {
-            if (!window.neonDrop?.game?.renderer?.dimensions?.zones) {
+        if (this.isMobile) return;        const getZones = () => {
+            if (!window.neonDrop?.renderer?.dimensions?.zones) {
+                // Check retry limit to prevent infinite loop
+                if (this.retryCount >= this.maxRetries) {
+                    console.warn('⚠️ StatsPanel: Max retries reached, giving up positioning');
+                    return false;
+                }
+                this.retryCount++;
                 setTimeout(() => this.positionPanel(), 100);
                 return false;
             }
-            return window.neonDrop.game.renderer.dimensions.zones;
+            return window.neonDrop.renderer.dimensions.zones;
         };
 
         const zones = getZones();

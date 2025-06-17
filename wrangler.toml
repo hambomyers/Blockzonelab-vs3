@@ -1,0 +1,3 @@
+name = "blockzone-api"
+main = "./worker/leaderboard.js"
+compatibility_date = "2023-12-01"

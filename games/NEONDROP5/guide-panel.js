@@ -5,12 +5,13 @@
  * UPDATED: Fixed positioning to center in left space
  */
 
-export class GuidePanel {
-    constructor() {
+export class GuidePanel {    constructor() {
         this.container = null;
         this.mobileModal = null;
         this.isVisible = false;
         this.isMobile = window.innerWidth < 1200;
+        this.retryCount = 0;  // Add retry counter
+        this.maxRetries = 20; // Max retries before giving up
 
         this.setupPanel();
         this.setupMobileButton();
@@ -21,19 +22,30 @@ export class GuidePanel {
             // Try positioning after a delay
             setTimeout(() => this.positionPanel(), 500);
         }
-    }
-
-    positionPanel() {
+    }    positionPanel() {
         if (this.isMobile) return;
 
-        // Get zones from ViewportManager
+        // Debug what's available
+        console.log('🔍 GuidePanel positioning debug:', {
+            hasWindow: !!window.neonDrop,
+            hasGame: !!window.neonDrop?.game,
+            hasRenderer: !!window.neonDrop?.game?.renderer,
+            hasDimensions: !!window.neonDrop?.game?.renderer?.dimensions,
+            hasZones: !!window.neonDrop?.game?.renderer?.dimensions?.zones
+        });        // Get zones from ViewportManager
         const getZones = () => {
-            if (!window.neonDrop?.game?.renderer?.dimensions?.zones) {
+            if (!window.neonDrop?.renderer?.dimensions?.zones) {
+                // Check retry limit to prevent infinite loop
+                if (this.retryCount >= this.maxRetries) {
+                    console.warn('⚠️ GuidePanel: Max retries reached, giving up positioning');
+                    return false;
+                }
+                this.retryCount++;
                 // Try again if not ready
                 setTimeout(() => this.positionPanel(), 100);
                 return false;
             }
-            return window.neonDrop.game.renderer.dimensions.zones;
+            return window.neonDrop.renderer.dimensions.zones;
         };
 
         const zones = getZones();

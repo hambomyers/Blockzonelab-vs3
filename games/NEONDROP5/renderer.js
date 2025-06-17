@@ -728,36 +728,27 @@ export class Renderer {
                 this.renderBoard(state);
                 break;
         }
-    }
-      renderMenu(state) {
+    }    renderMenu(state) {
         this.dimBoard(0.7);
+
+        // Render the beautiful NEON DROP title
+        this.renderTitle();
 
         const pulse = Math.sin(Date.now() * 0.001) * 0.3 + 0.7;
 
         this.ctx.save();
         this.ctx.globalAlpha = pulse;
 
-        // Calculate text size to span the full gameplay canvas width
-        const targetWidth = this.dimensions.boardWidth;
-        let fontSize = this.dimensions.blockSize * 0.7;
-        this.ctx.font = `${fontSize}px monospace`;
-
-        // Adjust font size to fit the gameplay canvas width
-        let textWidth = this.ctx.measureText('PRESS SPACE TO START').width;
-        if (textWidth > targetWidth) {
-            fontSize = (targetWidth / textWidth) * fontSize * 0.95; // 95% to add some padding
-            this.ctx.font = `${fontSize}px monospace`;
-        }
-
+        // Simple prompt below title
+        this.ctx.font = `${this.dimensions.blockSize * 0.6}px monospace`;
         this.ctx.fillStyle = '#FFFF00';
         this.ctx.textAlign = 'center';
         this.ctx.shadowColor = '#FFFF00';
         this.ctx.shadowBlur = 10;
 
-        // Align with guide/stats panels: 50% of viewport height
         const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
-        const alignedY = this.canvas.height * 0.5; // 50% viewport height (matching CSS panels)
-        this.ctx.fillText('PRESS SPACE TO START', centerX, alignedY);
+        const promptY = this.dimensions.zones.title.y + this.dimensions.blockSize * 3;
+        this.ctx.fillText('PRESS SPACE TO START', centerX, promptY);
 
         this.ctx.restore();
     }

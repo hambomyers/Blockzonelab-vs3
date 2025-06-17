@@ -1,0 +1,1 @@
+// This file is intentionally left empty to prevent any favicon auto-save logic from running.

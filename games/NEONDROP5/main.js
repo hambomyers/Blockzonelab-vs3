@@ -50,12 +50,22 @@ class NeonDrop {
         // Global access for UI systems
         this.setupGlobals();
     }    setupGlobals() {
-        window.neonDrop = { game: this };  // Add this for panel positioning
+        // Set up the complete global API that panels expect
+        window.neonDrop = this;  // Panels expect the game instance directly
         window.leaderboard = this.leaderboard;
         window.leaderboardUI = new ArcadeLeaderboardUI(this.leaderboard);
         window.gameOverSequence = new GameOverSequence();
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;
+    }
+    
+    // Methods expected by panels
+    state() {
+        return this.engine?.getState() || {};
+    }
+    
+    config() {
+        return this.gameConfig || {};
     }
 
     async initialize() {
@@ -91,9 +101,15 @@ class NeonDrop {
         game.height = dims.canvasHeight;
         bg.width = innerWidth;
         bg.height = innerHeight;
-        
-        this.renderer = new Renderer(game, bg, this.config, dims);
+          this.renderer = new Renderer(game, bg, this.config, dims);
         this.renderer.viewportManager = this.viewport;
+        
+        // Debug: Check if renderer has zones for panel positioning
+        console.log('🔍 Renderer dimensions after creation:', {
+            hasZones: !!this.renderer.dimensions?.zones,
+            zones: this.renderer.dimensions?.zones,
+            dims: this.renderer.dimensions
+        });
     }
 
     createSystems() {        this.audio = new AudioSystem(this.config);
@@ -109,17 +125,20 @@ class NeonDrop {
         this.guide.positionPanel();
         
         this.stats = new StatsPanel();
-        this.stats.positionPanel();        // Beautiful tournament UI
+        this.stats.positionPanel();
+        
+        // Beautiful tournament UI (the working card)
         this.tournamentUI = new TournamentUI();
         this.tournamentUI.setTournament(this.tournament);
-          // Initialize professional UI state management with all UI elements
+          
+        // Initialize professional UI state management with all UI elements
         this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), window.gameOverSequence);
         
         // Start in APPLICATION_READY state (tournament modal center-stage)
         setTimeout(() => {
             this.uiStateManager.setState('APPLICATION_READY');
         }, 1000);
-    }    bindEvents() {        // Game over choices - now handled by state manager
+    }bindEvents() {        // Game over choices - now handled by state manager
         document.addEventListener('gameOverChoice', e => {
             const { action, score } = e.detail;
             console.log('🎮 Game over choice received:', action);
@@ -147,8 +166,7 @@ class NeonDrop {
         });// Tournament selection/start game
         document.addEventListener('startGame', e => {
             console.log('🎮 Starting game from tournament UI');
-            this.uiStateManager.beginGameplay();
-        });
+            this.uiStateManager.beginGameplay();        });
 
         // Window resize (debounced)
         let resizeTimer;
@@ -304,8 +322,7 @@ class NeonDrop {
         setTimeout(() => error.remove(), 5000);
     }    /**
      * Professional return to menu - handles full system reset via state manager
-     */
-    returnToMenuViaStateManager() {
+     */    returnToMenuViaStateManager() {
         console.log('🔄 Professional return to menu via state manager');
         
         // Reset game engine to clean state
@@ -315,6 +332,13 @@ class NeonDrop {
         
         // Let state manager handle the UI transitions
         this.uiStateManager.returnToMenu();
+        
+        // Show the beautiful menu overlay after a brief delay
+        setTimeout(() => {
+            if (this.gameMenuOverlay) {
+                this.gameMenuOverlay.show();
+            }
+        }, 1000);
     }
 
     destroy() {
@@ -329,7 +353,7 @@ function startGame() {
     try {
         const game = new NeonDrop();
         game.initialize();
-        window.neonDrop = game; // Debug access
+        // Global reference is set in setupGlobals()
     } catch (error) {
         console.error('Failed to start NeonDrop:', error);
     }

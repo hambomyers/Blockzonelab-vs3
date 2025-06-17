@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Players Schema",
+  "type": "object",
+  "properties": {
+    "playerId": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "score": { "type": "number" }
+  },
+  "required": ["playerId", "name", "score"]
+}
