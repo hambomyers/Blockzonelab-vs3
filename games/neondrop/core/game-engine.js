@@ -1,13 +1,13 @@
 /**
- * game-engine.js - Professional game engine with smooth transitions
+ * core/game-engine.js - Professional game engine with smooth transitions
  *
  * UPDATED: Now uses the new ScoringSystem
  */
 
 import * as Physics from './physics-pure.js';
-import { ParticleSystem } from './particles.js';
-import { CONSTANTS, PIECE_DEFINITIONS, calculateGravityDelay } from './config.js';
-import { ScoringSystem } from './scoring.js';
+import { ParticleSystem } from '../gameplay/particles.js';
+import { CONSTANTS, PIECE_DEFINITIONS, calculateGravityDelay } from '../config.js';
+import { ScoringSystem } from '../gameplay/scoring.js';
 
 /**
  * Game states enum - Now with transition states
@@ -1350,3 +1350,7 @@ class ProfessionalRNG {
         return choices[choices.length - 1];
     }
 }
+
+
+
+

@@ -1,7 +1,7 @@
 /**
- * scoring.js - The Actual File You Need to Create
+ * gameplay/scoring.js - The Actual File You Need to Create
  *
- * SAVE THIS AS A NEW FILE: scoring.js
+ * SAVE THIS AS A NEW FILE: gameplay/scoring.js
  * Put it in the same folder as your other game files
  * This tracks score, combos, and anti-cheat metrics
  */
@@ -246,3 +246,4 @@ export class ScoringSystem {
         };
     }
 }
+

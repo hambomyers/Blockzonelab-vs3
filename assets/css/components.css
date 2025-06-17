@@ -766,9 +766,6 @@
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 /* Premium Flash Effect on Hover */
@@ -925,4 +922,60 @@
   .choice-title {
     font-size: 1.25rem;
   }
+}
+
+/* Game Card Link Enhancements for AAA UX */
+.game-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.game-card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.game-card-link:focus {
+  outline: 2px solid var(--bz-primary);
+  outline-offset: 2px;
+  border-radius: var(--bz-radius-xl);
+}
+
+.bz-game-card-cta {
+  background: var(--bz-primary);
+  color: var(--bz-dark-900);
+  padding: var(--bz-space-2) var(--bz-space-4);
+  border-radius: var(--bz-radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--bz-transition-smooth);
+}
+
+.game-card-link:hover .bz-game-card-cta {
+  background: var(--bz-electric-blue);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+/* Enhanced card interaction states */
+.game-card-link:active {
+  transform: translateY(-4px) scale(0.98);
+}
+
+.game-card-link:hover .bz-game-card-title {
+  color: var(--bz-primary);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Ensure proper z-index and interaction */
+.bz-game-card {
+  position: relative;
+  z-index: 1;
+}
+
+.bz-game-card::before {
+  z-index: -1;
 }

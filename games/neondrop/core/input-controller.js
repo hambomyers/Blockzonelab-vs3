@@ -1,5 +1,5 @@
 /**
- * input-controller.js - Professional Game Input System
+ * core/input-controller.js - Professional Game Input System
  *
  * Handles all input methods with proper state checking
  * Fixed to work with cleaned game engine states
@@ -848,3 +848,4 @@ export class InputController {
         }
     }
 }
+

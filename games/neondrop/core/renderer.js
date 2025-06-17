@@ -1,5 +1,5 @@
 /**
- * renderer.js - Professional rendering pipeline with smooth transitions
+ * core/renderer.js - Professional rendering pipeline with smooth transitions
  *
  * Handles all visual output including:
  * - Game board and piece rendering
@@ -10,10 +10,9 @@
 
 import * as Physics from './physics-pure.js';
 
-import { PIECE_DEFINITIONS } from './config.js';
-import { ChicletRenderer } from './chiclet.js';
-import { createStarfieldRenderer } from './starfield.js';
-import { CONSTANTS } from './config.js';
+import { PIECE_DEFINITIONS, CONSTANTS } from '../config.js';
+import { ChicletRenderer } from '../gameplay/chiclet.js';
+import { createStarfieldRenderer } from '../gameplay/starfield.js';
 
 /**
  * Professional renderer with dynamic sizing and transitions
@@ -1624,3 +1623,7 @@ export class Renderer {
         this.ctx.restore();
     }
 }
+
+
+
+

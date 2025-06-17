@@ -1,5 +1,5 @@
 /**
-* physics-pure.js - Core collision detection and game physics
+* core/physics-pure.js - Core collision detection and game physics
 *
 * Handles: collision detection, piece rotation, line clearing
 * Pure functions only - no state, no side effects
@@ -273,3 +273,4 @@ export const getSpawnOpacity = (piece, pieceY, yOffset = 0) => {
 
 // Export constants
 export { PHYSICS_CONSTANTS };
+

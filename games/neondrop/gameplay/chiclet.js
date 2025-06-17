@@ -1,5 +1,5 @@
 /**
- * chiclet.js - Beautiful procedurally-varied glowing blocks
+ * gameplay/chiclet.js - Beautiful procedurally-varied glowing blocks
  * This is the visual heart of the game - each block is unique
  *
  * UPDATED: Enhanced FLOAT piece visual feedback
@@ -566,3 +566,4 @@ export function drawChiclet(ctx, x, y, size, color, borderColor = '#004488') {
     // The original drawBlock method expects: ctx, x, y, color, boardY, boardX, piece
     globalChicletRenderer.drawBlock(ctx, x, y, color, 0, 0, null);
 }
+

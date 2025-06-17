@@ -1,5 +1,5 @@
 /**
- * particles.js - AAA Particle System
+ * gameplay/particles.js - AAA Particle System
  *
  * SIMPLE FIX:
  * - 5x more gravity so they curve down faster
@@ -7,7 +7,7 @@
  * - Everything else EXACTLY the same
  */
 
-import { CONSTANTS } from './config.js';
+import { CONSTANTS } from '../config.js';
 
 export class ParticleSystem {
     constructor() {
@@ -192,3 +192,4 @@ export class ParticleSystem {
         return particle;
     }
 }
+

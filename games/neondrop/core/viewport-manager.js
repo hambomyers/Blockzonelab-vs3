@@ -1,5 +1,5 @@
 /**
- * viewport-manager.js - Single source of truth for ALL UI positioning
+ * core/viewport-manager.js - Single source of truth for ALL UI positioning
  *
  * Calculates optimal dimensions and zones for entire game UI
  * Bottom-anchored layout system
@@ -195,3 +195,4 @@ export class ViewportManager {
         this.container.style.transform = 'none'; // Remove vertical centering
     }
 }
+

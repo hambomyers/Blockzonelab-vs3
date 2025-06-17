@@ -3,22 +3,29 @@
  * Clean, bulletproof, 25% smaller than previous versions
  */
 
-import { GameEngine } from './game-engine.js';
-import { Renderer } from './renderer.js';
-import { InputController } from './input-controller.js';
-import { AudioSystem } from './audio-system.js';
+// Core game systems
+import { GameEngine } from './core/game-engine.js';
+import { Renderer } from './core/renderer.js';
+import { InputController } from './core/input-controller.js';
+import { AudioSystem } from './core/audio-system.js';
+import { ViewportManager } from './core/viewport-manager.js';
+
+// Game configuration and identity
 import { Config } from './config.js';
-import { GuidePanel } from './guide-panel.js';
-import { UIStateManager } from './ui-state-manager.js';
-import { ViewportManager } from './viewport-manager.js';
-import { StatsPanel } from './stats-panel.js';
 import { PlayerIdentity } from './player-identity.js';
-import { LeaderboardSystem } from './leaderboard.js';
-import { ArcadeLeaderboardUI } from './arcade-leaderboard-ui.js';
-import { GameOverSequence } from './game-over-sequence.js';
-import { TournamentUI } from './tournament-ui.js';
-import { DailyTournament } from '../../shared/daily-tournament.js';
-import { USDCPaymentSystem } from '../../shared/usdc-payment.js';
+
+// UI components
+import { GuidePanel } from './ui/guide-panel.js';
+import { UIStateManager } from './ui/ui-state-manager.js';
+import { StatsPanel } from './ui/stats-panel.js';
+import { LeaderboardSystem } from './ui/leaderboard.js';
+import { ArcadeLeaderboardUI } from './ui/arcade-leaderboard-ui.js';
+import { GameOverSequence } from './ui/game-over-sequence.js';
+import { TournamentUI } from './ui/tournament-ui.js';
+
+// Shared systems
+import { DailyTournament } from '../../shared/tournaments/daily-tournament.js';
+import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
 
 class NeonDrop {
     constructor() {
@@ -372,3 +379,11 @@ if (document.readyState === 'loading') {
 
 // Cleanup on exit
 addEventListener('beforeunload', () => window.neonDrop?.destroy());
+
+
+
+
+
+
+
+

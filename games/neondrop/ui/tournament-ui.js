@@ -1,5 +1,5 @@
 /**
- * tournament-ui.js - Beautiful, Understated Tournament Interface
+ * ui/tournament-ui.js - Beautiful, Understated Tournament Interface
  * Provides a subtle, elegant way to join tournaments
  */
 
@@ -228,3 +228,4 @@ export class TournamentUI {
         this.updateTournamentStatus();
     }
 }
+

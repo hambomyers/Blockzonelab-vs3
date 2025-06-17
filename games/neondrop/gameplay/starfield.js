@@ -1,5 +1,5 @@
 /**
- * starfield.js - Pure functional scientifically accurate night sky
+ * gameplay/starfield.js - Pure functional scientifically accurate night sky
  *
  * Easter egg: Hold S+T+A+R keys on menu screen
  * Brightness: Adjust with +/- keys (Shift+Plus or Minus)
@@ -468,3 +468,4 @@ export const createStarfieldRenderer = () => {
     render
   };
 };
+

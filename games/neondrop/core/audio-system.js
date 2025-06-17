@@ -1,5 +1,5 @@
 /**
-* audio-system.js - Clean, classic block game sounds
+* core/audio-system.js - Clean, classic block game sounds
 *
 * Simple, satisfying, and perfect for competitive play
 */
@@ -437,3 +437,4 @@ export class AudioSystem {
        }
    }
 }
+

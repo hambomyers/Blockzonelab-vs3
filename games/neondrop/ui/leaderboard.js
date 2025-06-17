@@ -33,7 +33,7 @@ export class LeaderboardSystem {
      * Submit score with anti-cheat proof
      */
     async submitScore(scoreData) {
-        // scoreData comes from our scoring.js system
+        // scoreData comes from our gameplay/scoring.js system
         const submission = {
             score: scoreData.score,
             replay_hash: scoreData.finalHash,
@@ -129,7 +129,7 @@ export class LeaderboardSystem {
     }
 
     /**
-     * Alias for getLeaderboard - used by game-over-sequence.js
+     * Alias for getLeaderboard - used by ui/game-over-sequence.js
      */
     async getTopScores(limit = 10) {
         // Try to get from stored local scores first
@@ -334,3 +334,5 @@ export class LeaderboardSystem {
  *     return true;
  * }
  */
+
+
