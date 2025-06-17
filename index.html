@@ -10,14 +10,18 @@
     <link rel="icon" type="image/svg+xml" sizes="16x16" href="assets/favicon-16x16.svg">
     <link rel="icon" type="image/svg+xml" sizes="64x64" href="assets/favicon-64x64.svg">
     <link rel="apple-touch-icon" href="assets/favicon-64x64.svg">
+      <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">    <!-- Professional CSS Architecture -->
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/portal.css">
-    <link rel="stylesheet" href="css/components.css">
+    <!-- Modular CSS Architecture -->
+    <link rel="stylesheet" href="assets/css/core-variables.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/utilities.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/blockzone-system.css">
     <link rel="stylesheet" href="assets/css/main.css">
-      <!-- Font Awesome Icons -->
+    
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
       <!-- Web3 Libraries -->
     <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
@@ -77,34 +81,81 @@
                 </p>
             </a>
         </div>
-    </main><!-- Premium Features Showcase -->
+    </main>    <!-- Premium Features Showcase -->
     <section class="premium-features">
         <div class="features-container">
             <h2 class="features-title">Premium Crypto Edutainment Experience</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Real USDC Tournaments</h3>
-                    <p>Compete daily for real money prizes with our revolutionary 90/10 fee structure. Winners actually win big.</p>
+            <div class="bz-card-grid-md">
+                <div class="bz-game-card bz-flash-on-hover">
+                    <div class="bz-game-card-header">
+                        <span class="bz-game-card-icon">🏆</span>
+                        <h3 class="bz-game-card-title">Real USDC Tournaments</h3>
+                        <p class="bz-game-card-subtitle">Daily competitions, real prizes</p>
+                    </div>
+                    
+                    <div class="bz-game-card-body">
+                        <p>Compete daily for real money prizes with our revolutionary 90/10 fee structure. Winners actually win big.</p>
+                    </div>
+                    
+                    <div class="bz-game-card-footer">
+                        <span class="bz-game-card-status live">Live Now</span>
+                        <a href="games/" class="bz-btn bz-btn-primary bz-btn-sm">Play</a>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📚</div>
-                    <h3>Interactive Crypto Education</h3>
-                    <p>Learn blockchain, DeFi, and Web3 through engaging lessons. Earn crypto rewards as you master the future of finance.</p>
+
+                <div class="bz-game-card bz-flash-on-hover">
+                    <div class="bz-game-card-header">
+                        <span class="bz-game-card-icon">📚</span>
+                        <h3 class="bz-game-card-title">Interactive Education</h3>
+                        <p class="bz-game-card-subtitle">Learn blockchain fundamentals</p>
+                    </div>
+                    
+                    <div class="bz-game-card-body">
+                        <p>Master blockchain, DeFi, and Web3 through engaging lessons. Earn crypto rewards as you learn the future of finance.</p>
+                    </div>
+                    
+                    <div class="bz-game-card-footer">
+                        <span class="bz-game-card-status live">Available</span>
+                        <a href="academy/" class="bz-btn bz-btn-secondary bz-btn-sm">Learn</a>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Sonic Labs Integration</h3>
-                    <p>Lightning-fast transactions, sub-second confirmations, and $0.001 fees. Experience the fastest blockchain gaming.</p>
+
+                <div class="bz-game-card bz-flash-on-hover">
+                    <div class="bz-game-card-header">
+                        <span class="bz-game-card-icon">⚡</span>
+                        <h3 class="bz-game-card-title">Sonic Labs Integration</h3>
+                        <p class="bz-game-card-subtitle">Lightning-fast blockchain</p>
+                    </div>
+                    
+                    <div class="bz-game-card-body">
+                        <p>Sub-second confirmations and $0.001 fees. Experience the fastest blockchain gaming and learning platform.</p>
+                    </div>
+                    
+                    <div class="bz-game-card-footer">
+                        <span class="bz-game-card-status live">Integrated</span>
+                        <a href="#sonic-partnership" class="bz-btn bz-btn-accent bz-btn-sm">Details</a>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💎</div>
-                    <h3>Fair Revenue Model</h3>
-                    <p>Following Sonic's Fee Monetization - 90% goes to players and learners, not corporate profits. Actually fair.</p>
+
+                <div class="bz-game-card bz-flash-on-hover">
+                    <div class="bz-game-card-header">
+                        <span class="bz-game-card-icon">💎</span>
+                        <h3 class="bz-game-card-title">Fair Revenue Model</h3>
+                        <p class="bz-game-card-subtitle">90% to value creators</p>
+                    </div>
+                    
+                    <div class="bz-game-card-body">
+                        <p>Following Sonic's philosophy - 90% goes to players and learners, not corporate profits. Actually fair distribution.</p>
+                    </div>
+                    
+                    <div class="bz-game-card-footer">
+                        <span class="bz-game-card-status live">Active</span>
+                        <a href="#partnership" class="bz-btn bz-btn-outline bz-btn-sm">Learn More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>    <!-- Sonic Labs Partnership Section -->
+    </section><!-- Sonic Labs Partnership Section -->
     <section class="sonic-partnership">
         <div class="partnership-content">
             <h2 class="partnership-title">Built on Sonic's Revolutionary Model</h2>

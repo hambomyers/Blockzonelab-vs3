@@ -17,7 +17,7 @@
   Content-Type: application/javascript
   Cache-Control: public, max-age=300, must-revalidate
 
-/games/neondrop5/*
+/games/neondrop/*
   Cache-Control: public, max-age=31536000
   Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Opener-Policy: same-origin

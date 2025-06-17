@@ -76,20 +76,218 @@
 }
 
 /* === CARD COMPONENTS === */
+
+/* Playing Card Base - Elegant proportions (2.5" x 3.5" ratio) */
 .bz-card {
   background: var(--bz-dark-800);
   border: 1px solid var(--bz-dark-600);
   border-radius: var(--bz-radius-lg);
   padding: var(--bz-space-6);
   box-shadow: var(--bz-shadow-md);
-  transition: all var(--bz-transition-normal);
+  transition: all var(--bz-transition-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
 .bz-card:hover {
   border-color: var(--bz-primary);
-  box-shadow: var(--bz-shadow-lg);
+  box-shadow: var(--bz-shadow-xl), 0 0 20px rgba(212, 175, 55, 0.3);
+  transform: translateY(-4px);
 }
 
+.bz-card:hover::before {
+  opacity: 1;
+}
+
+.bz-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(212, 175, 55, 0.05) 0%, 
+    rgba(230, 199, 87, 0.08) 50%, 
+    rgba(212, 175, 55, 0.05) 100%);
+  opacity: 0;
+  transition: opacity var(--bz-transition-smooth);
+  pointer-events: none;
+}
+
+/* Playing Card Sizes */
+.bz-card-sm {
+  width: 200px;
+  height: 280px;
+  padding: var(--bz-space-4);
+}
+
+.bz-card-md {
+  width: 250px;
+  height: 350px;
+  padding: var(--bz-space-5);
+}
+
+.bz-card-lg {
+  width: 300px;
+  height: 420px;
+  padding: var(--bz-space-6);
+}
+
+/* Game Cards - For homepage game selection */
+.bz-game-card {
+  width: 280px;
+  height: 380px;
+  background: linear-gradient(135deg, var(--bz-dark-800), var(--bz-dark-700));
+  border: 2px solid transparent;
+  border-radius: var(--bz-radius-xl);
+  padding: var(--bz-space-6);
+  cursor: pointer;
+  transition: all var(--bz-transition-smooth);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bz-game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    transparent 0%, 
+    rgba(212, 175, 55, 0.1) 50%, 
+    transparent 100%);
+  opacity: 0;
+  transition: all var(--bz-transition-smooth);
+}
+
+.bz-game-card:hover {
+  border-color: var(--bz-primary);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.bz-game-card:hover::before {
+  opacity: 1;
+}
+
+.bz-game-card:hover .bz-game-card-title {
+  color: var(--bz-primary);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.bz-game-card-header {
+  text-align: center;
+  margin-bottom: var(--bz-space-4);
+}
+
+.bz-game-card-icon {
+  font-size: 3rem;
+  margin-bottom: var(--bz-space-3);
+  display: block;
+}
+
+.bz-game-card-title {
+  font-family: var(--bz-font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bz-light-100);
+  margin: 0;
+  transition: all var(--bz-transition-smooth);
+}
+
+.bz-game-card-subtitle {
+  font-size: 0.875rem;
+  color: var(--bz-light-300);
+  margin: var(--bz-space-1) 0 0 0;
+}
+
+.bz-game-card-body {
+  color: var(--bz-light-200);
+  line-height: 1.6;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.bz-game-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--bz-space-4);
+  padding-top: var(--bz-space-4);
+  border-top: 1px solid var(--bz-dark-600);
+}
+
+.bz-game-card-status {
+  font-size: 0.75rem;
+  padding: var(--bz-space-1) var(--bz-space-2);
+  border-radius: var(--bz-radius-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bz-game-card-status.live {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.bz-game-card-status.coming-soon {
+  background: rgba(156, 163, 175, 0.2);
+  color: #9ca3af;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+/* Card Grid Layout System */
+.bz-card-grid {
+  display: grid;
+  gap: var(--bz-space-6);
+  justify-items: center;
+  align-items: start;
+}
+
+.bz-card-grid-sm {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--bz-space-4);
+}
+
+.bz-card-grid-md {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--bz-space-6);
+}
+
+.bz-card-grid-lg {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--bz-space-8);
+}
+
+/* Responsive card grids */
+@media (max-width: 768px) {
+  .bz-card-grid-md {
+    grid-template-columns: 1fr;
+    gap: var(--bz-space-4);
+  }
+  
+  .bz-game-card {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    min-height: 300px;
+  }
+}
+
+/* Legacy card styles for backward compatibility */
 .bz-card-header {
   margin-bottom: var(--bz-space-4);
   padding-bottom: var(--bz-space-4);
@@ -119,6 +317,21 @@
   margin-top: var(--bz-space-6);
   padding-top: var(--bz-space-4);
   border-top: 1px solid var(--bz-dark-600);
+}
+
+/* Flash Effect for Premium Interactions */
+@keyframes bz-flash {
+  0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6), 0 0 30px rgba(212, 175, 55, 0.4); }
+  100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
+}
+
+.bz-flash-on-hover:hover {
+  animation: bz-flash 1.5s ease-in-out infinite;
+}
+
+.bz-flash-once {
+  animation: bz-flash 0.8s ease-in-out;
 }
 
 /* === TOURNAMENT COMPONENTS === */

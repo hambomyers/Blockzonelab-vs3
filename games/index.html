@@ -1,38 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>BlockZone Arcade - Retro Gaming Paradise - Blockzone Lab</title> <link rel="stylesheet" href="../academy/core/academy-styles.css"> <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockZone Arcade - Premium Gaming Experience</title>
+    
+    <!-- Import our modular CSS system -->
+    <link rel="stylesheet" href="../assets/css/core-variables.css">
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/utilities.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/blockzone-system.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body> <header> <div class="container"> <div class="logo">BlockZone Lab</div> <nav> <a href="../index.html">Portal</a> <a href="./" class="active">Games</a> <a href="../academy/">Academy</a> </nav> </div> </header> <div class="arcade-container"> <!-- Floating Background Elements --> <div class="floating-shapes"> <div class="shape cube"></div> <div class="shape triangle"></div> <div class="shape circle"></div> <div class="shape diamond"></div> <div class="shape hexagon"></div> </div> <!-- Hero Section --> <section class="arcade-hero"> <div class="hero-content"> <h1 class="arcade-title"> <span class="title-main">BLOCKZONE</span> <span class="title-sub">ARCADE</span> </h1> <p class="arcade-subtitle">Where Retro Meets Crypto</p>                <p class="arcade-description">
-                    Step into the neon-soaked world of BlockZone Arcade, where classic 80s gaming meets cutting-edge blockchain technology.
-                    Earn Stardust rewards, climb leaderboards, and experience the future of gaming in our unified ecosystem!
-                </p><div class="arcade-stats"> <div class="stat-card"> <div class="stat-icon">🎮</div> <div class="stat-number">5</div> <div class="stat-label">Games</div> </div> <div class="stat-card"> <div class="stat-icon">🏆</div> <div class="stat-number">1,337</div> <div class="stat-label">Players</div> </div> <div class="stat-card"> <div class="stat-icon">�</div> <div class="stat-number">∞</div> <div class="stat-label">Stardust</div> </div> </div> <div class="hero-actions"> <a href="#games" class="neon-btn primary">Start Playing</a> <a href="#leaderboards" class="neon-btn secondary">View Leaderboards</a> </div> </div> </section> <!-- Games Grid --> <section id="games" class="games-section"> <h2 class="section-title"> <span class="title-text">AVAILABLE GAMES</span> <span class="title-underline"></span> </h2> <div class="games-grid"> <!-- NeonDrop - Featured Game --> <div class="game-card featured"> <div class="game-header"> <div class="game-status">🔥 HOT</div> <div class="game-difficulty expert">EXPERT</div> </div> <div class="game-visual"> <div class="game-icon neon-drop">⭐</div> <div class="game-glow"></div> </div> <div class="game-info"> <h3 class="game-title">NEONDROP</h3> <p class="game-description">The ultimate falling block puzzle game with a retro twist. Master the art of tetris-like gameplay while earning QUARTERS tokens for your skills!</p> <div class="game-features"> <span class="feature">💰 Earn QUARTERS</span> <span class="feature">🏆 Leaderboards</span> <span class="feature">⚡ Power-ups</span> </div> <div class="game-stats"> <div class="stat"> <span class="stat-value">4.9</span> <span class="stat-label">★ Rating</span> </div> <div class="stat"> <span class="stat-value">1.2K</span> <span class="stat-label">Players</span> </div> </div> </div> <a href="NEONDROP5/" class="game-btn">PLAY NOW</a> </div> <!-- Coming Soon Games --> <div class="game-card coming-soon"> <div class="game-header"> <div class="game-status">🚀 SOON</div> <div class="game-difficulty intermediate">MEDIUM</div> </div> <div class="game-visual"> <div class="game-icon crypto-runner">🏃</div> <div class="game-glow"></div> </div> <div class="game-info"> <h3 class="game-title">CRYPTO RUNNER</h3> <p class="game-description">Endless runner through a digital blockchain world. Collect tokens, dodge FUD, and sprint toward financial freedom!</p> <div class="game-features"> <span class="feature">🏃 Endless Runner</span> <span class="feature">💎 Token Collection</span> <span class="feature">🌐 Blockchain Theme</span> </div> <div class="coming-soon-badge">Coming Q3 2025</div> </div> <div class="game-btn disabled">COMING SOON</div> </div> <div class="game-card coming-soon"> <div class="game-header"> <div class="game-status">🎪 NEW</div> <div class="game-difficulty expert">HARD</div> </div> <div class="game-visual"> <div class="game-icon defi-defense">🛡️</div> <div class="game-glow"></div> </div> <div class="game-info"> <h3 class="game-title">DeFi DEFENSE</h3> <p class="game-description">Tower defense meets DeFi! Protect your liquidity pools from rugpulls, exploits, and market crashes.</p> <div class="game-features"> <span class="feature">🛡️ Tower Defense</span> <span class="feature">💧 Liquidity Pools</span> <span class="feature">📊 DeFi Strategy</span> </div> <div class="coming-soon-badge">In Development</div> </div> <div class="game-btn disabled">COMING SOON</div> </div> </div> </section> <!-- Token Economy --> <section class="token-economy"> <h2 class="section-title"> <span class="title-text">QUARTERS TOKEN ECONOMY</span> <span class="title-underline"></span> </h2> <div class="economy-grid"> <div class="economy-card"> <div class="economy-icon">🎮</div> <h3>Play & Earn</h3> <p>Every game session rewards you with QUARTERS tokens based on your performance, achievements, and time played.</p> <div class="reward-example"> <span class="example-label">Example:</span> <span class="example-value">100-500 QUARTERS per game</span> </div> </div> <div class="economy-card"> <div class="economy-icon">🏆</div> <h3>Compete & Win</h3> <p>Top leaderboard positions earn bonus rewards. Weekly tournaments offer massive QUARTERS prizes for skilled players.</p> <div class="reward-example"> <span class="example-label">Weekly Prize:</span> <span class="example-value">10,000 QUARTERS</span> </div> </div> <div class="economy-card"> <div class="economy-icon">💎</div> <h3>Spend & Upgrade</h3> <p>Use QUARTERS to unlock power-ups, customize your experience, and gain access to exclusive game modes and features.</p> <div class="reward-example"> <span class="example-label">Power-up:</span> <span class="example-value">50-200 QUARTERS</span> </div> </div> </div> </section> <!-- Leaderboards Preview --> <section id="leaderboards" class="leaderboards-section"> <h2 class="section-title"> <span class="title-text">GLOBAL LEADERBOARDS</span> <span class="title-underline"></span> </h2> <div class="leaderboard-preview"> <div class="leaderboard-header"> <h3>🏆 NeonDrop - Top Players This Week</h3> <a href="NEONDROP5/" class="view-full-link">View Full Leaderboard →</a> </div> <div class="top-players"> <div class="player-card champion"> <div class="rank">👑</div> <div class="player-info"> <div class="player-name">CryptoMaster88</div> <div class="player-score">1,337,420 pts</div> </div> <div class="player-reward">🥇 2,500 QUARTERS</div> </div> <div class="player-card"> <div class="rank">🥈</div> <div class="player-info"> <div class="player-name">BlockchainBabe</div> <div class="player-score">1,234,567 pts</div> </div> <div class="player-reward">🥈 1,500 QUARTERS</div> </div> <div class="player-card"> <div class="rank">🥉</div> <div class="player-info"> <div class="player-name">NeonNinja</div> <div class="player-score">987,654 pts</div> </div> <div class="player-reward">🥉 1,000 QUARTERS</div> </div> </div> </div> </section> <!-- Call to Action --> <section class="arcade-cta"> <div class="cta-content"> <h2>Ready to Enter the BlockZone?</h2> <p>Join the revolution where gaming meets blockchain technology</p> <div class="cta-actions"> <a href="NEONDROP5/" class="neon-btn primary large">Play NeonDrop</a> <a href="../academy/" class="neon-btn secondary">Learn Crypto First</a> </div> <p class="cta-note">💡 New to crypto? Check out our Academy to learn while you earn!</p> </div> </section> </div> <!-- Background Audio Toggle --> <div class="audio-controls"> <button id="audioToggle" class="audio-btn" aria-label="Toggle background music">
-            🔊
-        </button> </div> <script>
-        // Floating shapes animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const shapes = document.querySelectorAll('.floating-shapes .shape');
+<body>
+    <header class="bz-header">
+        <div class="container">
+            <div class="bz-logo">BlockZone Lab</div>
+            <nav class="bz-nav">
+                <a href="../index.html">Portal</a>
+                <a href="./" class="active">Games</a>
+                <a href="../academy/">Academy</a>
+            </nav>
+        </div>
+    </header>
 
-            shapes.forEach((shape, index) => {
-                const duration = 15 + (index * 3); // Varying durations
-                const delay = index * 2; // Staggered start times
+    <main class="games-page">
+        <!-- Hero Section -->
+        <section class="games-hero">
+            <div class="container">
+                <h1 class="bz-title-xl bz-glow-text">BlockZone Arcade</h1>
+                <p class="bz-text-lg bz-text-muted">Premium gaming meets blockchain technology</p>
+            </div>
+        </section>
 
-                shape.style.animationDuration = duration + 's';
-                shape.style.animationDelay = delay + 's';
-            });
+        <!-- Games Grid -->
+        <section class="games-section">
+            <div class="container">
+                <h2 class="bz-title-lg bz-text-center bz-mb-8">Available Games</h2>
+                
+                <div class="bz-card-grid-md">
+                    <!-- NeonDrop - Live Game -->
+                    <div class="bz-game-card bz-flash-on-hover">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">⭐</span>
+                            <h3 class="bz-game-card-title">NeonDrop</h3>
+                            <p class="bz-game-card-subtitle">Precision Arcade Action</p>
+                        </div>
+                        
+                        <div class="bz-game-card-body">
+                            <p>Master the art of falling block puzzles with neon aesthetics. Compete in daily USDC tournaments with $200+ prize pools.</p>
+                        </div>
+                        
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Live</span>
+                            <a href="neondrop/" class="bz-btn bz-btn-primary bz-btn-sm">Play Now</a>
+                        </div>
+                    </div>
 
-            // Audio toggle functionality
-            const audioToggle = document.getElementById('audioToggle');
-            let audioEnabled = false;
+                    <!-- Crypto Runner - Coming Soon -->
+                    <div class="bz-game-card">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🏃</span>
+                            <h3 class="bz-game-card-title">Crypto Runner</h3>
+                            <p class="bz-game-card-subtitle">Endless Blockchain Adventure</p>
+                        </div>
+                        
+                        <div class="bz-game-card-body">
+                            <p>Sprint through digital worlds, collect tokens, and dodge market volatility in this high-speed endless runner.</p>
+                        </div>
+                        
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status coming-soon">Q3 2025</span>
+                            <button class="bz-btn bz-btn-outline bz-btn-sm" disabled>Coming Soon</button>
+                        </div>
+                    </div>
 
-            audioToggle.addEventListener('click', function() {
-                audioEnabled = !audioEnabled;
-                audioToggle.textContent = audioEnabled ? '🔊' : '🔇';
-                audioToggle.setAttribute('aria-label', audioEnabled ? 'Mute background music' : 'Unmute background music');
+                    <!-- DeFi Defense - Coming Soon -->
+                    <div class="bz-game-card">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🛡️</span>
+                            <h3 class="bz-game-card-title">DeFi Defense</h3>
+                            <p class="bz-game-card-subtitle">Tower Defense Strategy</p>
+                        </div>
+                        
+                        <div class="bz-game-card-body">
+                            <p>Protect your liquidity pools from market crashes and exploits in this DeFi-themed tower defense game.</p>
+                        </div>
+                        
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status coming-soon">In Dev</span>
+                            <button class="bz-btn bz-btn-outline bz-btn-sm" disabled>Coming Soon</button>
+                        </div>
+                    </div>
 
-                // Here you would implement actual audio control
-                console.log('Audio ' + (audioEnabled ? 'enabled' : 'disabled'));
-            });
-        });
-    </script>
+                    <!-- Placeholder for future games -->
+                    <div class="bz-game-card" style="opacity: 0.5;">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🎮</span>
+                            <h3 class="bz-game-card-title">More Games</h3>
+                            <p class="bz-game-card-subtitle">Expanding Library</p>
+                        </div>
+                        
+                        <div class="bz-game-card-body">
+                            <p>We're building a library of 30+ premium games. Each designed for competitive tournaments and real prizes.</p>
+                        </div>
+                        
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status coming-soon">2024-2025</span>
+                            <button class="bz-btn bz-btn-ghost bz-btn-sm" disabled>Stay Tuned</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tournament Info -->
+        <section class="tournament-info bz-py-16">
+            <div class="container">
+                <div class="bz-card bz-card-lg" style="max-width: 600px; margin: 0 auto;">
+                    <div class="bz-card-header">
+                        <h2 class="bz-card-title">🏆 Daily Tournaments</h2>
+                        <p class="bz-card-subtitle">Real USDC prizes, fair competition</p>
+                    </div>
+                    
+                    <div class="bz-card-body">
+                        <p class="bz-mb-4">Join our revolutionary tournament system where 90% of entry fees go directly to players. With Sonic Labs' lightning-fast blockchain, payouts are instant and costs are minimal.</p>
+                        
+                        <div class="tournament-stats bz-grid bz-grid-3 bz-gap-4 bz-mt-6">
+                            <div class="stat-card bz-text-center">
+                                <div class="stat-number bz-text-2xl bz-font-bold bz-text-primary">90%</div>
+                                <div class="stat-label bz-text-sm bz-text-muted">to players</div>
+                            </div>
+                            <div class="stat-card bz-text-center">
+                                <div class="stat-number bz-text-2xl bz-font-bold bz-text-primary">$200+</div>
+                                <div class="stat-label bz-text-sm bz-text-muted">daily prizes</div>
+                            </div>
+                            <div class="stat-card bz-text-center">
+                                <div class="stat-number bz-text-2xl bz-font-bold bz-text-primary">$2.50</div>
+                                <div class="stat-label bz-text-sm bz-text-muted">entry fee</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bz-card-footer">
+                        <a href="neondrop/" class="bz-btn bz-btn-primary bz-btn-lg">Start Playing</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        /* Page-specific styles */
+        .games-page {
+            min-height: 100vh;
+            background: var(--bz-gradient-dark);
+        }
+        
+        .games-hero {
+            padding: var(--bz-space-16) 0 var(--bz-space-8);
+            text-align: center;
+        }
+        
+        .games-section {
+            padding: var(--bz-space-8) 0;
+        }
+        
+        .tournament-stats {
+            border-top: 1px solid var(--bz-dark-600);
+            padding-top: var(--bz-space-4);
+        }
+        
+        .stat-card {
+            padding: var(--bz-space-2);
+        }
+    </style>
 </body>
 </html>

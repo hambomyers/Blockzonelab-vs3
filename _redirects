@@ -1,3 +1,2 @@
 # Main redirects
-/games/neondrop/* /games/NEONDROP5/:splat 200
 /learn/* /academy/:splat 200
