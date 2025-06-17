@@ -1,4 +1,4 @@
-// The Conspiracy Timeline - Interactive JavaScript
+﻿// The Conspiracy Timeline - Interactive JavaScript
 // Lesson 2: Money, Information & Scarcity
 
 // Timeline Data

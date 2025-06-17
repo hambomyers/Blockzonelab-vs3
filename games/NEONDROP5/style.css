@@ -28,10 +28,8 @@
 }
 
 body {
-    /* Very subtle ambient enhancement */
-    background: radial-gradient(ellipse at center,
-        rgba(0, 15, 30, 0.03) 0%,
-        rgba(0, 0, 0, 1) 80%) !important;
+    /* Clean solid background */
+    background: #000 !important;
 }
 
 /* ============ YOUR ORIGINAL CSS BELOW (UNCHANGED) ============ */
@@ -1759,4 +1757,137 @@ body {
         padding: 6px 12px;
         font-size: 8px;
     }
+}
+
+/* ============ GAME NAVIGATION (Using Your Design System) ============ */
+.game-nav {
+    position: fixed;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    pointer-events: none;
+}
+
+.game-nav > * {
+    pointer-events: all;
+}
+
+.game-title {
+    background: rgba(0, 255, 136, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: #00ff88;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.wallet-status {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.wallet-status:hover {
+    border-color: var(--color-primary);
+    color: var(--text-primary);
+}
+
+/* ============ CHALLENGE SYSTEM (Using Your Card Component) ============ */
+.challenge-panel {
+    position: fixed;
+    top: 80px;
+    right: var(--spacing-md);
+    width: 300px;
+    z-index: 999;
+    font-family: var(--font-mono);
+}
+
+.challenge-panel.hidden {
+    display: none;
+}
+
+.challenge-header h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--color-secondary);
+    font-size: 1.125rem;
+}
+
+.challenge-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.challenge-option {
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.main-challenge {
+    border: 1px solid #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.main-challenge:hover {
+    background: rgba(0, 255, 136, 0.2);
+    transform: translateY(-2px);
+}
+
+.high-rollers-challenge {
+    border: 1px solid #ff6b35;
+    background: rgba(255, 107, 53, 0.1);
+}
+
+.high-rollers-challenge:hover {
+    background: rgba(255, 107, 53, 0.2);
+    transform: translateY(-2px);
+}
+
+.challenge-title {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.main-challenge .challenge-title {
+    color: #00ff88;
+}
+
+.high-rollers-challenge .challenge-title {
+    color: #ff6b35;
+}
+
+.challenge-entry {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.challenge-status {
+    padding: var(--spacing-md);
+    background: rgba(0, 255, 136, 0.1);
+    border-radius: 8px;
+    margin-top: var(--spacing-md);
+}
+
+.challenge-btn {
+    position: fixed;
+    top: var(--spacing-md);
+    right: 200px;
+    z-index: 1000;
 }

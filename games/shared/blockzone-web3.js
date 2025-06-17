@@ -2,7 +2,6 @@
  * BLOCKZONE LAB - Shared Web3 Integration
  * Core blockchain infrastructure for all games
  */
-
 export class BlockZoneWeb3 {
     constructor() {
         this.isConnected = false;
@@ -10,11 +9,11 @@ export class BlockZoneWeb3 {
         this.provider = null;
         this.signer = null;
         this.network = null;
-        
+
         // Import blockchain bridge
         this.blockchain = null;
         this.wallet = null;
-        
+
         this.init();
     }
 
@@ -24,15 +23,17 @@ export class BlockZoneWeb3 {
             console.warn('Sonic config not loaded. Loading fallback...');
             await this.loadSonicConfig();
         }
-        
+
         // Check for existing connection
         this.checkExistingConnection();
-    }    async loadSonicConfig() {
+    }
+
+    async loadSonicConfig() {
         // Fallback if config script didn't load
         const script = document.createElement('script');
         script.src = '/core-systems/sonic-config.js';
         document.head.appendChild(script);
-        
+
         return new Promise(resolve => {
             script.onload = resolve;
         });
@@ -41,10 +42,10 @@ export class BlockZoneWeb3 {
     async checkExistingConnection() {
         if (window.ethereum) {
             try {
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_accounts' 
+                const accounts = await window.ethereum.request({
+                    method: 'eth_accounts'
                 });
-                
+
                 if (accounts.length > 0) {
                     await this.connect();
                 }
@@ -90,7 +91,6 @@ export class BlockZoneWeb3 {
             this.onConnect(this.account);
 
             return this.account;
-
         } catch (error) {
             console.error('Connection failed:', error);
             throw error;
@@ -102,7 +102,7 @@ export class BlockZoneWeb3 {
             // Dynamically import blockchain bridge
             const { BlockchainBridge } = await import('/core-systems/core/blockchain.js');
             const { WalletOnboarding } = await import('/core-systems/core/wallet-onboarding.js');
-            
+
             // Initialize with mock config for now
             const mockConfig = {
                 get: (key) => {
@@ -117,7 +117,6 @@ export class BlockZoneWeb3 {
 
             this.blockchain = new BlockchainBridge(mockConfig);
             this.wallet = new WalletOnboarding(mockConfig, this.blockchain);
-
         } catch (error) {
             console.warn('Could not load blockchain modules:', error);
         }
@@ -154,7 +153,7 @@ export class BlockZoneWeb3 {
         // Update wallet connection status in UI
         const connectBtns = document.querySelectorAll('.wallet-connect-btn');
         const walletStatus = document.querySelectorAll('.wallet-status');
-        
+
         connectBtns.forEach(btn => {
             if (this.isConnected) {
                 btn.textContent = `${this.account.slice(0, 6)}...${this.account.slice(-4)}`;

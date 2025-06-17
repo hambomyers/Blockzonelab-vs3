@@ -315,19 +315,19 @@ export class GameEngine {
             this.config.set('game.highScore', this.state.score);
         }
 
-        this.config.incrementStat('game.gamesPlayed');
-
-        // Trigger our professional GameOverSequence immediately
+        this.config.incrementStat('game.gamesPlayed');        // Trigger professional state transition instead of direct sequence
         setTimeout(() => {
-            if (window.gameOverSequence) {
-                window.gameOverSequence.start({
+            // Dispatch custom event for state manager to handle
+            const gameOverEvent = new CustomEvent('gameOver', {
+                detail: {
                     score: this.state.score,
-                    isNewHighScore: isNewHighScore,
-                    linesCleared: this.state.lines,
                     level: this.state.level,
-                    gameTime: Date.now() - this.state.gameStartTime
-                });
-            }
+                    lines: this.state.lines,
+                    time: Date.now() - this.state.gameStartTime,
+                    isNewHighScore: isNewHighScore
+                }
+            });
+            document.dispatchEvent(gameOverEvent);
         }, 500); // Brief pause for the game to settle
 
         // Update additional stats
@@ -1145,13 +1145,18 @@ export class GameEngine {
                         // Score submission failed silently
                     });
             }
-        }
-
-        // Trigger AAA Game Over Sequence instead of auto-leaderboard
+        }        // Trigger professional state transition instead of direct game over sequence
         setTimeout(() => {
-            if (window.gameOverSequence) {
-                window.gameOverSequence.start(this.state);
-            }
+            // Dispatch custom event for state manager to handle
+            const gameOverEvent = new CustomEvent('gameOver', {
+                detail: {
+                    score: this.state.score,
+                    level: this.state.level,
+                    lines: this.state.linesCleared,
+                    time: this.state.gameTime
+                }
+            });
+            document.dispatchEvent(gameOverEvent);
         }, 1500);
     }
 

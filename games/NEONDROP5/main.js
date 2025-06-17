@@ -1,9 +1,6 @@
 /**
- * main.js - Clean Game Bootstrap (AAA Architecture)
- *
- * ONLY handles core game initialization
- * NO blockchain, NO wallet, NO monetization
- * Those will be added as plugins later
+ * NeonDrop - Optimized Main Controller
+ * Clean, bulletproof, 25% smaller than previous versions
  */
 
 import { GameEngine } from './game-engine.js';
@@ -12,529 +9,339 @@ import { InputController } from './input-controller.js';
 import { AudioSystem } from './audio-system.js';
 import { Config } from './config.js';
 import { GuidePanel } from './guide-panel.js';
+import { UIStateManager } from './ui-state-manager.js';
 import { ViewportManager } from './viewport-manager.js';
 import { StatsPanel } from './stats-panel.js';
 import { PlayerIdentity } from './player-identity.js';
 import { LeaderboardSystem } from './leaderboard.js';
 import { ArcadeLeaderboardUI } from './arcade-leaderboard-ui.js';
 import { GameOverSequence } from './game-over-sequence.js';
+import { TournamentUI } from './tournament-ui.js';
+import { DailyTournament } from '../../shared/daily-tournament.js';
+import { USDCPaymentSystem } from '../../shared/usdc-payment.js';
 
 class NeonDrop {
     constructor() {
+        // Core config & viewport
         this.config = new Config();
-        this.viewportManager = new ViewportManager();
-
-        // Core game systems only
+        this.viewport = new ViewportManager();
+        
+        // Game systems (null until initialized)
         this.engine = null;
         this.renderer = null;
         this.audio = null;
-        this.input = null;
-
-        // UI panels
-        this.guidePanel = null;
-        this.statsPanel = null;
-
-        // Game state
-        this.initialized = false;
+        this.input = null;        // UI systems
+        this.guide = null;
+        this.stats = null;
+        this.tournamentUI = null;
+        this.uiStateManager = new UIStateManager();
+        this.identity = new PlayerIdentity();
+        this.leaderboard = new LeaderboardSystem();
+        
+        // Web3 systems (bulletproof)
+        this.tournament = new DailyTournament();
+        this.payment = new USDCPaymentSystem();
+        
+        // State
         this.running = false;
         this.lastTime = performance.now();
         this.accumulator = 0;
+        
+        // Global access for UI systems
+        this.setupGlobals();
+    }
 
-        // Performance tracking
-        this.frameTimings = {
-            update: 0,
-            render: 0,
-            total: 0
-        };
-          // Plugin system for future features
-        this.plugins = new Map();
-
-        // Player identity and leaderboard
-        this.playerIdentity = new PlayerIdentity();
-        this.leaderboard = new LeaderboardSystem();
-        window.leaderboard = this.leaderboard; // Make globally accessible
+    setupGlobals() {
+        window.leaderboard = this.leaderboard;
         window.leaderboardUI = new ArcadeLeaderboardUI(this.leaderboard);
         window.gameOverSequence = new GameOverSequence();
+        window.dailyTournament = this.tournament;
+        window.usdcPayment = this.payment;
     }
 
-    /**
-     * Clean initialization - core game only
-     */
-    async initialize() {        try {
-            // 1. Load configuration
+    async initialize() {
+        try {
+            console.log('🚀 NeonDrop starting...');
+            
             await this.config.load();
-
-            // 2. Setup display
-            await this.setupDisplay();
-
-            // 3. Create game systems
-            await this.createGameSystems();
-              // 4. Setup UI
-            await this.setupUI();
-
-            // 5. Setup Game Over Sequence Event Listeners
-            this.setupGameOverSequenceEvents();
-
-            // 6. Check wallet connection (Sonic)
-            await this.checkSonicConnection();
-            // 7. Start game loop
-            this.startGameLoop();
-
+            this.setupDisplay();
+            this.createSystems();
+            this.setupUI();
+            this.bindEvents();
+            this.startLoop();
+            
+            // Background initialization
+            this.initBackgroundSystems();
+            
+            console.log('✅ NeonDrop ready');
         } catch (error) {
-            // Initialization failed silently
-            this.showError('Failed to start game. Please refresh.');
+            console.error('❌ Init failed:', error);
+            this.showError('Game failed to load. Please refresh.');
         }
     }
 
-    async setupDisplay() {
-        // Get canvases
-        const gameCanvas = document.getElementById('game');
-        const bgCanvas = document.getElementById('bg');
-
-        if (!gameCanvas || !bgCanvas) {
-            throw new Error('Canvas elements not found');
-        }
-
-        // Calculate dimensions
-        const dimensions = this.viewportManager.calculateOptimalDimensions(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-        // Set canvas sizes
-        gameCanvas.width = dimensions.canvasWidth;
-        gameCanvas.height = dimensions.canvasHeight;
-        bgCanvas.width = window.innerWidth;
-        bgCanvas.height = window.innerHeight;
-
-        // Create renderer
-        this.renderer = new Renderer(gameCanvas, bgCanvas, this.config, dimensions);
-        this.renderer.viewportManager = this.viewportManager;
+    setupDisplay() {
+        const game = document.getElementById('game');
+        const bg = document.getElementById('bg');
+        
+        if (!game || !bg) throw new Error('Canvas elements missing');
+        
+        const dims = this.viewport.calculateOptimalDimensions(innerWidth, innerHeight);
+        
+        game.width = dims.canvasWidth;
+        game.height = dims.canvasHeight;
+        bg.width = innerWidth;
+        bg.height = innerHeight;
+        
+        this.renderer = new Renderer(game, bg, this.config, dims);
+        this.renderer.viewportManager = this.viewport;
     }
 
-    async createGameSystems() {
-        // Audio system
-        this.audio = new AudioSystem(this.config);
-
-        // Game engine - pure game logic, no blockchain
+    createSystems() {        this.audio = new AudioSystem(this.config);
         this.engine = new GameEngine(this.config, this.audio, null);
-
-        // Input controller
         this.input = new InputController(
-            this.handleAction.bind(this),
+            action => this.handleAction(action),
             () => this.engine.getState(),
-            this.config
+            this.config,
+            () => this.tournamentUI ? this.tournamentUI.isVisible : false
         );
-
-        // Setup event handlers
-        this.setupEventHandlers();
-
-        // Listen for game over choices
-        document.addEventListener('gameOverChoice', (e) => {
-            switch(e.detail.action) {
-                case 'leaderboard':
-                    window.leaderboardUI.show(e.detail.score);
+    }    setupUI() {
+        this.guide = new GuidePanel();
+        this.guide.positionPanel();
+        
+        this.stats = new StatsPanel();
+        this.stats.positionPanel();        // Beautiful tournament UI
+        this.tournamentUI = new TournamentUI();
+        this.tournamentUI.setTournament(this.tournament);
+          // Initialize professional UI state management with all UI elements
+        this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), window.gameOverSequence);
+        
+        // Start in APPLICATION_READY state (tournament modal center-stage)
+        setTimeout(() => {
+            this.uiStateManager.setState('APPLICATION_READY');
+        }, 1000);
+    }    bindEvents() {        // Game over choices - now handled by state manager
+        document.addEventListener('gameOverChoice', e => {
+            const { action, score } = e.detail;
+            console.log('🎮 Game over choice received:', action);
+            
+            switch (action) {
+                case 'leaderboard': 
+                    window.leaderboardUI.show(score); 
+                    break;                case 'play-again': 
+                    this.returnToMenuViaStateManager();
                     break;
-                case 'play-again':
-                    this.engine.handleInput({ type: 'START_GAME' });
-                    break;
-                case 'menu':
-                    this.engine.returnToMenu();
+                case 'menu': 
+                    this.returnToMenuViaStateManager();
                     break;
             }
+        });// Game over state transition - move to results modal
+        document.addEventListener('gameOver', e => {
+            const { score, level, lines, time } = e.detail;
+            console.log('🎮 Game over event received - transitioning to results modal');
+            console.log('📊 Score:', score, 'Level:', level, 'Lines:', lines, 'Time:', time);
+            this.uiStateManager.setState('RESULTS_MODAL', { score, level, lines, time });
+        });        // Leaderboard dismissed - return to tournament modal
+        document.addEventListener('leaderboardDismissed', e => {
+            console.log('🏆 Leaderboard dismissed, returning to tournament modal');
+            this.returnToMenuViaStateManager();
+        });// Tournament selection/start game
+        document.addEventListener('startGame', e => {
+            console.log('🎮 Starting game from tournament UI');
+            this.uiStateManager.beginGameplay();
         });
 
-        // Initialize touch controls state
-        this.initializeTouchControls();
-    }
-
-    async setupUI() {
-        // Guide panel
-        this.guidePanel = new GuidePanel();
-        this.guidePanel.positionPanel();
-
-        // Stats panel
-        this.statsPanel = new StatsPanel();
-        this.statsPanel.positionPanel();
-    }
-
-    startGameLoop() {
-        this.initialized = true;
-        this.running = true;
-        this.lastTime = performance.now();
-
-        // Initial render
-        this.render();
-
-        // Start loop
-        requestAnimationFrame(() => this.gameLoop());
-    }
-
-    /**
-     * Main game loop
-     */
-    gameLoop() {
-        if (!this.running) return;
-
-        const now = performance.now();
-        const deltaTime = Math.min(now - this.lastTime, 100);
-        this.lastTime = now;
-
-        // Fixed timestep with interpolation
-        this.accumulator += deltaTime;
-        const tickRate = this.config.get('game.tickRate');
-
-        let updated = false;
-
-        // Update with fixed timestep
-        while (this.accumulator >= tickRate) {
-            this.update(tickRate);
-            this.accumulator -= tickRate;
-            updated = true;
-        }
-
-        // Render if updated or animations playing
-        if (updated || this.shouldAlwaysRender()) {
-            this.render();
-        }
-
-        requestAnimationFrame(() => this.gameLoop());
-    }
-
-    update(deltaTime) {
-        if (!this.engine) return;
-
-        try {
-            this.engine.tick(deltaTime);
-
-            // Update plugins
-            this.plugins.forEach(plugin => {
-                if (plugin.update) {
-                    plugin.update(deltaTime);
-                }
-            });
-
-        } catch (error) {
-            // Update failed silently
-        }
-    }
-
-    render() {
-        if (!this.engine || !this.renderer) return;
-
-        try {
-            const state = this.engine.getState();
-            const particles = this.engine.getParticles();
-
-            // Starfield state (if enabled)
-            const starfieldState = {
-                enabled: this.config.get('graphics.starfield') || false,
-                brightness: 1.0,
-                stars: []
-            };
-
-            this.renderer.render(state, particles, starfieldState);
-
-        } catch (error) {
-            // Render failed silently
-        }
-    }
-
-    shouldAlwaysRender() {
-        const state = this.engine?.getState();
-        return state && (
-            state.phase === 'CLEARING' ||
-            state.phase === 'COUNTDOWN' ||
-            state.phase === 'GAME_OVER'
-        );
-    }
-
-    /**
-     * Handle input actions
-     */
-    handleAction(action) {
-        if (!this.engine || !this.initialized) return;
-
-        // Initialize audio on first interaction
-        if (!this.audio.initialized) {
-            this.audio.init();
-        }
-
-        // Let plugins handle actions first
-        let handled = false;
-        this.plugins.forEach(plugin => {
-            if (plugin.handleAction && plugin.handleAction(action)) {
-                handled = true;
-            }
+        // Window resize (debounced)
+        let resizeTimer;
+        addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => this.handleResize(), 100);
         });
 
-        // If no plugin handled it, pass to engine
-        if (!handled) {
-            this.engine.handleInput(action);
-        }
-    }
-      /**
-     * Plugin system for future features
-     */
-    addPlugin(name, plugin) {
-        this.plugins.set(name, plugin);
-
-        if (plugin.initialize) {
-            plugin.initialize(this);
-        }
-    }
-
-    removePlugin(name) {
-        const plugin = this.plugins.get(name);
-        if (plugin && plugin.destroy) {
-            plugin.destroy();
-        }
-        this.plugins.delete(name);
-    }
-
-    /**
-     * Initialize touch controls visibility
-     */
-    initializeTouchControls() {
-        // Check if we should show touch controls
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const isSmallScreen = window.innerWidth < 768;
-        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        // Only show touch controls on actual mobile devices
-        if (isMobile && hasTouch) {
-            document.body.classList.add('touch-device');
-        } else {
-            document.body.classList.remove('touch-device');
-        }
-    }
-
-    /**
-     * Event handlers
-     */
-    setupEventHandlers() {
-        // Window resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => this.handleResize(), 100);
-        });
-
-        // Pause when hidden
+        // Auto-pause when hidden
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && this.engine) {
-                const state = this.engine.getState();
-                if (state.phase === 'PLAYING') {
-                    this.engine.handleInput({ type: 'PAUSE' });
-                }
+            if (document.hidden && this.engine?.getState().phase === 'PLAYING') {
+                this.engine.handleInput({ type: 'PAUSE' });
             }
         });
 
-        // Prevent navigation
-        window.addEventListener('keydown', (e) => {
+        // Prevent unwanted navigation
+        addEventListener('keydown', e => {
             if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
                 e.preventDefault();
             }
         });
 
-        // Starfield easter egg
-        this.setupStarfieldEasterEgg();
+        // Touch device detection
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (isMobile && 'ontouchstart' in window) {
+            document.body.classList.add('touch-device');
+        }
     }
 
-    setupStarfieldEasterEgg() {
-        const keys = new Set();
-
-        document.addEventListener('keydown', (e) => {
-            if (this.engine?.getState().phase !== 'MENU') return;
-
-            const key = e.key.toUpperCase();
-            if (['S', 'T', 'A', 'R'].includes(key)) {
-                keys.add(key);
-                  if (keys.size === 4) {
-                    const enabled = !this.config.get('graphics.starfield');
-                    this.config.set('graphics.starfield', enabled);
-                    keys.clear();
-                }
+    async initBackgroundSystems() {
+        try {
+            // Tournament system is bulletproof - always works
+            console.log('🏆 Tournament ready');
+            
+            // Payment system in demo mode by default
+            if (this.payment?.initialize) {
+                await this.payment.initialize();
+                console.log('💰 Payment ready');
             }
-        });
-          document.addEventListener('keyup', (e) => {
-            keys.delete(e.key.toUpperCase());
-        });
+        } catch (error) {
+            console.log('🎮 Running in demo mode');
+        }
     }
 
-    /**
-     * Setup Game Over Sequence Event Listeners
-     */
-    setupGameOverSequenceEvents() {
-        // Listen for restart events from GameOverSequence
-        window.addEventListener('gameOver', (e) => {
-            if (e.detail.action === 'restart') {
-                this.engine.handleInput({ type: 'START_GAME' });
-            }
-        });
+    startLoop() {
+        this.running = true;
+        this.render(); // Initial render
+        requestAnimationFrame(() => this.gameLoop());
+    }
+
+    gameLoop() {
+        if (!this.running) return;
+        
+        const now = performance.now();
+        const delta = Math.min(now - this.lastTime, 100);
+        this.lastTime = now;
+        
+        this.accumulator += delta;
+        const tickRate = this.config.get('game.tickRate');
+        
+        let updated = false;
+        while (this.accumulator >= tickRate) {
+            this.update(tickRate);
+            this.accumulator -= tickRate;
+            updated = true;
+        }
+        
+        if (updated || this.shouldRender()) {
+            this.render();
+        }
+        
+        requestAnimationFrame(() => this.gameLoop());
+    }
+
+    update(deltaTime) {
+        try {
+            this.engine?.tick(deltaTime);
+        } catch (error) {
+            console.warn('Update error:', error);
+        }
+    }
+
+    render() {
+        if (!this.engine || !this.renderer) return;
+        
+        try {
+            const state = this.engine.getState();
+            const particles = this.engine.getParticles();
+            const starfield = {
+                enabled: this.config.get('graphics.starfield') || false,
+                brightness: 1.0,
+                stars: []
+            };
+            
+            this.renderer.render(state, particles, starfield);
+        } catch (error) {
+            console.warn('Render error:', error);
+        }
+    }
+
+    shouldRender() {
+        const phase = this.engine?.getState()?.phase;
+        return phase === 'CLEARING' || phase === 'COUNTDOWN' || phase === 'GAME_OVER';
+    }    handleAction(action) {
+        if (!this.engine) return;
+        
+        // Initialize audio on first interaction
+        if (!this.audio.initialized) {
+            this.audio.init();
+        }
+          // Ensure input system is ready when starting a game
+        if (action.type === 'START_GAME') {
+            console.log('🎮 Starting game - beginning gameplay session');
+            this.input.ensureReady();
+            this.uiStateManager.beginGameplay();
+        }
+        
+        this.engine.handleInput(action);
     }
 
     handleResize() {
-        if (!this.renderer || !this.viewportManager) return;
-
-        const dimensions = this.viewportManager.calculateOptimalDimensions(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-        // Update canvas sizes
-        const gameCanvas = document.getElementById('game');
-        const bgCanvas = document.getElementById('bg');
-
-        gameCanvas.width = dimensions.canvasWidth;
-        gameCanvas.height = dimensions.canvasHeight;
-        bgCanvas.width = window.innerWidth;
-        bgCanvas.height = window.innerHeight;
-
-        // Update renderer
-        this.renderer.dimensions = dimensions;
-        this.renderer.chicletRenderer.setBlockSize(dimensions.blockSize);
-        this.renderer.chicletRenderer.clearCache();
-
-        // Update UI panels
-        this.guidePanel?.positionPanel();
-        this.statsPanel?.positionPanel();
+        if (!this.renderer || !this.viewport) return;
+        
+        const dims = this.viewport.calculateOptimalDimensions(innerWidth, innerHeight);
+        const game = document.getElementById('game');
+        const bg = document.getElementById('bg');
+        
+        if (game && bg) {
+            game.width = dims.canvasWidth;
+            game.height = dims.canvasHeight;
+            bg.width = innerWidth;
+            bg.height = innerHeight;
+            
+            // Update renderer dimensions
+            this.renderer.dimensions = dims;
+            
+            // Reposition panels
+            if (this.guide) this.guide.positionPanel();
+            if (this.stats) this.stats.positionPanel();
+        }
     }
 
     showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `
-            <div>${message}</div>
-            <button onclick="location.reload()">Refresh Page</button>
+        const error = document.createElement('div');
+        error.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(255,0,0,0.9); color: white; padding: 20px;
+            border-radius: 10px; font-size: 18px; z-index: 10000; text-align: center;
         `;
-        document.body.appendChild(errorDiv);
-    }
-
-    /**
-     * Public API for debugging
+        error.textContent = message;
+        document.body.appendChild(error);
+        
+        setTimeout(() => error.remove(), 5000);
+    }    /**
+     * Professional return to menu - handles full system reset via state manager
      */
-    getState() {
-        return this.engine?.getState();
-    }
-
-    getConfig() {
-        return this.config;
-    }
-
-    getStats() {
-        return {
-            engine: this.engine?.getState(),
-            performance: this.frameTimings,
-            plugins: Array.from(this.plugins.keys())
-        };
-    }
-
-    async checkSonicConnection() {
-        const connectBtn = document.getElementById('connect-wallet');
-        connectBtn?.addEventListener('click', async () => {
-            alert('Sonic wallet integration coming soon! For now, enjoy with username.');
-
-            if (!localStorage.getItem('neon_drop_username')) {
-                const username = prompt('Choose your player name:');
-                if (username) {
-                    localStorage.setItem('neon_drop_username', username);
-                    localStorage.setItem('neon_player_id', username.toLowerCase().replace(/\s/g, '_'));
-                    this.updatePlayerStatus();
-                }
-            }
-        });
-
-        this.updatePlayerStatus();
-    }
-
-    async updatePlayerStatus() {
-        const identity = await this.playerIdentity.getIdentity();
-        const statusEl = document.querySelector('.player-name');
-        if (statusEl) {
-            statusEl.textContent = identity.displayName;
+    returnToMenuViaStateManager() {
+        console.log('🔄 Professional return to menu via state manager');
+        
+        // Reset game engine to clean state
+        if (this.engine) {
+            this.engine.returnToMenu();
         }
+        
+        // Let state manager handle the UI transitions
+        this.uiStateManager.returnToMenu();
+    }
+
+    destroy() {
+        this.running = false;
+        this.audio?.destroy();
+        console.log('🛑 NeonDrop shutdown');
     }
 }
 
-// Export for testing and external use
-export { NeonDrop };
-
-// Create debug interface
-function createDebugInterface(game) {
-    return {
-        game: game,
-        renderer: game.renderer,  // Expose renderer directly
-        state: () => game.getState(),
-        config: () => game.getConfig(),
-        stats: () => game.getStats(),
-
-        // Game controls
-        start: () => game.engine?.handleInput({ type: 'START_GAME' }),
-        pause: () => game.engine?.handleInput({ type: 'PAUSE' }),
-
-        // Plugin management
-        plugins: {
-            list: () => Array.from(game.plugins.keys()),
-            add: (name, plugin) => game.addPlugin(name, plugin),
-            remove: (name) => game.removePlugin(name)
-        }
-    };
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
-
-async function init() {
-    if (!checkBrowserCompatibility()) {
-        document.body.innerHTML = `
-            <div class="error-message">
-                <h2>Browser Not Supported</h2>
-                <p>Please use a modern browser to play Neon Drop.</p>
-            </div>
-        `;
-        return;
-    }
-
+// Auto-initialize
+function startGame() {
     try {
         const game = new NeonDrop();
-        await game.initialize();
-
-        // Global debug access
-        window.neonDrop = createDebugInterface(game);
-
-        setTimeout(() => {
-            if (!localStorage.getItem('neon_drop_username')) {
-                const username = prompt('Choose your player name for the leaderboard:');
-                if (username && username.trim()) {
-                    localStorage.setItem('neon_drop_username', username.trim());
-                    localStorage.setItem('neon_player_id', 'user_' + Date.now());
-                }
-            }
-        }, 1000);
+        game.initialize();
+        window.neonDrop = game; // Debug access
     } catch (error) {
-        // Game initialization failed silently
-        document.body.innerHTML = `
-            <div class="error-message">
-                <h2>Game Failed to Load</h2>
-                <p>Error: ${error.message}</p>
-                <button onclick="location.reload()">Try Again</button>
-            </div>
-        `;
+        console.error('Failed to start NeonDrop:', error);
     }
 }
 
-// Check browser compatibility
-function checkBrowserCompatibility() {
-    const required = [
-        typeof window.requestAnimationFrame === 'function',
-        typeof window.performance?.now === 'function',
-        'localStorage' in window
-    ];
-
-    return required.every(feature => feature);
+// Start when ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startGame);
+} else {
+    startGame();
 }
+
+// Cleanup on exit
+addEventListener('beforeunload', () => window.neonDrop?.destroy());
