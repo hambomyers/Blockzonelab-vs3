@@ -194,12 +194,16 @@ class NeonDrop {
         if (isMobile && 'ontouchstart' in window) {
             document.body.classList.add('touch-device');
         }
-    }
-
-    async initBackgroundSystems() {
+    }    async initBackgroundSystems() {
         try {
             // Tournament system is bulletproof - always works
             console.log('🏆 Tournament ready');
+            
+            // Start tournament status updates
+            if (this.tournament?.startPeriodicUpdates) {
+                this.tournament.startPeriodicUpdates();
+                console.log('📊 Tournament updates started');
+            }
             
             // Payment system in demo mode by default
             if (this.payment?.initialize) {
