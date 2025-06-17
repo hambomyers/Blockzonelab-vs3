@@ -49,9 +49,8 @@ class NeonDrop {
         
         // Global access for UI systems
         this.setupGlobals();
-    }
-
-    setupGlobals() {
+    }    setupGlobals() {
+        window.neonDrop = { game: this };  // Add this for panel positioning
         window.leaderboard = this.leaderboard;
         window.leaderboardUI = new ArcadeLeaderboardUI(this.leaderboard);
         window.gameOverSequence = new GameOverSequence();
