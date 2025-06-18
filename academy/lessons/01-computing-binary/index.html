@@ -1,11 +1,10 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lesson 1: Computing & Binary Fundamentals - The Academy</title>
     <!-- Import centralized CSS system -->
-    <link rel="stylesheet" href="../../../assets/css/core-variables.css">
     <link rel="stylesheet" href="../../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../../assets/css/utilities.css">
     <link rel="stylesheet" href="../../../assets/css/components.css">
@@ -342,12 +341,477 @@
             border-color: var(--color-gold);
             transform: scale(1.1);
         }
-        /* --- END REFACTORED CONVERTER SECTION --- */
-
-        /* Wider container for converter section */
+        /* --- END REFACTORED CONVERTER SECTION --- */        /* ====================================================
+           🌟 AAA PRODUCTION BINARY CONVERTER 🌟
+           Absolutely stunning, elegantly spaced perfection
+           ==================================================== */        /* Converter Container - Compact Luxury */
         .converter-container.wide {
-            max-width: 800px;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.92), 
+                rgba(212, 175, 55, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.4),
+                0 8px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(212, 175, 55, 0.1);
+            backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
+            scroll-margin-top: 10vh;
+        }
+
+        .converter-container.wide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(212, 175, 55, 0.5), 
+                transparent);
+        }        /* Compact Converter Title */
+        .converter-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #f8f9fa 25%, 
+                #d4af37 75%, 
+                #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .converter-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(212, 175, 55, 0.6), 
+                transparent);
+            border-radius: 1px;
+        }
+
+        /* Compact Number System Sections */
+        .number-system-section {
+            margin: 1.5rem 0;
+            padding: 0 0.5rem;
+        }
+
+        .number-system-section:first-child {
+            margin-top: 0;
+        }
+
+        /* Compact System Titles */
+        .system-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .decimal-title {
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+        }
+
+        .binary-title {
+            color: #d4af37;
+            text-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+        }        /* Compact Grid Layouts */
+        .decimal-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .binary-grid {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 0.8rem;
+            flex-wrap: nowrap;
+            max-width: 100%;
             margin: 0 auto;
+            overflow-x: auto;
+            padding: 0 1rem;
+        }
+
+        /* Ensure all binary buttons stay in one row */
+        .binary-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .binary-grid {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Compact Digit Groups */
+        .digit-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* Compact Place Labels */
+        .place-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Compact Decimal Buttons */
+        .decimal-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.98), 
+                rgba(248, 249, 250, 0.95));
+            color: #1a1d29;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 6px 16px rgba(255, 255, 255, 0.15),
+                0 3px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .decimal-btn:hover {
+            transform: translateY(-3px) scale(1.08);
+            border-color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            box-shadow: 
+                0 10px 24px rgba(255, 255, 255, 0.3),
+                0 6px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        /* Compact Binary Buttons */
+        .binary-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.95), 
+                rgba(212, 175, 55, 0.15));
+            color: #d4af37;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 12px rgba(212, 175, 55, 0.15),
+                0 2px 6px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .binary-btn:hover {
+            transform: translateY(-2px) scale(1.08);
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 
+                0 8px 20px rgba(212, 175, 55, 0.4),
+                0 4px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(212, 175, 55, 0.5);
+        }
+
+        .binary-btn.active {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1d29;
+            border-color: #d4af37;
+            box-shadow: 
+                0 0 20px rgba(212, 175, 55, 0.8),
+                0 4px 16px rgba(212, 175, 55, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            font-weight: 1000;
+        }        /* Compact Exponent Labels */
+        .exponent-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.65);
+            font-family: 'Courier New', monospace;
+            margin-top: 0.25rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* Compact Representation Display */
+        .representation-display {
+            margin: 2rem 0 1.5rem 0;
+            text-align: center;
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .representation-text {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.02em;
+        }        /* Compact Pulsing Numbers */
+        .pulsing {
+            font-weight: 800;
+            font-size: 1.6rem !important;
+            animation: luxuryPulse 2.5s ease-in-out infinite;
+            display: inline-block;
+            position: relative;
+        }
+
+        .decimal-number {
+            color: #ffffff;
+            text-shadow: 
+                0 0 24px rgba(255, 255, 255, 0.8),
+                0 4px 12px rgba(255, 255, 255, 0.4);
+            font-size: 1.6rem !important;
+            font-weight: 800 !important;
+        }
+
+        .binary-number {
+            color: #d4af37;
+            text-shadow: 
+                0 0 24px rgba(212, 175, 55, 0.8),
+                0 4px 12px rgba(212, 175, 55, 0.4);
+            font-family: 'Courier New', monospace;
+            font-weight: 800 !important;
+            font-size: 1.6rem !important;
+        }
+
+        /* Compact Dot Canvas Container */
+        .dot-canvas-container {
+            margin: 1.5rem 0 0 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.4) inset,
+                0 1px 0 rgba(255, 255, 255, 0.08) inset,
+                0 6px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        #dotCanvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.7), 
+                rgba(0, 0, 0, 0.4));
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);        }
+
+        @keyframes luxuryPulse {
+            0%, 100% { 
+                opacity: 0.85; 
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            20% { 
+                opacity: 0.95; 
+                transform: scale(1.02);
+                filter: brightness(1.05);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.08);
+                filter: brightness(1.2);
+            }
+            80% { 
+                opacity: 0.95; 
+                transform: scale(1.02);
+                filter: brightness(1.05);
+            }
+        }        /* Invisible Dot Canvas Container - Close to Sentence */
+        .dot-canvas-container {
+            margin: 0.5rem 0 0 0;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+        }
+
+        .dot-canvas-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;        }
+
+        /* Compact Responsive Design */
+        @media (max-width: 1200px) {
+            .converter-container.wide {
+                margin: 1.5rem 1rem;
+                padding: 1.5rem 1rem;
+            }
+            
+            .binary-grid {
+                gap: 0.6rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .converter-container.wide {
+                margin: 1rem 0.5rem;
+                padding: 1.5rem 1rem;
+            }
+            
+            .converter-title {
+                font-size: 1.9rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .binary-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .binary-grid {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .converter-container.wide {
+                margin: 1rem 0.25rem;
+                padding: 1.25rem 0.75rem;
+            }
+            
+            .converter-title {
+                font-size: 1.7rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .decimal-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+            
+            .binary-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            
+            .binary-grid {
+                gap: 0.4rem;
+            }
+            
+            .representation-text {
+                font-size: 1.2rem;
+            }
+              .pulsing {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .binary-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            .binary-grid {
+                gap: 0.3rem;
+                padding: 0 0.5rem;
+            }
+            
+            .decimal-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+            
+            .representation-text {
+                font-size: 1.1rem;
+            }
+              .pulsing {
+                font-size: 1.2rem;
+            }
+            
+            .exponent-label {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Accessibility and Performance Enhancements */
+        .decimal-btn:focus,
+        .binary-btn:focus {
+            outline: 3px solid rgba(212, 175, 55, 0.6);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .decimal-btn,
+            .binary-btn,
+            .pulsing {
+                animation: none;
+                transition: none;
+            }
+            
+            .decimal-btn:hover,
+            .binary-btn:hover {
+                transform: none;
+            }
         }
 
         /* Single row for binary buttons */
@@ -714,71 +1178,121 @@
                     <h3>Theseus the Maze Mouse</h3>
                     <p>Shannon built a mechanical mouse named Theseus that could solve a maze and “learn” the correct path. This was one of the earliest examples of machine learning and artificial intelligence.</p>
                 </div>
-            </div>
+            </div>            <div class="converter-container wide">
+                <!-- Elegant Decimal Section -->
+                <div class="number-system-section">
+                    <h3 class="system-title decimal-title">Decimal (Base 10)</h3>
+                    <div class="decimal-grid">
+                        <div class="digit-group">
+                            <span class="place-label">Thousands</span>
+                            <button class="decimal-btn" data-place="3">0</button>
+                            <span class="exponent-label">10³</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">Hundreds</span>
+                            <button class="decimal-btn" data-place="2">0</button>
+                            <span class="exponent-label">10²</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">Tens</span>
+                            <button class="decimal-btn" data-place="1">0</button>
+                            <span class="exponent-label">10¹</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">Ones</span>
+                            <button class="decimal-btn" data-place="0">0</button>
+                            <span class="exponent-label">10⁰</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="converter-container wide">
-                <!-- Decimal Label -->
-                <div class="converter-label decimal-label">Decimal (Base 10)</div>
-                <!-- Decimal Input (Top, Centered, Inline Container) -->
-                <div class="decimal-input-row" id="decimalInputRow">
-                    <div class="input-with-label">
-                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-0">
-                        <span class="exponent-label">10<sup>3</sup></span>
-                    </div>
-                    <span class="decimal-comma">,</span>
-                    <div class="input-with-label">
-                        <span class="place-label brighter label-center-container flex-label">
-                            <span class="arrow-label" aria-hidden="true">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="14,3 4,9 14,15 14,11 8,9 14,7 14,3" />
-                                </svg>
-                            </span>
-                            <span class="label-text">Hundreds</span>
-                        </span>
-                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-1">
-                        <span class="exponent-label">10<sup>2</sup></span>
-                    </div>
-                    <div class="input-with-label">
-                        <span class="place-label brighter">Tens</span>
-                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-2">
-                        <span class="exponent-label">10<sup>1</sup></span>
-                    </div>
-                    <div class="input-with-label">
-                        <span class="place-label brighter">Ones</span>
-                        <input class="decimal-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="dec-3">
-                        <span class="exponent-label">10<sup>0</sup></span>
+                <!-- Elegant Binary Section -->
+                <div class="number-system-section">
+                    <h3 class="system-title binary-title">Binary (Base 2)</h3>
+                    <div class="binary-grid">
+                        <div class="digit-group">
+                            <span class="place-label">4096s</span>
+                            <button class="binary-btn" data-bit="12">0</button>
+                            <span class="exponent-label">2¹²</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">2048s</span>
+                            <button class="binary-btn" data-bit="11">0</button>
+                            <span class="exponent-label">2¹¹</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">1024s</span>
+                            <button class="binary-btn" data-bit="10">0</button>
+                            <span class="exponent-label">2¹⁰</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">512s</span>
+                            <button class="binary-btn" data-bit="9">0</button>
+                            <span class="exponent-label">2⁹</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">256s</span>
+                            <button class="binary-btn" data-bit="8">0</button>
+                            <span class="exponent-label">2⁸</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">128s</span>
+                            <button class="binary-btn" data-bit="7">0</button>
+                            <span class="exponent-label">2⁷</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">64s</span>
+                            <button class="binary-btn" data-bit="6">0</button>
+                            <span class="exponent-label">2⁶</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">32s</span>
+                            <button class="binary-btn" data-bit="5">0</button>
+                            <span class="exponent-label">2⁵</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">16s</span>
+                            <button class="binary-btn" data-bit="4">0</button>
+                            <span class="exponent-label">2⁴</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">8s</span>
+                            <button class="binary-btn" data-bit="3">0</button>
+                            <span class="exponent-label">2³</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">4s</span>
+                            <button class="binary-btn" data-bit="2">0</button>
+                            <span class="exponent-label">2²</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">2s</span>
+                            <button class="binary-btn" data-bit="1">0</button>
+                            <span class="exponent-label">2¹</span>
+                        </div>
+                        <div class="digit-group">
+                            <span class="place-label">Ones</span>
+                            <button class="binary-btn" data-bit="0">0</button>
+                            <span class="exponent-label">2⁰</span>
+                        </div>
                     </div>
                 </div>
-                <!-- Binary Label -->
-                <div class="converter-label binary-label">Binary (Base 2)</div>
-                <!-- Binary Input (Single Row, Centered, Inline Container) -->
-                <div class="binary-input-row single-row">
-                    <div class="input-with-label"><button class="bit-btn" data-pos="12">0</button><span class="exponent-label">2<sup>12</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="11">0</button><span class="exponent-label">2<sup>11</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="10">0</button><span class="exponent-label">2<sup>10</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="9">0</button><span class="exponent-label">2<sup>9</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="8">0</button><span class="exponent-label">2<sup>8</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="7">0</button><span class="exponent-label">2<sup>7</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="6">0</button><span class="exponent-label">2<sup>6</sup></span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="5">0</button><span class="exponent-label">2<sup>5</sup></span><span class="place-label brighter label-center-container flex-label">
-                            <span class="arrow-label" aria-hidden="true">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="14,3 4,9 14,15 14,11 8,9 14,7 14,3" />
-                                </svg>
-                            </span>
-                            <span class="label-text">32s</span>
-                        </span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="4">0</button><span class="exponent-label">2<sup>4</sup></span><span class="place-label brighter">16s</span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="3">0</button><span class="exponent-label">2<sup>3</sup></span><span class="place-label brighter">8s</span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="2">0</button><span class="exponent-label">2<sup>2</sup></span><span class="place-label brighter">4s</span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="1">0</button><span class="exponent-label">2<sup>1</sup></span><span class="place-label brighter">2s</span></div>
-                    <div class="input-with-label"><button class="bit-btn" data-pos="0">0</button><span class="exponent-label">2<sup>0</sup></span><span class="place-label brighter">Ones</span></div>
+
+                <!-- Beautiful Dynamic Display -->
+                <div class="representation-display">
+                    <p class="representation-text">
+                        This represents 
+                        <span class="binary-number pulsing">0</span> 
+                        and 
+                        <span class="decimal-number pulsing">0</span> 
+                        dots
+                    </p>
                 </div>
-                <!-- Dynamic Dot Info Sentence -->
-                <div id="dotInfoSentence" class="dot-info-sentence"></div>
-                <!-- Dot Visualization (Organic Cloud, Bottom, Centered) -->
-                <div class="dot-visualization-row">
-                    <canvas id="dotCanvas" width="900" height="260" aria-label="Dot Visualization"></canvas>
+
+                <!-- Stunning Dot Visualization -->
+                <div class="dot-canvas-container">
+                    <canvas id="dotCanvas" width="1000" height="300" aria-label="Beautiful Dot Visualization"></canvas>
+                </div>
                 </div>
             </div>        </section>
         <!-- End Converter Section -->        <!-- === CARD 2: The Binary Universe === -->
@@ -1103,7 +1617,7 @@
             <div class="hotlink-expansion" id="exp-private-key">
                 <h3>Private Key</h3>
                 <p>A secret binary number that only you know, used to create digital signatures and control your cryptocurrency. Losing your private key means losing access to your funds forever—there's no "forgot password" button.</p>
-            </div>
+                       </div>
             <div class="hotlink-expansion" id="exp-public-key">
                 <h3>Public Key</h3>
                 <p>A binary number derived from your private key that you can share with anyone. Others use it to verify your digital signatures and send you encrypted messages, but it reveals nothing about your private key.</p>
@@ -1164,108 +1678,222 @@
                 </p>
             </div>
         </div>
-    </footer>
-
-    <script src="lesson-script.js"></script>    <script>
-// Enhanced hot link expansion logic for all cards
-(function() {
-    const hotLinks = document.querySelectorAll('.hot-link');
-    const expansions = document.querySelectorAll('.hotlink-expansion');
-    let active = null;
-    let overHotLink = false;
-    let overExpansion = false;
+    </footer>    <script src="lesson-script.js"></script>
+    <script>
+// 🌟 AAA PRODUCTION BINARY CONVERTER LOGIC 🌟
+// Absolutely stunning, perfectly random oval dots
+document.addEventListener('DOMContentLoaded', function() {
+    const decimalBtns = document.querySelectorAll('.decimal-btn');
+    const binaryBtns = document.querySelectorAll('.binary-btn');
+    const canvas = document.getElementById('dotCanvas');
+    const ctx = canvas.getContext('2d');
+    const binaryDisplay = document.querySelector('.binary-number');
+    const decimalDisplay = document.querySelector('.decimal-number');
     
-    function closeExpansion() {
-        if (!overHotLink && !overExpansion && active) {
-            active.classList.remove('active');
-            active = null;
-        }
-    }
+    let currentValue = 0;
+    let decimalDigits = [0, 0, 0, 0]; // thousands, hundreds, tens, ones
+    let binaryBits = Array(13).fill(0); // 13 bits for up to 8191
     
-    function showExpansion(link) {
-        // Check both data-hot and data-popup attributes for compatibility
-        const dataId = link.getAttribute('data-hot') || link.getAttribute('data-popup');
-        if (!dataId) return;
-        
-        const id = 'exp-' + dataId;
-        const exp = document.getElementById(id);
-        if (exp) {
-            if (active && active !== exp) active.classList.remove('active');
-            exp.classList.add('active');
-            active = exp;
-        }
-    }
+    // Beautiful color palette for dots
+    const dotColors = [
+        '#d4af37', '#f4d03f', '#00f5ff', '#4ecdc4',
+        '#ff6b6b', '#45b7d1', '#96ceb4', '#ffeaa7',
+        '#fd79a8', '#fdcb6e', '#6c5ce7', '#a29bfe'
+    ];
     
-    hotLinks.forEach(link => {
-        link.addEventListener('mouseenter', function() {
-            overHotLink = true;
-            showExpansion(this);
-        });
-        
-        link.addEventListener('mouseleave', function() {
-            overHotLink = false;
-            setTimeout(closeExpansion, 80);
-        });
-        
-        link.addEventListener('focus', function() {
-            overHotLink = true;
-            showExpansion(this);
-        });
-        
-        link.addEventListener('blur', function() {
-            overHotLink = false;
-            setTimeout(closeExpansion, 80);
-        });
-        
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            overHotLink = true;
-            const dataId = this.getAttribute('data-hot') || this.getAttribute('data-popup');
-            if (!dataId) return;
+    // Initialize converter
+    updateDisplays();
+    renderDots();
+    
+    // Decimal button handlers
+    decimalBtns.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            const place = parseInt(this.dataset.place);
+            decimalDigits[3 - place] = (decimalDigits[3 - place] + 1) % 10;
             
-            const id = 'exp-' + dataId;
-            const exp = document.getElementById(id);
-            if (exp) {
-                if (active === exp) {
-                    exp.classList.remove('active');
-                    active = null;
-                } else {
-                    if (active && active !== exp) active.classList.remove('active');
-                    exp.classList.add('active');
-                    active = exp;
-                }
+            calculateFromDecimal();
+            updateDisplays();
+            renderDots();
+        });
+    });
+    
+    // Binary button handlers  
+    binaryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const bit = parseInt(this.dataset.bit);
+            binaryBits[bit] = binaryBits[bit] === 0 ? 1 : 0;
+            
+            calculateFromBinary();
+            updateDisplays();
+            renderDots();
+        });
+    });
+    
+    function calculateFromDecimal() {
+        currentValue = decimalDigits[0] * 1000 + 
+                      decimalDigits[1] * 100 + 
+                      decimalDigits[2] * 10 + 
+                      decimalDigits[3];
+        
+        // Convert to binary
+        binaryBits.fill(0);
+        let remaining = currentValue;
+        
+        for (let i = 12; i >= 0; i--) {
+            const power = Math.pow(2, i);
+            if (remaining >= power) {
+                binaryBits[i] = 1;
+                remaining -= power;
             }
-        });
-    });
-    
-    expansions.forEach(exp => {
-        exp.addEventListener('mouseenter', function() {
-            overExpansion = true;
-        });
-        exp.addEventListener('mouseleave', function() {
-            overExpansion = false;
-            setTimeout(closeExpansion, 80);
-        });
-    });
-    
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            overHotLink = false;
-            overExpansion = false;
-            closeExpansion();
         }
-    });
-    
-    // Close on click outside
-    document.addEventListener('mousedown', function(e) {
-        if (active && !active.contains(e.target) && !e.target.classList.contains('hot-link')) {
-            overHotLink = false;
-            overExpansion = false;
-            closeExpansion();
+    }
+      function calculateFromBinary() {
+        currentValue = 0;
+        for (let i = 0; i < 13; i++) {
+            if (binaryBits[i] === 1) {
+                currentValue += Math.pow(2, i);
+            }
         }
+        
+        // Check if value exceeds 4-digit decimal display (9999)
+        if (currentValue > 9999) {
+            // Show "E" in all decimal positions like old calculators
+            decimalDigits = ['E', 'E', 'E', 'E'];
+        } else {
+            // Convert to decimal digits normally
+            const str = currentValue.toString().padStart(4, '0');
+            for (let i = 0; i < 4; i++) {
+                decimalDigits[i] = parseInt(str[i]);
+            }
+        }
+    }
+    
+    function updateDisplays() {
+        // Update decimal buttons
+        decimalBtns.forEach((btn, index) => {
+            const place = parseInt(btn.dataset.place);
+            btn.textContent = decimalDigits[3 - place];
+        });
+        
+        // Update binary buttons
+        binaryBtns.forEach(btn => {
+            const bit = parseInt(btn.dataset.bit);
+            btn.textContent = binaryBits[bit];
+            btn.classList.toggle('active', binaryBits[bit] === 1);
+        });
+        
+        // Update display numbers
+        const binaryString = binaryBits.slice().reverse().join('').replace(/^0+/, '') || '0';
+        binaryDisplay.textContent = binaryString;
+        decimalDisplay.textContent = currentValue.toLocaleString();
+    }    function renderDots() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (currentValue === 0) return;
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // Create large oval that stretches across most of viewport
+        const maxRadiusX = Math.min(canvas.width / 2 - 20, 500); // Wide oval
+        const maxRadiusY = Math.min(canvas.height / 2 - 20, 150); // Shorter height
+        
+        // Calculate dot size - smaller as number gets bigger
+        const baseDotSize = Math.max(2, Math.min(8, 12 - Math.log10(currentValue + 1) * 2));
+        
+        // Limit dots for performance but ensure good coverage
+        const maxDots = Math.min(currentValue, 3000);
+        const actualDots = Math.min(maxDots, currentValue);
+        
+        // Render dots in large oval with uniform distribution
+        for (let i = 0; i < actualDots; i++) {
+            // Generate completely random position within oval bounds
+            let x, y;
+            do {
+                // Random position in bounding rectangle
+                x = (Math.random() - 0.5) * 2 * maxRadiusX;
+                y = (Math.random() - 0.5) * 2 * maxRadiusY;
+            } while ((x*x)/(maxRadiusX*maxRadiusX) + (y*y)/(maxRadiusY*maxRadiusY) > 1); // Oval constraint
+            
+            // Convert to canvas coordinates
+            const canvasX = centerX + x;
+            const canvasY = centerY + y;
+            
+            // Vary dot size slightly for organic feel
+            const dotSize = baseDotSize + (Math.random() - 0.5) * 1.5;
+            
+            // Random color with slight transparency
+            const color = dotColors[Math.floor(Math.random() * dotColors.length)];
+            const alpha = 0.7 + Math.random() * 0.3;
+            
+            // Draw perfectly round dot
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(canvasX, canvasY, Math.max(1, dotSize), 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // Reset alpha
+        ctx.globalAlpha = 1.0;
+    }
+});
+
+// 🎯 SMART SCROLL SNAP - Auto-centers converter when 75% visible
+document.addEventListener('DOMContentLoaded', function() {
+    const converter = document.querySelector('.converter-container.wide');
+    if (!converter) return;
+    
+    let scrollTimeout;
+    let isSnapping = false;
+    
+    function checkConverterVisibility() {
+        if (isSnapping) return;
+        
+        const rect = converter.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // Calculate how much of the converter is visible
+        const visibleTop = Math.max(0, -rect.top);
+        const visibleBottom = Math.min(rect.height, windowHeight - rect.top);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        const visibilityPercent = (visibleHeight / rect.height) * 100;
+        
+        // If 75% or more is visible, snap to center it perfectly
+        if (visibilityPercent >= 75 && visibilityPercent < 100) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isSnapping = true;
+                
+                // Calculate ideal scroll position to center the converter
+                const converterCenter = rect.top + window.pageYOffset + (rect.height / 2);
+                const targetScroll = converterCenter - (windowHeight / 2);
+                
+                window.scrollTo({
+                    top: Math.max(0, targetScroll),
+                    behavior: 'smooth'
+                });
+                
+                // Reset snapping flag after animation
+                setTimeout(() => {
+                    isSnapping = false;
+                }, 800);
+            }, 300); // Small delay to avoid excessive snapping
+        }
+    }
+    
+    // Throttled scroll listener for performance
+    let scrollThrottle;
+    window.addEventListener('scroll', function() {
+        if (scrollThrottle) return;
+        
+        scrollThrottle = setTimeout(() => {
+            checkConverterVisibility();
+            scrollThrottle = null;
+        }, 16); // ~60fps
     });
-})();
+});
     </script>
 </body>
 </html>
