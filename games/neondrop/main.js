@@ -391,16 +391,13 @@ class NeonDrop {
             this.accumulator -= tickRate;
             updated = true;
         }
-        
-        // Throttle rendering to prevent racing
+          // Throttle rendering to prevent racing
         if (updated || this.shouldRender()) {
             this.render();
         }
         
-        // Add a small delay to prevent racing
-        setTimeout(() => {
-            requestAnimationFrame(() => this.gameLoop());
-        }, 16); // ~60fps max
+        // Use only requestAnimationFrame for smooth 60fps
+        requestAnimationFrame(() => this.gameLoop());
     }
 
     update(deltaTime) {
