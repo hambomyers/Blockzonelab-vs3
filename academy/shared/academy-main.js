@@ -1,68 +1,59 @@
 /* ===================================================================
    BLOCKZONE ACADEMY - MINIMAL JAVASCRIPT
-   Simple academy functionality without complexity
+   Simple lesson progression tracking (no Stardust)
    =================================================================== */
 
-// Basic lesson progress tracking (no rewards, just progress)
-let lessonProgress = {
-    currentLesson: 1,
-    sectionsCompleted: 0,
-    totalSections: 10
-};
+// Simple lesson progress tracking
+let lessonProgress = 0;
+const totalSections = 10;
 
-// Update progress display
+// Update progress counter
 function updateProgress() {
-    const progressElement = document.getElementById('lessonProgress');
+    const progressElement = document.getElementById('lessonProgress') || document.getElementById('progressAmount');
     if (progressElement) {
-        progressElement.textContent = lessonProgress.sectionsCompleted;
+        progressElement.textContent = lessonProgress;
     }
 }
 
-// Mark section as completed
+// Mark section as complete
 function completeSection() {
-    if (lessonProgress.sectionsCompleted < lessonProgress.totalSections) {
-        lessonProgress.sectionsCompleted++;
+    if (lessonProgress < totalSections) {
+        lessonProgress++;
         updateProgress();
     }
 }
 
 // Quiz functionality
-function checkAnswer(questionElement, selectedAnswer, correctAnswer) {
-    const options = questionElement.querySelectorAll('.answer-option');
+function checkAnswer(questionId, selectedAnswer, correctAnswer) {
+    const options = document.querySelectorAll(`[data-question="${questionId}"] .answer-option`);
     
     options.forEach(option => {
-        option.classList.remove('correct', 'incorrect');
-        if (option.textContent.trim() === correctAnswer) {
+        if (option.dataset.answer === correctAnswer) {
             option.classList.add('correct');
-        } else if (option === selectedAnswer && option.textContent.trim() !== correctAnswer) {
+        } else if (option.dataset.answer === selectedAnswer && selectedAnswer !== correctAnswer) {
             option.classList.add('incorrect');
         }
+        option.style.pointerEvents = 'none';
     });
     
-    if (selectedAnswer.textContent.trim() === correctAnswer) {
+    if (selectedAnswer === correctAnswer) {
         completeSection();
-        return true;
     }
-    return false;
 }
 
-// Initialize page
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
     
-    // Add click handlers to quiz answers
-    document.querySelectorAll('.answer-option').forEach(option => {
+    // Add click handlers to quiz options
+    const answerOptions = document.querySelectorAll('.answer-option');
+    answerOptions.forEach(option => {
         option.addEventListener('click', function() {
-            const questionCard = this.closest('.question-card');
-            const correctAnswer = questionCard.dataset.correct;
-            checkAnswer(questionCard, this, correctAnswer);
+            const questionId = this.closest('.question-card').dataset.question;
+            const selectedAnswer = this.dataset.answer;
+            const correctAnswer = this.closest('.question-card').dataset.correct;
+            
+            checkAnswer(questionId, selectedAnswer, correctAnswer);
         });
     });
 });
-
-// Export for other scripts
-window.AcademyMain = {
-    updateProgress,
-    completeSection,
-    checkAnswer
-};
