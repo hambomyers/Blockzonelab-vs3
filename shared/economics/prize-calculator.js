@@ -111,34 +111,5 @@ export class PrizeCalculator {
   }
 }
 
-// Example usage and testing
-export function testPrizeCalculation() {
-  const calc = new PrizeCalculator();
-  
-  console.log('=== PRIZE CALCULATION EXAMPLES ===');
-  
-  // Test with different player counts
-  const testScenarios = [
-    { players: 5, fee: 2.50 },
-    { players: 10, fee: 2.50 },
-    { players: 20, fee: 2.50 },
-    { players: 50, fee: 2.50 },
-    { players: 100, fee: 2.50 }
-  ];
-  
-  testScenarios.forEach(({ players, fee }) => {
-    const revenue = players * fee;
-    const result = calc.calculatePrizes(revenue);
-    
-    console.log(`\n${players} players × $${fee} = $${revenue} total`);
-    console.log(`Prize Pool: $${result.prizePool} (90%)`);
-    console.log(`Platform: $${result.platformRevenue} (10%)`);
-    console.log('Prizes:');
-    result.distribution.forEach(prize => {
-      console.log(`  ${prize.position}: $${prize.amount} (${prize.percentage}%)`);
-    });
-  });
-}
-
 // Export for use in Cloudflare Worker
 export default PrizeCalculator;

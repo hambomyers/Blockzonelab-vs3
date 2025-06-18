@@ -13,12 +13,10 @@ export class UniversalPlayerIdentity {
     constructor() {
         this.currentTier = this.detectTier();
         this.identity = null;
-        this.migrationInProgress = false;
+        this.migrationInProgress = false;        // Backend integration
+        this.blockzoneAPI = 'https://blockzone-api.hambomyers.workers.dev';
         
-        // Backend integration
-        this.cloudflareAPI = 'https://blockzone-identity.hambomyers.workers.dev';
-        
-        console.log(`🎭 Universal Player Identity initialized - Tier: ${this.currentTier}`);
+        // Initialize identity system silently
     }
 
     /**
@@ -396,6 +394,63 @@ export class UniversalPlayerIdentity {
 
     async getLocalGamesPlayed() {
         return JSON.parse(localStorage.getItem('local_games_played') || '[]');
+    }
+
+    /**
+     * Register player with BlockZone API
+     */
+    async registerPlayer(playerId, displayName, tier, email = null, walletAddress = null) {
+        try {
+            const response = await fetch(`${this.blockzoneAPI}/api/players/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    player_id: playerId,
+                    display_name: displayName,
+                    tier: tier,
+                    email: email,
+                    wallet_address: walletAddress
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Registration failed: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log(`✅ Player registered successfully:`, result.player);
+            return result.player;
+            
+        } catch (error) {
+            console.error('❌ Player registration failed:', error);
+            // Don't throw - allow the game to continue with local storage
+            return null;
+        }
+    }
+
+    /**
+     * Update player profile with BlockZone API
+     */
+    async updatePlayerProfile(playerId, updates) {
+        try {
+            const response = await fetch(`${this.blockzoneAPI}/api/players/${playerId}/profile`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Profile update failed: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log(`✅ Player profile updated:`, result.player);
+            return result.player;
+            
+        } catch (error) {
+            console.error('❌ Profile update failed:', error);
+            return null;
+        }
     }
 }
 

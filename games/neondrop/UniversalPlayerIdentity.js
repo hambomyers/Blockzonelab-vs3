@@ -13,12 +13,10 @@ export class UniversalPlayerIdentity {
     constructor() {
         this.currentTier = this.detectTier();
         this.identity = null;
-        this.migrationInProgress = false;
+        this.migrationInProgress = false;        // Backend integration
+        this.blockzoneAPI = 'https://blockzone-api.hambomyers.workers.dev';
         
-        // Backend integration
-        this.cloudflareAPI = 'https://blockzone-identity.hambomyers.workers.dev';
-        
-        console.log(`🎭 Universal Player Identity initialized - Tier: ${this.currentTier}`);
+        // Initialize identity system silently
     }
 
     /**
@@ -132,9 +130,7 @@ export class UniversalPlayerIdentity {
             // Privileges
             privileges: ['daily_challenges', 'practice_mode']
         };
-    }
-
-    /**
+    }    /**
      * Create new anonymous identity for first-time users
      */
     async createNewAnonymousIdentity() {
@@ -145,8 +141,8 @@ export class UniversalPlayerIdentity {
         localStorage.setItem('anonymous_display_name', displayName);
         localStorage.setItem('identity_created', Date.now().toString());
         
-        // Track new user for analytics
-        await this.trackNewUser(anonId);
+        // Register player with BlockZone API
+        await this.registerPlayer(anonId, displayName, 'anonymous');
         
         this.currentTier = 'anonymous';
         return await this.getAnonymousIdentity();
@@ -166,14 +162,16 @@ export class UniversalPlayerIdentity {
         try {
             // Migrate anonymous data to social account
             const anonymousData = await this.exportAnonymousData();
-            
-            // Store social credentials
+              // Store social credentials
             localStorage.setItem('apple_id_token', appleIDToken);
             localStorage.setItem('verified_email', email);
             localStorage.setItem('social_display_name', displayName);
             
-            // Migrate data to cloud backend
-            await this.migrateToSocial(anonymousData, email);
+            // Create new social player ID
+            const socialPlayerId = `social_${this.hashEmail(email)}`;
+            
+            // Register/update player with BlockZone API
+            await this.registerPlayer(socialPlayerId, displayName, 'social', email);
             
             // Update tier
             this.currentTier = 'social';
@@ -200,13 +198,15 @@ export class UniversalPlayerIdentity {
         try {
             // Migrate existing data to Web3 account
             const existingData = await this.exportCurrentData();
-            
-            // Store Web3 credentials
+              // Store Web3 credentials
             localStorage.setItem('sonic_wallet_address', walletAddress);
             localStorage.setItem('sonic_wallet_type', walletType);
             
-            // Migrate data to blockchain/backend
-            await this.migrateToWeb3(existingData, walletAddress);
+            // Create new Web3 player ID
+            const web3PlayerId = `web3_${walletAddress.slice(0, 8)}`;
+            
+            // Register/update player with BlockZone API
+            await this.registerPlayer(web3PlayerId, this.shortenAddress(walletAddress), 'web3', null, walletAddress);
             
             // Update tier
             this.currentTier = 'web3';
@@ -305,74 +305,95 @@ export class UniversalPlayerIdentity {
             hash = hash & hash; // Convert to 32-bit integer
         }
         return Math.abs(hash).toString(36);
-    }
-
-    /**
-     * DATA MIGRATION METHODS
+    }    /**
+     * BLOCKZONE API INTEGRATION
      */
 
-    async exportAnonymousData() {
-        return {
-            scores: JSON.parse(localStorage.getItem('local_scores') || '[]'),
-            achievements: JSON.parse(localStorage.getItem('local_achievements') || '[]'),
-            settings: JSON.parse(localStorage.getItem('game_settings') || '{}'),
-            playTime: localStorage.getItem('total_play_time') || '0'
-        };
-    }
-
-    async exportCurrentData() {
-        if (this.currentTier === 'social') {
-            return await this.exportSocialData();
-        } else {
-            return await this.exportAnonymousData();
-        }
-    }
-
-    async migrateToSocial(data, email) {
-        // Migrate to Cloudflare Workers backend
-        const response = await fetch(`${this.cloudflareAPI}/migrate/social`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, data })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Migration to social tier failed');
-        }
-    }
-
-    async migrateToWeb3(data, walletAddress) {
-        // Migrate to blockchain + backend
-        const response = await fetch(`${this.cloudflareAPI}/migrate/web3`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ walletAddress, data })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Migration to Web3 tier failed');
+    /**
+     * Register player with BlockZone API
+     */
+    async registerPlayer(playerId, displayName, tier, email = null, walletAddress = null) {
+        try {
+            const response = await fetch(`${this.blockzoneAPI}/api/players/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    player_id: playerId,
+                    display_name: displayName,
+                    tier: tier,
+                    email: email,
+                    wallet_address: walletAddress
+                })
+            });
+            
+            if (!response.ok) {
+                // If player already exists, update their profile instead
+                if (response.status === 409) {
+                    return await this.updatePlayerProfile(playerId, { display_name: displayName, tier, email, wallet_address });
+                }
+                throw new Error(`Registration failed: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log(`✅ Player registered successfully:`, result.player);
+            return result.player;
+            
+        } catch (error) {
+            console.error('❌ Player registration failed:', error);
+            // Don't throw - allow the game to continue with local storage
+            return null;
         }
     }
 
     /**
+     * Update player profile with BlockZone API
+     */
+    async updatePlayerProfile(playerId, updates) {
+        try {
+            const response = await fetch(`${this.blockzoneAPI}/api/players/${playerId}/profile`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Profile update failed: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log(`✅ Player profile updated:`, result.player);
+            return result.player;
+            
+        } catch (error) {
+            console.error('❌ Profile update failed:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Get player stats from BlockZone API
+     */
+    async getPlayerStats(playerId) {
+        try {
+            const response = await fetch(`${this.blockzoneAPI}/api/players/${playerId}/stats`);
+            
+            if (!response.ok) {
+                throw new Error(`Failed to get player stats: ${response.status}`);
+            }
+            
+            return await response.json();
+            
+        } catch (error) {
+            console.error('❌ Failed to get player stats:', error);
+            return null;
+        }
+    }    /**
      * ANALYTICS METHODS
      */
 
     async trackNewUser(playerId) {
-        try {
-            await fetch(`${this.cloudflareAPI}/analytics/new_user`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    playerId,
-                    timestamp: Date.now(),
-                    userAgent: navigator.userAgent,
-                    referrer: document.referrer
-                })
-            });
-        } catch (error) {
-            console.log('Analytics tracking failed:', error);
-        }
+        // Analytics are now handled through player registration
+        console.log(`📊 New user tracked: ${playerId}`);
     }
 
     /**

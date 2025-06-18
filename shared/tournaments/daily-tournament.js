@@ -6,20 +6,18 @@
 export class DailyTournament {
     constructor() {
         this.apiBase = 'https://blockzone-api.hambomyers.workers.dev/api';
-        this.isActive = false;
-        this.participants = 0;
+        this.isActive = false;        this.participants = 0;
         this.prizePool = 0;
         this.timeRemaining = '00:00:00';
         this.updateInterval = null;
         this.eventListeners = {};
         
-        console.log('🏆 DailyTournament: Connected to live API');
+        // Connect to live API and refresh status
         this.refreshTournamentStatus();
     }
 
-    async joinTournament(entryFee = 5) {
-        try {
-            // TODO: Integrate with payment system for entry fee
+    async joinTournament(entryFee = 5) {        try {
+            // Entry fee will be integrated with payment system
             console.log(`💰 Joining tournament with $${entryFee} entry fee`);
             
             // For now, simulate successful entry

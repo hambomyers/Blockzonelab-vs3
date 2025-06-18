@@ -13,9 +13,7 @@ export default {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers });
-    }
-
-    // Route requests
+    }    // Route requests
     try {
       if (url.pathname === '/api/scores' && request.method === 'POST') {
         return handleSubmitScore(request, env, headers);
@@ -32,6 +30,16 @@ export default {
 
       if (url.pathname.startsWith('/api/players/') && url.pathname.endsWith('/stats')) {
         return handleGetPlayerStats(request, env, headers);
+      }
+
+      // NEW: Player registration endpoint
+      if (url.pathname === '/api/players/register' && request.method === 'POST') {
+        return handlePlayerRegistration(request, env, headers);
+      }
+
+      // NEW: Player profile update endpoint
+      if (url.pathname.startsWith('/api/players/') && url.pathname.endsWith('/profile') && request.method === 'PUT') {
+        return handleUpdatePlayerProfile(request, env, headers);
       }
 
       return new Response(JSON.stringify({ error: 'Not found' }), {
@@ -166,20 +174,134 @@ async function handleGetPlayerStats(request, env, headers) {
   const url = new URL(request.url);
   const playerId = url.pathname.split('/')[3];
 
-  const playerData = await env.SCORES.get(`player:${playerId}`, 'json') || {
+  // Get player profile from PLAYERS namespace
+  const playerProfile = await env.PLAYERS.get(`profile:${playerId}`, 'json') || {
+    player_id: playerId,
+    display_name: `Player ${playerId.slice(0, 6)}`,
+    tier: 'anonymous',
+    created_at: Date.now()
+  };
+
+  // Get player stats from SCORES namespace
+  const playerStats = await env.SCORES.get(`player:${playerId}`, 'json') || {
     high_score: 0,
     games_played: 0,
     total_score: 0
   };
 
-  const rank = await calculateRank(env, playerData.high_score, 'daily');
+  const rank = await calculateRank(env, playerStats.high_score, 'daily');
 
   return new Response(JSON.stringify({
-    ...playerData,
-    avg_score: playerData.games_played > 0
-      ? Math.floor(playerData.total_score / playerData.games_played)
+    ...playerProfile,
+    ...playerStats,
+    avg_score: playerStats.games_played > 0
+      ? Math.floor(playerStats.total_score / playerStats.games_played)
       : 0,
     current_rank: rank
+  }), { headers });
+}
+
+// NEW: Player registration
+async function handlePlayerRegistration(request, env, headers) {
+  const data = await request.json();
+  const { player_id, display_name, tier, email, wallet_address } = data;
+
+  if (!player_id) {
+    return new Response(JSON.stringify({ error: 'player_id is required' }), {
+      status: 400,
+      headers
+    });
+  }
+
+  const profileKey = `profile:${player_id}`;
+  
+  // Check if player already exists
+  const existingProfile = await env.PLAYERS.get(profileKey, 'json');
+  if (existingProfile) {
+    return new Response(JSON.stringify({ error: 'Player already exists' }), {
+      status: 409,
+      headers
+    });
+  }
+
+  // Create new player profile
+  const newProfile = {
+    player_id,
+    display_name: display_name || `Player ${player_id.slice(0, 6)}`,
+    tier: tier || 'anonymous',
+    email: email || null,
+    wallet_address: wallet_address || null,
+    created_at: Date.now(),
+    last_activity: Date.now(),
+    current_high_score: 0,
+    verified: tier === 'social' || tier === 'web3'
+  };
+
+  // Store in PLAYERS namespace
+  await env.PLAYERS.put(profileKey, JSON.stringify(newProfile));
+
+  // Also store player ID index for lookups
+  if (email) {
+    await env.PLAYERS.put(`email:${email}`, player_id);
+  }
+  if (wallet_address) {
+    await env.PLAYERS.put(`wallet:${wallet_address}`, player_id);
+  }
+
+  return new Response(JSON.stringify({
+    success: true,
+    player: newProfile
+  }), { headers });
+}
+
+// NEW: Update player profile
+async function handleUpdatePlayerProfile(request, env, headers) {
+  const url = new URL(request.url);
+  const playerId = url.pathname.split('/')[3];
+  const data = await request.json();
+
+  const profileKey = `profile:${playerId}`;
+  const existingProfile = await env.PLAYERS.get(profileKey, 'json');
+  
+  if (!existingProfile) {
+    return new Response(JSON.stringify({ error: 'Player not found' }), {
+      status: 404,
+      headers
+    });
+  }
+
+  // Update allowed fields
+  const updatedProfile = {
+    ...existingProfile,
+    last_activity: Date.now()
+  };
+
+  if (data.display_name) updatedProfile.display_name = data.display_name;
+  if (data.email) updatedProfile.email = data.email;
+  if (data.wallet_address) updatedProfile.wallet_address = data.wallet_address;
+  if (data.tier) updatedProfile.tier = data.tier;
+
+  // Store updated profile
+  await env.PLAYERS.put(profileKey, JSON.stringify(updatedProfile));
+
+  // Update indexes if needed
+  if (data.email && data.email !== existingProfile.email) {
+    await env.PLAYERS.put(`email:${data.email}`, playerId);
+    if (existingProfile.email) {
+      await env.PLAYERS.delete(`email:${existingProfile.email}`);
+    }
+  }
+
+  if (data.wallet_address && data.wallet_address !== existingProfile.wallet_address) {
+    await env.PLAYERS.put(`wallet:${data.wallet_address}`, playerId);
+    if (existingProfile.wallet_address) {
+      await env.PLAYERS.delete(`wallet:${existingProfile.wallet_address}`);
+    }
+  }
+
+  return new Response(JSON.stringify({
+    success: true,
+    player: updatedProfile
   }), { headers });
 }
 
@@ -205,11 +327,12 @@ function validateScore(score, metrics) {
 
 async function updatePlayerHighScore(env, playerId, score) {
   const key = `player:${playerId}`;
+  
+  // Get existing stats from SCORES namespace
   const existing = await env.SCORES.get(key, 'json') || {
     high_score: 0,
     games_played: 0,
-    total_score: 0,
-    display_name: `Player ${playerId.slice(0, 6)}`
+    total_score: 0
   };
 
   existing.games_played++;
@@ -219,7 +342,24 @@ async function updatePlayerHighScore(env, playerId, score) {
     existing.high_score = score;
   }
 
+  // Update stats in SCORES namespace
   await env.SCORES.put(key, JSON.stringify(existing));
+
+  // Get or create player profile in PLAYERS namespace
+  const profileKey = `profile:${playerId}`;
+  const playerProfile = await env.PLAYERS.get(profileKey, 'json') || {
+    player_id: playerId,
+    display_name: `Player ${playerId.slice(0, 6)}`,
+    tier: 'anonymous',
+    created_at: Date.now()
+  };
+
+  // Update last activity and high score in profile
+  playerProfile.last_activity = Date.now();
+  playerProfile.current_high_score = existing.high_score;
+  
+  // Store updated profile in PLAYERS namespace
+  await env.PLAYERS.put(profileKey, JSON.stringify(playerProfile));
 }
 
 async function updateLeaderboard(env, period, playerId, score, game = 'neon_drop') {
@@ -229,10 +369,13 @@ async function updateLeaderboard(env, period, playerId, score, game = 'neon_drop
   // Remove player's previous entry
   leaderboard.scores = leaderboard.scores.filter(s => s.player_id !== playerId);
 
-  const playerData = await env.SCORES.get(`player:${playerId}`, 'json');
+  // Get player profile from PLAYERS namespace for display name
+  const playerProfile = await env.PLAYERS.get(`profile:${playerId}`, 'json');
+  const displayName = playerProfile?.display_name || `Player ${playerId.slice(0, 6)}`;
+  
   leaderboard.scores.push({
     player_id: playerId,
-    display_name: playerData?.display_name || `Player ${playerId.slice(0, 6)}`,
+    display_name: displayName,
     score: score,
     timestamp: Date.now()
   });

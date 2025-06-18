@@ -24,11 +24,10 @@ export class UniversalPaymentSystem {
         this.applePayProcessor = null;
         this.quartersProcessor = null;
         this.sonicLabsProcessor = null;
-        
-        // Backend integration
+          // Backend integration
         this.paymentsAPI = 'https://blockzone-payments.hambomyers.workers.dev';
         
-        console.log('💰 Universal Payment System initialized');
+        // Initialize payment system silently
         this.initialize();
     }
 

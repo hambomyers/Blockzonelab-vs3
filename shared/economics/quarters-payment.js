@@ -122,7 +122,6 @@ export class QuartersSystem {
   addQuarters(amount) {
     this.balance += amount;
     this.saveBalance();
-    console.log(`✅ Added ${amount} quarters. New balance: ${this.balance}`);
   }
   
   canAfford(item) {

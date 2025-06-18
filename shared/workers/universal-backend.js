@@ -89,18 +89,8 @@ async function handleLeaderboard(request, env) {
   const url = new URL(request.url);
   
   if (method === 'GET' && url.pathname === '/api/leaderboard') {
-    // Return mock leaderboard for now
-    const mockScores = [];
-    for (let i = 0; i < 50; i++) {
-      mockScores.push({
-        rank: i + 1,
-        player_name: Player ,
-        score: Math.floor(Math.random() * 50000) + 10000 - (i * 500),
-        timestamp: Date.now() - (i * 3600000)
-      });
-    }
-    
-    return new Response(JSON.stringify({ scores: mockScores }), {
+    // Return empty leaderboard for development
+    return new Response(JSON.stringify({ scores: [] }), {
       headers: { 'Content-Type': 'application/json' }
     });
   }
