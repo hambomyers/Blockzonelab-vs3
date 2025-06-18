@@ -1063,366 +1063,103 @@
   margin: 0 auto;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .choices {
-    grid-template-columns: 1fr;
-    gap: var(--bz-space-4);
-  }
-  
-  .choice-btn {
-    aspect-ratio: 3 / 2; /* Wider cards on mobile */
-    max-width: none;
-  }
-  
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  
-  .portal-nav {
-    padding: 0 var(--bz-space-2);
-  }
-}
-
-@media (max-width: 480px) {
-  .hero {
-    padding: var(--bz-space-6) var(--bz-space-2);
-  }
-  
-  .choice-btn {
-    padding: var(--bz-space-4);
-  }
-  
-  .choice-title {
-    font-size: 1.25rem;
-  }
-}
-
-/* Game Card Link Enhancements for AAA UX */
-.game-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.game-card-link:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
-.game-card-link:focus {
-  outline: 2px solid var(--bz-primary);
-  outline-offset: 2px;
-  border-radius: var(--bz-radius-xl);
-}
-
-.bz-game-card-cta {
-  background: var(--bz-primary);
-  color: var(--bz-dark-900);
-  padding: var(--bz-space-2) var(--bz-space-4);
-  border-radius: var(--bz-radius-md);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all var(--bz-transition-smooth);
-}
-
-.game-card-link:hover .bz-game-card-cta {
-  background: var(--bz-electric-blue);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
-
-/* Enhanced card interaction states */
-.game-card-link:active {
-  transform: translateY(-4px) scale(0.98);
-}
-
-.game-card-link:hover .bz-game-card-title {
-  color: var(--bz-primary);
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-/* Ensure proper z-index and interaction */
-.bz-game-card {
-  position: relative;
-  z-index: 1;
-}
-
-.bz-game-card::before {
-  z-index: -1;
-}
-
-/* === AAA PLAYING CARD SYSTEM === */
-/* 2.5" x 3.5" aspect ratio (5:7) - Professional playing card dimensions */
-
-/* Base Playing Card - Universal foundation */
-.bz-playing-card {
-  /* Playing Card Dimensions - 2.5" x 3.5" aspect ratio */
-  width: 250px;
-  height: 350px;
-  aspect-ratio: 5/7;
-  
-  /* Core Styling */
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.12) 0%, 
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.05) 100%);
-  backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 20px;
-  
-  /* Layout */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+/* === DAILY CHALLENGE BANNER === */
+.daily-challenge-banner {
+  background: linear-gradient(135deg, var(--bz-primary), var(--bz-electric-blue));
+  padding: var(--bz-space-4) 0;
+  margin: var(--bz-space-4) 0;
   position: relative;
   overflow: hidden;
-  
-  /* Interactions */
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform-style: preserve-3d;
 }
 
-/* Subtle flash effect on first hover - Elegant and understated */
-.bz-playing-card::before {
+.daily-challenge-banner::before {
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.08) 50%, 
-    transparent 100%);
-  transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  z-index: 1;
-  pointer-events: none;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: bannerShimmer 3s ease-in-out infinite;
 }
 
-.bz-playing-card:hover::before {
-  left: 100%;
+@keyframes bannerShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-.bz-playing-card:hover {
-  transform: translateY(-8px) scale(1.02) rotateX(2deg);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(212, 175, 55, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+.banner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--bz-space-4);
 }
 
-/* Card content positioning above flash effect */
-.bz-playing-card > * {
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: var(--bz-space-4);
   position: relative;
   z-index: 2;
 }
 
-/* === GAMING VARIANT - More Fun & Energetic === */
-.bz-playing-card--gaming {
-  background: linear-gradient(135deg, 
-    rgba(0, 255, 255, 0.15) 0%, 
-    rgba(255, 0, 255, 0.10) 50%,
-    rgba(255, 255, 255, 0.05) 100%);
-  border: 2px solid rgba(0, 255, 255, 0.2);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(0, 255, 255, 0.1);
+.banner-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
 }
 
-.bz-playing-card--gaming::before {
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(0, 255, 255, 0.15) 50%, 
-    transparent 100%);
+.banner-text {
+  flex: 1;
 }
 
-.bz-playing-card--gaming:hover {
-  border-color: rgba(0, 255, 255, 0.4);
-  box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.5),
-    0 0 50px rgba(0, 255, 255, 0.3),
-    0 0 20px rgba(255, 0, 255, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-12px) scale(1.03) rotateX(3deg);
-}
-
-/* Gaming card subtle pulse animation */
-.bz-playing-card--gaming:hover {
-  animation: gaming-card-pulse 2s infinite;
-}
-
-@keyframes gaming-card-pulse {
-  0%, 100% { 
-    box-shadow: 
-      0 30px 60px rgba(0, 0, 0, 0.5),
-      0 0 50px rgba(0, 255, 255, 0.3),
-      0 0 20px rgba(255, 0, 255, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  50% { 
-    box-shadow: 
-      0 30px 60px rgba(0, 0, 0, 0.5),
-      0 0 60px rgba(0, 255, 255, 0.4),
-      0 0 30px rgba(255, 0, 255, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-}
-
-/* === ACADEMY VARIANT - Studious & Professional === */
-.bz-playing-card--academy {
-  background: linear-gradient(135deg, 
-    rgba(100, 200, 255, 0.10) 0%, 
-    rgba(200, 150, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.05) 100%);
-  border: 2px solid rgba(100, 200, 255, 0.18);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 0 15px rgba(100, 200, 255, 0.1);
-}
-
-.bz-playing-card--academy::before {
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(100, 200, 255, 0.12) 50%, 
-    transparent 100%);
-}
-
-.bz-playing-card--academy:hover {
-  border-color: rgba(100, 200, 255, 0.3);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(100, 200, 255, 0.25),
-    0 0 15px rgba(200, 150, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-6px) scale(1.015) rotateX(1deg);
-}
-
-/* Academy card subtle glow - More refined */
-.bz-playing-card--academy:hover {
-  animation: academy-card-glow 3s infinite;
-}
-
-@keyframes academy-card-glow {
-  0%, 100% { 
-    box-shadow: 
-      0 25px 50px rgba(0, 0, 0, 0.4),
-      0 0 40px rgba(100, 200, 255, 0.25),
-      0 0 15px rgba(200, 150, 255, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  50% { 
-    box-shadow: 
-      0 25px 50px rgba(0, 0, 0, 0.4),
-      0 0 50px rgba(100, 200, 255, 0.35),
-      0 0 25px rgba(200, 150, 255, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-}
-
-/* === PLAYING CARD SIZES === */
-.bz-playing-card--sm {
-  width: 200px;
-  height: 280px;
-  padding: 16px;
-  border-radius: 12px;
-}
-
-.bz-playing-card--md {
-  width: 250px;
-  height: 350px;
-  padding: 20px;
-  border-radius: 16px;
-}
-
-.bz-playing-card--lg {
-  width: 300px;
-  height: 420px;
-  padding: 24px;
-  border-radius: 20px;
-}
-
-/* === PLAYING CARD CONTENT STRUCTURE === */
-.bz-playing-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.bz-playing-card__number {
-  font-family: var(--bz-font-gaming, 'Arial', sans-serif);
-  font-size: 14px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.bz-playing-card__status {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
+.banner-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--bz-dark-900);
+  margin: 0 0 var(--bz-space-1) 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.bz-playing-card__status--available {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+.banner-subtitle {
+  font-size: 1rem;
+  color: var(--bz-dark-800);
+  margin: 0;
+  font-weight: 600;
 }
 
-.bz-playing-card__status--locked {
-  background: rgba(156, 163, 175, 0.15);
-  color: #9ca3af;
-  border: 1px solid rgba(156, 163, 175, 0.2);
-}
-
-.bz-playing-card__status--live {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.bz-playing-card__icon {
-  font-size: 3rem;
-  text-align: center;
-  margin: 1rem 0;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-}
-
-.bz-playing-card__title {
-  font-size: 1.25rem;
+.banner-cta {
+  background: var(--bz-dark-900);
+  color: var(--bz-primary);
+  padding: var(--bz-space-3) var(--bz-space-6);
+  border-radius: var(--bz-radius-lg);
   font-weight: 700;
-  color: var(--bz-light-100);
-  margin: 0.75rem 0 0.5rem 0;
-  text-align: center;
-  line-height: 1.2;
+  font-size: 1.1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--bz-transition-normal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.bz-playing-card__description {
-  font-size: 0.875rem;
-  color: var(--bz-light-400);
-  line-height: 1.5;
-  text-align: center;
-  margin: 0.75rem 0;
-  flex-grow: 1;
+.banner-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  background: var(--bz-dark-800);
 }
 
-.bz-playing-card__footer {
-  margin-top: auto;
-  padding-top: 1rem;
-  text-align: center;
-}
-
-.bz-playing-card__footer .bz-btn {
-  width: 100%;
-  font-size: 0.8rem;
+@media (max-width: 768px) {
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--bz-space-3);
+  }
+  
+  .banner-title {
+    font-size: 1.5rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 0.9rem;
+  }
 }
