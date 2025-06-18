@@ -1,0 +1,109 @@
+/**
+ * NEON DROP - GAME SPECIFIC STYLES
+ * Only styles unique to this specific game
+ * Reusable components moved to shared design system
+ */
+
+/* ============ GAME CANVAS RENDERING ============ */
+#game {
+    /* Enhanced canvas rendering for Neon Drop */
+    filter: brightness(1.03) contrast(1.01);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+#bg {
+    /* Background canvas rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+/* ============ GAME LAYOUT ============ */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Inter', Arial, sans-serif;
+    color: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+#bg, #game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+#bg {
+    z-index: 1;
+}
+
+#game {
+    z-index: 2;
+}
+
+#ui {
+    position: fixed;
+    top: 0;
+    left: 0;    right: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* ============ MOBILE RESPONSIVE GAME ADJUSTMENTS ============ */
+@media (max-width: 768px) {
+    /* Mobile-specific game adjustments */
+    #gameContainer {
+        /* Ensure full viewport on mobile */
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    }
+}
+
+/* ============ ENHANCED RENDERING ============ */
+#game {
+    /* Enhanced canvas rendering - subtle brightness boost */
+    filter: brightness(1.03) contrast(1.01);
+    /* Better pixel rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+#bg {
+    /* Better pixel rendering for background */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+body {
+    /* Very subtle ambient enhancement */
+    background: radial-gradient(ellipse at center,
+        rgba(0, 15, 30, 0.03) 0%,
+        rgba(0, 0, 0, 1) 80%) !important;
+}

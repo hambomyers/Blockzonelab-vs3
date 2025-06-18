@@ -78,37 +78,17 @@ class NeonDrop {
         return this.config || {};
     }    async initialize() {
         try {
-            console.log('🚀 NeonDrop starting...');
-            
-            console.log('📋 Loading config...');
             await this.config.load();
-            
-            console.log('🖥️ Setting up display...');
             this.setupDisplay();
-            
-            console.log('⚙️ Creating systems...');
             this.createSystems();
-            
-            console.log('🎨 Setting up UI...');
             this.setupUI();
-            
-            console.log('🧹 Cleaning up old UI...');
             this.cleanupOldUI(); // Remove any old tournament UI elements
-            
-            console.log('🃏 Setting up menu card...');
             this.setupGameMenuCard(); // Add our elegant menu card
-            
-            console.log('🔗 Binding events...');
             this.bindEvents();
-            
-            console.log('🔄 Starting game loop...');
             this.startLoop();
             
             // Background initialization
-            console.log('🌍 Initializing background systems...');
             this.initBackgroundSystems();
-            
-            console.log('✅ NeonDrop ready');
         } catch (error) {
             console.error('❌ Init failed:', error);
             this.showError('Game failed to load. Please refresh.');
@@ -130,7 +110,7 @@ class NeonDrop {
           this.renderer = new Renderer(game, bg, this.config, dims);
         this.renderer.viewportManager = this.viewport;
         
-        // Debug: Check if renderer has zones for panel positioning
+        // Check if renderer has zones for panel positioning
         console.log('🔍 Renderer dimensions after creation:', {
             hasZones: !!this.renderer.dimensions?.zones,
             zones: this.renderer.dimensions?.zones,
@@ -259,12 +239,19 @@ class NeonDrop {
                     this.startFreePlay();
                 }, 300);
                 break;
-                
-            case 'leaderboard':
+                  case 'leaderboard':
                 // Show leaderboard
+                console.log('🏆 Leaderboard requested');
+                console.log('🔍 window.leaderboardUI exists:', !!window.leaderboardUI);
+                console.log('🔍 window.leaderboard exists:', !!window.leaderboard);
+                
                 setTimeout(() => {
                     if (window.leaderboardUI) {
+                        console.log('🎯 Calling leaderboardUI.show()');
                         window.leaderboardUI.show();
+                    } else {
+                        console.error('❌ window.leaderboardUI is null/undefined!');
+                        alert('Leaderboard system not initialized!');
                     }
                 }, 300);
                 break;

@@ -24,14 +24,31 @@ export class ElegantLeaderboardUI {
 
     setupUI() {
         this.container = document.createElement('div');
-        this.container.className = 'elegant-leaderboard-overlay';
-        this.container.innerHTML = `
+        this.container.className = 'elegant-leaderboard-overlay';        this.container.innerHTML = `
             <div class="elegant-leaderboard-backdrop">
                 <div class="elegant-leaderboard-card">
-                    <!-- Header -->
+                    <!-- Personal Stats Section - Top Priority -->
+                    <div class="personal-stats-section">
+                        <div class="personal-stats-grid">
+                            <div class="personal-welcome">
+                                <h3>Welcome back, Player!</h3>
+                                <p>Your performance and global standings</p>
+                            </div>
+                            <div class="personal-rank-card">
+                                <p class="personal-rank-label">Your Rank</p>
+                                <div class="personal-rank-value" id="personal-rank">--</div>
+                            </div>
+                            <div class="personal-score-card">
+                                <p class="personal-score-label">Best Score</p>
+                                <div class="personal-score-value" id="personal-score">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Header -->
                     <div class="leaderboard-header">
-                        <h2 class="leaderboard-title">High Scores</h2>
-                        <p class="leaderboard-subtitle">Top Neon Drop players</p>
+                        <h2 class="leaderboard-title">Global Leaderboard</h2>
+                        <p class="leaderboard-subtitle">Top players worldwide • Updated in real-time</p>
                     </div>
 
                     <!-- Period Selector -->
@@ -45,7 +62,7 @@ export class ElegantLeaderboardUI {
                     <div class="scores-table-container">
                         <div class="loading-state">
                             <div class="loading-spinner"></div>
-                            <p>Loading scores...</p>
+                            <p>Loading global scores...</p>
                         </div>
                         
                         <div class="scores-table" style="display: none;">
@@ -61,45 +78,19 @@ export class ElegantLeaderboardUI {
                         </div>
                     </div>
 
-                    <!-- Player Status -->
-                    <div class="player-status">
-                        <div class="status-item">
-                            <span class="status-label">Your Rank:</span>
-                            <span class="status-value" id="player-rank">--</span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">Your Best:</span>
-                            <span class="status-value" id="player-score">--</span>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination" id="pagination" style="display: none;">
-                        <button class="page-btn" id="prev-page" disabled>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="15,18 9,12 15,6"></polyline>
-                            </svg>
-                            Previous
-                        </button>
-                        <span class="page-info">
-                            Page <span id="current-page">1</span> of <span id="total-pages">1</span>
-                        </span>
-                        <button class="page-btn" id="next-page" disabled>
-                            Next
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="9,18 15,12 9,6"></polyline>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Actions -->
+                    <!-- Beautiful Navigation Actions - Bottom Priority -->
                     <div class="leaderboard-actions">
-                        <button class="action-btn secondary" id="close-leaderboard">
+                        <button class="action-btn secondary" id="back-to-main">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                <path d="M19 12H6m0 0l6 6m-6-6l6-6"/>
                             </svg>
-                            Close
+                            Back to Main
+                        </button>
+                        <button class="action-btn tertiary" id="view-challenges">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Challenges
                         </button>
                         <button class="action-btn primary" id="play-again">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -139,12 +130,19 @@ export class ElegantLeaderboardUI {
             if (this.currentPage < totalPages - 1) {
                 this.goToPage(this.currentPage + 1);
             }
-        });
-
-        // Actions
-        this.container.querySelector('#close-leaderboard')?.addEventListener('click', (e) => {
+        });        // Actions
+        this.container.querySelector('#back-to-main')?.addEventListener('click', (e) => {
             e.stopPropagation();
             this.hide();
+            // Navigate back to main site
+            window.location.href = '/';
+        });
+
+        this.container.querySelector('#view-challenges')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.hide();
+            // Show challenges (future feature)
+            console.log('🎯 Challenges feature coming soon!');
         });
 
         this.container.querySelector('#play-again')?.addEventListener('click', (e) => {
@@ -258,40 +256,30 @@ export class ElegantLeaderboardUI {
                 </div>
             `;
             return;
-        }
-
-        pageEntries.forEach((entry, index) => {
+        }        pageEntries.forEach((entry, index) => {
             const globalRank = startIndex + index + 1;
             const scoreRow = document.createElement('div');
             scoreRow.className = 'score-row';
             
             // Highlight player's score if it matches
             if (this.playerScore && entry.score === this.playerScore) {
-                scoreRow.classList.add('player-score');
-            }
-
-            // Special styling for top 3
-            if (globalRank <= 3) {
-                scoreRow.classList.add(`rank-${globalRank}`);
+                scoreRow.classList.add('current-player');
             }
 
             scoreRow.innerHTML = `
-                <div class="rank-col">
-                    ${globalRank <= 3 ? this.getRankMedal(globalRank) : `#${globalRank}`}
-                </div>
-                <div class="player-col">
-                    ${this.formatPlayerName(entry.player_name || 'Anonymous')}
-                </div>
-                <div class="score-col">
-                    ${this.formatScore(entry.score)}
-                </div>
-                <div class="time-col">
-                    ${this.formatDate(entry.timestamp)}
-                </div>
+                <div class="rank">${this.getRankDisplay(globalRank)}</div>
+                <div class="player-name">${this.formatPlayerName(entry.player_name || 'Anonymous')}</div>
+                <div class="score">${this.formatScore(entry.score)}</div>
+                <div class="date">${this.formatDate(entry.timestamp)}</div>
             `;
 
             scoresContainer.appendChild(scoreRow);
         });
+    }    getRankDisplay(rank) {
+        if (rank === 1) return '🥇';
+        if (rank === 2) return '🥈';
+        if (rank === 3) return '🥉';
+        return `#${rank}`;
     }
 
     getRankMedal(rank) {
@@ -319,34 +307,77 @@ export class ElegantLeaderboardUI {
         } else {
             return date.toLocaleDateString();
         }
-    }
+    }    updatePlayerStatus() {
+        const personalRankEl = this.container.querySelector('#personal-rank');
+        const personalScoreEl = this.container.querySelector('#personal-score');
 
-    updatePlayerStatus() {
-        const playerRankEl = this.container.querySelector('#player-rank');
-        const playerScoreEl = this.container.querySelector('#player-score');
+        // Add loading animation
+        const showLoading = (element) => {
+            element.style.opacity = '0.5';
+            element.textContent = '...';
+        };
 
-        if (this.playerScore) {
-            const playerEntry = this.allEntries.find(entry => entry.score === this.playerScore);
-            if (playerEntry) {
-                const rank = this.allEntries.indexOf(playerEntry) + 1;
-                playerRankEl.textContent = `#${rank}`;
-                playerScoreEl.textContent = this.formatScore(this.playerScore);
-            } else {
-                playerRankEl.textContent = 'Not ranked';
-                playerScoreEl.textContent = this.formatScore(this.playerScore);
+        const hideLoading = (element, value, isHighlight = false) => {
+            element.style.opacity = '1';
+            element.textContent = value;
+            
+            // Add highlight animation for achievements
+            if (isHighlight) {
+                element.style.animation = 'statusHighlight 2s ease-out';
+                setTimeout(() => {
+                    element.style.animation = '';
+                }, 2000);
             }
-        } else {
-            playerRankEl.textContent = '--';
-            playerScoreEl.textContent = '--';
-        }
-    }
+        };
 
-    updatePagination() {
+        // Show loading state
+        showLoading(personalRankEl);
+        showLoading(personalScoreEl);
+
+        setTimeout(() => {
+            if (this.playerScore && this.playerScore > 0) {
+                // Find player in leaderboard
+                const playerEntry = this.allEntries.find(entry => entry.score === this.playerScore);
+                
+                if (playerEntry) {
+                    const rank = this.allEntries.indexOf(playerEntry) + 1;
+                    let rankText = `#${rank}`;
+                    let isTopRank = false;
+                    
+                    // Add special formatting for top ranks
+                    if (rank === 1) {
+                        rankText = '👑 #1';
+                        isTopRank = true;
+                    } else if (rank === 2) {
+                        rankText = '🥈 #2';
+                        isTopRank = true;
+                    } else if (rank === 3) {
+                        rankText = '🥉 #3';
+                        isTopRank = true;
+                    } else if (rank <= 10) {
+                        rankText = `⭐ #${rank}`;
+                    }
+                    
+                    hideLoading(personalRankEl, rankText, isTopRank);
+                    hideLoading(personalScoreEl, this.formatScore(this.playerScore), this.playerScore >= 10000);
+                    
+                } else {
+                    // Player not in current leaderboard period
+                    const totalEntries = this.allEntries.length;
+                    hideLoading(personalRankEl, totalEntries > 0 ? `#${totalEntries + 1}+` : '--');
+                    hideLoading(personalScoreEl, this.formatScore(this.playerScore));
+                }
+            } else {
+                // No score yet
+                hideLoading(personalRankEl, '--');
+                hideLoading(personalScoreEl, '--');
+            }
+        }, 300); // Small delay for smooth loading animation
+    }    updatePagination() {
         const totalPages = Math.ceil(this.totalEntries / this.pageSize);
         const paginationEl = this.container.querySelector('#pagination');
         
-        if (totalPages <= 1) {
-            paginationEl.style.display = 'none';
+        if (!paginationEl || totalPages <= 1) {
             return;
         }
 

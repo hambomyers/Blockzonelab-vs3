@@ -26,7 +26,7 @@ export class LeaderboardSystem {
         const hostname = window.location.hostname;
         
         // Always use your Cloudflare Worker for now
-        return 'https://blockzone-universal-backend.hambomyers.workers.dev/api';
+        return 'https://blockzone-api.hambomyers.workers.dev/api';
     }
 
     /**

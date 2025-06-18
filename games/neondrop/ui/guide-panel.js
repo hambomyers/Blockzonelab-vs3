@@ -21,18 +21,10 @@ export class GuidePanel {    constructor() {
         if (!this.isMobile) {
             // Try positioning after a delay
             setTimeout(() => this.positionPanel(), 500);
-        }
-    }positionPanel() {
+        }    }positionPanel() {
         if (this.isMobile) return;
 
-        // Debug what's available
-        console.log('🔍 GuidePanel positioning debug:', {
-            hasWindow: !!window.neonDrop,
-            hasGame: !!window.neonDrop?.game,
-            hasRenderer: !!window.neonDrop?.game?.renderer,
-            hasDimensions: !!window.neonDrop?.game?.renderer?.dimensions,
-            hasZones: !!window.neonDrop?.game?.renderer?.dimensions?.zones
-        });        // Get zones from ViewportManager
+        // Get zones from ViewportManager
         const getZones = () => {
             if (!window.neonDrop?.renderer?.dimensions?.zones) {
                 // Check retry limit to prevent infinite loop
