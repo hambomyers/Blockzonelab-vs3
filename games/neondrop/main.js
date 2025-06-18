@@ -193,15 +193,13 @@ class NeonDrop {
         addEventListener('keydown', e => {
             if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
                 e.preventDefault();
-            }
-        });
+            }        });
 
-        // Touch device detection
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (isMobile && 'ontouchstart' in window) {
+        // Touch device detection using centralized system
+        if (window.BlockZoneMobile?.isMobile() && window.BlockZoneMobile?.hasTouch()) {
             document.body.classList.add('touch-device');
         }
-    }    async initBackgroundSystems() {
+    }async initBackgroundSystems() {
         try {
             // Tournament system is bulletproof - always works
             console.log('🏆 Tournament ready');

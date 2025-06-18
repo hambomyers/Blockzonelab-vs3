@@ -2,14 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BlockZone Lab - Professional Gaming Platform</title>
+      <!-- CRITICAL: Mobile Detection First (Inline for Performance) -->    <script>
+        // Industry-standard mobile detection with keyboard detection (like Axie Infinity, Gods Unchained)
+        window.BlockZoneMobile = {
+            // Cached values for performance
+            _isMobile: window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+            _isTablet: window.innerWidth > 768 && window.innerWidth <= 1024 && 'ontouchstart' in window,
+            _hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            _isPWA: window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true,
+            _hasPhysicalKeyboard: null, // Will be detected dynamically
+            
+            // Function API for compatibility
+            isMobile() { return this._isMobile; },
+            isTablet() { return this._isTablet; },
+            hasTouch() { return this._hasTouch; },
+            isPWA() { return this._isPWA; },            hasPhysicalKeyboard() { 
+                // Simple detection: assume keyboard on desktop OS or large screens
+                return !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth > 1024;
+            },
+            needsMobileControls() {
+                // Show mobile controls only on touch devices without keyboards
+                return (this._isMobile || this._isTablet) && !this.hasPhysicalKeyboard();
+            },
+            getScreenSize() {
+                const w = window.innerWidth;
+                return w <= 480 ? 'small' : w <= 768 ? 'medium' : w <= 1024 ? 'large' : 'xlarge';            }
+        };
+        
+        // Set CSS custom properties immediately for layout
+        document.documentElement.style.setProperty('--is-mobile', window.BlockZoneMobile._isMobile ? '1' : '0');
+        document.documentElement.style.setProperty('--has-touch', window.BlockZoneMobile._hasTouch ? '1' : '0');
+        document.documentElement.style.setProperty('--has-keyboard', window.BlockZoneMobile.hasPhysicalKeyboard() ? '1' : '0');
+        document.documentElement.style.setProperty('--needs-mobile-controls', window.BlockZoneMobile.needsMobileControls() ? '1' : '0');
+    </script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BlockZone Lab">
     
     <!-- Professional CSS Architecture -->
     <link rel="stylesheet" href="assets/css/design-system.css">
     <link rel="stylesheet" href="assets/css/utilities.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/blockzone-system.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
 </head>
 <body class="portal-container">
     <!-- Professional Starfield Background -->
@@ -84,8 +129,11 @@
             <p class="partnership-description">
                 Professional gaming platform with revolutionary 90/10 fee structure
             </p>
-        </div>
-    </section>
+        </div>    </section>
+
+    <!-- PWA Installation & Mobile Framework (mobile detection already inline) -->
+    <script src="/pwa/install-prompt.js"></script>
+    <script src="/shared/responsive/mobile-game-framework.js"></script>
 
 </body>
 </html>

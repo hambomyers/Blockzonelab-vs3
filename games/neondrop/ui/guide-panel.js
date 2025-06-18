@@ -9,7 +9,7 @@ export class GuidePanel {    constructor() {
         this.container = null;
         this.mobileModal = null;
         this.isVisible = false;
-        this.isMobile = window.innerWidth < 1200;
+        this.isMobile = window.BlockZoneMobile?.isMobile() || window.innerWidth < 1200;
         this.retryCount = 0;  // Add retry counter
         this.maxRetries = 20; // Max retries before giving up
 
@@ -22,7 +22,7 @@ export class GuidePanel {    constructor() {
             // Try positioning after a delay
             setTimeout(() => this.positionPanel(), 500);
         }
-    }    positionPanel() {
+    }positionPanel() {
         if (this.isMobile) return;
 
         // Debug what's available

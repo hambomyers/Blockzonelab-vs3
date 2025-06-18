@@ -1,0 +1,145 @@
+{
+  "name": "BlockZone Lab - Web3 Gaming Hub",
+  "short_name": "BlockZone Lab",
+  "description": "Premium Web3 gaming platform with daily tournaments and crypto education",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "natural",
+  "theme_color": "#d4af37",
+  "background_color": "#1a1d29",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  
+  "categories": ["games", "education", "finance"],
+  "screenshots": [
+    {
+      "src": "/assets/icons/screenshot-mobile.png",
+      "sizes": "640x1136",
+      "type": "image/png",
+      "platform": "mobile",
+      "label": "Mobile gaming experience"
+    },
+    {
+      "src": "/assets/icons/screenshot-desktop.png", 
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Desktop gaming hub"
+    }
+  ],
+  
+  "icons": [
+    {
+      "src": "/assets/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "badge"
+    },
+    {
+      "src": "/assets/icons/icon-96.png",
+      "sizes": "96x96", 
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  
+  "shortcuts": [
+    {
+      "name": "Play Neon Drop",
+      "short_name": "Neon Drop",
+      "description": "Jump into the arcade action",
+      "url": "/games/neondrop/",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-neondrop.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Tournament Leaderboard", 
+      "short_name": "Leaderboard",
+      "description": "Check daily rankings",
+      "url": "/games/?view=leaderboard",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-leaderboard.png", 
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Crypto Academy",
+      "short_name": "Academy", 
+      "description": "Learn blockchain fundamentals",
+      "url": "/academy/",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-academy.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  
+  "related_applications": [],
+  "prefer_related_applications": false,
+  
+  "protocol_handlers": [
+    {
+      "protocol": "web+blockzone",
+      "url": "/games/?tournament=%s"
+    }
+  ],
+  
+  "share_target": {
+    "action": "/games/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text", 
+      "url": "url"
+    }
+  },
+  
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

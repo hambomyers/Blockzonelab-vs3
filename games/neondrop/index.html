@@ -21,6 +21,39 @@ BLOCKCHAIN INTEGRATION:
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Neon Drop - BlockZone Lab</title>
+      <!-- CRITICAL: Mobile Detection First (Inline for Performance) -->
+    <script>
+        // Industry-standard mobile detection with function API (like existing code expects)
+        window.BlockZoneMobile = {
+            // Cached values for performance
+            _isMobile: window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+            _isTablet: window.innerWidth > 768 && window.innerWidth <= 1024 && 'ontouchstart' in window,
+            _hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            _isPWA: window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true,
+            
+            // Function API that existing code expects
+            isMobile() { return this._isMobile; },
+            isTablet() { return this._isTablet; },
+            hasTouch() { return this._hasTouch; },
+            isPWA() { return this._isPWA; },
+            getScreenSize() {
+                const w = window.innerWidth;
+                return w <= 480 ? 'small' : w <= 768 ? 'medium' : w <= 1024 ? 'large' : 'xlarge';
+            }
+        };
+        
+        // Set CSS custom properties immediately for game layout
+        document.documentElement.style.setProperty('--is-mobile', window.BlockZoneMobile._isMobile ? '1' : '0');
+        document.documentElement.style.setProperty('--has-touch', window.BlockZoneMobile._hasTouch ? '1' : '0');
+        
+        // Show/hide touch controls immediately
+        document.addEventListener('DOMContentLoaded', () => {
+            const touchControls = document.getElementById('touch-controls');
+            if (touchControls) {
+                touchControls.style.display = window.BlockZoneMobile.hasTouch() ? 'block' : 'none';
+            }
+        });
+    </script>
     
     <!-- Clean, Self-Contained Game Styles -->
     <link rel="stylesheet" href="style.css">
@@ -66,14 +99,12 @@ BLOCKCHAIN INTEGRATION:
             <button class="touch-btn" data-action="right">▶</button>
         </div>
         <div class="touch-bottom">
-            <button class="touch-btn" data-action="drop">⬇⬇</button>
-            <button class="touch-btn" data-action="hold">HOLD</button>
-        </div>
-    </div>
+            <button class="touch-btn" data-action="drop">⬇⬇</button>            <button class="touch-btn" data-action="hold">HOLD</button>
+        </div>    </div>
 
-    <!-- Load the game directly -->
+    <!-- Load the game directly (mobile detection already available) -->
     <script type="module">
-        // Just load the game - no Web3 complications
+        // Just load the game - mobile detection already inline above
         import('./main.js').catch(e => {
             console.error('Failed to load game:', e);
             document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px;">Game failed to load. Please refresh the page.</div>';
