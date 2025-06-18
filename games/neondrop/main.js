@@ -42,13 +42,12 @@ class NeonDrop {
         this.guide = null;
         this.stats = null;
         this.tournamentUI = null;
-        this.uiStateManager = new UIStateManager();
-        // Universal systems (next-generation)
+        this.uiStateManager = new UIStateManager();        // Universal systems (next-generation)
         this.universalIdentity = new UniversalPlayerIdentity();
         this.universalPayments = new UniversalPaymentSystem(this.universalIdentity);
         
-        // Legacy systems (for compatibility)
-        this.identity = new PlayerIdentity();
+        // Alias for compatibility (universal identity replaces legacy)
+        this.identity = this.universalIdentity;
         this.leaderboard = new LeaderboardSystem();
         
         // Web3 systems (bulletproof)
