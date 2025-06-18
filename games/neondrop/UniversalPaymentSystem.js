@@ -107,26 +107,42 @@ export class UniversalPaymentSystem {
      * QUARTERS TOKEN SYSTEM
      */
     async initializeQuarters() {
-        try {
-            this.quartersProcessor = {
+        try {            this.quartersProcessor = {
                 balance: 0,
-                
-                // Quarters pricing tiers
+                  // TRUE ARCADE QUARTERS SYSTEM: 1 quarter = $0.25
                 packages: [
-                    { quarters: 100, price: 0.99, bonus: 0 },
-                    { quarters: 500, price: 4.99, bonus: 50 },
-                    { quarters: 1200, price: 9.99, bonus: 200 },
-                    { quarters: 2500, price: 19.99, bonus: 500 },
-                    { quarters: 6000, price: 49.99, bonus: 1500 }
+                    { 
+                        quarters: 1, 
+                        price: 0.25, 
+                        bonus: 0, 
+                        popular: false,
+                        description: "Single Quarter",
+                        bestFor: "Try a daily challenge"
+                    },
+                    { 
+                        quarters: 10, 
+                        price: 2.50, 
+                        bonus: 1, 
+                        popular: true,
+                        description: "Roll of Quarters",
+                        bestFor: "1 tournament + bonus"
+                    },
+                    { 
+                        quarters: 40, 
+                        price: 10.00, 
+                        bonus: 5, 
+                        popular: false,
+                        description: "Arcade Pack",
+                        bestFor: "4 tournaments + bonus"
+                    }
                 ],
-                
-                // Game costs in quarters
+                  // Game costs in TRUE QUARTERS (1 quarter = $0.25)
                 costs: {
-                    tournament_entry: 25,
-                    premium_game: 10,
-                    daily_challenge: 5,
-                    cosmetic_item: 50,
-                    power_up: 15
+                    tournament_entry: 10,    // 10 quarters = $2.50
+                    premium_game: 4,         // 4 quarters = $1.00 
+                    daily_challenge: 1,      // 1 quarter = $0.25 (true arcade!)
+                    cosmetic_item: 8,        // 8 quarters = $2.00
+                    power_up: 2             // 2 quarters = $0.50
                 }
             };
             
@@ -295,7 +311,7 @@ export class UniversalPaymentSystem {
      * Quarters token processing
      */
     async processQuartersPayment(item) {
-        const quartersNeeded = item.quarters || item.price * 10; // 10 quarters per dollar
+        const quartersNeeded = item.quarters || item.price * 4; // TRUE ARCADE: $0.25 = 1 quarter
         
         if (this.balance.quarters < quartersNeeded) {
             throw new Error(`Insufficient quarters. Need ${quartersNeeded}, have ${this.balance.quarters}`);
@@ -495,7 +511,7 @@ export class UniversalPaymentSystem {
         
         switch (paymentMethod) {
             case 'quarters':
-                return this.balance.quarters >= (item.quarters || item.price * 10);
+                return this.balance.quarters >= (item.quarters || item.price * 4);
             case 'sonic_labs':
                 return this.balance.sonic >= (item.sonic_price || 0);
             case 'free':

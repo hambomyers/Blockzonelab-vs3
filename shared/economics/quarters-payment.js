@@ -6,22 +6,44 @@
 export class QuartersSystem {
   constructor() {
     this.balance = this.loadBalance();
+    
+    // TRUE ARCADE QUARTERS SYSTEM: 1 quarter = $0.25
     this.packages = [
-      { quarters: 100, price: 0.99, bonus: 0, popular: false },
-      { quarters: 500, price: 4.99, bonus: 50, popular: false },
-      { quarters: 1200, price: 9.99, bonus: 200, popular: true },
-      { quarters: 2500, price: 19.99, bonus: 500, popular: false },
-      { quarters: 6000, price: 49.99, bonus: 1500, popular: false }
+      { 
+        quarters: 1, 
+        price: 0.25, 
+        bonus: 0, 
+        popular: false,
+        description: "Single Quarter",
+        bestFor: "Try a daily challenge"
+      },
+      { 
+        quarters: 10, 
+        price: 2.50, 
+        bonus: 1, 
+        popular: true,
+        description: "Roll of Quarters",
+        bestFor: "1 tournament + bonus"
+      },
+      { 
+        quarters: 40, 
+        price: 10.00, 
+        bonus: 5, 
+        popular: false,
+        description: "Arcade Pack",
+        bestFor: "4 tournaments + bonus"
+      }
     ];
     
+    // Game costs in TRUE QUARTERS (1 quarter = $0.25)
     this.costs = {
-      tournament_entry: 25,
-      premium_game: 10,
-      daily_challenge: 5,
-      cosmetic_unlock: 50,
-      power_up: 15,
-      extra_life: 20,
-      score_multiplier: 30
+      tournament_entry: 10,    // 10 quarters = $2.50 (matches current USDC price)
+      premium_game: 4,         // 4 quarters = $1.00 
+      daily_challenge: 1,      // 1 quarter = $0.25 (true arcade style!)
+      cosmetic_unlock: 8,      // 8 quarters = $2.00
+      power_up: 2,            // 2 quarters = $0.50
+      extra_life: 3,          // 3 quarters = $0.75
+      score_multiplier: 4     // 4 quarters = $1.00
     };
   }
   
@@ -44,7 +66,7 @@ export class QuartersSystem {
       if (paymentMethod === 'apple_pay' && window.ApplePayIntegration?.isAvailable) {
         result = await window.ApplePayIntegration.processPayment(
           package_.price,
-          \\ Quarters\
+          `${package_.quarters + package_.bonus} Quarters`
         );
       } else {
         // Fallback to web payment
@@ -66,7 +88,7 @@ export class QuartersSystem {
   
   async spendQuarters(item, amount) {
     if (this.balance < amount) {
-      throw new Error(\Insufficient quarters. Need \, have \\);
+      throw new Error(`Insufficient quarters. Need ${amount}, have ${this.balance}`);
     }
     
     try {
@@ -100,7 +122,7 @@ export class QuartersSystem {
   addQuarters(amount) {
     this.balance += amount;
     this.saveBalance();
-    console.log(\ Added \ quarters. New balance: \\);
+    console.log(`✅ Added ${amount} quarters. New balance: ${this.balance}`);
   }
   
   canAfford(item) {
