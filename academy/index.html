@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Academy - Austrian Economics & Digital Innovation</title>
+    <title>The Academy - Austrian Economics & Digital Innovation</title>    <link rel="stylesheet" href="../assets/css/core-variables.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="core/academy-styles.css">
     <!-- Dynamic Bitcoin Price Updates -->
     <script src="../core-systems/bitcoin-price.js"></script>
@@ -97,34 +98,29 @@
                     Each lesson exponentially builds on previous knowledge, creating a comprehensive understanding 
                     of how mathematical certainty enables voluntary exchange and technological innovation.
                 </p>
-            </div>
-
-            <div class="lessons-container">
-                <div class="lessons-grid">
+            </div>            <div class="lessons-container">
+                <div class="bz-card-grid-md">
                     <!-- Lesson 1 -->
-                    <article class="lesson-card available" data-lesson="1">
-                        <div class="lesson-status">
-                            <span class="status-indicator available">Available</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md available" data-lesson="1">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">01</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--available">Available</div>
                         </div>
-                        <div class="lesson-header">
-                            <div class="lesson-number">01</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">200</span>
-                            </div>
+                        
+                        <div class="bz-playing-card__icon">🔢</div>
+                        
+                        <h3 class="bz-playing-card__title">Computing & Binary Fundamentals</h3>
+                        <p class="bz-playing-card__description">
+                            Discover how zeros and ones created the digital revolution. Master information theory, 
+                            binary systems, and the mathematical foundations that enable digital scarcity.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Information Theory</span>
+                            <span class="bz-playing-card__tag">Binary Systems</span>
+                            <span class="bz-playing-card__tag">Digital Scarcity</span>
                         </div>
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Computing & Binary Fundamentals</h3>
-                            <p class="lesson-description">
-                                Discover how zeros and ones created the digital revolution. Master information theory, 
-                                binary systems, and the mathematical foundations that enable digital scarcity.
-                            </p>
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Information Theory</span>
-                                <span class="topic-tag">Binary Systems</span>
-                                <span class="topic-tag">Digital Scarcity</span>
-                            </div>
-                        </div>
+                        
                         <div class="lesson-footer">
                             <div class="lesson-progress">
                                 <div class="progress-bar">
@@ -132,7 +128,11 @@
                                 </div>
                                 <span class="progress-text">Ready to Start</span>
                             </div>
-                            <a href="lessons/01-computing-binary/index.html" class="lesson-link primary">
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">200</span>
+                            </div>
+                            <a href="lessons/01-computing-binary/index.html" class="bz-btn bz-btn-primary lesson-link">
                                 Begin Lesson
                                 <span class="link-arrow">→</span>
                             </a>
@@ -140,29 +140,26 @@
                     </article>
 
                     <!-- Lesson 2 -->
-                    <article class="lesson-card locked" data-lesson="2">
-                        <div class="lesson-status">
-                            <span class="status-indicator locked">🔒 Locked</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="2">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">02</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--locked">� Locked</div>
                         </div>
-                        <div class="lesson-header">
-                            <div class="lesson-number">02</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">400</span>
-                            </div>
+                        
+                        <div class="bz-playing-card__icon">🏦</div>
+                        
+                        <h3 class="bz-playing-card__title">Money as Information Technology</h3>
+                        <p class="bz-playing-card__description">
+                            From Jekyll Island to Bitcoin - The secret meeting that created the Federal Reserve and 
+                            how mathematical money solves fiat manipulation through Austrian principles.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Jekyll Island</span>
+                            <span class="bz-playing-card__tag">Federal Reserve</span>
+                            <span class="bz-playing-card__tag">Austrian Theory</span>
                         </div>
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Money as Information Technology</h3>
-                            <p class="lesson-description">
-                                From Jekyll Island to Bitcoin - The secret meeting that created the Federal Reserve and 
-                                how mathematical money solves fiat manipulation through Austrian principles.
-                            </p>
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Jekyll Island</span>
-                                <span class="topic-tag">Federal Reserve</span>
-                                <span class="topic-tag">Austrian Theory</span>
-                            </div>
-                        </div>
+                        
                         <div class="lesson-footer">
                             <div class="lesson-progress">
                                 <div class="progress-bar">
@@ -170,7 +167,11 @@
                                 </div>
                                 <span class="progress-text">Complete Lesson 1 First</span>
                             </div>
-                            <button class="lesson-link disabled" disabled>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">400</span>
+                            </div>
+                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
                                 Complete Previous Lesson
                                 <span class="link-arrow">→</span>
                             </button>
@@ -178,29 +179,26 @@
                     </article>
 
                     <!-- Lesson 3 -->
-                    <article class="lesson-card locked" data-lesson="3">
-                        <div class="lesson-status">
-                            <span class="status-indicator locked">🔒 Locked</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="3">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">03</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
                         </div>
-                        <div class="lesson-header">
-                            <div class="lesson-number">03</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">800</span>
-                            </div>
+                        
+                        <div class="bz-playing-card__icon">🌐</div>
+                        
+                        <h3 class="bz-playing-card__title">Network Effects & Digital Scarcity</h3>
+                        <p class="bz-playing-card__description">
+                            Why Facebook is worth trillions while MySpace died. Understanding network 
+                            economics and platform monopolies through Austrian economic theory.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Metcalfe's Law</span>
+                            <span class="bz-playing-card__tag">Network Value</span>
+                            <span class="bz-playing-card__tag">Platform Economics</span>
                         </div>
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Network Effects & Digital Scarcity</h3>
-                            <p class="lesson-description">
-                                Why Facebook is worth trillions while MySpace died. Understanding network 
-                                economics and platform monopolies through Austrian economic theory.
-                            </p>
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Metcalfe's Law</span>
-                                <span class="topic-tag">Network Value</span>
-                                <span class="topic-tag">Platform Economics</span>
-                            </div>
-                        </div>
+                        
                         <div class="lesson-footer">
                             <div class="lesson-progress">
                                 <div class="progress-bar">
@@ -208,7 +206,11 @@
                                 </div>
                                 <span class="progress-text">Complete Lesson 2 First</span>
                             </div>
-                            <button class="lesson-link disabled" disabled>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">800</span>
+                            </div>
+                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
                                 Complete Previous Lesson
                                 <span class="link-arrow">→</span>
                             </button>
@@ -216,29 +218,26 @@
                     </article>
 
                     <!-- Lesson 4 -->
-                    <article class="lesson-card locked" data-lesson="4">
-                        <div class="lesson-status">
-                            <span class="status-indicator locked">🔒 Locked</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="4">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">04</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
                         </div>
-                        <div class="lesson-header">
-                            <div class="lesson-number">04</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">1,600</span>
-                            </div>
+                        
+                        <div class="bz-playing-card__icon">🔐</div>
+                        
+                        <h3 class="bz-playing-card__title">Cryptographic Consensus & Trust</h3>
+                        <p class="bz-playing-card__description">
+                            The <span class="bitcoin-pizza-value" data-bitcoin-pizza="The {PIZZA_VALUE} pizza">$1.2 billion pizza</span> that proved mathematical trust beats institutional trust. 
+                            Byzantine Generals, proof-of-work, and the birth of trustless systems.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Byzantine Generals</span>
+                            <span class="bz-playing-card__tag">Proof-of-Work</span>
+                            <span class="bz-playing-card__tag">Bitcoin Mining</span>
                         </div>
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Cryptographic Consensus & Trust</h3>
-                            <p class="lesson-description">
-                                The <span class="bitcoin-pizza-value" data-bitcoin-pizza="The {PIZZA_VALUE} pizza">$1.2 billion pizza</span> that proved mathematical trust beats institutional trust. 
-                                Byzantine Generals, proof-of-work, and the birth of trustless systems.
-                            </p>
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Byzantine Generals</span>
-                                <span class="topic-tag">Proof-of-Work</span>
-                                <span class="topic-tag">Bitcoin Mining</span>
-                            </div>
-                        </div>
+                        
                         <div class="lesson-footer">
                             <div class="lesson-progress">
                                 <div class="progress-bar">
@@ -246,7 +245,11 @@
                                 </div>
                                 <span class="progress-text">Complete Lesson 3 First</span>
                             </div>
-                            <button class="lesson-link disabled" disabled>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">1,600</span>
+                            </div>
+                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
                                 Complete Previous Lesson
                                 <span class="link-arrow">→</span>
                             </button>
@@ -254,29 +257,26 @@
                     </article>
 
                     <!-- Lesson 5 -->
-                    <article class="lesson-card locked" data-lesson="5">
-                        <div class="lesson-status">
-                            <span class="status-indicator locked">🔒 Locked</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="5">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">05</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
                         </div>
-                        <div class="lesson-header">
-                            <div class="lesson-number">05</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">3,200</span>
-                            </div>
+                        
+                        <div class="bz-playing-card__icon">📜</div>
+                        
+                        <h3 class="bz-playing-card__title">Smart Contracts & Programmable Economics</h3>
+                        <p class="bz-playing-card__description">
+                            Nick Szabo's "lawyer killers" now secure $100+ billion. How code replaces law 
+                            and enables pure voluntary exchange through decentralized finance.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Smart Contracts</span>
+                            <span class="bz-playing-card__tag">DeFi Protocols</span>
+                            <span class="bz-playing-card__tag">Yield Farming</span>
                         </div>
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Smart Contracts & Programmable Economics</h3>
-                            <p class="lesson-description">
-                                Nick Szabo's "lawyer killers" now secure $100+ billion. How code replaces law 
-                                and enables pure voluntary exchange through decentralized finance.
-                            </p>
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Smart Contracts</span>
-                                <span class="topic-tag">DeFi Protocols</span>
-                                <span class="topic-tag">Yield Farming</span>
-                            </div>
-                        </div>
+                        
                         <div class="lesson-footer">
                             <div class="lesson-progress">
                                 <div class="progress-bar">
@@ -284,39 +284,37 @@
                                 </div>
                                 <span class="progress-text">Complete Lesson 4 First</span>
                             </div>
-                            <button class="lesson-link disabled" disabled>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">3,200</span>
+                            </div>
+                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
                                 Complete Previous Lesson
                                 <span class="link-arrow">→</span>
                             </button>
-                        </div>                    </article>
+                        </div>
+                    </article>
 
                     <!-- Lesson 6: Sonic Labs -->
-                    <article class="lesson-card locked" data-lesson="6">
-                        <div class="lesson-status">
-                            <span class="status-indicator locked">🔒 Complete Previous Lessons</span>
+                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="6">
+                        <div class="bz-playing-card__header">
+                            <div class="bz-playing-card__number">06</div>
+                            <div class="bz-playing-card__status bz-playing-card__status--locked">Complete Previous Lessons</div>
                         </div>
                         
-                        <div class="lesson-header">
-                            <div class="lesson-number">06</div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">6,400</span>
-                            </div>
-                        </div>
+                        <div class="bz-playing-card__icon">⚡</div>
                         
-                        <div class="lesson-content">
-                            <h3 class="lesson-title">Sonic Labs: Next-Generation DeFi Infrastructure</h3>
-                            <p class="lesson-description">
-                                Andre Cronje's triumphant return from exile with the blockchain that solves every problem 
-                                that made him quit DeFi. The perfect synthesis of Austrian economics and cutting-edge technology.
-                            </p>
-                            
-                            <div class="lesson-topics">
-                                <span class="topic-tag">Andre Cronje</span>
-                                <span class="topic-tag">Sonic Labs</span>
-                                <span class="topic-tag">Layer 2 Scaling</span>
-                                <span class="topic-tag">DeFi 3.0</span>
-                            </div>
+                        <h3 class="bz-playing-card__title">Sonic Labs: Next-Generation DeFi Infrastructure</h3>
+                        <p class="bz-playing-card__description">
+                            Andre Cronje's triumphant return from exile with the blockchain that solves every problem 
+                            that made him quit DeFi. The perfect synthesis of Austrian economics and cutting-edge technology.
+                        </p>
+                        
+                        <div class="bz-playing-card__tags">
+                            <span class="bz-playing-card__tag">Andre Cronje</span>
+                            <span class="bz-playing-card__tag">Sonic Labs</span>
+                            <span class="bz-playing-card__tag">Layer 2 Scaling</span>
+                            <span class="bz-playing-card__tag">DeFi 3.0</span>
                         </div>
                         
                         <div class="lesson-footer">
@@ -326,7 +324,11 @@
                                 </div>
                                 <span class="progress-text">Complete All Previous Lessons First</span>
                             </div>
-                            <button class="lesson-link disabled" disabled>
+                            <div class="lesson-reward">
+                                <span class="reward-icon">💫</span>
+                                <span class="reward-amount">6,400</span>
+                            </div>
+                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
                                 Start Lesson
                                 <span class="link-arrow">→</span>
                             </button>
