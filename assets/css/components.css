@@ -1427,4 +1427,8 @@
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius
+  border-radius: var(--bz-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--bz-light-300);
+}
