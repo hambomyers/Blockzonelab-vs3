@@ -12,15 +12,16 @@ import { ViewportManager } from './core/viewport-manager.js';
 
 // Game configuration and identity
 import { Config } from './config.js';
-import { PlayerIdentity } from './player-identity.js';
+import { UniversalPlayerIdentity } from './UniversalPlayerIdentity.js';
+import UniversalPaymentSystem from './UniversalPaymentSystem.js';
 
 // UI components
 import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
-import { LeaderboardSystem } from './ui/leaderboard.js';
-import { ArcadeLeaderboardUI } from './ui/arcade-leaderboard-ui.js';
 import { GameOverSequence } from './ui/game-over-sequence.js';
+import { LeaderboardSystem } from './ui/leaderboard.js';
+import { ElegantLeaderboardUI } from './ui/elegant-leaderboard-ui.js';
 import { TournamentUI } from './ui/tournament-ui.js';
 
 // Shared systems
@@ -42,6 +43,11 @@ class NeonDrop {
         this.stats = null;
         this.tournamentUI = null;
         this.uiStateManager = new UIStateManager();
+        // Universal systems (next-generation)
+        this.universalIdentity = new UniversalPlayerIdentity();
+        this.universalPayments = new UniversalPaymentSystem(this.universalIdentity);
+        
+        // Legacy systems (for compatibility)
         this.identity = new PlayerIdentity();
         this.leaderboard = new LeaderboardSystem();
         
@@ -60,7 +66,7 @@ class NeonDrop {
         // Set up the complete global API that panels expect
         window.neonDrop = this;  // Panels expect the game instance directly
         window.leaderboard = this.leaderboard;
-        window.leaderboardUI = new ArcadeLeaderboardUI(this.leaderboard);
+        window.leaderboardUI = new ElegantLeaderboardUI(this.leaderboard);
         window.gameOverSequence = new GameOverSequence();
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;
@@ -69,20 +75,17 @@ class NeonDrop {
     // Methods expected by panels
     state() {
         return this.engine?.getState() || {};
-    }
-    
-    config() {
-        return this.gameConfig || {};
-    }
-
-    async initialize() {
+    }    getConfig() {
+        return this.config || {};
+    }async initialize() {
         try {
             console.log('🚀 NeonDrop starting...');
             
             await this.config.load();
             this.setupDisplay();
-            this.createSystems();
-            this.setupUI();
+            this.createSystems();            this.setupUI();
+            this.cleanupOldUI(); // Remove any old tournament UI elements
+            this.setupGameMenuCard(); // Add our elegant menu card
             this.bindEvents();
             this.startLoop();
             
@@ -133,18 +136,152 @@ class NeonDrop {
         
         this.stats = new StatsPanel();
         this.stats.positionPanel();
-        
-        // Beautiful tournament UI (the working card)
+          // Beautiful tournament UI (keep for tournament mode)
         this.tournamentUI = new TournamentUI();
         this.tournamentUI.setTournament(this.tournament);
+        
+        // Create game over sequence
+        this.gameOverSequence = new GameOverSequence();
           
         // Initialize professional UI state management with all UI elements
-        this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), window.gameOverSequence);
+        this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.gameOverSequence);
         
-        // Start in APPLICATION_READY state (tournament modal center-stage)
+        // Start with menu card visible instead of tournament modal
+        // The menu card will be shown in setupGameMenuCard()
+    }    setupGameMenuCard() {
+        // Wait for DOM to be ready
+        const initCard = () => {
+            this.gameMenuCard = document.getElementById('game-menu-card');
+            if (!this.gameMenuCard) {
+                console.error('Game menu card not found');
+                return;
+            }
+
+            // Add event listeners for menu buttons
+            const modeButtons = this.gameMenuCard.querySelectorAll('.game-mode-btn');
+            const backButton = this.gameMenuCard.querySelector('.back-btn');
+
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const mode = e.currentTarget.dataset.mode;
+                    this.handleMenuChoice(mode);
+                });
+            });
+
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    window.location.href = '/games/';
+                });
+            }
+
+            // Show the menu card initially
+            this.showGameMenuCard();
+        };        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCard);
+        } else {
+            initCard();
+        }
+    }
+
+    /**
+     * Clean up any old/legacy UI elements that might still exist
+     */
+    cleanupOldUI() {
+        console.log('🧹 Cleaning up old UI elements...');
+        
+        // Remove any old tournament panels
+        const oldTournamentPanel = document.getElementById('tournament-panel');
+        if (oldTournamentPanel) {
+            oldTournamentPanel.remove();
+            console.log('🗑️ Removed old tournament panel');
+        }
+        
+        // Remove any old overlay elements
+        const overlaySelectors = [
+            '.game-menu-overlay',
+            '.tournament-overlay', 
+            '.modal-overlay',
+            '#gameMenuOverlay',
+            '#tournamentOverlay'
+        ];
+        
+        overlaySelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                el.remove();
+                console.log(`🗑️ Removed legacy element: ${selector}`);
+            });
+        });
+        
+        // Remove any old style elements that might conflict
+        const oldStyles = document.querySelectorAll('style[data-legacy]');
+        oldStyles.forEach(style => style.remove());
+        
+        console.log('✅ Old UI cleanup complete');
+    }
+
+    handleMenuChoice(mode) {
+        console.log('🎮 Menu choice:', mode);
+        
+        // Hide the menu card with elegant animation
+        this.hideGameMenuCard();
+        
+        // Handle different game modes
+        switch (mode) {
+            case 'tournament':
+                // Start tournament mode (existing functionality)
+                setTimeout(() => {
+                    if (this.tournamentUI) {
+                        this.tournamentUI.show();
+                    }
+                }, 300);
+                break;
+                
+            case 'free':
+                // Start free play mode
+                setTimeout(() => {
+                    this.startFreePlay();
+                }, 300);
+                break;
+                
+            case 'leaderboard':
+                // Show leaderboard
+                setTimeout(() => {
+                    if (window.leaderboardUI) {
+                        window.leaderboardUI.show();
+                    }
+                }, 300);
+                break;
+        }
+    }
+
+    startFreePlay() {
+        console.log('🎮 Starting free play mode');
+        // Start the game engine directly for free play
+        if (this.engine) {
+            this.engine.startFreePlay();
+        }
+        // Hide UI panels for clean gameplay
+        this.uiStateManager.setState('GAME_ACTIVE');
+    }
+
+    showGameMenuCard() {
+        if (this.gameMenuCard) {
+            this.gameMenuCard.classList.remove('hidden');
+        }
+    }
+
+    hideGameMenuCard() {
+        if (this.gameMenuCard) {
+            this.gameMenuCard.classList.add('hidden');
+        }
+    }
+
+    // Called from game over and other return-to-menu scenarios
+    showGameMenuCardWithDelay(delay = 1000) {
         setTimeout(() => {
-            this.uiStateManager.setState('APPLICATION_READY');
-        }, 1000);
+            this.showGameMenuCard();
+        }, delay);
     }bindEvents() {        // Game over choices - now handled by state manager
         document.addEventListener('gameOverChoice', e => {
             const { action, score } = e.detail;
@@ -193,10 +330,8 @@ class NeonDrop {
         addEventListener('keydown', e => {
             if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
                 e.preventDefault();
-            }        });
-
-        // Touch device detection using centralized system
-        if (window.BlockZoneMobile?.isMobile() && window.BlockZoneMobile?.hasTouch()) {
+            }        });        // Touch device detection using centralized system
+        if (window.BlockZoneMobile?.needsMobileControls()) {
             document.body.classList.add('touch-device');
         }
     }async initBackgroundSystems() {
@@ -285,11 +420,10 @@ class NeonDrop {
         // Initialize audio on first interaction
         if (!this.audio.initialized) {
             this.audio.init();
-        }
-          // Ensure input system is ready when starting a game
+        }        // Ensure input system is ready when starting a game
         if (action.type === 'START_GAME') {
             console.log('🎮 Starting game - beginning gameplay session');
-            this.input.ensureReady();
+            // Input controller is already initialized, no need for ensureReady
             this.uiStateManager.beginGameplay();
         }
         
@@ -331,7 +465,8 @@ class NeonDrop {
         setTimeout(() => error.remove(), 5000);
     }    /**
      * Professional return to menu - handles full system reset via state manager
-     */    returnToMenuViaStateManager() {
+     */
+    returnToMenuViaStateManager() {
         console.log('🔄 Professional return to menu via state manager');
         
         // Reset game engine to clean state
@@ -342,12 +477,8 @@ class NeonDrop {
         // Let state manager handle the UI transitions
         this.uiStateManager.returnToMenu();
         
-        // Show the beautiful menu overlay after a brief delay
-        setTimeout(() => {
-            if (this.gameMenuOverlay) {
-                this.gameMenuOverlay.show();
-            }
-        }, 1000);
+        // Show the elegant menu card after a brief delay
+        this.showGameMenuCardWithDelay(1000);
     }
 
     destroy() {
@@ -356,6 +487,7 @@ class NeonDrop {
         console.log('🛑 NeonDrop shutdown');
     }
 }
+
 
 // Auto-initialize
 function startGame() {

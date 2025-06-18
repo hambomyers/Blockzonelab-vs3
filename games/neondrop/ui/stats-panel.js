@@ -192,11 +192,9 @@ export class StatsPanel {    constructor() {
         if (!window.neonDrop) {
             console.log('StatsPanel: window.neonDrop not available');
             return;
-        }
-
-        try {
+        }        try {
             const state = window.neonDrop.state();
-            const config = window.neonDrop.config();
+            const config = window.neonDrop.getConfig();
             
             if (!state) {
                 console.log('StatsPanel: game state not available');

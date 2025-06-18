@@ -1,4 +1,4 @@
-/**
+﻿/**
  * leaderboard.js - Professional Leaderboard System for Sonic Labs Integration
  *
  * Scalable leaderboard system that works:
@@ -26,7 +26,7 @@ export class LeaderboardSystem {
         const hostname = window.location.hostname;
         
         // Always use your Cloudflare Worker for now
-        return 'https://leaderboard.hambomyers.workers.dev/api';
+        return 'https://blockzone-universal-backend.hambomyers.workers.dev/api';
     }
 
     /**
@@ -307,7 +307,44 @@ export class LeaderboardSystem {
         }
 
         return mockData;
+    }    /**
+     * Get scores for the elegant leaderboard UI
+     */
+    async getScores(period = 'daily', limit = 50) {
+        try {
+            const leaderboard = await this.getLeaderboard(period, limit);
+            
+            // Transform to expected format for elegant leaderboard
+            return leaderboard.map((entry, index) => ({
+                player_name: entry.displayName || `Player ${index + 1}`,
+                score: entry.score || 0,
+                timestamp: Date.now() - (index * 3600000), // Mock timestamps
+                rank: entry.rank || index + 1
+            }));
+        } catch (error) {
+            console.error('Failed to get scores:', error);
+            // Return mock data for development/demo
+            return this.getMockScores();
+        }
     }
+
+    /**
+     * Mock scores for development and when API is unavailable
+     */
+    getMockScores() {
+        const mockPlayers = [
+            'NeonMaster', 'BlockChain', 'TetrisKing', 'CyberDrop', 'QuantumFall',
+            'CodeBreaker', 'PixelPro', 'GameGuru', 'HighScore', 'TopPlayer'
+        ];
+        
+        return mockPlayers.map((name, index) => ({
+            player_name: name,
+            score: Math.floor(Math.random() * 50000) + 10000 - (index * 2000),
+            timestamp: Date.now() - (index * 3600000),
+            rank: index + 1
+        })).sort((a, b) => b.score - a.score);
+    }
+
 }
 
 /**
@@ -334,5 +371,6 @@ export class LeaderboardSystem {
  *     return true;
  * }
  */
+
 
 

@@ -3,14 +3,24 @@
  * Provides a subtle, elegant way to join tournaments
  */
 
-export class TournamentUI {
-    constructor() {
+export class TournamentUI {    constructor() {
         this.container = null;
         this.isVisible = false;
         this.tournament = null; // Will be set by main.js
         
-        this.setupUI();
-        this.setupEventListeners();
+        // Don't setup UI automatically - only when show() is called
+    }    show() {
+        // COMPLETELY DISABLED - Using HTML game menu card instead
+        console.log('🏆 Tournament UI disabled - using HTML-based game menu card');
+        this.isVisible = false; // Keep it marked as not visible
+        return; // Do absolutely nothing
+    }
+
+    hide() {
+        this.isVisible = false;
+        if (this.container) {
+            this.container.style.display = 'none';
+        }
     }
 
     setupUI() {
@@ -59,6 +69,8 @@ export class TournamentUI {
             </div>
         `;
     }    setupEventListeners() {
+        if (!this.container) return;
+        
         // Join tournament button
         this.container.addEventListener('click', (e) => {
             if (e.target.id === 'tournamentJoinBtn') {

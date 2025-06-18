@@ -520,6 +520,14 @@ export class GameEngine {
     }
 
     /**
+     * Start free play mode - simplified game start without tournament features
+     */
+    startFreePlay() {
+        console.log('🎮 Starting free play mode');
+        this.startGame('practice');
+    }
+
+    /**
      * Main game update
      */
     updatePlaying(deltaTime) {

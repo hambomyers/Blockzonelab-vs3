@@ -1,6 +1,6 @@
 /**
- * Clean Game Over Sequence - Premium Card-based Design
- * Simplified, modular approach using our component system
+ * Elegant Fade & Rise Game Over Sequence - AAA Quality Implementation
+ * Premium, smooth animations with luxury feel
  */
 
 export class GameOverSequence {
@@ -9,12 +9,13 @@ export class GameOverSequence {
         this.finalScore = 0;
         this.gameMetrics = null;
         this.container = null;
-        this.currentView = 'score'; // 'score', 'tournament', 'success'
         
-        // Simple, clean timings
+        // Elegant timing for smooth experience
         this.timings = {
-            scoreDisplay: 2500,    // 2.5 seconds to show score
-            autoProgress: 1000     // 1 second before showing options
+            gameBlur: 800,         // Time to blur the game
+            scoreCountUp: 1500,    // Score animation duration
+            cardSlideUp: 600,      // Card slide animation
+            buttonFadeIn: 400      // Button appearance
         };
     }
 
@@ -23,440 +24,241 @@ export class GameOverSequence {
         this.gameMetrics = metrics;
         this.isActive = true;
         
-        this.createOverlay();
-        this.showScoreView();
+        console.log('🎭 Starting Elegant Fade & Rise sequence');
         
-        // Auto-progress to options after brief delay
-        setTimeout(() => {
-            if (this.isActive) {
-                this.showOptionsView();
+        this.startElegantSequence();
+    }
+
+    async startElegantSequence() {
+        // Step 1: Elegant game blur and fade
+        await this.blurGameBoard();
+        
+        // Step 2: Animated score count-up
+        await this.showScoreAnimation();
+        
+        // Step 3: Slide up the action card
+        await this.slideUpActionCard();
+        
+        // Step 4: Fade in action buttons
+        this.fadeInActionButtons();
+    }
+
+    async blurGameBoard() {
+        return new Promise(resolve => {
+            // Get the game canvas
+            const gameCanvas = document.getElementById('game');
+            const bgCanvas = document.getElementById('bg');
+            
+            // Create overlay for blur effect
+            this.createOverlay();
+            
+            // Apply elegant blur transition
+            if (gameCanvas) {
+                gameCanvas.style.transition = `filter ${this.timings.gameBlur}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+                gameCanvas.style.filter = 'blur(8px) brightness(0.3)';
             }
-        }, this.timings.scoreDisplay);
+            
+            if (bgCanvas) {
+                bgCanvas.style.transition = `filter ${this.timings.gameBlur}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+                bgCanvas.style.filter = 'blur(12px) brightness(0.2)';
+            }
+            
+            setTimeout(resolve, this.timings.gameBlur);
+        });
+    }
+
+    async showScoreAnimation() {
+        return new Promise(resolve => {
+            const content = this.container.querySelector('.game-over-content');
+            
+            // Create score display
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'score-animation';
+            scoreDisplay.innerHTML = `
+                <div class="score-label">Final Score</div>
+                <div class="score-number" id="animated-score">0</div>
+                <div class="score-glow"></div>
+            `;
+            
+            content.appendChild(scoreDisplay);
+            
+            // Animate score count-up
+            this.animateScoreCountUp();
+            
+            setTimeout(resolve, this.timings.scoreCountUp);
+        });
+    }
+
+    animateScoreCountUp() {
+        const scoreElement = document.getElementById('animated-score');
+        if (!scoreElement) return;
+        
+        const startScore = 0;
+        const endScore = this.finalScore;
+        const duration = this.timings.scoreCountUp;
+        const startTime = performance.now();
+        
+        const updateScore = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentScore = Math.floor(startScore + (endScore - startScore) * easeOut);
+            
+            scoreElement.textContent = currentScore.toLocaleString();
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateScore);
+            }
+        };
+        
+        requestAnimationFrame(updateScore);
+    }
+
+    async slideUpActionCard() {
+        return new Promise(resolve => {
+            const content = this.container.querySelector('.game-over-content');
+            
+            // Create action card
+            const actionCard = document.createElement('div');
+            actionCard.className = 'action-card';
+            actionCard.innerHTML = `
+                <div class="card-header">
+                    <h3>Game Complete</h3>
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Level</span>
+                            <span class="stat-value">${this.gameMetrics.level || 1}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Lines</span>
+                            <span class="stat-value">${this.gameMetrics.lines || 0}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Time</span>
+                            <span class="stat-value">${this.formatTime(this.gameMetrics.time || 0)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <!-- Buttons will fade in separately -->
+                </div>
+            `;
+            
+            content.appendChild(actionCard);
+            
+            // Trigger slide-up animation
+            setTimeout(() => {
+                actionCard.classList.add('slide-up');
+                setTimeout(resolve, this.timings.cardSlideUp);
+            }, 100);
+        });
+    }
+
+    fadeInActionButtons() {
+        const actionsContainer = this.container.querySelector('.card-actions');
+        if (!actionsContainer) return;
+        
+        // Create elegant action buttons
+        actionsContainer.innerHTML = `
+            <button class="action-btn primary" data-action="play-again">
+                <span class="btn-icon">🎮</span>
+                <span class="btn-text">Play Again</span>
+            </button>
+            
+            <button class="action-btn secondary" data-action="leaderboard">
+                <span class="btn-icon">🏆</span>
+                <span class="btn-text">Leaderboard</span>
+            </button>
+            
+            <button class="action-btn tertiary" data-action="menu">
+                <span class="btn-icon">🏠</span>
+                <span class="btn-text">Main Menu</span>
+            </button>
+        `;
+        
+        // Add click handlers
+        actionsContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.action-btn');
+            if (btn) {
+                const action = btn.dataset.action;
+                this.handleAction(action);
+            }
+        });
+        
+        // Fade in buttons with stagger
+        const buttons = actionsContainer.querySelectorAll('.action-btn');
+        buttons.forEach((btn, index) => {
+            setTimeout(() => {
+                btn.classList.add('fade-in');
+            }, index * 150);
+        });
     }
 
     createOverlay() {
         // Remove any existing overlay
         this.destroy();
         
-        // Create clean overlay using our component system
+        // Create elegant overlay
         this.container = document.createElement('div');
-        this.container.className = 'game-over-overlay';
+        this.container.className = 'game-over-overlay elegant-fade-rise';
         this.container.innerHTML = `
-            <div class="game-over-backdrop"></div>
-            <div class="game-over-content">
-                <!-- Content will be dynamically updated -->
-            </div>
+            <div class="elegant-backdrop"></div>
+            <div class="game-over-content"></div>
         `;
         
         document.body.appendChild(this.container);
-        this.setupGlobalHandlers();
+        
+        // Trigger initial fade-in
+        setTimeout(() => {
+            this.container.classList.add('active');
+        }, 50);
     }
 
-    showScoreView() {
-        const content = this.container.querySelector('.game-over-content');
-        content.innerHTML = `
-            <div class="bz-card bz-card-lg score-card">
-                <div class="score-display">
-                    <h2 class="final-score-label">Final Score</h2>
-                    <div class="final-score-value">${this.finalScore.toLocaleString()}</div>
-                    ${this.isNewHighScore() ? '<div class="high-score-badge">✨ New High Score!</div>' : ''}
-                </div>
-            </div>
-        `;
+    handleAction(action) {
+        console.log('🎮 Game over action:', action);
         
-        // Add entrance animation
-        content.style.opacity = '0';
-        content.style.transform = 'scale(0.8)';
+        // Add elegant exit animation
+        this.container.classList.add('exiting');
         
-        requestAnimationFrame(() => {
-            content.style.transition = 'all 0.5s ease-out';
-            content.style.opacity = '1';
-            content.style.transform = 'scale(1)';
-        });
-    }
-
-    showOptionsView() {
-        this.currentView = 'options';
-        const content = this.container.querySelector('.game-over-content');
-        
-        // Get tournament info for live data
-        const tournament = window.neonDrop?.tournament;
-        const tournamentInfo = tournament ? tournament.getTournamentInfo() : {
-            prizePool: 45.00,
-            participants: 18,
-            timeRemaining: '12:34:56'
-        };
-        
-        content.innerHTML = `
-            <div class="game-over-cards">
-                <!-- Score Summary Card -->
-                <div class="bz-card bz-card-sm score-summary">
-                    <div class="bz-card-header">
-                        <h3 class="bz-card-title">Your Game</h3>
-                    </div>
-                    <div class="bz-card-body">
-                        <div class="score-line">
-                            <span>Score:</span>
-                            <span class="score-value">${this.finalScore.toLocaleString()}</span>
-                        </div>
-                        <div class="score-line">
-                            <span>Level:</span>
-                            <span>${this.gameMetrics?.level || 1}</span>
-                        </div>
-                        <div class="score-line">
-                            <span>Time:</span>
-                            <span>${this.formatTime(this.gameMetrics?.duration || 0)}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tournament Entry Card -->
-                <div class="bz-game-card tournament-card bz-flash-on-hover" data-action="tournament">
-                    <div class="bz-game-card-header">
-                        <span class="bz-game-card-icon">🏆</span>
-                        <h3 class="bz-game-card-title">Enter Tournament</h3>
-                        <p class="bz-game-card-subtitle">Compete for real USDC prizes</p>
-                    </div>
-                    
-                    <div class="bz-game-card-body">
-                        <div class="tournament-stats">
-                            <div class="stat-item">
-                                <span class="stat-label">Prize Pool</span>
-                                <span class="stat-value">$${tournamentInfo.prizePool.toFixed(2)}</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Players</span>
-                                <span class="stat-value">${tournamentInfo.participants}</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Time Left</span>
-                                <span class="stat-value">${tournamentInfo.timeRemaining}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bz-game-card-footer">
-                        <span class="bz-game-card-status live">$2.50 Entry</span>
-                        <span class="enter-hint">Click to Enter</span>
-                    </div>
-                </div>
-
-                <!-- Quick Actions Card -->
-                <div class="bz-card bz-card-sm actions-card">
-                    <div class="bz-card-header">
-                        <h3 class="bz-card-title">Quick Actions</h3>
-                    </div>
-                    <div class="bz-card-body">
-                        <button class="bz-btn bz-btn-primary bz-btn-lg" data-action="play-again">
-                            <span>↻</span> Play Again
-                        </button>
-                        <button class="bz-btn bz-btn-secondary" data-action="leaderboard">
-                            <span>👑</span> Leaderboard
-                        </button>
-                        <button class="bz-btn bz-btn-outline" data-action="menu">
-                            <span>🏠</span> Main Menu
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        this.setupActionHandlers();
-        
-        // Smooth transition
-        content.style.transform = 'translateY(20px)';
-        content.style.opacity = '0';
-        
-        requestAnimationFrame(() => {
-            content.style.transition = 'all 0.4s ease-out';
-            content.style.transform = 'translateY(0)';
-            content.style.opacity = '1';
-        });
-    }
-
-    showTournamentEntry() {
-        this.currentView = 'tournament';
-        const content = this.container.querySelector('.game-over-content');
-        
-        content.innerHTML = `
-            <div class="bz-card bz-card-lg tournament-entry-card">
-                <div class="bz-card-header">
-                    <h2 class="bz-card-title">🏆 Enter Tournament</h2>
-                    <p class="bz-card-subtitle">Your score: ${this.finalScore.toLocaleString()}</p>
-                </div>
-                
-                <div class="bz-card-body">
-                    <div class="entry-options">
-                        <div class="entry-option selected" data-entry="daily">
-                            <div class="option-header">
-                                <span class="option-price">$2.50</span>
-                                <span class="option-label">All Day Pass</span>
-                            </div>
-                            <p class="option-desc">Play unlimited tournament games today</p>
-                        </div>
-                        
-                        <div class="entry-option" data-entry="single">
-                            <div class="option-header">
-                                <span class="option-price">$0.25</span>
-                                <span class="option-label">Single Game</span>
-                            </div>
-                            <p class="option-desc">Just submit this one score</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bz-card-footer">
-                    <button class="bz-btn bz-btn-primary bz-btn-lg" data-action="confirm-entry">
-                        Enter Tournament
-                    </button>
-                    <button class="bz-btn bz-btn-outline" data-action="back">
-                        Maybe Later
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        this.setupTournamentHandlers();
-    }
-
-    showSuccessView(result) {
-        this.currentView = 'success';
-        const content = this.container.querySelector('.game-over-content');
-        
-        content.innerHTML = `
-            <div class="bz-card bz-card-lg success-card">
-                <div class="bz-card-header">
-                    <h2 class="bz-card-title">🎉 Tournament Entry Successful!</h2>
-                    <p class="bz-card-subtitle">Your score has been submitted</p>
-                </div>
-                
-                <div class="bz-card-body">
-                    <div class="success-info">
-                        <div class="result-stat">
-                            <span class="stat-label">Your Rank</span>
-                            <span class="stat-value">#${result.rank || '?'}</span>
-                        </div>
-                        <div class="result-stat">
-                            <span class="stat-label">Score</span>
-                            <span class="stat-value">${this.finalScore.toLocaleString()}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bz-card-footer">
-                    <button class="bz-btn bz-btn-primary" data-action="leaderboard">
-                        View Leaderboard
-                    </button>
-                    <button class="bz-btn bz-btn-secondary" data-action="play-again">
-                        Play Again
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        this.setupActionHandlers();
-    }
-
-    setupActionHandlers() {
-        const buttons = this.container.querySelectorAll('[data-action]');
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const action = button.getAttribute('data-action');
-                this.handleAction(action);
-            });
-        });
-        
-        // Tournament card click
-        const tournamentCard = this.container.querySelector('.tournament-card');
-        if (tournamentCard) {
-            tournamentCard.addEventListener('click', () => {
-                this.handleAction('tournament');
-            });
-        }
-    }
-
-    setupTournamentHandlers() {
-        // Entry option selection
-        const options = this.container.querySelectorAll('.entry-option');
-        options.forEach(option => {
-            option.addEventListener('click', () => {
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-            });
-        });
-        
-        this.setupActionHandlers();
-    }
-
-    setupGlobalHandlers() {
-        // ESC key to close
-        this.keyHandler = (e) => {
-            if (e.key === 'Escape') {
-                this.handleAction('menu');
-            } else if (e.key === 'Enter') {
-                this.handleAction('play-again');
-            }
-        };
-        
-        document.addEventListener('keydown', this.keyHandler);
-        
-        // Click outside to close
-        this.container.addEventListener('click', (e) => {
-            if (e.target === this.container || e.target.classList.contains('game-over-backdrop')) {
-                this.handleAction('menu');
-            }
-        });
-    }
-
-    async handleAction(action) {
-        switch (action) {
-            case 'play-again':
-                this.destroy();
-                if (window.neonDrop) {
-                    window.neonDrop.restart();
-                }
-                break;
-                
-            case 'tournament':
-                this.showTournamentEntry();
-                break;
-                
-            case 'confirm-entry':
-                await this.processTournamentEntry();
-                break;
-                
-            case 'back':
-                this.showOptionsView();
-                break;
-                
-            case 'leaderboard':
-                this.destroy();
-                // Show leaderboard UI
-                if (window.leaderboardUI) {
-                    window.leaderboardUI.show();
-                }
-                break;
-                
-            case 'menu':
-                this.destroy();
-                window.location.href = '../index.html';
-                break;
-                
-            default:
-                console.log('Unknown action:', action);
-        }
-    }
-
-    async processTournamentEntry() {
-        try {
-            const selectedOption = this.container.querySelector('.entry-option.selected');
-            const entryType = selectedOption?.getAttribute('data-entry') || 'daily';
+        setTimeout(() => {
+            // Dispatch the action
+            document.dispatchEvent(new CustomEvent('gameOverChoice', {
+                detail: { action, score: this.finalScore }
+            }));
             
-            // Show processing state
-            this.showProcessingState();
-            
-            // Submit to tournament
-            const result = await this.submitToTournament(entryType);
-            
-            // Show success
-            this.showSuccessView(result);
-            
-        } catch (error) {
-            console.error('Tournament entry failed:', error);
-            this.showErrorState(error.message);
-        }
+            this.destroy();
+        }, 300);
     }
 
-    async submitToTournament(entryType) {
-        try {
-            const tournament = window.neonDrop?.tournament;
-            if (!tournament) {
-                throw new Error('Tournament system not available');
-            }
-            
-            const playerId = this.getPlayerId();
-            return await tournament.submitScore(this.finalScore, {
-                entryType,
-                gameId: 'neondrop',
-                duration: this.gameMetrics?.duration || 0,
-                level: this.gameMetrics?.level || 1
-            }, playerId);
-            
-        } catch (error) {
-            // Graceful fallback
-            console.warn('Using demo mode:', error);
-            return { success: true, rank: Math.floor(Math.random() * 10) + 1 };
-        }
-    }
-
-    showProcessingState() {
-        const content = this.container.querySelector('.game-over-content');
-        content.innerHTML = `
-            <div class="bz-card bz-card-lg processing-card">
-                <div class="bz-card-body" style="text-align: center; padding: 3rem;">
-                    <div class="processing-spinner"></div>
-                    <h3>Processing Entry...</h3>
-                    <p>Submitting your score to the tournament</p>
-                </div>
-            </div>
-        `;
-    }
-
-    showErrorState(message) {
-        const content = this.container.querySelector('.game-over-content');
-        content.innerHTML = `
-            <div class="bz-card bz-card-lg error-card">
-                <div class="bz-card-header">
-                    <h2 class="bz-card-title">Entry Failed</h2>
-                </div>
-                <div class="bz-card-body">
-                    <p>${message}</p>
-                </div>
-                <div class="bz-card-footer">
-                    <button class="bz-btn bz-btn-primary" data-action="back">Try Again</button>
-                    <button class="bz-btn bz-btn-outline" data-action="menu">Main Menu</button>
-                </div>
-            </div>
-        `;
-        
-        this.setupActionHandlers();
-    }
-
-    // Utility methods
-    getPlayerId() {
-        let playerId = localStorage.getItem('blockzone_player_id');
-        if (!playerId) {
-            playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('blockzone_player_id', playerId);
-        }
-        return playerId;
-    }
-
-    isNewHighScore() {
-        const highScore = localStorage.getItem('neondrop_high_score') || 0;
-        const isNew = this.finalScore > parseInt(highScore);
-        if (isNew) {
-            localStorage.setItem('neondrop_high_score', this.finalScore.toString());
-        }
-        return isNew;
-    }
-
-    formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    formatTime(milliseconds) {
+        const seconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
     destroy() {
         if (this.container) {
+            // Clear blur effects
+            const gameCanvas = document.getElementById('game');
+            const bgCanvas = document.getElementById('bg');
+            
+            if (gameCanvas) {
+                gameCanvas.style.filter = '';
+                gameCanvas.style.transition = '';
+            }
+            
+            if (bgCanvas) {
+                bgCanvas.style.filter = '';
+                bgCanvas.style.transition = '';
+            }
+            
+            // Remove overlay
             this.container.remove();
             this.container = null;
-        }
-        
-        if (this.keyHandler) {
-            document.removeEventListener('keydown', this.keyHandler);
-            this.keyHandler = null;
         }
         
         this.isActive = false;

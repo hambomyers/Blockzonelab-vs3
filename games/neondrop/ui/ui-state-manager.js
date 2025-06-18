@@ -12,6 +12,7 @@ const UIStates = {
     APPLICATION_READY: 'APPLICATION_READY',     // Tournament modal center-stage
     MODAL_TRANSITION: 'MODAL_TRANSITION',       // Tournament modal shrinks to corner
     GAME_SESSION: 'GAME_SESSION',               // Full game canvas, tournament badge
+    GAME_ACTIVE: 'GAME_ACTIVE',                 // Game actively playing
     RESULTS_MODAL: 'RESULTS_MODAL',             // Game dimmed, results modal appears
     RESET_SEQUENCE: 'RESET_SEQUENCE'            // Results closes, tournament returns
 };
@@ -96,9 +97,12 @@ export class UIStateManager {
             case UIStates.MODAL_TRANSITION:
                 await this.transitionToGameViewport();
                 break;
-                
-            case UIStates.GAME_SESSION:
+                  case UIStates.GAME_SESSION:
                 await this.showGameSession();
+                break;
+                
+            case UIStates.GAME_ACTIVE:
+                await this.showGameActive();
                 break;
                 
             case UIStates.RESULTS_MODAL:
@@ -116,8 +120,10 @@ export class UIStateManager {
 
     /**
      * APPLICATION_READY: Tournament modal center-stage
-     */
-    async showTournamentModal() {
+     */    async showTournamentModal() {
+        // DISABLED: Now using HTML-based game menu card instead
+        console.log('🎭 Tournament modal disabled - using HTML game menu card');
+        
         // Hide game viewport completely
         if (this.gameViewport) {
             this.gameViewport.style.display = 'none';
@@ -127,22 +133,7 @@ export class UIStateManager {
         if (this.resultsModal?.container) {
             this.resultsModal.container.style.display = 'none';
         }
-        
-        // Show tournament modal center-stage with professional animation
-        if (this.tournamentModal) {
-            this.tournamentModal.container.style.display = 'block';
-            this.tournamentModal.container.style.position = 'fixed';
-            this.tournamentModal.container.style.top = '50%';
-            this.tournamentModal.container.style.left = '50%';
-            this.tournamentModal.container.style.transform = 'translate(-50%, -50%) scale(1)';
-            this.tournamentModal.container.style.zIndex = '1000';
-            this.tournamentModal.container.style.transition = `all ${this.timings.modalTransition}ms ease`;
-            
-            // Ensure it's visible
-            this.tournamentModal.isVisible = true;
-        }
-        
-        await this.wait(this.timings.modalTransition);
+          // Don't show the old tournament modal - our HTML card handles this now
     }
 
     /**
@@ -175,10 +166,9 @@ export class UIStateManager {
 
     /**
      * GAME_SESSION: Full game canvas, tournament info in corner badge
-     */
-    async showGameSession() {
+     */    async showGameSession() {
         // Hide tournament modal completely
-        if (this.tournamentModal) {
+        if (this.tournamentModal && this.tournamentModal.container) {
             this.tournamentModal.container.style.display = 'none';
             this.tournamentModal.isVisible = false;
         }
@@ -190,7 +180,28 @@ export class UIStateManager {
         }
         
         await this.wait(this.timings.fadeTransition);
-    }    /**
+    }
+
+    /**
+     * GAME_ACTIVE: Game actively playing - clean game view
+     */
+    async showGameActive() {
+        // Hide all UI overlays for clean gameplay
+        if (this.tournamentModal && this.tournamentModal.container) {
+            this.tournamentModal.container.style.display = 'none';
+            this.tournamentModal.isVisible = false;
+        }
+        
+        // Ensure game viewport is fully visible and clear
+        if (this.gameViewport) {
+            this.gameViewport.style.opacity = '1';
+            this.gameViewport.style.filter = 'none';
+        }
+        
+        await this.wait(this.timings.fadeTransition);
+    }
+
+    /**
      * RESULTS_MODAL: Game dimmed with overlay, results modal appears
      */
     async showResultsModal(data) {
@@ -199,12 +210,10 @@ export class UIStateManager {
             this.gameViewport.style.filter = 'brightness(0.3) blur(2px)';
             this.gameViewport.style.transition = `filter ${this.timings.fadeTransition}ms ease`;
         }
-        
-        // Start the results modal with game data
+          // Start the results modal with game data
         if (this.resultsModal && data) {
-            // Start the game over sequence with the provided data
-            this.resultsModal.start({
-                score: data.score,
+            // Show the game over sequence with the provided data
+            this.resultsModal.show(data.score, {
                 level: data.level,
                 linesCleared: data.lines,
                 gameTime: data.time,
