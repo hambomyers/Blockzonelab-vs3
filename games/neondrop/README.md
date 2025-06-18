@@ -55,7 +55,7 @@ NEONDROP5/
 **Planned Features**:
 - Sonic Labs testnet integration
 - QUARTERS token rewards
-- STARDUST achievement NFTs
+- Quarterly achievement rewards
 - Cross-game wallet system
 - On-chain leaderboards
 
