@@ -1,82 +1,89 @@
-/* ==========================================================================
-   BLOCKZONE LAB - AAA DESIGN SYSTEM
-   Modular CSS Architecture for 30+ Games
-   ========================================================================== */
+/* ===================================================================
+   BLOCKZONE LAB - PROFESSIONAL DESIGN SYSTEM
+   AAA Gaming Platform Foundation
+   =================================================================== */
 
 :root {
-  /* === CORE BRAND COLORS === */
-  --bz-primary: #00d4ff;          /* Neon cyan - primary brand */
-  --bz-secondary: #ff6b35;        /* Energy orange - secondary */
-  --bz-accent: #a855f7;           /* Purple - accent highlights */
-  
-  /* === GAME THEME COLORS === */
-  --bz-neon-pink: #ff0080;
-  --bz-neon-green: #39ff14;
-  --bz-neon-yellow: #ffff00;
-  --bz-electric-blue: #0080ff;
-  
-  /* === NEUTRALS & BACKGROUNDS === */
-  --bz-dark-900: #0a0a0a;         /* Pure black backgrounds */
-  --bz-dark-800: #1a1a1a;         /* Card backgrounds */
-  --bz-dark-700: #2a2a2a;         /* Elevated surfaces */
-  --bz-dark-600: #3a3a3a;         /* Borders & dividers */
-  --bz-dark-500: #4a4a4a;         /* Muted elements */
-  
-  --bz-light-100: #ffffff;        /* Pure white text */
-  --bz-light-200: #f0f0f0;        /* Secondary text */
-  --bz-light-300: #d0d0d0;        /* Muted text */
-  --bz-light-400: #a0a0a0;        /* Placeholder text */
-  
-  /* === SEMANTIC COLORS === */
-  --bz-success: #00ff88;          /* Success states */
-  --bz-warning: #ffaa00;          /* Warning states */
-  --bz-error: #ff4444;            /* Error states */
-  --bz-info: #4488ff;             /* Info states */
-  
-  /* === TYPOGRAPHY === */
-  --bz-font-primary: 'Inter', 'Segoe UI', sans-serif;
-  --bz-font-gaming: 'Orbitron', 'Rajdhani', monospace;
-  --bz-font-display: 'Exo 2', 'Orbitron', sans-serif;
-  
-  /* === SPACING SYSTEM (8px base) === */
-  --bz-space-1: 0.25rem;   /* 4px */
-  --bz-space-2: 0.5rem;    /* 8px */
-  --bz-space-3: 0.75rem;   /* 12px */
-  --bz-space-4: 1rem;      /* 16px */
-  --bz-space-6: 1.5rem;    /* 24px */
-  --bz-space-8: 2rem;      /* 32px */
-  --bz-space-12: 3rem;     /* 48px */
-  --bz-space-16: 4rem;     /* 64px */
-  --bz-space-20: 5rem;     /* 80px */
-  --bz-space-24: 6rem;     /* 96px */
-  
-  /* === BORDER RADIUS === */
-  --bz-radius-sm: 0.25rem;  /* 4px */
-  --bz-radius-md: 0.5rem;   /* 8px */
-  --bz-radius-lg: 1rem;     /* 16px */
-  --bz-radius-xl: 1.5rem;   /* 24px */
-  --bz-radius-full: 9999px;
-  
-  /* === SHADOWS & EFFECTS === */
-  --bz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --bz-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --bz-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
-  --bz-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
-  
-  --bz-glow-sm: 0 0 10px currentColor;
-  --bz-glow-md: 0 0 20px currentColor;
-  --bz-glow-lg: 0 0 40px currentColor;
-  
-  /* === ANIMATIONS === */
-  --bz-transition-fast: 0.15s ease-out;
-  --bz-transition-normal: 0.25s ease-out;
-  --bz-transition-slow: 0.4s ease-out;
-  
-  /* === Z-INDEX LAYERS === */
-  --bz-z-below: -1;
-  --bz-z-normal: 1;
-  --bz-z-tooltip: 100;
-  --bz-z-overlay: 200;
-  --bz-z-modal: 300;
-  --bz-z-toast: 400;
+    /* Professional Gaming Colors */
+    --bz-primary: #00f5ff;
+    --bz-secondary: #ff00aa;
+    --bz-accent: #ffd700;
+    --bz-dark: #0a0d13;
+    --bz-dark-light: #1a1d29;
+    --bz-light: #ffffff;
+    --bz-gray: #666;
+    
+    /* Typography - Gaming Fonts */
+    --bz-font-base: 'Inter', sans-serif;
+    --bz-font-heading: 'Orbitron', monospace;
+    
+    /* Professional Spacing */
+    --bz-space-xs: 0.25rem;
+    --bz-space-sm: 0.5rem;
+    --bz-space-md: 1rem;
+    --bz-space-lg: 1.5rem;
+    --bz-space-xl: 2rem;
+    --bz-space-2xl: 3rem;
+    
+    /* Professional Borders */
+    --bz-radius: 0.75rem;
+    --bz-radius-lg: 1rem;
+    
+    /* Smooth Transitions */
+    --bz-transition: 0.3s ease;
+    
+    /* Professional Card Dimensions */
+    --card-width: 280px;
+    --card-height: 392px;
+}
+
+/* Professional Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--bz-font-base);
+    background: var(--bz-dark);
+    color: var(--bz-light);
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Professional Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--bz-font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Professional Containers */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--bz-space-md);
+}
+
+/* PROFESSIONAL GRID SYSTEM - CENTERED */
+.grid {
+    display: grid;
+    gap: var(--bz-space-xl);
+    justify-content: center;
+    justify-items: center;
+    padding: var(--bz-space-2xl) 0;
+}
+
+.grid-2 { 
+    grid-template-columns: repeat(2, var(--card-width));
+    max-width: calc(var(--card-width) * 2 + var(--bz-space-xl));
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .grid-2 { 
+        grid-template-columns: 1fr; 
+        max-width: var(--card-width);
+    }
 }

@@ -2,198 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="description" content="Premium crypto edutainment platform - Learn blockchain, compete in tournaments, earn real rewards. Following Sonic Labs' revolutionary 90/10 fee model.">
-    <title>BlockZone Lab - Premium Crypto Edutainment Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockZone Lab - Professional Gaming Platform</title>
     
-    <!-- BZL Favicons -->
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="icon" type="image/svg+xml" sizes="16x16" href="assets/favicon-16x16.svg">
-    <link rel="icon" type="image/svg+xml" sizes="64x64" href="assets/favicon-64x64.svg">
-    <link rel="apple-touch-icon" href="assets/favicon-64x64.svg">
-      <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">    
-    <!-- Modular CSS Architecture -->
-    <link rel="stylesheet" href="assets/css/core-variables.css">
+    <!-- Professional CSS Architecture -->
     <link rel="stylesheet" href="assets/css/design-system.css">
     <link rel="stylesheet" href="assets/css/utilities.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/blockzone-system.css">
-      <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-      <!-- Web3 Libraries -->
-    <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body class="portal-container">
-    <!-- Animated Starfield Background -->
-    <div class="starfield" aria-hidden="true">
+    <!-- Professional Starfield Background -->
+    <div class="starfield">
         <div class="stars"></div>
-        <div class="stars2"></div>
-        <div class="stars3"></div>
-    </div>
-
-    <!-- Header -->
+    </div>    <!-- Professional Header -->
     <header class="portal-header">
         <nav class="portal-nav">
             <a href="index.html" class="logo">
                 <span>✧</span> BlockZone Lab
             </a>
-            <div class="wallet-status disconnected" id="walletStatus">
-                <i class="fas fa-wallet"></i>
+            <div class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="academy/">Academy</a>
+                <a href="games/">Games</a>
+            </div>
+            <div class="wallet-status" id="walletStatus">
                 <span>Connect Wallet</span>
             </div>
         </nav>
-    </header>    <!-- Daily Challenge Banner -->
-    <section class="daily-challenge-banner">
-        <div class="banner-container">
-            <div class="banner-content">
-                <div class="banner-icon">🎮</div>
-                <div class="banner-text">
-                    <h2 class="banner-title">PLAY THE DAILY NEONDROP CHALLENGE!</h2>
-                    <p class="banner-subtitle">$200+ daily prizes • Entry just $2.50 USDC • 90% to winners</p>
-                </div>
-                <a href="games/neondrop/" class="banner-cta">Play Now</a>
-            </div>
-        </div>
-    </section>    <!-- Hero Section -->
+    </header><!-- Professional Banner - Clickable -->
+    <a href="games/neondrop/" class="banner">
+        🎮 PLAY THE DAILY NEONDROP CHALLENGE! 🎮
+        <br>$200+ daily prizes • Entry $2.50 USDC • 90% to winners
+    </a>
+
+    <!-- Professional Main Section -->
     <main class="hero">
-        <div class="hero-badge">🏆 PREMIUM GAMING PLATFORM • 90% TO PLAYERS</div>
+        <div class="hero-badge">🏆 PROFESSIONAL GAMING PLATFORM</div>
         <h1 class="hero-title">Win Real USDC Playing Games</h1>
         <p class="hero-subtitle">
-            The first gaming platform following <a href="https://docs.soniclabs.com/funding/fee-monetization" target="_blank" class="sonic-link">Sonic Labs' 90/10 Fee Model</a> - 
-            where 90% of tournament fees go directly to players. Daily $2.50 USDC tournaments with $200+ prize pools.
+            Professional tournaments with 90/10 fee structure on Sonic Labs blockchain
         </p>
-        
-        <div class="choices gaming-first">
-            <!-- MAIN ATTRACTION: Gaming -->
-            <a href="games/index.html" class="choice-btn gaming-hero">
-                <div class="gaming-badge">🚀 LIVE TOURNAMENTS</div>
-                <span class="choice-icon">�</span>
-                <h2 class="choice-title">Daily USDC Tournaments</h2>
-                <p class="choice-description">
-                    Compete in skill-based NeonDrop tournaments. $2.50 entry, $200+ daily prizes. 
-                    Revolutionary 90/10 split - players actually win big on Sonic's lightning-fast blockchain.
-                </p>
-                <div class="choice-stats">
-                    <div class="stat-item">⚡ Sub-second payouts</div>
-                    <div class="stat-item">💎 90% to winners</div>
-                    <div class="stat-item">🏆 Daily tournaments</div>
+          <!-- Professional Centered Cards - Fully Clickable -->
+        <div class="grid grid-2">
+            <a href="games/" class="card card--hover card--glow">
+                <div class="card__header">
+                    <div class="card__title">🏆 Gaming Hub</div>
+                    <div class="card__subtitle">Professional Tournaments</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Compete in professional NeonDrop tournaments. $2.50 entry, $200+ daily prizes with 90% to winners.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--primary">Enter Tournament</span>
                 </div>
             </a>
-            
-            <!-- SECONDARY: Education rabbit hole -->
-            <a href="academy/index.html" class="choice-btn academy-subtle">
-                <span class="choice-icon">📚</span>
-                <h3 class="choice-title">Learn While You Earn</h3>
-                <p class="choice-description">
-                    Curious about crypto? Master blockchain fundamentals through interactive lessons. 
-                    Perfect for players who want to understand the tech behind the money.
-                </p>
+
+            <a href="academy/" class="card card--hover card--neon">
+                <div class="card__header">
+                    <div class="card__title">📚 Academy</div>
+                    <div class="card__subtitle">Professional Education</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Master blockchain technology through professional courses and interactive lessons.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--outline">Start Learning</span>
+                </div>
             </a>
         </div>
-    </main>    <!-- Premium Features Showcase -->
-    <section class="premium-features">
-        <div class="features-container">
-            <h2 class="features-title">Premium Crypto Edutainment Experience</h2>            <div class="bz-card-grid-md">
-                <div class="bz-playing-card bz-playing-card--gaming bz-playing-card--md">
-                    <div class="bz-playing-card__header">
-                        <div class="bz-playing-card__number">01</div>
-                        <div class="bz-playing-card__status bz-playing-card__status--available">Live Now</div>
-                    </div>
-                    
-                    <div class="bz-playing-card__icon">🏆</div>
-                    
-                    <h3 class="bz-playing-card__title">Real USDC Tournaments</h3>
-                    <p class="bz-playing-card__description">
-                        Compete daily for real money prizes with our revolutionary 90/10 fee structure. Winners actually win big.
-                    </p>
-                    
-                    <div class="bz-playing-card__footer">
-                        <a href="games/" class="bz-btn bz-btn-primary bz-btn-sm">Play Now</a>
-                    </div>
-                </div>                <div class="bz-playing-card bz-playing-card--academy bz-playing-card--md">
-                    <div class="bz-playing-card__header">
-                        <div class="bz-playing-card__number">02</div>
-                        <div class="bz-playing-card__status bz-playing-card__status--available">Available</div>
-                    </div>
-                    
-                    <div class="bz-playing-card__icon">📚</div>
-                    
-                    <h3 class="bz-playing-card__title">Interactive Education</h3>
-                    <p class="bz-playing-card__description">
-                        Master blockchain, DeFi, and Web3 through engaging lessons. Learn the future of finance.
-                    </p>
-                    
-                    <div class="bz-playing-card__footer">
-                        <a href="academy/" class="bz-btn bz-btn-secondary bz-btn-sm">Learn Now</a>
-                    </div>                </div>
-            </div>
-        </div>
-    </section><!-- Sonic Labs Partnership Section -->
+    </main>
+
+    <!-- Partnership Section -->
     <section class="sonic-partnership">
         <div class="partnership-content">
-            <h2 class="partnership-title">Built on Sonic's Revolutionary Model</h2>
+            <h2 class="partnership-title">Built on Sonic Labs Technology</h2>
             <p class="partnership-description">
-                The first premium crypto edutainment platform applying <a href="https://docs.soniclabs.com/funding/fee-monetization" target="_blank" class="sonic-link">Sonic Labs' Fee Monetization philosophy</a> 
-                to education and gaming - where value creators earn 90% of the fees they generate.
+                Professional gaming platform with revolutionary 90/10 fee structure
             </p>
-            <div class="partnership-stats">
-                <div class="stat">
-                    <span class="stat-number">90%</span>
-                    <span class="stat-label">To Players & Learners</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">10%</span>
-                    <span class="stat-label">Platform Operations</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">400k+</span>
-                    <span class="stat-label">TPS on Sonic</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">$0.001</span>
-                    <span class="stat-label">Transaction Cost</span>
-                </div>
-            </div>
-            <div class="partnership-quote">
-                "Just as Sonic rewards developers for driving network traffic, 
-                we reward players and learners for creating educational and competitive value. Premium crypto edutainment with fair economics."
-            </div>
         </div>
-    </section>    <!-- Footer -->
-    <footer class="portal-footer">
-        <div class="footer-links">
-            <a href="academy/index.html">🎓 Crypto Academy</a>
-            <a href="games/index.html">🎮 Tournament Arena</a>
-            <a href="#" onclick="showWalletModal()">💎 Connect Wallet</a>
-            <a href="https://docs.soniclabs.com/funding/fee-monetization" target="_blank">� Sonic Partnership</a>
-        </div>
-        <div class="footer-copyright">
-            © 2025 BlockZone Lab - Premium Crypto Edutainment Platform. Powered by Sonic Labs technology.
-        </div>
-    </footer>
+    </section>
 
-    <!-- Wallet Connection Modal -->
-    <div class="modal-overlay" id="walletModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Connect Your Wallet</h3>
-                <button class="modal-close" onclick="closeWalletModal()">&times;</button>
-            </div>            <div class="modal-body">                <p>Connect to Sonic Labs for premium crypto edutainment:</p>
-                <ul style="margin: 1rem 0; color: var(--text-secondary);">
-                    <li>• Premium $2.50 USDC tournaments with 90% to players</li>
-                    <li>• Revolutionary fee structure following Sonic's philosophy</li>
-                    <li>• Instant winner payouts with sub-second confirmation</li>
-                    <li>• Learn crypto while earning - premium edutainment experience</li>
-                    <li>• Built on lightning-fast Sonic Labs blockchain</li>
-                </ul>
-                <button class="btn btn-primary" onclick="connectWallet()">
-                    <i class="fas fa-wallet"></i>
-                    Connect Sonic Labs Wallet
-                </button>
-            </div>
-        </div>
-    </div>    <!-- Main JS -->
-    <script src="academy/shared/academy-main.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>

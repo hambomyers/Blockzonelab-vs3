@@ -3,168 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlockZone Academy - Learn Blockchain Fundamentals</title>      <!-- Import our modular CSS system -->
-    <link rel="stylesheet" href="../assets/css/core-variables.css">
+    <title>Academy - BlockZone Lab</title>
+    
+    <!-- Professional CSS Architecture -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/utilities.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/blockzone-system.css">
 </head>
 <body class="portal-container">
-    <!-- Animated Starfield Background -->
-    <div class="starfield" aria-hidden="true">
+    <!-- Professional Starfield Background -->
+    <div class="starfield">
         <div class="stars"></div>
-        <div class="stars2"></div>
-        <div class="stars3"></div>
     </div>
 
-    <!-- Header -->
+    <!-- Professional Header -->
     <header class="portal-header">
         <nav class="portal-nav">
             <a href="../index.html" class="logo">
                 <span>✧</span> BlockZone Lab
             </a>
             <div class="nav-links">
-                <a href="../games/index.html">🎮 Games</a>
-                <a href="../academy/index.html" class="active">� Academy</a>
+                <a href="../index.html">Home</a>
+                <a href="#" class="active">Academy</a>
+                <a href="../games/">Games</a>
+            </div>
+            <div class="wallet-status" id="walletStatus">
+                <span>Connect Wallet</span>
             </div>
         </nav>
-    </header>    <!-- Hero Section -->
+    </header>
+
+    <!-- Professional Banner - Clickable -->
+    <a href="../games/neondrop/" class="banner">
+        📚 LEARN TO EARN: Complete lessons and win tournament entries! 🎓
+        <br>Master blockchain technology while earning real USDC prizes
+    </a>
+
+    <!-- Professional Main Section -->
     <main class="hero">
-        <div class="hero-badge">🎓 FREE BLOCKCHAIN EDUCATION</div>
-        <h1 class="hero-title">Learn Blockchain Fundamentals</h1>
+        <div class="hero-badge">🎓 PROFESSIONAL EDUCATION</div>
+        <h1 class="hero-title">Master Blockchain Technology</h1>
         <p class="hero-subtitle">
-            Master blockchain technology through interactive lessons. 
-            From computing basics to DeFi protocols - completely free education.
+            Professional courses designed for real-world application and career advancement
         </p>
-        
-        <!-- Lesson Cards -->
-        <section class="bz-py-8">
-            <div class="container">
-                <h2 class="bz-title-lg bz-text-center bz-mb-8">Course Curriculum</h2>
+
+        <!-- Professional Course Grid - Fully Clickable -->
+        <div class="grid grid-3">
+            <a href="lessons/01-computing-binary/" class="card card--hover card--glow">
+                <div class="card__header">
+                    <div class="card__title">💻 Computing & Binary</div>
+                    <div class="card__subtitle">Foundation Course</div>
+                </div>
                 
-                <div class="bz-card-grid-md">                    <!-- Lesson 1 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">🔢</span>
-                            <h3 class="bz-game-card-title">Computing & Binary</h3>
-                            <p class="bz-game-card-subtitle">Lesson 1</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>Learn how zeros and ones created the digital revolution. Master information theory and binary systems.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/01-computing-binary/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>
+                <div class="card__content">
+                    <p>Master the fundamentals of computing, binary systems, and digital logic that power blockchain technology.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--primary">Start Course</span>
+                </div>
+            </a>
 
-                    <!-- Lesson 2 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">🏦</span>
-                            <h3 class="bz-game-card-title">Money & Economics</h3>
-                            <p class="bz-game-card-subtitle">Lesson 2</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>From Jekyll Island to Bitcoin - how mathematical money solves fiat manipulation.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/02-money-scarcity/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>
+            <a href="lessons/02-money-scarcity/" class="card card--hover card--neon">
+                <div class="card__header">
+                    <div class="card__title">💰 Money & Scarcity</div>
+                    <div class="card__subtitle">Economic Theory</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Understand monetary systems, scarcity principles, and the economic foundations of cryptocurrency.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--outline">Begin Lesson</span>
+                </div>
+            </a>
 
-                    <!-- Lesson 3 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">🌐</span>
-                            <h3 class="bz-game-card-title">Blockchain Fundamentals</h3>
-                            <p class="bz-game-card-subtitle">Lesson 3</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>Understand network effects and how blockchains create digital scarcity.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/03-blockchain-fundamentals/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>
+            <a href="lessons/03-blockchain-fundamentals/" class="card card--hover card--glow">
+                <div class="card__header">
+                    <div class="card__title">⛓️ Blockchain Fundamentals</div>
+                    <div class="card__subtitle">Core Technology</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Deep dive into blockchain architecture, consensus mechanisms, and distributed ledger technology.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--primary">Explore</span>
+                </div>
+            </a>
 
-                    <!-- Lesson 4 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">�</span>
-                            <h3 class="bz-game-card-title">Smart Contracts</h3>
-                            <p class="bz-game-card-subtitle">Lesson 4</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>Learn how code replaces law and enables programmable money.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/04-smart-contracts/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>
+            <a href="lessons/04-smart-contracts/" class="card card--hover card--neon">
+                <div class="card__header">
+                    <div class="card__title">📜 Smart Contracts</div>
+                    <div class="card__subtitle">Advanced Programming</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Learn to build and deploy smart contracts on various blockchain platforms with real examples.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--outline">Code Now</span>
+                </div>
+            </a>
 
-                    <!-- Lesson 5 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">�</span>
-                            <h3 class="bz-game-card-title">DeFi & DEXes</h3>
-                            <p class="bz-game-card-subtitle">Lesson 5</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>Master decentralized finance and automated market makers.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/05-defi-dexes/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>
+            <a href="lessons/05-defi-dexes/" class="card card--hover card--glow">
+                <div class="card__header">
+                    <div class="card__title">🔄 DeFi & DEXes</div>
+                    <div class="card__subtitle">Financial Applications</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Master decentralized finance protocols, automated market makers, and trading strategies.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--primary">Trade</span>
+                </div>
+            </a>
 
-                    <!-- Lesson 6 -->
-                    <div class="bz-card bz-card-academy">
-                        <div class="bz-game-card-header">
-                            <span class="bz-game-card-icon">⚡</span>
-                            <h3 class="bz-game-card-title">Sonic Labs</h3>
-                            <p class="bz-game-card-subtitle">Lesson 6</p>
-                        </div>
-                        
-                        <div class="bz-game-card-body">
-                            <p>Explore next-generation blockchain infrastructure and scaling solutions.</p>
-                        </div>
-                        
-                        <div class="bz-game-card-footer">
-                            <span class="bz-game-card-status live">Available</span>
-                            <a href="lessons/06-sonic-labs/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
-                        </div>
-                    </div>                </div>
+            <a href="lessons/06-sonic-labs/" class="card card--hover card--neon">
+                <div class="card__header">
+                    <div class="card__title">⚡ Sonic Labs</div>
+                    <div class="card__subtitle">Cutting-Edge Platform</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Explore the revolutionary Sonic Labs blockchain and its high-performance capabilities.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--outline">Discover</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Learning Path Section -->
+        <section class="learning-path">
+            <h2 class="section-title">Professional Learning Path</h2>
+            
+            <div class="path-container">
+                <div class="path-step">
+                    <div class="step-number">1</div>
+                    <h3>Foundation</h3>
+                    <p>Computing & Binary Systems</p>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="path-step">
+                    <div class="step-number">2</div>
+                    <h3>Economics</h3>
+                    <p>Money & Scarcity Principles</p>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="path-step">
+                    <div class="step-number">3</div>
+                    <h3>Blockchain</h3>
+                    <p>Core Technology & Architecture</p>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="path-step">
+                    <div class="step-number">4</div>
+                    <h3>Development</h3>
+                    <p>Smart Contracts & DeFi</p>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="path-step">
+                    <div class="step-number">5</div>
+                    <h3>Advanced</h3>
+                    <p>Sonic Labs Mastery</p>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="portal-footer">
-        <div class="footer-links">
-            <a href="../index.html">� Portal</a>
-            <a href="../games/index.html">🎮 Games</a>
-            <a href="../academy/index.html">🎓 Academy</a>
+    <!-- Education Features Section -->
+    <section class="education-features">
+        <div class="features-content">
+            <h2 class="features-title">Professional Education Platform</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <strong>Interactive Learning:</strong> Hands-on exercises and real blockchain interactions
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <strong>Career-Focused:</strong> Skills that directly apply to professional blockchain roles
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🏆</div>
+                    <strong>Earn Rewards:</strong> Complete courses to earn tournament entries and prizes
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <strong>Cutting-Edge:</strong> Latest developments in blockchain and DeFi technology
+                </div>
+            </div>
         </div>
-        <div class="footer-copyright">
-            © 2025 BlockZone Lab - Free Blockchain Education
-        </div>
-    </footer>
+    </section>
 
 </body>
 </html>
