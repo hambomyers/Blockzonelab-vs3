@@ -1392,43 +1392,37 @@
 }
 
 .bz-playing-card__icon {
-  font-size: 40px;
+  font-size: 3rem;
   text-align: center;
-  margin: 20px 0;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+  margin: 1rem 0;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
 }
 
 .bz-playing-card__title {
-  font-family: var(--bz-font-display, 'Arial', sans-serif);
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--bz-light-100, #ffffff);
-  margin: 0 0 8px 0;
-  line-height: 1.2;
+  color: var(--bz-light-100);
+  margin: 0.75rem 0 0.5rem 0;
   text-align: center;
+  line-height: 1.2;
 }
 
 .bz-playing-card__description {
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--bz-light-300, rgba(255, 255, 255, 0.8));
-  margin: 0 0 16px 0;
+  font-size: 0.875rem;
+  color: var(--bz-light-400);
+  line-height: 1.5;
+  text-align: center;
+  margin: 0.75rem 0;
+  flex-grow: 1;
+}
+
+.bz-playing-card__footer {
+  margin-top: auto;
+  padding-top: 1rem;
   text-align: center;
 }
 
-.bz-playing-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 12px 0;
-}
-
-.bz-playing-card__tag {
-  padding: 4px 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--bz-radius-sm);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--bz-light-300);
+.bz-playing-card__footer .bz-btn {
+  width: 100%;
+  font-size: 0.8rem;
 }
