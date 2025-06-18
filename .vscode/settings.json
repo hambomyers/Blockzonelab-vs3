@@ -1,67 +1,48 @@
 {
-    "// ZOMBIE FILE PREVENTION SETTINGS": "Disable all auto-save and backup features",
+    "// NUCLEAR ANTI-ZOMBIE SETTINGS": "Maximum prevention",
     
     "// Core file saving settings": "",
     "files.autoSave": "off",
     "files.autoSaveDelay": 0,
     "files.enableTrash": false,
     "files.hotExit": "off",
+    "files.simpleDialog.enable": true,
     
-    "// Disable local history and backups": "",
+    "// Disable ALL history and backups": "",
     "workbench.localHistory.enabled": false,
     "workbench.localHistory.maxFileEntries": 0,
     "files.maxMemoryForLargeFilesMB": 0,
+    "timeline.excludeSources": ["git-history", "local-history"],
     
     "// Disable session restore": "",
     "window.restoreWindows": "none",
     "workbench.startupEditor": "none",
     "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
     
     "// Disable git auto features": "",
+    "git.enabled": false,
+    "git.autorefresh": false,
     "git.autofetch": false,
-    "git.autoStash": false,
-    "git.enableSmartCommit": false,
     "git.autoRepositoryDetection": false,
     
     "// Disable search and indexing": "",
-    "search.maintainFileSearchCache": false,
-    "search.followSymlinks": false,
+    "search.useGlobalIgnoreFiles": true,
+    "search.useParentIgnoreFiles": true,
     "files.watcherExclude": {
-        "**/.git/objects/**": true,
-        "**/.git/subtree-cache/**": true,
-        "**/node_modules/*/**": true,
-        "**/.hg/store/**": true,
-        "**/tmp/**": true,
-        "**/temp/**": true,
-        "**/*.tmp": true,
-        "**/*.backup": true,
-        "**/*.old": true,
-        "**/modules/**": true
+        "**/.git/**": true,
+        "**/node_modules/**": true,
+        "**/.wrangler/**": true,
+        "**/zombie-*": true
     },
     
-    "// Disable telemetry and tracking": "",
-    "telemetry.telemetryLevel": "off",
-    "workbench.enableExperiments": false,
-    
-    "// Extension-specific disables": "",
-    "gitlens.currentLine.enabled": false,
-    "gitlens.hovers.enabled": false,
-    "gitlens.codeLens.enabled": false,
-    
-    "// File association prevention": "",
+    "// Disable file watchers": "",
+    "typescript.disableAutomaticTypeAcquisition": true,
     "files.associations": {},
-    "emmet.includeLanguages": {},
-    
-    "// Prevent auto-formatting that might create files": "",
-    "editor.formatOnSave": false,
-    "editor.formatOnPaste": false,
-    "editor.formatOnType": false,
-    
-    "// Workspace trust": "",
-    "security.workspace.trust.enabled": false,
-    "security.workspace.trust.startupPrompt": "never",
-    
-    "// Terminal settings": "",
-    "terminal.integrated.enablePersistentSessions": false,
-    "terminal.integrated.persistentSessionReviveProcess": "never"
+    "files.exclude": {
+        "**/zombie-*": true,
+        "**/verify-*": true,
+        "**/start-work.*": true,
+        "**/*ZOMBIE*": true
+    }
 }
