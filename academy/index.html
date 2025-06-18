@@ -3,419 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Academy - Austrian Economics & Digital Innovation</title>    <link rel="stylesheet" href="../assets/css/core-variables.css">
+    <title>BlockZone Academy - Learn Blockchain Fundamentals</title>
+    
+    <!-- Modular CSS Architecture -->
+    <link rel="stylesheet" href="../assets/css/core-variables.css">
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/utilities.css">
     <link rel="stylesheet" href="../assets/css/components.css">
-    <link rel="stylesheet" href="core/academy-styles.css">
-    <!-- Dynamic Bitcoin Price Updates -->
-    <script src="../core-systems/bitcoin-price.js"></script>
+    <link rel="stylesheet" href="../assets/css/blockzone-system.css">
 </head>
-<body>
+<body class="portal-container">
     <!-- Animated Starfield Background -->
     <div class="starfield" aria-hidden="true">
         <div class="stars"></div>
         <div class="stars2"></div>
         <div class="stars3"></div>
-    </div>    <!-- Main Navigation -->
-    <nav class="main-nav" role="navigation">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <a href="../index.html" class="logo">
-                    <span class="logo-icon">✧</span>
-                    <span class="logo-text">BlockZone Lab</span>
-                </a>
-                <div class="tagline">Academy Portal</div>
-            </div>
-            <div class="nav-actions">
-                <div class="stardust-counter" role="status" aria-live="polite">
-                    <span class="stardust-icon">💫</span>
-                    <span class="stardust-amount" id="totalStardust">0</span>
-                    <span class="stardust-label">Stardust</span>
-                </div>
-                <a href="../games/index.html" class="nav-link" style="color: var(--color-text-secondary); text-decoration: none; margin-right: var(--space-4); font-size: 0.875rem;">🎮 Games</a>
-                <button class="nav-menu-toggle" aria-label="Toggle navigation menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </nav><!-- Hero Section -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <div class="hero-badge">
-                <span class="badge-icon">🎓</span>
-                <span class="badge-text">BlockZone Lab Academy</span>
-            </div>
-            
-            <h1 class="hero-title">
-                <span class="hero-line1">Master the Economics</span>
-                <span class="hero-line2">of Digital Innovation</span>
-            </h1>
-            
-            <p class="hero-description">
-                Journey from fundamental computing principles to cutting-edge blockchain technology. 
-                Each lesson exponentially builds toward understanding how Austrian economic theory 
-                drives technological innovation and shapes the future of money.
-            </p>
-            
-            <div class="hero-highlights">
-                <div class="highlight-item">
-                    <span class="highlight-icon">⚡</span>
-                    <span class="highlight-text">Progressive Difficulty</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-icon">🔗</span>
-                    <span class="highlight-text">Real-World Applications</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-icon">💎</span>
-                    <span class="highlight-text">Earn Stardust Rewards</span>
-                </div>
-            </div>
-            
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-number">6</div>
-                    <div class="stat-label">Core Lessons</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">120</div>
-                    <div class="stat-label">Quiz Questions</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">12,600</div>
-                    <div class="stat-label">Total Stardust</div>
-                </div>
-            </div>
-        </div>
-    </header>
+    </div>
 
-    <!-- Curriculum Overview -->
-    <main class="main-content">        <section class="curriculum-section" aria-labelledby="curriculum-title">
-            <div class="section-header">
-                <h2 id="curriculum-title" class="section-title">Core Curriculum</h2>
-                <p class="section-subtitle">
-                    Each lesson exponentially builds on previous knowledge, creating a comprehensive understanding 
-                    of how mathematical certainty enables voluntary exchange and technological innovation.
-                </p>
-            </div>            <div class="lessons-container">
-                <div class="bz-card-grid-md">
-                    <!-- Lesson 1 -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md available" data-lesson="1">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">01</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--available">Available</div>
+    <!-- Header -->
+    <header class="portal-header">
+        <nav class="portal-nav">
+            <a href="../index.html" class="logo">
+                <span>✧</span> BlockZone Lab
+            </a>
+            <div class="nav-links">
+                <a href="../games/index.html">🎮 Games</a>
+                <a href="../academy/index.html" class="active">� Academy</a>
+            </div>
+        </nav>
+    </header>    <!-- Hero Section -->
+    <main class="hero">
+        <div class="hero-badge">🎓 FREE BLOCKCHAIN EDUCATION</div>
+        <h1 class="hero-title">Learn Blockchain Fundamentals</h1>
+        <p class="hero-subtitle">
+            Master blockchain technology through interactive lessons. 
+            From computing basics to DeFi protocols - completely free education.
+        </p>
+        
+        <!-- Lesson Cards -->
+        <section class="bz-py-8">
+            <div class="container">
+                <h2 class="bz-title-lg bz-text-center bz-mb-8">Course Curriculum</h2>
+                
+                <div class="bz-card-grid-md">                    <!-- Lesson 1 -->
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🔢</span>
+                            <h3 class="bz-game-card-title">Computing & Binary</h3>
+                            <p class="bz-game-card-subtitle">Lesson 1</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">🔢</div>
-                        
-                        <h3 class="bz-playing-card__title">Computing & Binary Fundamentals</h3>
-                        <p class="bz-playing-card__description">
-                            Discover how zeros and ones created the digital revolution. Master information theory, 
-                            binary systems, and the mathematical foundations that enable digital scarcity.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Information Theory</span>
-                            <span class="bz-playing-card__tag">Binary Systems</span>
-                            <span class="bz-playing-card__tag">Digital Scarcity</span>
+                        <div class="bz-game-card-body">
+                            <p>Learn how zeros and ones created the digital revolution. Master information theory and binary systems.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Ready to Start</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">200</span>
-                            </div>
-                            <a href="lessons/01-computing-binary/index.html" class="bz-btn bz-btn-primary lesson-link">
-                                Begin Lesson
-                                <span class="link-arrow">→</span>
-                            </a>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/01-computing-binary/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Lesson 2 -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="2">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">02</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--locked">� Locked</div>
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🏦</span>
+                            <h3 class="bz-game-card-title">Money & Economics</h3>
+                            <p class="bz-game-card-subtitle">Lesson 2</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">🏦</div>
-                        
-                        <h3 class="bz-playing-card__title">Money as Information Technology</h3>
-                        <p class="bz-playing-card__description">
-                            From Jekyll Island to Bitcoin - The secret meeting that created the Federal Reserve and 
-                            how mathematical money solves fiat manipulation through Austrian principles.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Jekyll Island</span>
-                            <span class="bz-playing-card__tag">Federal Reserve</span>
-                            <span class="bz-playing-card__tag">Austrian Theory</span>
+                        <div class="bz-game-card-body">
+                            <p>From Jekyll Island to Bitcoin - how mathematical money solves fiat manipulation.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Complete Lesson 1 First</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">400</span>
-                            </div>
-                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
-                                Complete Previous Lesson
-                                <span class="link-arrow">→</span>
-                            </button>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/02-money-scarcity/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Lesson 3 -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="3">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">03</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">🌐</span>
+                            <h3 class="bz-game-card-title">Blockchain Fundamentals</h3>
+                            <p class="bz-game-card-subtitle">Lesson 3</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">🌐</div>
-                        
-                        <h3 class="bz-playing-card__title">Network Effects & Digital Scarcity</h3>
-                        <p class="bz-playing-card__description">
-                            Why Facebook is worth trillions while MySpace died. Understanding network 
-                            economics and platform monopolies through Austrian economic theory.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Metcalfe's Law</span>
-                            <span class="bz-playing-card__tag">Network Value</span>
-                            <span class="bz-playing-card__tag">Platform Economics</span>
+                        <div class="bz-game-card-body">
+                            <p>Understand network effects and how blockchains create digital scarcity.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Complete Lesson 2 First</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">800</span>
-                            </div>
-                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
-                                Complete Previous Lesson
-                                <span class="link-arrow">→</span>
-                            </button>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/03-blockchain-fundamentals/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Lesson 4 -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="4">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">04</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">�</span>
+                            <h3 class="bz-game-card-title">Smart Contracts</h3>
+                            <p class="bz-game-card-subtitle">Lesson 4</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">🔐</div>
-                        
-                        <h3 class="bz-playing-card__title">Cryptographic Consensus & Trust</h3>
-                        <p class="bz-playing-card__description">
-                            The <span class="bitcoin-pizza-value" data-bitcoin-pizza="The {PIZZA_VALUE} pizza">$1.2 billion pizza</span> that proved mathematical trust beats institutional trust. 
-                            Byzantine Generals, proof-of-work, and the birth of trustless systems.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Byzantine Generals</span>
-                            <span class="bz-playing-card__tag">Proof-of-Work</span>
-                            <span class="bz-playing-card__tag">Bitcoin Mining</span>
+                        <div class="bz-game-card-body">
+                            <p>Learn how code replaces law and enables programmable money.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Complete Lesson 3 First</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">1,600</span>
-                            </div>
-                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
-                                Complete Previous Lesson
-                                <span class="link-arrow">→</span>
-                            </button>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/04-smart-contracts/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Lesson 5 -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="5">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">05</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--locked">🔒 Locked</div>
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">�</span>
+                            <h3 class="bz-game-card-title">DeFi & DEXes</h3>
+                            <p class="bz-game-card-subtitle">Lesson 5</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">📜</div>
-                        
-                        <h3 class="bz-playing-card__title">Smart Contracts & Programmable Economics</h3>
-                        <p class="bz-playing-card__description">
-                            Nick Szabo's "lawyer killers" now secure $100+ billion. How code replaces law 
-                            and enables pure voluntary exchange through decentralized finance.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Smart Contracts</span>
-                            <span class="bz-playing-card__tag">DeFi Protocols</span>
-                            <span class="bz-playing-card__tag">Yield Farming</span>
+                        <div class="bz-game-card-body">
+                            <p>Master decentralized finance and automated market makers.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Complete Lesson 4 First</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">3,200</span>
-                            </div>
-                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
-                                Complete Previous Lesson
-                                <span class="link-arrow">→</span>
-                            </button>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/05-defi-dexes/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
+                    </div>
 
-                    <!-- Lesson 6: Sonic Labs -->
-                    <article class="bz-playing-card bz-playing-card--academy bz-playing-card--md locked" data-lesson="6">
-                        <div class="bz-playing-card__header">
-                            <div class="bz-playing-card__number">06</div>
-                            <div class="bz-playing-card__status bz-playing-card__status--locked">Complete Previous Lessons</div>
+                    <!-- Lesson 6 -->
+                    <div class="bz-card bz-card-academy">
+                        <div class="bz-game-card-header">
+                            <span class="bz-game-card-icon">⚡</span>
+                            <h3 class="bz-game-card-title">Sonic Labs</h3>
+                            <p class="bz-game-card-subtitle">Lesson 6</p>
                         </div>
                         
-                        <div class="bz-playing-card__icon">⚡</div>
-                        
-                        <h3 class="bz-playing-card__title">Sonic Labs: Next-Generation DeFi Infrastructure</h3>
-                        <p class="bz-playing-card__description">
-                            Andre Cronje's triumphant return from exile with the blockchain that solves every problem 
-                            that made him quit DeFi. The perfect synthesis of Austrian economics and cutting-edge technology.
-                        </p>
-                        
-                        <div class="bz-playing-card__tags">
-                            <span class="bz-playing-card__tag">Andre Cronje</span>
-                            <span class="bz-playing-card__tag">Sonic Labs</span>
-                            <span class="bz-playing-card__tag">Layer 2 Scaling</span>
-                            <span class="bz-playing-card__tag">DeFi 3.0</span>
+                        <div class="bz-game-card-body">
+                            <p>Explore next-generation blockchain infrastructure and scaling solutions.</p>
                         </div>
                         
-                        <div class="lesson-footer">
-                            <div class="lesson-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">Complete All Previous Lessons First</span>
-                            </div>
-                            <div class="lesson-reward">
-                                <span class="reward-icon">💫</span>
-                                <span class="reward-amount">6,400</span>
-                            </div>
-                            <button class="bz-btn bz-btn-outline lesson-link disabled" disabled>
-                                Start Lesson
-                                <span class="link-arrow">→</span>
-                            </button>
+                        <div class="bz-game-card-footer">
+                            <span class="bz-game-card-status live">Available</span>
+                            <a href="lessons/06-sonic-labs/" class="bz-btn bz-btn-primary bz-btn-sm">Start Lesson</a>
                         </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- Learning Path Visualization -->
-        <section class="learning-path" aria-labelledby="path-title">
-            <div class="section-header">
-                <h2 id="path-title" class="section-title">Your Learning Journey</h2>
-                <p class="section-subtitle">
-                    Follow the exponential progression from binary basics to blockchain mastery
-                </p>
-            </div>
-            <div class="path-visualization">
-                <div class="path-line"></div>
-                <div class="path-nodes">
-                    <div class="path-node active" data-lesson="1">
-                        <div class="node-icon">🔢</div>
-                        <div class="node-label">Binary</div>
-                    </div>
-                    <div class="path-node" data-lesson="2">
-                        <div class="node-icon">💰</div>
-                        <div class="node-label">Money</div>
-                    </div>
-                    <div class="path-node" data-lesson="3">
-                        <div class="node-icon">🌐</div>
-                        <div class="node-label">Networks</div>
-                    </div>
-                    <div class="path-node" data-lesson="4">
-                        <div class="node-icon">🔐</div>
-                        <div class="node-label">Consensus</div>
-                    </div>
-                    <div class="path-node" data-lesson="5">
-                        <div class="node-icon">📜</div>
-                        <div class="node-label">Contracts</div>
-                    </div>
-                    <div class="path-node" data-lesson="6">
-                        <div class="node-icon">⚡</div>
-                        <div class="node-label">Sonic</div>
-                    </div>
-                </div>
+                    </div>                </div>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3 class="footer-title">The Academy</h3>
-                <p class="footer-text">
-                    Bridging Austrian economic theory with cutting-edge blockchain technology 
-                    through exponential learning.
-                </p>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-title">Core Principles</h3>
-                <ul class="footer-list">
-                    <li>Voluntary Exchange</li>
-                    <li>Sound Money</li>
-                    <li>Spontaneous Order</li>
-                    <li>Mathematical Certainty</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-title">Progress Tracking</h3>
-                <div class="progress-summary">
-                    <div class="summary-item">
-                        <span class="summary-label">Lessons Completed:</span>
-                        <span class="summary-value" id="lessonsCompleted">0/6</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Total Stardust:</span>
-                        <span class="summary-value" id="footerStardust">0</span>
-                    </div>
-                </div>
-            </div>
+    <footer class="portal-footer">
+        <div class="footer-links">
+            <a href="../index.html">� Portal</a>
+            <a href="../games/index.html">🎮 Games</a>
+            <a href="../academy/index.html">🎓 Academy</a>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 The Academy. Educational content for the digital age.</p>
+        <div class="footer-copyright">
+            © 2025 BlockZone Lab - Free Blockchain Education
         </div>
     </footer>
 
-    <script src="shared/academy-main.js"></script>
 </body>
 </html>

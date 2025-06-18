@@ -27,16 +27,15 @@ window.SONIC_CONFIG = {
     },
     
     // Contract addresses (will be deployed)
-    contracts: {
-        testnet: {
+    contracts: {        testnet: {
             QUARTERS: '0x0000000000000000000000000000000000000000',
-            STARDUST: '0x0000000000000000000000000000000000000000',
+            // STARDUST removed - no longer used
             NEONDROP_GAME: '0x0000000000000000000000000000000000000000',
             LEADERBOARD: '0x0000000000000000000000000000000000000000'
         },
         mainnet: {
             QUARTERS: '0x0000000000000000000000000000000000000000',
-            STARDUST: '0x0000000000000000000000000000000000000000',
+            // STARDUST removed - no longer used
             NEONDROP_GAME: '0x0000000000000000000000000000000000000000',
             LEADERBOARD: '0x0000000000000000000000000000000000000000'
         }
