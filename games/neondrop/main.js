@@ -76,19 +76,36 @@ class NeonDrop {
         return this.engine?.getState() || {};
     }    getConfig() {
         return this.config || {};
-    }async initialize() {
+    }    async initialize() {
         try {
             console.log('🚀 NeonDrop starting...');
             
+            console.log('📋 Loading config...');
             await this.config.load();
+            
+            console.log('🖥️ Setting up display...');
             this.setupDisplay();
-            this.createSystems();            this.setupUI();
+            
+            console.log('⚙️ Creating systems...');
+            this.createSystems();
+            
+            console.log('🎨 Setting up UI...');
+            this.setupUI();
+            
+            console.log('🧹 Cleaning up old UI...');
             this.cleanupOldUI(); // Remove any old tournament UI elements
+            
+            console.log('🃏 Setting up menu card...');
             this.setupGameMenuCard(); // Add our elegant menu card
+            
+            console.log('🔗 Binding events...');
             this.bindEvents();
+            
+            console.log('🔄 Starting game loop...');
             this.startLoop();
             
             // Background initialization
+            console.log('🌍 Initializing background systems...');
             this.initBackgroundSystems();
             
             console.log('✅ NeonDrop ready');
@@ -358,9 +375,7 @@ class NeonDrop {
         this.running = true;
         this.render(); // Initial render
         requestAnimationFrame(() => this.gameLoop());
-    }
-
-    gameLoop() {
+    }    gameLoop() {
         if (!this.running) return;
         
         const now = performance.now();
@@ -377,11 +392,15 @@ class NeonDrop {
             updated = true;
         }
         
+        // Throttle rendering to prevent racing
         if (updated || this.shouldRender()) {
             this.render();
         }
         
-        requestAnimationFrame(() => this.gameLoop());
+        // Add a small delay to prevent racing
+        setTimeout(() => {
+            requestAnimationFrame(() => this.gameLoop());
+        }, 16); // ~60fps max
     }
 
     update(deltaTime) {
@@ -408,12 +427,11 @@ class NeonDrop {
         } catch (error) {
             console.warn('Render error:', error);
         }
-    }
-
-    shouldRender() {
+    }    shouldRender() {
         const phase = this.engine?.getState()?.phase;
-        return phase === 'CLEARING' || phase === 'COUNTDOWN' || phase === 'GAME_OVER';
-    }    handleAction(action) {
+        // Always render during menu/idle states, but throttle during gameplay
+        return true; // Simplified - let the gameLoop handle throttling
+    }handleAction(action) {
         if (!this.engine) return;
         
         // Initialize audio on first interaction
