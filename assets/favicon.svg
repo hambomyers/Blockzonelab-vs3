@@ -139,8 +139,10 @@
              Q 13.9 13.6 11.7 13.7
              L 4.1 13.6
              Q 2.3 13.5 2.4 11.6
-             Z"
-          fill="url(#sidesMatte16)"
+             Z"          fill="url(#sidesMatte16)"
           stroke="none"/>
   </g>
+  
+  <!-- Dark green BZL letters on top -->
+  <text x="8" y="7.5" class="bubble-text" fill="#0A1A0A">BZL</text>
 </svg>
