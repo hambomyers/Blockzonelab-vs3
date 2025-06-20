@@ -1,5 +1,5 @@
 name = "blockzone-api"
-main = "./worker/leaderboard.js"
+main = "./worker/tournament-manager.js"
 compatibility_date = "2023-12-01"
 
 [[kv_namespaces]]

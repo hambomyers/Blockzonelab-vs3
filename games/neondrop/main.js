@@ -19,8 +19,7 @@ import UniversalPaymentSystem from './UniversalPaymentSystem.js';
 import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
-import { GameOverSequence } from './ui/game-over-sequence.js';
-import { LocalLeaderboardSystem } from './ui/local-leaderboard-system.js';
+import { EverythingCard } from './ui/EverythingCard.js';
 import { TournamentUI } from './ui/tournament-ui.js';
 
 // Shared systems
@@ -51,7 +50,8 @@ class NeonDrop {
           // Alias for compatibility
         this.identity = this.playerIdentity;
         this.universalIdentity = this.playerIdentity; // Keep for existing code
-        this.leaderboard = new LocalLeaderboardSystem();
+        // Leaderboard will be handled by TournamentLeaderboard overlay
+        this.leaderboard = null;
         
         // Web3 systems (bulletproof)
         this.tournament = new DailyTournament();
@@ -68,7 +68,7 @@ class NeonDrop {
     setupGlobals() {        // Set up the complete global API that panels expect
         window.neonDrop = this;  // Panels expect the game instance directly
         window.leaderboard = this.leaderboard;
-        window.gameOverSequence = new GameOverSequence();
+        window.gameOverSequence = new EverythingCard();
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;
     }
@@ -137,7 +137,7 @@ class NeonDrop {
         this.tournamentUI.setTournament(this.tournament);
         
         // Create game over sequence
-        this.gameOverSequence = new GameOverSequence();
+        this.gameOverSequence = new EverythingCard();
           
         // Initialize professional UI state management with all UI elements
         this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.gameOverSequence);

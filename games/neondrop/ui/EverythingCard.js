@@ -1,18 +1,17 @@
 /**
- * AAA Game Over Sequence - Cinematic Stats Reveal
- * Beautiful, professional, and graceful even when API is down
+ * Everything Card - The Universal Identity Card
+ * Beautiful Netflix-style card for all game states
  */
 
-import { LocalLeaderboardSystem } from './local-leaderboard-system.js';
+import { TournamentLeaderboard } from '../../../shared/ui/TournamentLeaderboard.js';
 
-export class GameOverSequence {
-    constructor() {
+export class EverythingCard {    constructor() {
         this.container = null;
         this.finalScore = 0;
         this.isVisible = false;
         this.animationInProgress = false;
-        this.leaderboard = new LocalLeaderboardSystem();
         this.currentPlayer = null;
+        this.tournamentLeaderboard = new TournamentLeaderboard();
         
         this.createContainer();
     }
@@ -29,13 +28,11 @@ export class GameOverSequence {
         this.isVisible = true;
         this.animationInProgress = true;
 
-        // Get current player and submit score
-        this.currentPlayer = await this.leaderboard.getCurrentPlayer();
-        await this.leaderboard.submitScore({
-            playerId: this.currentPlayer.id,
-            playerName: this.currentPlayer.displayName,
-            score: this.finalScore
-        });
+        // Get the real player identity from the game system
+        await this.loadCurrentPlayer();
+
+        // Submit score to tournament API
+        await this.submitScoreToTournament();
 
         this.container.innerHTML = '';
         this.container.style.display = 'flex';
@@ -238,20 +235,9 @@ export class GameOverSequence {
             console.log('🔄 Fallback: reloading page');
             window.location.reload();
         }
-    }
-
-    showLeaderboard() {
-        this.hide();
-        
-        // Check if there's a leaderboard system
-        if (window.neonDrop && window.neonDrop.leaderboard) {
-            console.log('📊 Opening leaderboard via game system');
-            window.neonDrop.leaderboard.show();
-        } else {
-            // For now, just log - we'll implement this properly
-            console.log('📊 Leaderboard system not yet implemented');
-            alert('Leaderboard coming soon! 🏆');
-        }
+    }    showLeaderboard() {
+        console.log('🏆 Opening tournament leaderboard');
+        this.tournamentLeaderboard.show();
     }
 
     hide() {
@@ -305,5 +291,74 @@ export class GameOverSequence {
         });
         
         return container;
+    }
+
+    async submitScoreToTournament() {
+        try {
+            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/tournament/submit-score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: this.currentPlayer.id,
+                    playerName: this.currentPlayer.displayName,
+                    score: this.finalScore,
+                    walletAddress: '0x742d35Cc6548C6532C' // Future: get from wallet connection
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('🏆 Score submitted successfully:', result);
+                this.currentPlayer.rank = result.newRank;
+                this.currentPlayer.totalPlayers = result.totalPlayers;
+            } else {
+                console.warn('Failed to submit score to tournament');
+            }
+        } catch (error) {
+            console.error('Error submitting score:', error);
+        }
+    }
+
+    async loadCurrentPlayer() {
+        try {
+            // Get the real player identity from the main game system
+            if (window.neonDrop && window.neonDrop.playerIdentity) {
+                const identity = await window.neonDrop.playerIdentity.getIdentity();
+                
+                this.currentPlayer = {
+                    id: identity.playerId || 'anonymous_player',
+                    displayName: identity.displayName || identity.name || 'Anonymous Player',
+                    score: this.finalScore,
+                    walletAddress: identity.walletAddress || null,
+                    tier: identity.tier || 'anonymous'
+                };
+                
+                console.log('🎮 Loaded real player identity:', this.currentPlayer.displayName);
+            } else {
+                // Fallback if identity system isn't available
+                this.currentPlayer = {
+                    id: 'fallback_player',
+                    displayName: 'Player',
+                    score: this.finalScore,
+                    walletAddress: null,
+                    tier: 'anonymous'
+                };
+                
+                console.warn('⚠️ Using fallback player identity');
+            }
+        } catch (error) {
+            console.error('Failed to load player identity:', error);
+            
+            // Emergency fallback
+            this.currentPlayer = {
+                id: 'error_player',
+                displayName: 'Player',
+                score: this.finalScore,
+                walletAddress: null,
+                tier: 'anonymous'
+            };
+        }
     }
 }
