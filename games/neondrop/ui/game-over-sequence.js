@@ -43,17 +43,25 @@ export class GameOverSequence {
         await this.createCinematicReveal();
         
         this.animationInProgress = false;
-    }
-
-    async createCinematicReveal() {
+    }    async createCinematicReveal() {
         const card = document.createElement('div');
         card.className = 'game-over-card';
         this.container.appendChild(card);
 
-        const title = document.createElement('div');
-        title.className = 'game-over-title';
-        title.textContent = 'GAME OVER';
-        card.appendChild(title);
+        // Netflix-style Hero Section
+        const heroSection = document.createElement('div');
+        heroSection.className = 'hero-section';
+        card.appendChild(heroSection);
+
+        // Add chiclet title
+        const titleContainer = this.createNetflixChicletTitle();
+        heroSection.appendChild(titleContainer);
+
+        // Add subtitle
+        const subtitle = document.createElement('div');
+        subtitle.className = 'game-over-subtitle';
+        subtitle.textContent = 'DAILY LEADERBOARD CHALLENGE!';
+        heroSection.appendChild(subtitle);
 
         const divider = document.createElement('div');
         divider.className = 'game-over-divider';
@@ -264,5 +272,38 @@ export class GameOverSequence {
         if (this.container && this.container.parentNode) {
             this.container.parentNode.removeChild(this.container);
         }
+    }    createNetflixChicletTitle() {
+        const container = document.createElement('div');
+        container.className = 'netflix-chiclet-title';
+        
+        const words = ['NEON', 'DROP'];
+        
+        words.forEach((word, wordIndex) => {
+            const wordContainer = document.createElement('div');
+            wordContainer.className = 'chiclet-word';
+            
+            [...word].forEach((letter, letterIndex) => {
+                const chiclet = document.createElement('div');
+                chiclet.className = `chiclet ${wordIndex === 0 ? 'neon' : 'drop'}`;
+                chiclet.textContent = letter;
+                chiclet.style.animationDelay = `${(wordIndex * 4 + letterIndex) * 100}ms`;
+                wordContainer.appendChild(chiclet);
+            });
+            
+            container.appendChild(wordContainer);
+            
+            // Add 2 block spaces between NEON and DROP (like actual game)
+            if (wordIndex === 0) {
+                const spacer1 = document.createElement('div');
+                spacer1.className = 'chiclet-spacer';
+                container.appendChild(spacer1);
+                
+                const spacer2 = document.createElement('div');
+                spacer2.className = 'chiclet-spacer';
+                container.appendChild(spacer2);
+            }
+        });
+        
+        return container;
     }
 }

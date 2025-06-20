@@ -289,139 +289,178 @@ body {
     margin: 2rem 0;
 }
 
-.stat-row {
+/* Netflix-Style Hero Section - No frame, clean */
+.hero-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0; /* Remove padding */
+    background: none; /* Remove background frame */
+    border: none; /* Remove border frame */
+    border-radius: 0; /* Remove border radius */
+}
+
+/* Netflix-Style Chiclet Title - EXACT game branding match */
+.netflix-chiclet-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px; /* No gap, spacing handled by spacers */
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.chiclet-word {
+    display: flex;
+    gap: 0px; /* No gap between letters, just like in game */
+}
+
+.chiclet-spacer {
+    width: 24px; /* One block width for spacing */
+    height: 24px; /* Match chiclet height */
+}
+
+.chiclet {
+    width: 24px; /* EXACT game block size */
+    height: 24px; /* EXACT game block size */
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    margin: 0.5rem 0;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    border-left: 4px solid #888888;
-    transition: all 0.3s ease;
-}
-
-.stat-row:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-}
-
-.stat-icon {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
-
-.stat-label {
-    color: #bbbbbb;
-    font-weight: 500;
-    flex: 1;
-    text-align: left;
-}
-
-.stat-value {
-    color: #ffffff;
+    justify-content: center;
+    font-family: 'Bungee', monospace; /* ACTUAL game font from renderer.js */
     font-weight: bold;
-    font-size: 1.1rem;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    font-size: 28.8px; /* blockSize * 1.2 = 24 * 1.2 */
+    line-height: 1;
+    border-radius: 3px; /* Subtle rounding like game blocks */
+    position: relative;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000000; /* EXACT game stroke */
+    transform: translateY(-30px) scale(0.3);
+    opacity: 0;
+    animation: gameChicletEntrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transition: transform 0.3s ease;
 }
 
+.chiclet:hover {
+    transform: translateY(0) scale(1.05);
+}
+
+.chiclet.neon {
+    background: #FFFF00; /* EXACT game color for NEON */
+    color: transparent; /* Text is cut out, not colored */
+    box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.3),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(255, 255, 0, 0.5);
+    /* Text cutout effect using CSS */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(135deg, #FFFF00 0%, #FFD700 50%, #FFA500 100%);
+}
+
+.chiclet.drop {
+    background: #8A2BE2; /* EXACT game color for DROP */
+    color: transparent; /* Text is cut out, not colored */
+    box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.3),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(138, 43, 226, 0.5);
+    /* Text cutout effect using CSS */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(135deg, #8A2BE2 0%, #9932CC 50%, #DA70D6 100%);
+}
+
+@keyframes gameChicletEntrance {
+    0% {
+        transform: translateY(-30px) scale(0.3) rotate(10deg);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(2px) scale(1.1) rotate(-3deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Professional Game Over Buttons - Netflix Style */
 .game-over-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 12px;
+    justify-content: center;
     margin-top: 2rem;
+    flex-wrap: wrap;
 }
 
 .game-over-btn {
-    flex: 1;
-    padding: 1rem 1.5rem;
+    padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
-    pointer-events: auto;
-    z-index: 1000;
+    overflow: hidden;
 }
 
-.game-over-btn:hover {
-    transform: translateY(-4px) scale(1.02);
+.game-over-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
 }
 
-.game-over-btn:active {
-    transform: translateY(-1px) scale(0.98);
+.game-over-btn:hover::before {
+    left: 100%;
 }
 
 .game-over-btn.primary {
-    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    background: linear-gradient(135deg, #00ff88 0%, #00cc70 100%);
     color: #000000;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-    border: 2px solid #ffffff;
+    font-weight: 700;
 }
 
 .game-over-btn.primary:hover {
-    background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
-    box-shadow: 
-        0 8px 25px rgba(255, 255, 255, 0.4),
-        0 0 40px rgba(255, 255, 255, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    border-color: #ffffff;
+    background: linear-gradient(135deg, #00ff88 0%, #00ff88 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
 }
 
 .game-over-btn.secondary {
-    background: transparent;
-    color: #cccccc;
-    border: 2px solid #888888;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .game-over-btn.secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #ffffff;
-    color: #ffffff;
-    box-shadow: 
-        0 8px 25px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(255, 255, 255, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #444444 0%, #666666 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.game-over-btn:active {
+    transform: translateY(0);
 }
 
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .game-over-card {
-        min-width: 90vw;
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-    
-    .game-over-title {
-        font-size: 2rem;
-    }
-    
+/* Mobile responsiveness for buttons */
+@media (max-width: 600px) {
     .game-over-buttons {
         flex-direction: column;
+        align-items: center;
     }
     
-    .stat-row {
-        padding: 0.5rem;
+    .game-over-btn {
+        width: 200px;
     }
 }
