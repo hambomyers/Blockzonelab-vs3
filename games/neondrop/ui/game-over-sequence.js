@@ -27,20 +27,81 @@ export class GameOverSequence {
         console.log('🎭 Starting Elegant Fade & Rise sequence');
         
         this.startElegantSequence();
-    }
-
-    async startElegantSequence() {
-        // Step 1: Elegant game blur and fade
+    }    async startElegantSequence() {
+        // Step 1: Get username if needed (before showing sequence)
+        await this.ensurePlayerIdentity();
+        
+        // Step 2: Elegant game blur and fade
         await this.blurGameBoard();
         
-        // Step 2: Animated score count-up
+        // Step 3: Submit score to API
+        await this.submitScoreToAPI();
+        
+        // Step 4: Animated score count-up
         await this.showScoreAnimation();
         
-        // Step 3: Slide up the action card
+        // Step 5: Slide up the action card
         await this.slideUpActionCard();
         
-        // Step 4: Fade in action buttons
+        // Step 6: Fade in action buttons
         this.fadeInActionButtons();
+    }
+
+    /**
+     * Ensure player has username for leaderboard
+     */
+    async ensurePlayerIdentity() {
+        const game = window.neonDrop;
+        if (game && game.playerIdentity) {
+            await game.playerIdentity.getUsername();
+        }
+    }
+
+    /**
+     * Submit score to your Cloudflare API
+     */
+    async submitScoreToAPI() {
+        try {
+            const game = window.neonDrop;
+            if (!game || !game.playerIdentity) return;
+
+            const playerData = game.playerIdentity.getPlayerData();
+            const scoreData = {
+                score: this.finalScore,
+                replay_hash: this.generateReplayHash(),
+                metrics: {
+                    apm: this.gameMetrics.apm || 0,
+                    pps: this.gameMetrics.pps || 0,
+                    time: this.gameMetrics.time || 0
+                },
+                player_id: playerData.username || 'anonymous',
+                timestamp: Date.now()
+            };
+
+            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(scoreData)
+            });
+
+            const result = await response.json();
+            if (result.verified) {
+                console.log('✅ Score submitted successfully:', result);
+                this.scoreSubmissionResult = result;
+            } else {
+                console.warn('⚠️ Score submission failed:', result.reason);
+            }
+        } catch (error) {
+            console.error('❌ Score submission error:', error);
+        }
+    }
+
+    /**
+     * Generate simple replay hash for anti-cheat
+     */
+    generateReplayHash() {
+        const data = `${this.finalScore}-${Date.now()}-${Math.random()}`;
+        return btoa(data).replace(/[+/=]/g, '').substr(0, 16);
     }
 
     async blurGameBoard() {

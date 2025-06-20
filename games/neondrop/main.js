@@ -12,7 +12,7 @@ import { ViewportManager } from './core/viewport-manager.js';
 
 // Game configuration and identity
 import { Config } from './config.js';
-import { UniversalPlayerIdentity } from './UniversalPlayerIdentity.js';
+import { SimplePlayerIdentity } from './SimplePlayerIdentity.js';
 import UniversalPaymentSystem from './UniversalPaymentSystem.js';
 
 // UI components
@@ -42,12 +42,15 @@ class NeonDrop {
         this.guide = null;
         this.stats = null;
         this.tournamentUI = null;
-        this.uiStateManager = new UIStateManager();        // Universal systems (next-generation)
-        this.universalIdentity = new UniversalPlayerIdentity();
-        this.universalPayments = new UniversalPaymentSystem(this.universalIdentity);
+        this.uiStateManager = new UIStateManager();        // Simple identity system (username + optional wallet)
+        this.playerIdentity = new SimplePlayerIdentity();
         
-        // Alias for compatibility (universal identity replaces legacy)
-        this.identity = this.universalIdentity;
+        // Payment system
+        this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
+        
+        // Alias for compatibility
+        this.identity = this.playerIdentity;
+        this.universalIdentity = this.playerIdentity; // Keep for existing code
         this.leaderboard = new LeaderboardSystem();
         
         // Web3 systems (bulletproof)
