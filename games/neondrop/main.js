@@ -1,6 +1,7 @@
 /**
  * NeonDrop - Optimized Main Controller
  * Clean, bulletproof, 25% smaller than previous versions
+ * Cache bust: 2025-06-20 12:30
  */
 
 // Core game systems

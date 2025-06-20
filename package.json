@@ -1,0 +1,24 @@
+{
+  "name": "blockzone-labs",
+  "version": "1.0.0",
+  "description": "BlockZone Labs - Web3 Gaming Platform",
+  "scripts": {
+    "version-bump": "npm version patch --no-git-tag-version",
+    "version-bump-minor": "npm version minor --no-git-tag-version", 
+    "version-bump-major": "npm version major --no-git-tag-version",
+    "build": "npm run version-bump && node build-versioned.js",
+    "deploy": "npm run build && git add . && git commit -m \"Deploy v$(node -p \"require('./package.json').version\")\" && git push",
+    "serve": "python -m http.server 8000",
+    "dev": "npm run serve"
+  },
+  "deployments": {
+    "current": "blockzone-labs-v1-0-0",
+    "history": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/blockzone-labs"
+  },
+  "author": "BlockZone Labs",
+  "license": "MIT"
+}
