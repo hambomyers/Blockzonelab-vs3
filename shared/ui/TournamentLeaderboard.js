@@ -72,11 +72,16 @@ export class TournamentLeaderboard {
             console.log('🏆 Already visible, returning');
             return;
         }
-        
-        this.isVisible = true;
+          this.isVisible = true;
         console.log('🏆 Adding visible class to container');
         this.container.classList.add('visible');
-          console.log('🏆 Container classes after adding visible:', this.container.className);
+        
+        // Force visibility via inline styles to bypass CSS conflicts
+        this.container.style.opacity = '1';
+        this.container.style.visibility = 'visible';
+        this.container.style.display = 'flex';
+        
+        console.log('🏆 Container classes after adding visible:', this.container.className);
         console.log('🏆 Container style display:', this.container.style.display);
         
         // Debug computed styles
