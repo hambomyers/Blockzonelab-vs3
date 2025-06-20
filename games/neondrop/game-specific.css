@@ -234,3 +234,194 @@ body {
         order: 2;
     }
 }
+
+/* ===================================
+   AAA GAME OVER SEQUENCE STYLES - GRAYSCALE
+   ================================== */
+
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.90);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.game-over-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
+    border: 2px solid #888888;
+    border-radius: 16px;
+    padding: 2rem;
+    min-width: 400px;
+    max-width: 500px;
+    box-shadow: 
+        0 20px 40px rgba(255, 255, 255, 0.1),
+        0 0 80px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+}
+
+.game-over-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    letter-spacing: 2px;
+}
+
+.game-over-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #666666, transparent);
+    margin: 1.5rem 0;
+}
+
+.game-over-stats {
+    margin: 2rem 0;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border-left: 4px solid #888888;
+    transition: all 0.3s ease;
+}
+
+.stat-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.stat-label {
+    color: #bbbbbb;
+    font-weight: 500;
+    flex: 1;
+    text-align: left;
+}
+
+.stat-value {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.game-over-btn {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    pointer-events: auto;
+    z-index: 1000;
+}
+
+.game-over-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+.game-over-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.game-over-btn.primary {
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    border: 2px solid #ffffff;
+}
+
+.game-over-btn.primary:hover {
+    background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+    box-shadow: 
+        0 8px 25px rgba(255, 255, 255, 0.4),
+        0 0 40px rgba(255, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-color: #ffffff;
+}
+
+.game-over-btn.secondary {
+    background: transparent;
+    color: #cccccc;
+    border: 2px solid #888888;
+}
+
+.game-over-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 
+        0 8px 25px rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .game-over-card {
+        min-width: 90vw;
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .game-over-title {
+        font-size: 2rem;
+    }
+    
+    .game-over-buttons {
+        flex-direction: column;
+    }
+    
+    .stat-row {
+        padding: 0.5rem;
+    }
+}

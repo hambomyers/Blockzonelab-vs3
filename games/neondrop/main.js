@@ -12,7 +12,7 @@ import { ViewportManager } from './core/viewport-manager.js';
 
 // Game configuration and identity
 import { Config } from './config.js';
-import { SimplePlayerIdentity } from './SimplePlayerIdentity.js';
+import { UniversalPlayerIdentity } from './UniversalPlayerIdentity.js';
 import UniversalPaymentSystem from './UniversalPaymentSystem.js';
 
 // UI components
@@ -20,8 +20,7 @@ import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
 import { GameOverSequence } from './ui/game-over-sequence.js';
-import { LeaderboardSystem } from './ui/leaderboard.js';
-import { ElegantLeaderboardUI } from './ui/elegant-leaderboard-ui.js';
+import { LocalLeaderboardSystem } from './ui/local-leaderboard-system.js';
 import { TournamentUI } from './ui/tournament-ui.js';
 
 // Shared systems
@@ -44,17 +43,15 @@ class NeonDrop {
         this.stats = null;
         this.tournamentUI = null;
         this.uiStateManager = new UIStateManager();
-        
-        // Simple identity system (username + optional wallet)
-        this.playerIdentity = new SimplePlayerIdentity();
+          // Simple identity system (username + optional wallet)
+        this.playerIdentity = new UniversalPlayerIdentity();
         
         // Payment system
         this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
-        
-        // Alias for compatibility
+          // Alias for compatibility
         this.identity = this.playerIdentity;
         this.universalIdentity = this.playerIdentity; // Keep for existing code
-        this.leaderboard = new LeaderboardSystem();
+        this.leaderboard = new LocalLeaderboardSystem();
         
         // Web3 systems (bulletproof)
         this.tournament = new DailyTournament();
@@ -68,11 +65,9 @@ class NeonDrop {
         this.setupGlobals();
     }
 
-    setupGlobals() {
-        // Set up the complete global API that panels expect
+    setupGlobals() {        // Set up the complete global API that panels expect
         window.neonDrop = this;  // Panels expect the game instance directly
         window.leaderboard = this.leaderboard;
-        window.leaderboardUI = new ElegantLeaderboardUI(this.leaderboard);
         window.gameOverSequence = new GameOverSequence();
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;

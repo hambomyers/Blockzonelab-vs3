@@ -1,0 +1,10 @@
+FORCE CACHE REFRESH - Complete UI Panel Refactor
+Timestamp: 2025-06-20T${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}
+Build: UI-PANELS-SCROLLBAR-CENTERING-PROFESSIONAL
+Changes: 
+- Scrollbar-aware viewport centering
+- Perfect panel symmetry 
+- Professional positioning
+- White/greyscale design system
+- Block-based spacing
+CACHE_BUST_ID: ${Date.now()}
