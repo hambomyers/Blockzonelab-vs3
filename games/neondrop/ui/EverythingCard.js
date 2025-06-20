@@ -123,9 +123,11 @@ export class EverythingCard {    constructor() {
         playAgainBtn.className = 'game-over-btn primary';
         playAgainBtn.innerHTML = '� Free Game';
         playAgainBtn.style.pointerEvents = 'auto';
-        playAgainBtn.style.cursor = 'pointer';
-        playAgainBtn.onclick = (e) => {
-            console.log('� Free Game button clicked!');
+        playAgainBtn.style.cursor = 'pointer';        playAgainBtn.onclick = (e) => {
+            console.log('🎮 Free Game button clicked!');
+            console.log('🎮 Button element:', e.target);
+            console.log('🎮 Button className:', e.target.className);
+            console.log('🎮 Button innerHTML:', e.target.innerHTML);
             e.preventDefault();
             e.stopPropagation();
             this.playAgain();
@@ -135,9 +137,11 @@ export class EverythingCard {    constructor() {
         leaderboardBtn.className = 'game-over-btn secondary';
         leaderboardBtn.innerHTML = '🏆 Leaderboard';
         leaderboardBtn.style.pointerEvents = 'auto';
-        leaderboardBtn.style.cursor = 'pointer';
-        leaderboardBtn.onclick = (e) => {
+        leaderboardBtn.style.cursor = 'pointer';        leaderboardBtn.onclick = (e) => {
             console.log('🏆 Leaderboard button clicked!');
+            console.log('🏆 Button element:', e.target);
+            console.log('🏆 Button className:', e.target.className);
+            console.log('🏆 Button innerHTML:', e.target.innerHTML);
             e.preventDefault();
             e.stopPropagation();
             this.showLeaderboard();
@@ -223,11 +227,12 @@ export class EverythingCard {    constructor() {
         
         return `+${total} QUARTERS`;
     }    playAgain() {
+        console.log('🎮 playAgain() method called');
         this.hide();
         
         // Go to GAME_SESSION state (Press Space to Start) instead of all the way back to menu
         if (window.neonDrop && window.neonDrop.uiStateManager) {
-            console.log('� Going to game session state for fresh start');
+            console.log('🎮 Going to game session state for fresh start');
             window.neonDrop.engine.returnToMenu();
             window.neonDrop.uiStateManager.beginGameplay();
         } else {
@@ -235,7 +240,7 @@ export class EverythingCard {    constructor() {
             console.log('🔄 Fallback: reloading page');
             window.location.reload();
         }
-    }    showLeaderboard() {
+    }showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
         console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
         console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);

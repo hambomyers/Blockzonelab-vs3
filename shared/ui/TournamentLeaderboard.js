@@ -76,9 +76,15 @@ export class TournamentLeaderboard {
         this.isVisible = true;
         console.log('🏆 Adding visible class to container');
         this.container.classList.add('visible');
-        
-        console.log('🏆 Container classes after adding visible:', this.container.className);
+          console.log('🏆 Container classes after adding visible:', this.container.className);
         console.log('🏆 Container style display:', this.container.style.display);
+        
+        // Debug computed styles
+        const computedStyles = window.getComputedStyle(this.container);
+        console.log('🏆 Computed opacity:', computedStyles.opacity);
+        console.log('🏆 Computed visibility:', computedStyles.visibility);
+        console.log('🏆 Computed z-index:', computedStyles.zIndex);
+        console.log('🏆 Computed position:', computedStyles.position);
         
         // Load tournament data
         await this.loadTournamentData();
