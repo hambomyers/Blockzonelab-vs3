@@ -63,13 +63,22 @@ export class TournamentLeaderboard {
                 this.hide();
             }
         });
-    }
-
-    async show() {
-        if (this.isVisible) return;
+    }    async show() {
+        console.log('🏆 TournamentLeaderboard.show() called');
+        console.log('🏆 Current isVisible state:', this.isVisible);
+        console.log('🏆 Container element:', this.container);
+        
+        if (this.isVisible) {
+            console.log('🏆 Already visible, returning');
+            return;
+        }
         
         this.isVisible = true;
+        console.log('🏆 Adding visible class to container');
         this.container.classList.add('visible');
+        
+        console.log('🏆 Container classes after adding visible:', this.container.className);
+        console.log('🏆 Container style display:', this.container.style.display);
         
         // Load tournament data
         await this.loadTournamentData();
@@ -78,6 +87,8 @@ export class TournamentLeaderboard {
         this.refreshInterval = setInterval(() => {
             this.loadTournamentData();
         }, 30000);
+        
+        console.log('🏆 TournamentLeaderboard.show() completed');
     }
 
     hide() {

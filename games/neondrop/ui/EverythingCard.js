@@ -237,7 +237,15 @@ export class EverythingCard {    constructor() {
         }
     }    showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
-        this.tournamentLeaderboard.show();
+        console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
+        console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);
+        
+        if (this.tournamentLeaderboard && this.tournamentLeaderboard.show) {
+            this.tournamentLeaderboard.show();
+            console.log('🏆 Leaderboard show() method called');
+        } else {
+            console.error('❌ Tournament leaderboard not properly initialized');
+        }
     }
 
     hide() {
