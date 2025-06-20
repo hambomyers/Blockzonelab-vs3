@@ -1,65 +1,146 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
   <defs>
-    <!-- Red chiclet gradient -->
-    <radialGradient id="chicletGradient16" cx="50%" cy="50%" r="90%">
-      <stop offset="0%" style="stop-color:#FF7F7F;stop-opacity:1" />
-      <stop offset="60%" style="stop-color:#FF0000;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#BF0000;stop-opacity:1" />
+    <!-- Enhanced base with richer, less washed-out reds -->
+    <radialGradient id="baseGradient16" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" style="stop-color:#FF6666;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#DD2222;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#BB0000;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#770000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#440000;stop-opacity:1" />
     </radialGradient>
-
-    <!-- Highlight gradient -->
-    <radialGradient id="highlightGradient16" cx="30%" cy="30%" r="70%">
-      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
-      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.3" />
+    <!-- Matte zones - deliberate dull areas with minimal shine -->
+    <radialGradient id="matteZones16" cx="80%" cy="80%" r="90%">
+      <stop offset="0%" style="stop-color:#990000;stop-opacity:0.6" />
+      <stop offset="30%" style="stop-color:#660000;stop-opacity:0.4" />
+      <stop offset="60%" style="stop-color:#440000;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#220000;stop-opacity:0.2" />
+    </radialGradient>
+    <!-- Concentrated shiny highlight - upper left only -->
+    <radialGradient id="shinyHighlight16" cx="35%" cy="30%" r="40%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.75" />
+      <stop offset="15%" style="stop-color:#FFFFFF;stop-opacity:0.45" />
+      <stop offset="30%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.08" />
+      <stop offset="70%" style="stop-color:#FFFFFF;stop-opacity:0.02" />
       <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
     </radialGradient>
-
+    <!-- Enhanced horizontal shine under BZL text -->
+    <ellipse id="textUnderline" cx="8" cy="10.5" rx="5" ry="1.2"/>
+    <radialGradient id="underlineShine16" cx="50%" cy="85%" r="60%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.7" />
+      <stop offset="15%" style="stop-color:#FFCCCC;stop-opacity:0.5" />
+      <stop offset="30%" style="stop-color:#FF9999;stop-opacity:0.3" />
+      <stop offset="50%" style="stop-color:#FF6666;stop-opacity:0.15" />
+      <stop offset="70%" style="stop-color:#FF3333;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    <!-- Left and right matte enhancement under text -->
+    <linearGradient id="sidesMatte16" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#660000;stop-opacity:0.5" />
+      <stop offset="15%" style="stop-color:#880000;stop-opacity:0.3" />
+      <stop offset="25%" style="stop-color:#AA0000;stop-opacity:0.1" />
+      <stop offset="75%" style="stop-color:#AA0000;stop-opacity:0.1" />
+      <stop offset="85%" style="stop-color:#880000;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#660000;stop-opacity:0.5" />
+    </linearGradient>
+    <!-- Enhanced chiclet base gradient -->
+    <radialGradient id="chicletGradient16" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" style="stop-color:#FF4444;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#DD2222;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#AA0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#660000;stop-opacity:1" />
+    </radialGradient>
+    <!-- Refined highlight gradient -->
+    <radialGradient id="highlightGradient16" cx="35%" cy="25%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.6" />
+      <stop offset="20%" style="stop-color:#FFFFFF;stop-opacity:0.3" />
+      <stop offset="40%" style="stop-color:#FFFFFF;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    <!-- Bottom shine gradient -->
+    <linearGradient id="bottomShine16" x1="0%" y1="70%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0" />
+      <stop offset="30%" style="stop-color:#FFFFFF;stop-opacity:0.05" />
+      <stop offset="60%" style="stop-color:#FFFFFF;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.25" />
+    </linearGradient>
     <style>
-      .arcade-text-16 {
-        font-family: 'Courier New', monospace;
+      .bubble-text {
+        font-family: 'Arial Rounded MT Bold', 'Baloo', 'Freddoka One', 'Comic Sans MS', Arial, sans-serif;
         font-weight: bold;
-        font-size: 3.5px;
-        fill: #404040;
+        font-size: 6px;
         text-anchor: middle;
         dominant-baseline: central;
       }
     </style>
+    <!-- Mask for cutout text -->
+    <mask id="text-cutout">
+      <!-- White = visible, black = transparent cutout -->
+      <rect x="0" y="0" width="16" height="16" fill="white"/>
+      <text x="8" y="7.5" class="bubble-text" fill="black">BZL</text>
+    </mask>
   </defs>
-
-  <!-- Main chiclet body -->
-  <path d="M 2 4
-           Q 2 2 4 2
-           L 12 2
-           Q 14 2 14 4
-           L 14 12
-           Q 14 14 12 14
-           L 4 14
-           Q 2 14 2 12
-           Z"
-        fill="url(#chicletGradient16)"
-        stroke="#BF0000"
-        stroke-width="0.25"/>
-
-  <!-- 3D highlight -->
-  <path d="M 2 4
-           Q 2 2 4 2
-           L 12 2
-           Q 14 2 14 4
-           L 14 6
-           L 4 6
-           Q 3 6 3 5
-           L 3 4
-           Q 3 3 4 3
-           L 12 3
-           Q 13 3 13 4
-           Z"
-        fill="url(#highlightGradient16)"/>
-
-  <!-- Shine spots -->
-  <ellipse cx="5.5" cy="4.5" rx="0.7" ry="0.4" fill="rgba(255,255,255,0.7)"/>
-  <ellipse cx="10.5" cy="6" rx="0.5" ry="0.3" fill="rgba(255,255,255,0.5)"/>
-  <ellipse cx="7" cy="11" rx="0.4" ry="0.4" fill="rgba(255,255,255,0.4)"/>
-
-  <!-- BZL text centered -->
-  <text x="8" y="8" class="arcade-text-16">BZL</text>
+  <!-- Main chiclet body with cutout mask applied -->
+  <g mask="url(#text-cutout)">
+    <!-- Inner pillow body with subtle irregularity -->
+    <path d="M 2.4 4.1
+             Q 2.3 2.4 4.1 2.3
+             L 11.7 2.4
+             Q 13.6 2.3 13.9 4.1
+             L 13.8 11.5
+             Q 13.9 13.6 11.7 13.7
+             L 4.1 13.6
+             Q 2.3 13.5 2.4 11.6
+             Z"
+          fill="url(#chicletGradient16)"
+          stroke="none"/>
+    <!-- Pillow highlight -->
+    <path d="M 2.4 4.1
+             Q 2.3 2.4 4.1 2.3
+             L 11.7 2.4
+             Q 13.6 2.3 13.9 4.1
+             L 13.8 11.5
+             Q 13.9 13.6 11.7 13.7
+             L 4.1 13.6
+             Q 2.3 13.5 2.4 11.6
+             Z"
+          fill="url(#highlightGradient16)"
+          stroke="none"/>
+    <!-- Bottom edge hazy shine overlay -->
+    <path d="M 2.4 4.1
+             Q 2.3 2.4 4.1 2.3
+             L 11.7 2.4
+             Q 13.6 2.3 13.9 4.1
+             L 13.8 11.5
+             Q 13.9 13.6 11.7 13.7
+             L 4.1 13.6
+             Q 2.3 13.5 2.4 11.6
+             Z"
+          fill="url(#bottomShine16)"
+          stroke="none"/>
+    <!-- Horizontal underline shine -->
+    <path d="M 2.4 4.1
+             Q 2.3 2.4 4.1 2.3
+             L 11.7 2.4
+             Q 13.6 2.3 13.9 4.1
+             L 13.8 11.5
+             Q 13.9 13.6 11.7 13.7
+             L 4.1 13.6
+             Q 2.3 13.5 2.4 11.6
+             Z"
+          fill="url(#underlineShine16)"
+          stroke="none"/>
+    <!-- Matte zones for left and right under-text areas -->
+    <path d="M 2.4 4.1
+             Q 2.3 2.4 4.1 2.3
+             L 11.7 2.4
+             Q 13.6 2.3 13.9 4.1
+             L 13.8 11.5
+             Q 13.9 13.6 11.7 13.7
+             L 4.1 13.6
+             Q 2.3 13.5 2.4 11.6
+             Z"
+          fill="url(#sidesMatte16)"
+          stroke="none"/>
+  </g>
 </svg>
