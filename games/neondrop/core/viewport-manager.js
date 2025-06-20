@@ -14,9 +14,7 @@ export class ViewportManager {
     constructor() {
         this.BOARD_TILES_X = 10;
         this.BOARD_TILES_Y = 20;
-    }
-
-    calculateOptimalDimensions(viewportWidth, viewportHeight) {
+    }    calculateOptimalDimensions(viewportWidth, viewportHeight) {
         // Board is always 10 blocks wide
         const TOTAL_WIDTH_BLOCKS = 10;
 
@@ -31,26 +29,29 @@ export class ViewportManager {
         // Calculate total blocks needed
         const KNOWN_BLOCKS = HOLD_BLOCKS + SCORE_BLOCKS + BOARD_BLOCKS + TITLE_BLOCKS;
 
+        // SCROLLBAR-AWARE CENTERING: Calculate effective viewport width for all devices
+        const scrollbarWidth = viewportWidth - document.documentElement.clientWidth;
+        const effectiveViewportWidth = viewportWidth - scrollbarWidth;
+
         // Calculate optimal block size that fits the screen
         const blockSize = Math.floor(Math.min(
-            viewportWidth / TOTAL_WIDTH_BLOCKS,
+            effectiveViewportWidth / TOTAL_WIDTH_BLOCKS,
             (viewportHeight - BOTTOM_GAP - TITLE_GAP) / (KNOWN_BLOCKS + 2) // +2 for minimum spawn room
         ));
 
         // Board dimensions
         const boardWidth = blockSize * this.BOARD_TILES_X;
         const boardHeight = blockSize * this.BOARD_TILES_Y;
-        const boardX = (viewportWidth - boardWidth) / 2;
-
-        // Build layout from bottom up
+        // Center board in effective viewport (excluding scrollbar)
+        const boardX = (effectiveViewportWidth - boardWidth) / 2;        // Build layout from bottom up
         const holdY = viewportHeight - BOTTOM_GAP - (blockSize * HOLD_BLOCKS);
         const scoreY = holdY - (blockSize * SCORE_BLOCKS);
         const boardY = scoreY - boardHeight;
         const titleY = boardY - TITLE_GAP - blockSize;
 
-        // Calculate side panel widths
+        // Calculate side panel widths using effective viewport for perfect symmetry
         const leftPanelWidth = boardX;
-        const rightPanelWidth = viewportWidth - (boardX + boardWidth);
+        const rightPanelWidth = effectiveViewportWidth - (boardX + boardWidth);
 
         // Return complete dimension system
         return {

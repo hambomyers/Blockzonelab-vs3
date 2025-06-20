@@ -59,46 +59,27 @@ export class GuidePanel {    constructor() {
 
         // Use zone's centerX for positioning
         const collapsedLeft = leftZone.centerX - (collapsedWidth / 2);
-        const expandedLeft = leftZone.centerX - (expandedWidth / 2);
-
-        // Store positions
+        const expandedLeft = leftZone.centerX - (expandedWidth / 2);        // Store positions with professional title-level elevation
         this.container.dataset.collapsedLeft = collapsedLeft;
         this.container.dataset.expandedLeft = expandedLeft;
         this.container.dataset.collapsedWidth = collapsedWidth;
-        this.container.dataset.expandedWidth = expandedWidth;
-
-        // Set initial position
+        this.container.dataset.expandedWidth = expandedWidth;        // Position panels at board top + 1 block for professional spacing
+        const boardTop = zones.board.y;
+        const blockSize = window.neonDrop?.renderer?.dimensions?.blockSize || 32;
+        const panelElevation = boardTop + blockSize; // One block down from board top
+        
+        // Set initial position with proper block-based spacing
         this.container.style.left = `${collapsedLeft}px`;
         this.container.style.width = `${collapsedWidth}px`;
-    }
-
-    setupPanel() {
+        this.container.style.top = `${panelElevation}px`;
+    }setupPanel() {
         this.container = document.createElement('div');
         this.container.className = 'guide-panel';
-        this.container.innerHTML = this.getContent();
-
-        this.container.style.maxHeight = '80vh';
-        this.container.style.padding = '20px';
-        this.container.style.display = 'flex';
-        this.container.style.flexDirection = 'column';
-        this.container.style.alignItems = 'center';
-
-        this.container.style.transition = 'left 0.3s ease, width 0.3s ease, padding 0.3s ease';
-
-        const header = this.container.querySelector('.guide-header');
-        if (header) {
-            header.style.textAlign = 'center';
-            header.style.marginBottom = '20px';
-        }
-
-        const sections = this.container.querySelectorAll('.guide-section');
-        sections.forEach(section => {
-            section.style.marginBottom = '20px';
-            const h3 = section.querySelector('h3');
-            if (h3) {
-                h3.style.margin = '0 0 10px 0';
-            }
-        });
+        // Start with just the glowing word
+        this.container.innerHTML = 'GUIDE';
+        
+        // Store the full content for hover expansion
+        this.fullContent = this.getContent();
 
         document.body.appendChild(this.container);
 
@@ -124,36 +105,23 @@ export class GuidePanel {    constructor() {
         button.addEventListener('click', () => this.showMobileModal());
     }
 
-    setupEventListeners() {
-        // Desktop hover
+    setupEventListeners() {        // Desktop hover - expand to full content
         this.container.addEventListener('mouseenter', () => {
             this.container.classList.add('visible');
-            // JS controls ALL layout changes
+            // Switch to full content
+            this.container.innerHTML = this.fullContent;
+            // Expand size and position
             this.container.style.left = this.container.dataset.expandedLeft + 'px';
             this.container.style.width = this.container.dataset.expandedWidth + 'px';
-            this.container.style.padding = '20px 20px 68px 20px'; // top right bottom left - adds 48px to bottom
-            this.container.style.alignItems = 'flex-start';
-
-            // Ensure sections have proper transform
-            const sections = this.container.querySelectorAll('.guide-section');
-            sections.forEach(section => {
-                section.style.transform = 'translateX(0)';
-            });
         });
 
         this.container.addEventListener('mouseleave', () => {
             this.container.classList.remove('visible');
-            // Return to centered position
+            // Switch back to just the word
+            this.container.innerHTML = 'GUIDE';
+            // Return to collapsed position
             this.container.style.left = this.container.dataset.collapsedLeft + 'px';
             this.container.style.width = this.container.dataset.collapsedWidth + 'px';
-            this.container.style.padding = '20px';
-            this.container.style.alignItems = 'center';
-
-            // Reset section transforms
-            const sections = this.container.querySelectorAll('.guide-section');
-            sections.forEach(section => {
-                section.style.transform = 'translateX(-10px)';
-            });
         });
 
         // Mobile close

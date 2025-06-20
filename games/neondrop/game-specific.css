@@ -107,3 +107,130 @@ body {
         rgba(0, 15, 30, 0.03) 0%,
         rgba(0, 0, 0, 1) 80%) !important;
 }
+
+/* ============ PROFESSIONAL UI PANELS ============ */
+
+/* Base panel styling - collapsed state is professional white text */
+.guide-panel, .stats-panel {
+    position: absolute;
+    /* Top position will be set dynamically by JavaScript to match title */
+    background: transparent; /* No background in collapsed state */
+    border: none; /* No border in collapsed state */
+    border-radius: 8px;
+    padding: 0; /* No padding in collapsed state */
+    backdrop-filter: none; /* No blur in collapsed state */
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8); /* Professional white */
+    font-family: 'Orbitron', monospace;
+    text-shadow: none; /* No glow for professional look */
+    max-width: 280px;
+    z-index: 100;
+    box-shadow: none; /* No shadow in collapsed state */
+    transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1;
+    /* JavaScript will handle left/width positioning */
+}
+
+/* Expanded state on hover - professional greyscale */
+.guide-panel:hover, .stats-panel:hover {
+    background: rgba(40, 44, 52, 0.95); /* Dark greyscale background */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
+    padding: 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* Darker shadow */
+    font-size: 14px;
+    text-shadow: none;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9); /* White text */
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Panel Content - Professional Greyscale */
+.panel-title, .guide-header, .stats-header {
+    color: rgba(255, 255, 255, 0.95); /* Professional white */
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-family: 'Orbitron', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.panel-content, .guide-section, .stats-section {
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8); /* Slightly softer white */
+}
+
+.panel-content ul, .guide-section ul, .stats-section ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.panel-content li, .guide-section li, .stats-section li {
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.panel-content code, .guide-key {
+    background: rgba(255, 255, 255, 0.1); /* Subtle white background */
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.guide-section h3, .stats-section h3 {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    margin: 0 0 8px 0;
+}
+
+/* Professional stat values */
+.stat-value {
+    color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+}
+
+/* Panel Notifications */
+.panel-notification {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    color: #00d4ff;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.panel-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============ MOBILE RESPONSIVE PANELS ============ */
+@media (max-width: 768px) {
+    .guide-panel, .stats-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        margin: 10px;
+        max-width: calc(100vw - 40px);
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .guide-panel {
+        order: 1;
+    }
+    
+    .stats-panel {
+        order: 2;
+    }
+}

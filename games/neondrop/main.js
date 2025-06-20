@@ -33,16 +33,19 @@ class NeonDrop {
         // Core config & viewport
         this.config = new Config();
         this.viewport = new ViewportManager();
-        
-        // Game systems (null until initialized)
+          // Game systems (null until initialized)
         this.engine = null;
         this.renderer = null;
         this.audio = null;
-        this.input = null;        // UI systems
+        this.input = null;
+        
+        // UI systems
         this.guide = null;
         this.stats = null;
         this.tournamentUI = null;
-        this.uiStateManager = new UIStateManager();        // Simple identity system (username + optional wallet)
+        this.uiStateManager = new UIStateManager();
+        
+        // Simple identity system (username + optional wallet)
         this.playerIdentity = new SimplePlayerIdentity();
         
         // Payment system
@@ -61,10 +64,11 @@ class NeonDrop {
         this.running = false;
         this.lastTime = performance.now();
         this.accumulator = 0;
-        
-        // Global access for UI systems
+          // Global access for UI systems
         this.setupGlobals();
-    }    setupGlobals() {
+    }
+
+    setupGlobals() {
         // Set up the complete global API that panels expect
         window.neonDrop = this;  // Panels expect the game instance directly
         window.leaderboard = this.leaderboard;
@@ -96,9 +100,7 @@ class NeonDrop {
             console.error('❌ Init failed:', error);
             this.showError('Game failed to load. Please refresh.');
         }
-    }
-
-    setupDisplay() {
+    }    setupDisplay() {
         const game = document.getElementById('game');
         const bg = document.getElementById('bg');
         
@@ -432,9 +434,7 @@ class NeonDrop {
         }
         
         this.engine.handleInput(action);
-    }
-
-    handleResize() {
+    }    handleResize() {
         if (!this.renderer || !this.viewport) return;
         
         const dims = this.viewport.calculateOptimalDimensions(innerWidth, innerHeight);

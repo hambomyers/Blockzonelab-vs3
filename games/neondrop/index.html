@@ -37,12 +37,9 @@
         document.documentElement.style.setProperty('--has-touch', window.BlockZoneMobile._hasTouch ? '1' : '0');
         document.documentElement.style.setProperty('--has-keyboard', window.BlockZoneMobile.hasPhysicalKeyboard() ? '1' : '0');
         document.documentElement.style.setProperty('--needs-mobile-controls', window.BlockZoneMobile.needsMobileControls() ? '1' : '0');
-    </script>    <!-- Professional CSS Architecture -->
-    <link rel="stylesheet" href="../../assets/css/core-variables.css">
-    <link rel="stylesheet" href="../../assets/css/design-system.css">
-    <link rel="stylesheet" href="../../assets/css/utilities.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
-    <link rel="stylesheet" href="../../assets/css/blockzone-system.css">
+    </script>    <!-- Professional CSS Architecture -->    <link rel="stylesheet" href="../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../assets/css/utilities.css">    <link rel="stylesheet" href="../../assets/css/components.css">
+    <!-- REMOVED blockzone-system.css due to panel positioning conflicts -->
     <link rel="stylesheet" href="../../assets/css/mobile.css">
       <!-- Game-specific styles (minimal) -->
     <link rel="stylesheet" href="game-specific.css">
@@ -58,9 +55,12 @@
 </head>
 
 <body>
-    <!-- Game Canvas -->
-    <canvas id="bg"></canvas>
-    <canvas id="game"></canvas>
+    <!-- Game Container -->
+    <div id="gameContainer">
+        <!-- Game Canvas -->
+        <canvas id="bg"></canvas>
+        <canvas id="game"></canvas>
+    </div>
     
     <!-- Elegant Game Menu Card -->
     <div id="game-menu-card" class="game-menu-card">
