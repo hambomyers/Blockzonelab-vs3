@@ -1,7 +1,7 @@
 {
   "name": "Neon Drop",
   "short_name": "NeonDrop", 
-  "description": "Premium Tetris Challenge",
+  "description": "Block Puzzle Challenge",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
