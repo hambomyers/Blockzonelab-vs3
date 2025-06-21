@@ -83,10 +83,9 @@ class NeonDrop {
         try {
             await this.config.load();
             this.setupDisplay();
-            this.createSystems();
-            this.setupUI();
+            this.createSystems();            this.setupUI();
             this.cleanupOldUI(); // Remove any old tournament UI elements
-            this.setupGameMenuCard(); // Add our elegant menu card
+            this.showInitialEverythingCard(); // Show EverythingCard instead of menu card
             this.bindEvents();
             this.startLoop();
             
@@ -142,45 +141,20 @@ class NeonDrop {
           
         // Initialize professional UI state management with all UI elements
         this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.gameOverSequence);
+          // Initialize EverythingCard as the universal interface
+        this.everythingCard = new EverythingCard();
         
-        // Start with menu card visible instead of tournament modal
-        // The menu card will be shown in setupGameMenuCard()
-    }    setupGameMenuCard() {
-        // Wait for DOM to be ready
-        const initCard = () => {
-            this.gameMenuCard = document.getElementById('game-menu-card');
-            if (!this.gameMenuCard) {
-                console.error('Game menu card not found');
-                return;
-            }
-
-            // Add event listeners for menu buttons
-            const modeButtons = this.gameMenuCard.querySelectorAll('.game-mode-btn');
-            const backButton = this.gameMenuCard.querySelector('.back-btn');
-
-            modeButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const mode = e.currentTarget.dataset.mode;
-                    this.handleMenuChoice(mode);
-                });
-            });
-
-            if (backButton) {
-                backButton.addEventListener('click', () => {
-                    window.location.href = '/games/';
-                });
-            }
-
-            // Show the menu card initially
-            this.showGameMenuCard();
-        };        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCard);
-        } else {
-            initCard();
-        }
+        // Store globally for easy access
+        window.neonDrop.everythingCard = this.everythingCard;
     }
 
-    /**
+    showInitialEverythingCard() {
+        // Show EverythingCard in "welcome" mode for first-time or returning players
+        console.log('🎮 Showing initial EverythingCard');
+        
+        // Show it in a welcome/menu state (score = 0 means welcome mode)
+        this.everythingCard.show(0);
+    }    /**
      * Clean up any old/legacy UI elements that might still exist
      */
     cleanupOldUI() {
@@ -215,77 +189,6 @@ class NeonDrop {
         oldStyles.forEach(style => style.remove());
         
         console.log('✅ Old UI cleanup complete');
-    }
-
-    handleMenuChoice(mode) {
-        console.log('🎮 Menu choice:', mode);
-        
-        // Hide the menu card with elegant animation
-        this.hideGameMenuCard();
-        
-        // Handle different game modes
-        switch (mode) {
-            case 'tournament':
-                // Start tournament mode (existing functionality)
-                setTimeout(() => {
-                    if (this.tournamentUI) {
-                        this.tournamentUI.show();
-                    }
-                }, 300);
-                break;
-                
-            case 'free':
-                // Start free play mode
-                setTimeout(() => {
-                    this.startFreePlay();
-                }, 300);
-                break;
-                  case 'leaderboard':
-                // Show leaderboard
-                console.log('🏆 Leaderboard requested');
-                console.log('🔍 window.leaderboardUI exists:', !!window.leaderboardUI);
-                console.log('🔍 window.leaderboard exists:', !!window.leaderboard);
-                
-                setTimeout(() => {
-                    if (window.leaderboardUI) {
-                        console.log('🎯 Calling leaderboardUI.show()');
-                        window.leaderboardUI.show();
-                    } else {
-                        console.error('❌ window.leaderboardUI is null/undefined!');
-                        alert('Leaderboard system not initialized!');
-                    }
-                }, 300);
-                break;
-        }
-    }
-
-    startFreePlay() {
-        console.log('🎮 Starting free play mode');
-        // Start the game engine directly for free play
-        if (this.engine) {
-            this.engine.startFreePlay();
-        }
-        // Hide UI panels for clean gameplay
-        this.uiStateManager.setState('GAME_ACTIVE');
-    }
-
-    showGameMenuCard() {
-        if (this.gameMenuCard) {
-            this.gameMenuCard.classList.remove('hidden');
-        }
-    }
-
-    hideGameMenuCard() {
-        if (this.gameMenuCard) {
-            this.gameMenuCard.classList.add('hidden');
-        }
-    }
-
-    // Called from game over and other return-to-menu scenarios
-    showGameMenuCardWithDelay(delay = 1000) {
-        setTimeout(() => {
-            this.showGameMenuCard();
-        }, delay);
     }bindEvents() {        // Game over choices - now handled by state manager
         document.addEventListener('gameOverChoice', e => {
             const { action, score } = e.detail;
@@ -473,12 +376,13 @@ class NeonDrop {
         if (this.engine) {
             this.engine.returnToMenu();
         }
-        
-        // Let state manager handle the UI transitions
+          // Let state manager handle the UI transitions
         this.uiStateManager.returnToMenu();
         
-        // Show the elegant menu card after a brief delay
-        this.showGameMenuCardWithDelay(1000);
+        // Show the EverythingCard in welcome mode after a brief delay
+        setTimeout(() => {
+            this.everythingCard.show(0); // 0 score = welcome mode
+        }, 1000);
     }
 
     destroy() {

@@ -75,15 +75,30 @@ export class TournamentLeaderboard {
         }
           this.isVisible = true;
         console.log('🏆 Adding visible class to container');
-        this.container.classList.add('visible');
-        
-        // Force visibility via inline styles to bypass CSS conflicts
+        this.container.classList.add('visible');        // Force visibility via inline styles to bypass CSS conflicts
         this.container.style.opacity = '1';
         this.container.style.visibility = 'visible';
         this.container.style.display = 'flex';
+        this.container.style.zIndex = '9999';
+        
+        // Small delay to ensure styles are applied
+        setTimeout(() => {
+            this.container.style.opacity = '1';
+            this.container.style.visibility = 'visible';
+            this.container.style.display = 'flex';
+        }, 10);
+        this.container.style.zIndex = '9999'; // Even higher z-index
         
         console.log('🏆 Container classes after adding visible:', this.container.className);
         console.log('🏆 Container style display:', this.container.style.display);
+        console.log('🏆 Forced inline styles applied');
+        
+        // Add a small delay to ensure styles are applied
+        setTimeout(() => {
+            console.log('🏆 Delayed check - opacity:', this.container.style.opacity);
+            console.log('🏆 Delayed check - visibility:', this.container.style.visibility);
+            console.log('🏆 Delayed check - display:', this.container.style.display);
+        }, 100);
         
         // Debug computed styles
         const computedStyles = window.getComputedStyle(this.container);

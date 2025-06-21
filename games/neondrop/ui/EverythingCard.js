@@ -118,12 +118,11 @@ export class EverythingCard {    constructor() {
                 setTimeout(resolve, 600);
             }, delay);
         });
-    }    async createActionButtons(container) {
-        const playAgainBtn = document.createElement('button');
+    }    async createActionButtons(container) {        const playAgainBtn = document.createElement('button');
         playAgainBtn.className = 'game-over-btn primary';
-        playAgainBtn.innerHTML = '� Free Game';
+        playAgainBtn.innerHTML = '🎮 Neon Drop';
         playAgainBtn.style.pointerEvents = 'auto';
-        playAgainBtn.style.cursor = 'pointer';        playAgainBtn.onclick = (e) => {
+        playAgainBtn.style.cursor = 'pointer';playAgainBtn.onclick = (e) => {
             console.log('🎮 Free Game button clicked!');
             console.log('🎮 Button element:', e.target);
             console.log('🎮 Button className:', e.target.className);
@@ -240,14 +239,17 @@ export class EverythingCard {    constructor() {
             console.log('🔄 Fallback: reloading page');
             window.location.reload();
         }
-    }showLeaderboard() {
+    }    showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
         console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
         console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);
         
         if (this.tournamentLeaderboard && this.tournamentLeaderboard.show) {
-            this.tournamentLeaderboard.show();
-            console.log('🏆 Leaderboard show() method called');
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                this.tournamentLeaderboard.show();
+                console.log('🏆 Leaderboard show() method called');
+            }, 100);
         } else {
             console.error('❌ Tournament leaderboard not properly initialized');
         }
