@@ -258,15 +258,23 @@ body {
     background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
     border: 2px solid #888888;
     border-radius: 16px;
-    padding: 2rem;
-    min-width: 400px;
-    max-width: 500px;
+    padding: 2.5rem;
+    
+    /* Playing card proportions (5:7 ratio) with generous sizing */
+    width: 420px;
+    height: 588px;
+    
     box-shadow: 
         0 20px 40px rgba(255, 255, 255, 0.1),
         0 0 80px rgba(255, 255, 255, 0.05),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
+    
+    /* Flexbox for better content organization */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .game-over-title {

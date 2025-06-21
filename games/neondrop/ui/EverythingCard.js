@@ -118,40 +118,39 @@ export class EverythingCard {    constructor() {
                 setTimeout(resolve, 600);
             }, delay);
         });
-    }    async createActionButtons(container) {        const playAgainBtn = document.createElement('button');
-        playAgainBtn.className = 'game-over-btn primary';
-        playAgainBtn.innerHTML = '🎮 Neon Drop';
-        playAgainBtn.style.pointerEvents = 'auto';
-        playAgainBtn.style.cursor = 'pointer';playAgainBtn.onclick = (e) => {
-            console.log('🎮 Free Game button clicked!');
-            console.log('🎮 Button element:', e.target);
-            console.log('🎮 Button className:', e.target.className);
-            console.log('🎮 Button innerHTML:', e.target.innerHTML);
+    }    async createActionButtons(container) {
+        const playBtn = document.createElement('button');
+        playBtn.className = 'game-over-btn primary';
+        playBtn.innerHTML = '🎮 Play Neon Drop';
+        playBtn.style.pointerEvents = 'auto';
+        playBtn.style.cursor = 'pointer';
+        
+        playBtn.onclick = (e) => {
+            console.log('🎮 Play Neon Drop button clicked!');
             e.preventDefault();
             e.stopPropagation();
-            this.playAgain();
+            this.smartPlayNeonDrop();
         };
 
         const leaderboardBtn = document.createElement('button');
         leaderboardBtn.className = 'game-over-btn secondary';
         leaderboardBtn.innerHTML = '🏆 Leaderboard';
         leaderboardBtn.style.pointerEvents = 'auto';
-        leaderboardBtn.style.cursor = 'pointer';        leaderboardBtn.onclick = (e) => {
+        leaderboardBtn.style.cursor = 'pointer';
+        
+        leaderboardBtn.onclick = (e) => {
             console.log('🏆 Leaderboard button clicked!');
-            console.log('🏆 Button element:', e.target);
-            console.log('🏆 Button className:', e.target.className);
-            console.log('🏆 Button innerHTML:', e.target.innerHTML);
             e.preventDefault();
             e.stopPropagation();
             this.showLeaderboard();
         };
 
-        container.appendChild(playAgainBtn);
+        container.appendChild(playBtn);
         container.appendChild(leaderboardBtn);
 
-        await this.animateIn(playAgainBtn, 0);
+        await this.animateIn(playBtn, 0);
         await this.animateIn(leaderboardBtn, 100);
-    }    async getPersonalBest() {
+    }async getPersonalBest() {
         try {
             if (this.currentPlayer && this.currentPlayer.stats) {
                 return this.currentPlayer.stats.bestScore.toLocaleString();
@@ -225,21 +224,59 @@ export class EverythingCard {    constructor() {
         const total = baseEarnings + bonus;
         
         return `+${total} QUARTERS`;
-    }    playAgain() {
-        console.log('🎮 playAgain() method called');
+    }    smartPlayNeonDrop() {
+        console.log('🎮 Smart Play Neon Drop - checking player status');
+        
+        // Check if player has used their free daily game
+        const hasPlayedFreeGameToday = this.checkFreeGameStatus();
+        
+        if (hasPlayedFreeGameToday) {
+            console.log('💰 Player has used free game - showing payment prompt');
+            this.showPaymentPrompt();
+        } else {
+            console.log('🎮 Starting free daily game');
+            this.startFreeGame();
+        }
+    }
+    
+    checkFreeGameStatus() {
+        // Check localStorage for last free game date
+        const lastFreeGame = localStorage.getItem('lastFreeGameDate');
+        const today = new Date().toDateString();
+        
+        if (lastFreeGame === today) {
+            return true; // Already played today
+        }
+        
+        return false; // Haven't played today
+    }
+    
+    startFreeGame() {
+        // Mark that they've played their free game today
+        localStorage.setItem('lastFreeGameDate', new Date().toDateString());
+        
         this.hide();
         
-        // Go to GAME_SESSION state (Press Space to Start) instead of all the way back to menu
+        // Start the game in free mode
         if (window.neonDrop && window.neonDrop.uiStateManager) {
-            console.log('🎮 Going to game session state for fresh start');
+            console.log('🎮 Starting free daily game');
             window.neonDrop.engine.returnToMenu();
             window.neonDrop.uiStateManager.beginGameplay();
         } else {
-            // Fallback: reload the page
-            console.log('🔄 Fallback: reloading page');
             window.location.reload();
         }
-    }    showLeaderboard() {
+    }
+    
+    showPaymentPrompt() {
+        // TODO: Implement payment prompt for tournament entry
+        // For now, show an alert
+        alert('🏆 You\'ve used your free daily game!\n\n� Enter the tournament for $2.50 to play again and compete for prizes!\n\n(Payment system coming soon)');
+    }
+
+    playAgain() {
+        // Legacy method - now redirects to smart logic
+        this.smartPlayNeonDrop();
+    }showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
         console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
         console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);
