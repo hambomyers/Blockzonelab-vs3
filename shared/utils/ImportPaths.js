@@ -13,15 +13,26 @@ export const PLATFORM_PATHS = {
     CORE: {
         GAME_REGISTRY: `${SHARED_BASE}/platform/core/GameRegistry.js`,
         PLATFORM_CONFIG: `${SHARED_BASE}/platform/core/PlatformConfig.js`,
+        UNIFIED_MANAGER: `${SHARED_BASE}/platform/core/UnifiedManager.js`, // 🆕 Phase 1
         PLATFORM_MANAGER: `${SHARED_BASE}/platform/core/PlatformManager.js` // Future
     },
     
     // Platform systems
     SYSTEMS: {
         UNIVERSAL_IDENTITY: `${SHARED_BASE}/platform/systems/UniversalIdentity.js`,
+        UNIFIED_IDENTITY: `${SHARED_BASE}/platform/systems/UnifiedIdentity.js`, // 🆕 Phase 1 Consolidation
         UNIVERSAL_PAYMENTS: `${SHARED_BASE}/platform/systems/UniversalPayments.js`,
+        FREE_GAME_MANAGER: `${SHARED_BASE}/platform/systems/FreeGameManager.js`, // 🆕 Phase 1
         TOURNAMENT_MANAGER: `${SHARED_BASE}/platform/systems/TournamentManager.js`, // Future
         ANALYTICS_TRACKER: `${SHARED_BASE}/platform/systems/AnalyticsTracker.js` // Future
+    },
+    
+    // Security systems
+    SECURITY: {
+        DEVICE_FINGERPRINTER: `${SHARED_BASE}/platform/security/DeviceFingerprinter.js`, // 🆕 Phase 1
+        ANTI_ABUSE_MANAGER: `${SHARED_BASE}/platform/security/AntiAbuseManager.js`, // 🆕 Phase 1
+        RATE_LIMITER: `${SHARED_BASE}/platform/security/RateLimiter.js`, // Future
+        BEHAVIOR_ANALYZER: `${SHARED_BASE}/platform/security/BehaviorAnalyzer.js` // Future
     },
     
     // Platform UI components

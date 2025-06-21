@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 Unified Systems Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #4ECDC4;
+        }
+        
+        .test-result {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 4px solid #f44336;
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.2);
+            border-left: 4px solid #2196F3;
+        }
+        
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #FF9800;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .player-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ready { background: #4CAF50; }
+        .status-error { background: #f44336; }
+        .status-pending { background: #FF9800; }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4ECDC4;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Phase 1: Unified Systems Test Suite</h1>
+        <p><strong>Testing:</strong> Unified Identity, Anti-Abuse Protection, Free Game Management, Central Coordination</p>
+        
+        <div class="test-section">
+            <h2>System Initialization</h2>
+            <button onclick="initializeSystems()">Initialize Unified Systems</button>
+            <button onclick="checkSystemHealth()">Check System Health</button>
+            <div id="init-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Player Identity & Free Games</h2>
+            <button onclick="testPlayerCreation()">Create New Player</button>
+            <button onclick="testFreeGameFlow()">Test Free Game Flow</button>
+            <button onclick="testAntiAbuse()">Test Anti-Abuse Protection</button>
+            <div id="identity-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Game Operations</h2>
+            <button onclick="startTestGame()">Start Free Game</button>
+            <button onclick="completeTestGame()">Complete Game</button>
+            <button onclick="testUpgradeFlow()">Test Tier Upgrade</button>
+            <div id="game-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Player Status & Metrics</h2>
+            <button onclick="getPlayerStatus()">Get Player Status</button>
+            <button onclick="getSystemMetrics()">Get System Metrics</button>
+            <div id="status-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>System Integration Tests</h2>
+            <button onclick="runFullIntegrationTest()">Run Full Integration Test</button>
+            <button onclick="simulateMultipleUsers()">Simulate Multiple Users</button>
+            <div id="integration-results"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import unified systems
+        import { unifiedManager } from '/shared/platform/core/UnifiedManager.js';
+        import { unifiedIdentity } from '/shared/platform/systems/UnifiedIdentity.js';
+        import { freeGameManager } from '/shared/platform/systems/FreeGameManager.js';
+        import { antiAbuseManager } from '/shared/platform/security/AntiAbuseManager.js';
+        import { deviceFingerprinter } from '/shared/platform/security/DeviceFingerprinter.js';
+
+        // Make available globally for button clicks
+        window.unifiedManager = unifiedManager;
+        window.unifiedIdentity = unifiedIdentity;
+        window.freeGameManager = freeGameManager;
+        window.antiAbuseManager = antiAbuseManager;
+        window.deviceFingerprinter = deviceFingerprinter;
+
+        let currentGameSession = null;
+        let testResults = [];
+
+        // Test helper functions
+        function addResult(containerId, type, message, data = null) {
+            const container = document.getElementById(containerId);
+            const result = document.createElement('div');
+            result.className = `test-result ${type}`;
+            result.innerHTML = `
+                <strong>${type.toUpperCase()}:</strong> ${message}
+                ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+            container.appendChild(result);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        // System initialization tests
+        window.initializeSystems = async function() {
+            clearResults('init-results');
+            addResult('init-results', 'info', 'Starting unified systems initialization...');
+            
+            try {
+                const startTime = Date.now();
+                const result = await unifiedManager.initialize();
+                const duration = Date.now() - startTime;
+                
+                if (result.success) {
+                    addResult('init-results', 'success', `Systems initialized successfully in ${duration}ms`, {
+                        player: result.player,
+                        systems: result.systems
+                    });
+                    
+                    // Test device fingerprinting
+                    const fingerprint = await deviceFingerprinter.generateFingerprint();
+                    const stability = deviceFingerprinter.getStabilityScore();
+                    
+                    addResult('init-results', 'info', `Device fingerprint generated (stability: ${(stability * 100).toFixed(1)}%)`, {
+                        fingerprint: fingerprint.substring(0, 16) + '...',
+                        stabilityScore: stability
+                    });
+                    
+                } else {
+                    addResult('init-results', 'error', 'System initialization failed', result);
+                }
+            } catch (error) {
+                addResult('init-results', 'error', 'Initialization error: ' + error.message);
+            }
+        };
+
+        window.checkSystemHealth = async function() {
+            try {
+                const health = unifiedManager.getSystemHealth();
+                addResult('init-results', 'info', 'System health check completed', health);
+            } catch (error) {
+                addResult('init-results', 'error', 'Health check failed: ' + error.message);
+            }
+        };
+
+        // Player identity tests
+        window.testPlayerCreation = async function() {
+            clearResults('identity-results');
+            addResult('identity-results', 'info', 'Testing player creation and identity system...');
+            
+            try {
+                const player = await unifiedManager.getPlayer();
+                addResult('identity-results', 'success', 'Player identity loaded', {
+                    playerId: player.playerId,
+                    tier: player.tier,
+                    features: player.features,
+                    securityStatus: player.securityStatus
+                });
+                
+                // Test feature checking
+                const canPlayFree = unifiedIdentity.hasFeature('play_free_games');
+                const canEarnCrypto = unifiedIdentity.hasFeature('crypto_rewards');
+                
+                addResult('identity-results', 'info', 'Feature permissions', {
+                    canPlayFreeGames: canPlayFree,
+                    canEarnCrypto: canEarnCrypto,
+                    allFeatures: unifiedIdentity.getAvailableFeatures()
+                });
+                
+            } catch (error) {
+                addResult('identity-results', 'error', 'Player creation failed: ' + error.message);
+            }
+        };
+
+        window.testFreeGameFlow = async function() {
+            try {
+                const player = await unifiedManager.getPlayer();
+                
+                // Check free game eligibility
+                const eligibility = await freeGameManager.checkFreeGameEligibility(
+                    player.playerId,
+                    player.securityStatus
+                );
+                
+                addResult('identity-results', eligibility.eligible ? 'success' : 'warning', 
+                    'Free game eligibility check', eligibility);
+                
+                // Get player status
+                const status = freeGameManager.getPlayerStatus(player.playerId);
+                addResult('identity-results', 'info', 'Player free game status', status);
+                
+            } catch (error) {
+                addResult('identity-results', 'error', 'Free game flow test failed: ' + error.message);
+            }
+        };
+
+        window.testAntiAbuse = async function() {
+            try {
+                const fingerprint = await deviceFingerprinter.generateFingerprint();
+                
+                // Simulate validation
+                const validation = await antiAbuseManager.validateNewPlayer(
+                    fingerprint,
+                    '127.0.0.1', // Test IP
+                    { timestamp: Date.now() }
+                );
+                
+                addResult('identity-results', validation.allowed ? 'success' : 'warning',
+                    'Anti-abuse validation', validation);
+                
+                // Get security metrics
+                const metrics = antiAbuseManager.getSecurityMetrics();
+                addResult('identity-results', 'info', 'Security metrics', metrics);
+                
+            } catch (error) {
+                addResult('identity-results', 'error', 'Anti-abuse test failed: ' + error.message);
+            }
+        };
+
+        // Game operation tests
+        window.startTestGame = async function() {
+            clearResults('game-results');
+            addResult('game-results', 'info', 'Starting test game...');
+            
+            try {
+                const result = await unifiedManager.startGame('neondrop', { isFreeGame: true });
+                
+                if (result.success) {
+                    currentGameSession = result.gameSession;
+                    addResult('game-results', 'success', 'Game started successfully', {
+                        gameSession: result.gameSession,
+                        remainingFreeGames: result.remainingFreeGames,
+                        showConversionPrompt: result.showConversionPrompt
+                    });
+                } else {
+                    addResult('game-results', 'error', 'Game start failed', result);
+                }
+            } catch (error) {
+                addResult('game-results', 'error', 'Game start error: ' + error.message);
+            }
+        };
+
+        window.completeTestGame = async function() {
+            if (!currentGameSession) {
+                addResult('game-results', 'warning', 'No active game session. Start a game first.');
+                return;
+            }
+            
+            try {
+                const gameStats = {
+                    score: Math.floor(Math.random() * 10000) + 1000,
+                    duration: 120000, // 2 minutes
+                    completed: true,
+                    cheated: false
+                };
+                
+                const result = await unifiedManager.completeGame(currentGameSession, gameStats);
+                
+                if (result.success) {
+                    addResult('game-results', 'success', 'Game completed successfully', {
+                        gameStats,
+                        rewards: result.rewards,
+                        upgradePrompt: result.upgradePrompt
+                    });
+                    currentGameSession = null;
+                } else {
+                    addResult('game-results', 'error', 'Game completion failed', result);
+                }
+            } catch (error) {
+                addResult('game-results', 'error', 'Game completion error: ' + error.message);
+            }
+        };
+
+        window.testUpgradeFlow = async function() {
+            try {
+                const player = await unifiedManager.getPlayer();
+                
+                if (player.tier === 'free') {
+                    // Test social upgrade
+                    const socialData = {
+                        email: 'test@example.com',
+                        provider: 'email'
+                    };
+                    
+                    const result = await unifiedManager.upgradePlayer('social', socialData);
+                    
+                    if (result.success) {
+                        addResult('game-results', 'success', 'Player upgraded to social tier', result.player);
+                    } else {
+                        addResult('game-results', 'error', 'Upgrade failed', result);
+                    }
+                } else {
+                    addResult('game-results', 'info', `Player already at ${player.tier} tier`);
+                }
+            } catch (error) {
+                addResult('game-results', 'error', 'Upgrade test error: ' + error.message);
+            }
+        };
+
+        // Status and metrics tests
+        window.getPlayerStatus = async function() {
+            clearResults('status-results');
+            
+            try {
+                const status = await unifiedManager.getPlayerStatus();
+                addResult('status-results', 'success', 'Player status retrieved', status);
+                
+                // Create visual status display
+                const statusDiv = document.createElement('div');
+                statusDiv.className = 'player-card';
+                statusDiv.innerHTML = `
+                    <h3>Player Overview</h3>
+                    <p><strong>ID:</strong> ${status.player.playerId}</p>
+                    <p><strong>Tier:</strong> ${status.player.tier.toUpperCase()}</p>
+                    <p><strong>Games Played:</strong> ${status.player.gamesPlayed}</p>
+                    <p><strong>Free Games Available:</strong> ${status.freeGames.availableCredits}</p>
+                    <p><strong>Security Risk:</strong> ${status.security.riskLevel}</p>
+                `;
+                document.getElementById('status-results').appendChild(statusDiv);
+                
+            } catch (error) {
+                addResult('status-results', 'error', 'Status retrieval failed: ' + error.message);
+            }
+        };
+
+        window.getSystemMetrics = async function() {
+            try {
+                const freeGameMetrics = freeGameManager.getSystemMetrics();
+                const securityMetrics = antiAbuseManager.getSecurityMetrics();
+                const systemHealth = unifiedManager.getSystemHealth();
+                
+                addResult('status-results', 'info', 'System metrics', {
+                    freeGames: freeGameMetrics,
+                    security: securityMetrics,
+                    health: systemHealth
+                });
+                
+                // Create visual metrics display
+                const metricsDiv = document.createElement('div');
+                metricsDiv.innerHTML = `
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">${freeGameMetrics.totalPlayers}</div>
+                            <div>Total Players</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${freeGameMetrics.conversionRate}</div>
+                            <div>Conversion Rate</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${securityMetrics.blockedAttempts}</div>
+                            <div>Blocked Attempts</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${systemHealth.initialized ? 'Ready' : 'Error'}</div>
+                            <div>System Status</div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('status-results').appendChild(metricsDiv);
+                
+            } catch (error) {
+                addResult('status-results', 'error', 'Metrics retrieval failed: ' + error.message);
+            }
+        };
+
+        // Integration tests
+        window.runFullIntegrationTest = async function() {
+            clearResults('integration-results');
+            addResult('integration-results', 'info', 'Running full integration test...');
+            
+            const tests = [
+                { name: 'System Initialization', fn: () => unifiedManager.initialize() },
+                { name: 'Player Creation', fn: () => unifiedManager.getPlayer() },
+                { name: 'Game Start', fn: () => unifiedManager.startGame('neondrop') },
+                { name: 'Player Status', fn: () => unifiedManager.getPlayerStatus() }
+            ];
+            
+            let passed = 0;
+            let failed = 0;
+            
+            for (const test of tests) {
+                try {
+                    const startTime = Date.now();
+                    await test.fn();
+                    const duration = Date.now() - startTime;
+                    
+                    addResult('integration-results', 'success', 
+                        `✓ ${test.name} (${duration}ms)`);
+                    passed++;
+                } catch (error) {
+                    addResult('integration-results', 'error', 
+                        `✗ ${test.name}: ${error.message}`);
+                    failed++;
+                }
+            }
+            
+            addResult('integration-results', passed === tests.length ? 'success' : 'warning',
+                `Integration test complete: ${passed} passed, ${failed} failed`);
+        };
+
+        window.simulateMultipleUsers = async function() {
+            addResult('integration-results', 'info', 'Simulating multiple users...');
+            
+            const userCount = 5;
+            const results = [];
+            
+            for (let i = 0; i < userCount; i++) {
+                try {
+                    // Clear storage to simulate new user
+                    const tempPlayerId = localStorage.getItem('bz_free_player_id');
+                    localStorage.removeItem('bz_free_player_id');
+                    localStorage.removeItem('bz_player_data');
+                    
+                    // Create new user instance
+                    const manager = await unifiedManager.initialize();
+                    const player = await unifiedManager.getPlayer();
+                    
+                    results.push({
+                        userId: i + 1,
+                        playerId: player.playerId,
+                        tier: player.tier,
+                        securityRisk: player.securityStatus?.riskLevel
+                    });
+                    
+                    // Restore original user
+                    if (tempPlayerId) {
+                        localStorage.setItem('bz_free_player_id', tempPlayerId);
+                    }
+                    
+                } catch (error) {
+                    results.push({
+                        userId: i + 1,
+                        error: error.message
+                    });
+                }
+            }
+            
+            addResult('integration-results', 'info', 
+                `Simulated ${userCount} users`, results);
+        };
+
+        // Auto-initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Phase 1 Test Suite Ready');
+            console.log('Click "Initialize Unified Systems" to begin testing');
+        });
+    </script>
+</body>
+</html>
