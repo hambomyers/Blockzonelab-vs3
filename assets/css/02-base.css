@@ -1,0 +1,17 @@
+/* 02-base.css - Basic HTML resets and body styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background-color: var(--dark-bg);
+  color: var(--text-primary);
+}
+
+body {
+  line-height: 1.6;
+  min-height: 100vh;
+}

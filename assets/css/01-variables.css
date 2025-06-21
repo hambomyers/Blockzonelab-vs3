@@ -1,0 +1,28 @@
+/* 01-variables.css - Colors, fonts, spacing ONLY */
+:root {
+  /* 80s Arcade Colors */
+  --neon-blue: #00f5ff;
+  --hot-pink: #ff1493;
+  --laser-green: #39ff14;
+  --electric-purple: #8a2be2;
+  
+  /* Background Colors */
+  --dark-bg: #0a0a0f;
+  --card-bg: #1a1a2e;
+  --border-color: #333344;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8cc;
+  --text-accent: var(--neon-blue);
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  
+  /* Typography */
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-game: 'Courier New', monospace;
+}

@@ -1,0 +1,89 @@
+/* ===================================================================
+   BLOCKZONE LAB - PROFESSIONAL DESIGN SYSTEM
+   AAA Gaming Platform Foundation
+   =================================================================== */
+
+:root {
+    /* Professional Gaming Colors */
+    --bz-primary: #00f5ff;
+    --bz-secondary: #ff00aa;
+    --bz-accent: #ffd700;
+    --bz-dark: #0a0d13;
+    --bz-dark-light: #1a1d29;
+    --bz-light: #ffffff;
+    --bz-gray: #666;
+    
+    /* Typography - Gaming Fonts */
+    --bz-font-base: 'Inter', sans-serif;
+    --bz-font-heading: 'Orbitron', monospace;
+    
+    /* Professional Spacing */
+    --bz-space-xs: 0.25rem;
+    --bz-space-sm: 0.5rem;
+    --bz-space-md: 1rem;
+    --bz-space-lg: 1.5rem;
+    --bz-space-xl: 2rem;
+    --bz-space-2xl: 3rem;
+    
+    /* Professional Borders */
+    --bz-radius: 0.75rem;
+    --bz-radius-lg: 1rem;
+    
+    /* Smooth Transitions */
+    --bz-transition: 0.3s ease;
+    
+    /* Professional Card Dimensions */
+    --card-width: 280px;
+    --card-height: 392px;
+}
+
+/* Professional Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--bz-font-base);
+    background: var(--bz-dark);
+    color: var(--bz-light);
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Professional Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--bz-font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Professional Containers */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--bz-space-md);
+}
+
+/* PROFESSIONAL GRID SYSTEM - CENTERED */
+.grid {
+    display: grid;
+    gap: var(--bz-space-xl);
+    justify-content: center;
+    justify-items: center;
+    padding: var(--bz-space-2xl) 0;
+}
+
+.grid-2 { 
+    grid-template-columns: repeat(2, var(--card-width));
+    max-width: calc(var(--card-width) * 2 + var(--bz-space-xl));
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .grid-2 { 
+        grid-template-columns: 1fr; 
+        max-width: var(--card-width);
+    }
+}

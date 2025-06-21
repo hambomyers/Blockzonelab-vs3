@@ -1,0 +1,466 @@
+/**
+ * NEON DROP - GAME SPECIFIC STYLES
+ * Only styles unique to this specific game
+ * Reusable components moved to shared design system
+ */
+
+/* ============ GAME CANVAS RENDERING ============ */
+#game {
+    /* Enhanced canvas rendering for Neon Drop */
+    filter: brightness(1.03) contrast(1.01);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+#bg {
+    /* Background canvas rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+/* ============ GAME LAYOUT ============ */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Inter', Arial, sans-serif;
+    color: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+#bg, #game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+#bg {
+    z-index: 1;
+}
+
+#game {
+    z-index: 2;
+}
+
+#ui {
+    position: fixed;
+    top: 0;
+    left: 0;    right: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* ============ MOBILE RESPONSIVE GAME ADJUSTMENTS ============ */
+@media (max-width: 768px) {
+    /* Mobile-specific game adjustments */
+    #gameContainer {
+        /* Ensure full viewport on mobile */
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    }
+}
+
+/* ============ ENHANCED RENDERING ============ */
+#game {
+    /* Enhanced canvas rendering - subtle brightness boost */
+    filter: brightness(1.03) contrast(1.01);
+    /* Better pixel rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+#bg {
+    /* Better pixel rendering for background */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+body {
+    /* Very subtle ambient enhancement */
+    background: radial-gradient(ellipse at center,
+        rgba(0, 15, 30, 0.03) 0%,
+        rgba(0, 0, 0, 1) 80%) !important;
+}
+
+/* ============ PROFESSIONAL UI PANELS ============ */
+
+/* Base panel styling - collapsed state is professional white text */
+.guide-panel, .stats-panel {
+    position: absolute;
+    /* Top position will be set dynamically by JavaScript to match title */
+    background: transparent; /* No background in collapsed state */
+    border: none; /* No border in collapsed state */
+    border-radius: 8px;
+    padding: 0; /* No padding in collapsed state */
+    backdrop-filter: none; /* No blur in collapsed state */
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8); /* Professional white */
+    font-family: 'Orbitron', monospace;
+    text-shadow: none; /* No glow for professional look */
+    max-width: 280px;
+    z-index: 100;
+    box-shadow: none; /* No shadow in collapsed state */
+    transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1;
+    /* JavaScript will handle left/width positioning */
+}
+
+/* Expanded state on hover - professional greyscale */
+.guide-panel:hover, .stats-panel:hover {
+    background: rgba(40, 44, 52, 0.95); /* Dark greyscale background */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
+    padding: 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* Darker shadow */
+    font-size: 14px;
+    text-shadow: none;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9); /* White text */
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Panel Content - Professional Greyscale */
+.panel-title, .guide-header, .stats-header {
+    color: rgba(255, 255, 255, 0.95); /* Professional white */
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-family: 'Orbitron', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.panel-content, .guide-section, .stats-section {
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8); /* Slightly softer white */
+}
+
+.panel-content ul, .guide-section ul, .stats-section ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.panel-content li, .guide-section li, .stats-section li {
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.panel-content code, .guide-key {
+    background: rgba(255, 255, 255, 0.1); /* Subtle white background */
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.guide-section h3, .stats-section h3 {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    margin: 0 0 8px 0;
+}
+
+/* Professional stat values */
+.stat-value {
+    color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+}
+
+/* Panel Notifications */
+.panel-notification {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    color: #00d4ff;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.panel-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============ MOBILE RESPONSIVE PANELS ============ */
+@media (max-width: 768px) {
+    .guide-panel, .stats-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        margin: 10px;
+        max-width: calc(100vw - 40px);
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .guide-panel {
+        order: 1;
+    }
+    
+    .stats-panel {
+        order: 2;
+    }
+}
+
+/* ===================================
+   AAA GAME OVER SEQUENCE STYLES - GRAYSCALE
+   ================================== */
+
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.90);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.game-over-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
+    border: 2px solid #888888;
+    border-radius: 16px;
+    padding: 2rem;
+    min-width: 400px;
+    max-width: 500px;
+    box-shadow: 
+        0 20px 40px rgba(255, 255, 255, 0.1),
+        0 0 80px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+}
+
+.game-over-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    letter-spacing: 2px;
+}
+
+.game-over-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #666666, transparent);
+    margin: 1.5rem 0;
+}
+
+.game-over-stats {
+    margin: 2rem 0;
+}
+
+/* Netflix-Style Hero Section - No frame, clean */
+.hero-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0; /* Remove padding */
+    background: none; /* Remove background frame */
+    border: none; /* Remove border frame */
+    border-radius: 0; /* Remove border radius */
+}
+
+/* Netflix-Style Chiclet Title - EXACT game branding match */
+.netflix-chiclet-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px; /* No gap, spacing handled by spacers */
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.chiclet-word {
+    display: flex;
+    gap: 0px; /* No gap between letters, just like in game */
+}
+
+.chiclet-spacer {
+    width: 24px; /* One block width for spacing */
+    height: 24px; /* Match chiclet height */
+}
+
+.chiclet {
+    width: 24px; /* EXACT game block size */
+    height: 24px; /* EXACT game block size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bungee', monospace; /* ACTUAL game font from renderer.js */
+    font-weight: bold;
+    font-size: 28.8px; /* blockSize * 1.2 = 24 * 1.2 */
+    line-height: 1;
+    border-radius: 3px; /* Subtle rounding like game blocks */
+    position: relative;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000000; /* EXACT game stroke */
+    transform: translateY(-30px) scale(0.3);
+    opacity: 0;
+    animation: gameChicletEntrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transition: transform 0.3s ease;
+}
+
+.chiclet:hover {
+    transform: translateY(0) scale(1.05);
+}
+
+.chiclet.neon {
+    background: #FFFF00; /* EXACT game color for NEON */
+    color: transparent; /* Text is cut out, not colored */
+    box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.3),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(255, 255, 0, 0.5);
+    /* Text cutout effect using CSS */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(135deg, #FFFF00 0%, #FFD700 50%, #FFA500 100%);
+}
+
+.chiclet.drop {
+    background: #8A2BE2; /* EXACT game color for DROP */
+    color: transparent; /* Text is cut out, not colored */
+    box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.3),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(138, 43, 226, 0.5);
+    /* Text cutout effect using CSS */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(135deg, #8A2BE2 0%, #9932CC 50%, #DA70D6 100%);
+}
+
+@keyframes gameChicletEntrance {
+    0% {
+        transform: translateY(-30px) scale(0.3) rotate(10deg);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(2px) scale(1.1) rotate(-3deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Professional Game Over Buttons - Netflix Style */
+.game-over-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.game-over-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-over-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.game-over-btn:hover::before {
+    left: 100%;
+}
+
+.game-over-btn.primary {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc70 100%);
+    color: #000000;
+    font-weight: 700;
+}
+
+.game-over-btn.primary:hover {
+    background: linear-gradient(135deg, #00ff88 0%, #00ff88 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
+}
+
+.game-over-btn.secondary {
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-over-btn.secondary:hover {
+    background: linear-gradient(135deg, #444444 0%, #666666 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.game-over-btn:active {
+    transform: translateY(0);
+}
+
+/* Mobile responsiveness for buttons */
+@media (max-width: 600px) {
+    .game-over-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .game-over-btn {
+        width: 200px;
+    }
+}
