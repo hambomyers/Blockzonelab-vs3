@@ -23,6 +23,10 @@ export const PLATFORM_PATHS = {
         UNIFIED_IDENTITY: `${SHARED_BASE}/platform/systems/UnifiedIdentity.js`, // 🆕 Phase 1 Consolidation
         UNIVERSAL_PAYMENTS: `${SHARED_BASE}/platform/systems/UniversalPayments.js`,
         FREE_GAME_MANAGER: `${SHARED_BASE}/platform/systems/FreeGameManager.js`, // 🆕 Phase 1
+        
+        // 🆕 PHASE 2: UNIFIED LEADERBOARD SYSTEM
+        UNIFIED_LEADERBOARD: `${SHARED_BASE}/platform/systems/UnifiedLeaderboard.js`, // 🆕 Phase 2
+        
         TOURNAMENT_MANAGER: `${SHARED_BASE}/platform/systems/TournamentManager.js`, // Future
         ANALYTICS_TRACKER: `${SHARED_BASE}/platform/systems/AnalyticsTracker.js` // Future
     },
@@ -38,8 +42,26 @@ export const PLATFORM_PATHS = {
     // Platform UI components
     UI: {
         PLATFORM_CARD: `${SHARED_BASE}/platform/ui/PlatformCard.js`,
+        
+        // 🆕 PHASE 2: UNIFIED LEADERBOARD UI COMPONENTS
+        LEADERBOARD_COMPONENTS: `${SHARED_BASE}/platform/ui/LeaderboardComponents.js`, // 🆕 Phase 2
+        
         PLATFORM_HEADER: `${SHARED_BASE}/platform/ui/PlatformHeader.js`, // Future
         PLATFORM_MODALS: `${SHARED_BASE}/platform/ui/PlatformModals.js` // Future
+    },
+    
+    // 🆕 PHASE 2: REAL-TIME SYSTEMS
+    REALTIME: {
+        LEADERBOARD_SOCKET: `${SHARED_BASE}/platform/realtime/LeaderboardSocket.js`, // 🆕 Phase 2
+        WEBSOCKET_MANAGER: `${SHARED_BASE}/platform/realtime/WebSocketManager.js`, // Future
+        EVENT_BROADCASTER: `${SHARED_BASE}/platform/realtime/EventBroadcaster.js` // Future
+    },
+    
+    // 🆕 PHASE 2: TOURNAMENT MANAGEMENT
+    TOURNAMENTS: {
+        TOURNAMENT_MANAGER: `${SHARED_BASE}/platform/tournaments/TournamentManager.js`, // 🆕 Phase 2
+        TOURNAMENT_SCHEDULER: `${SHARED_BASE}/platform/tournaments/TournamentScheduler.js`, // Future
+        PRIZE_DISTRIBUTOR: `${SHARED_BASE}/platform/tournaments/PrizeDistributor.js` // Future
     }
 };
 
@@ -102,14 +124,25 @@ export const GAME_PATHS = {
     }
 };
 
-// Legacy Paths (for migration tracking)
+// ========================
+// LEGACY PATHS (TO BE REMOVED AFTER PHASE 2 MIGRATION)
+// ========================
+
+// 🚨 SCHEDULED FOR REMOVAL: These paths reference legacy leaderboard implementations
+// that will be replaced by the unified system above. Mark for cleanup after migration.
 export const LEGACY_PATHS = {
-    // These will be consolidated/removed
-    SHARED_TOURNAMENTS: `${SHARED_BASE}/tournaments/daily-tournament.js`,
-    SHARED_ECONOMICS: `${SHARED_BASE}/economics/usdc-payment.js`,
-    SHARED_UI: `${SHARED_BASE}/ui/TournamentLeaderboard.js`,
-    // ... other legacy paths to track during migration
+    // Phase 2 consolidation targets - to be removed
+    TOURNAMENT_LEADERBOARD_SHARED: `${SHARED_BASE}/ui/TournamentLeaderboard.js`, // ➡️ Use PLATFORM_PATHS.UI.LEADERBOARD_COMPONENTS
+    DAILY_TOURNAMENT: `${SHARED_BASE}/tournaments/daily-tournament.js`, // ➡️ Use PLATFORM_PATHS.TOURNAMENTS.TOURNAMENT_MANAGER
+    WORKER_LEADERBOARD: `/worker/leaderboard.js`, // ➡️ Use /worker/unified-leaderboard.js
+    
+    // Game-specific legacy (to be removed)
+    NEONDROP_TOURNAMENT_LEADERBOARD: `${GAMES_BASE}/neondrop/ui/TournamentLeaderboard.js` // ➡️ Use PLATFORM_PATHS.UI.LEADERBOARD_COMPONENTS
 };
+
+// ========================
+// SHARED UTILITIES & EXTERNAL
+// ========================
 
 // Utility functions for path resolution
 export class PathResolver {
