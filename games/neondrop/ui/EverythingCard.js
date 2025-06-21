@@ -75,10 +75,11 @@ export class EverythingCard {    constructor() {
         card.appendChild(buttonsSection);
 
         await this.createActionButtons(buttonsSection);
-    }
-
-    async animateStatsReveal(container) {
+    }    async animateStatsReveal(container) {
+        const playerStatus = this.getPlayerStatusDisplay();
+        
         const stats = [
+            { icon: playerStatus.icon, label: playerStatus.status, value: playerStatus.detail },
             { icon: '🎮', label: 'Your Score', value: this.finalScore.toLocaleString() },
             { icon: '📈', label: 'Personal Best', value: await this.getPersonalBest() },
             { icon: '🏆', label: 'Global Rank', value: await this.getGlobalRank() },
@@ -119,14 +120,31 @@ export class EverythingCard {    constructor() {
             }, delay);
         });
     }    async createActionButtons(container) {
+        const playerStatus = this.getPlayerStatusDisplay();
+        
         const playBtn = document.createElement('button');
         playBtn.className = 'game-over-btn primary';
-        playBtn.innerHTML = '🎮 Play Neon Drop';
+        
+        // Dynamic button text based on player status
+        let buttonText = '🎮 Play Neon Drop';
+        if (playerStatus.tier === 'free-available') {
+            buttonText = '✨ Play Free Daily Game';
+        } else if (playerStatus.tier === 'free-used') {
+            buttonText = '💰 Continue Playing';
+        } else if (playerStatus.tier === 'monthly') {
+            buttonText = '� Play Unlimited';
+        } else if (playerStatus.tier === 'daily') {
+            buttonText = '⏰ Play All Day';
+        } else if (playerStatus.tier === 'single') {
+            buttonText = '🪙 Use Paid Game';
+        }
+        
+        playBtn.innerHTML = buttonText;
         playBtn.style.pointerEvents = 'auto';
         playBtn.style.cursor = 'pointer';
         
         playBtn.onclick = (e) => {
-            console.log('🎮 Play Neon Drop button clicked!');
+            console.log('🎮 Play button clicked:', buttonText);
             e.preventDefault();
             e.stopPropagation();
             this.smartPlayNeonDrop();
@@ -227,6 +245,13 @@ export class EverythingCard {    constructor() {
     }    smartPlayNeonDrop() {
         console.log('🎮 Smart Play Neon Drop - checking player status');
         
+        // Check if player has active paid access
+        if (this.hasActivePaidAccess()) {
+            console.log('💎 Player has paid access - starting game immediately');
+            this.startPaidGame();
+            return;
+        }
+        
         // Check if player has used their free daily game
         const hasPlayedFreeGameToday = this.checkFreeGameStatus();
         
@@ -237,6 +262,44 @@ export class EverythingCard {    constructor() {
             console.log('🎮 Starting free daily game');
             this.startFreeGame();
         }
+    }
+    
+    hasActivePaidAccess() {
+        const now = new Date();
+        
+        // Check for monthly pass
+        const monthlyExpiry = localStorage.getItem('monthlyPassExpiry');
+        if (monthlyExpiry) {
+            const expiryDate = new Date(monthlyExpiry);
+            if (now < expiryDate) {
+                console.log('🎯 Monthly pass active until:', expiryDate.toDateString());
+                return true;
+            } else {
+                // Clean up expired pass
+                localStorage.removeItem('monthlyPassExpiry');
+            }
+        }
+        
+        // Check for all-day pass
+        const allDayDate = localStorage.getItem('allDayPassDate');
+        if (allDayDate === now.toDateString()) {
+            console.log('⏰ All-day pass active for today');
+            return true;
+        } else if (allDayDate && allDayDate !== now.toDateString()) {
+            // Clean up expired day pass
+            localStorage.removeItem('allDayPassDate');
+        }
+        
+        // Check for remaining paid games
+        const paidGames = parseInt(localStorage.getItem('paidGamesRemaining') || '0');
+        if (paidGames > 0) {
+            console.log('🪙 Paid games remaining:', paidGames);
+            // Consume one paid game
+            localStorage.setItem('paidGamesRemaining', (paidGames - 1).toString());
+            return true;
+        }
+        
+        return false;
     }
     
     checkFreeGameStatus() {
@@ -268,15 +331,299 @@ export class EverythingCard {    constructor() {
     }
     
     showPaymentPrompt() {
-        // TODO: Implement payment prompt for tournament entry
-        // For now, show an alert
-        alert('🏆 You\'ve used your free daily game!\n\n� Enter the tournament for $2.50 to play again and compete for prizes!\n\n(Payment system coming soon)');
+        // Create elegant pricing modal
+        const modal = document.createElement('div');
+        modal.className = 'pricing-modal-overlay';
+        modal.innerHTML = `
+            <div class="pricing-modal">
+                <div class="pricing-header">
+                    <h2>🎮 Continue Playing</h2>
+                    <p>You've used your free daily game!</p>
+                    <button class="modal-close">&times;</button>
+                </div>
+                
+                <div class="pricing-options">
+                    <div class="pricing-tier" data-tier="single">
+                        <div class="tier-icon">🪙</div>
+                        <div class="tier-title">Single Game</div>
+                        <div class="tier-price">$0.25</div>
+                        <div class="tier-desc">One tournament entry</div>
+                    </div>
+                    
+                    <div class="pricing-tier featured" data-tier="daily">
+                        <div class="tier-icon">⏰</div>
+                        <div class="tier-title">All Day Pass</div>
+                        <div class="tier-price">$3.00</div>
+                        <div class="tier-desc">Unlimited today</div>
+                        <div class="tier-badge">Popular</div>
+                    </div>
+                    
+                    <div class="pricing-tier" data-tier="monthly">
+                        <div class="tier-icon">🎯</div>
+                        <div class="tier-title">Roll of Quarters</div>
+                        <div class="tier-price">$10.00</div>
+                        <div class="tier-desc">Unlimited monthly</div>
+                    </div>
+                </div>
+                
+                <div class="pricing-footer">
+                    <button class="pricing-cancel">Maybe Later</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add event listeners
+        modal.querySelector('.modal-close').onclick = () => this.closePricingModal(modal);
+        modal.querySelector('.pricing-cancel').onclick = () => this.closePricingModal(modal);
+        modal.onclick = (e) => {
+            if (e.target === modal) this.closePricingModal(modal);
+        };
+        
+        // Pricing tier selection
+        modal.querySelectorAll('.pricing-tier').forEach(tier => {
+            tier.onclick = () => {
+                const tierType = tier.dataset.tier;
+                this.selectPricingTier(tierType, modal);
+            };
+        });
+        
+        // Animate in
+        setTimeout(() => modal.classList.add('visible'), 10);
+    }
+    
+    closePricingModal(modal) {
+        modal.classList.remove('visible');
+        setTimeout(() => modal.remove(), 300);
+    }
+      selectPricingTier(tier, modal) {
+        console.log('💰 Selected pricing tier:', tier);
+        
+        // Show payment processing UI
+        this.showPaymentProcessing(tier, modal);
+    }
+    
+    showPaymentProcessing(tier, modal) {
+        const paymentContent = modal.querySelector('.pricing-modal');
+        
+        // Save original content for restoration
+        const originalContent = paymentContent.innerHTML;
+        
+        // Show payment processing screen
+        paymentContent.innerHTML = `
+            <div class="payment-processing">
+                <div class="payment-header">
+                    <h2>🔐 Secure Payment</h2>
+                    <p>Processing your ${this.getTierDisplayName(tier)} purchase...</p>
+                </div>
+                
+                <div class="payment-simulator">
+                    <div class="payment-step active" data-step="1">
+                        <div class="step-icon">💳</div>
+                        <div class="step-text">Verifying payment method</div>
+                        <div class="step-loader"></div>
+                    </div>
+                    
+                    <div class="payment-step" data-step="2">
+                        <div class="step-icon">🔒</div>
+                        <div class="step-text">Processing secure transaction</div>
+                        <div class="step-loader"></div>
+                    </div>
+                    
+                    <div class="payment-step" data-step="3">
+                        <div class="step-icon">✅</div>
+                        <div class="step-text">Activating game access</div>
+                        <div class="step-loader"></div>
+                    </div>
+                </div>
+                
+                <div class="payment-footer">
+                    <button class="payment-cancel">Cancel</button>
+                </div>
+            </div>
+        `;
+        
+        // Add cancel functionality
+        modal.querySelector('.payment-cancel').onclick = () => {
+            paymentContent.innerHTML = originalContent;
+            this.rebindPricingEvents(modal);
+        };
+        
+        // Simulate payment processing
+        this.simulatePaymentProcess(tier, modal, paymentContent);
+    }
+    
+    async simulatePaymentProcess(tier, modal, paymentContent) {
+        const steps = paymentContent.querySelectorAll('.payment-step');
+        
+        // Step 1: Verify payment method (1.5s)
+        await this.processPaymentStep(steps[0], 1500);
+        
+        // Step 2: Process transaction (2s)
+        await this.processPaymentStep(steps[1], 2000);
+        
+        // Step 3: Activate access (1s)
+        await this.processPaymentStep(steps[2], 1000);
+        
+        // Payment complete - grant access
+        this.completePayment(tier, modal);
+    }
+    
+    processPaymentStep(step, duration) {
+        return new Promise(resolve => {
+            step.classList.add('active');
+            
+            setTimeout(() => {
+                step.classList.remove('active');
+                step.classList.add('completed');
+                step.querySelector('.step-loader').style.display = 'none';
+                step.querySelector('.step-icon').style.opacity = '1';
+                resolve();
+            }, duration);
+        });
+    }
+    
+    completePayment(tier, modal) {
+        console.log('✅ Payment completed for tier:', tier);
+        
+        // Grant access based on tier
+        this.grantGameAccess(tier);
+        
+        // Show success message
+        const paymentContent = modal.querySelector('.pricing-modal');
+        paymentContent.innerHTML = `
+            <div class="payment-success">
+                <div class="success-icon">🎉</div>
+                <h2>Payment Successful!</h2>
+                <p>Your ${this.getTierDisplayName(tier)} is now active</p>
+                
+                <div class="access-details">
+                    ${this.getAccessDetails(tier)}
+                </div>
+                
+                <button class="success-play-btn">🎮 Start Playing</button>
+            </div>
+        `;
+        
+        // Add play button functionality
+        modal.querySelector('.success-play-btn').onclick = () => {
+            this.closePricingModal(modal);
+            this.startPaidGame();
+        };
+        
+        // Auto-close after showing success briefly
+        setTimeout(() => {
+            if (modal.parentNode) {
+                this.closePricingModal(modal);
+                this.startPaidGame();
+            }
+        }, 3000);
+    }
+    
+    grantGameAccess(tier) {
+        const now = new Date();
+        
+        switch(tier) {
+            case 'single':
+                // Grant one additional game
+                const currentGames = parseInt(localStorage.getItem('paidGamesRemaining') || '0');
+                localStorage.setItem('paidGamesRemaining', (currentGames + 1).toString());
+                console.log('🎮 Granted 1 additional game');
+                break;
+                
+            case 'daily':
+                // Grant unlimited games for today
+                localStorage.setItem('allDayPassDate', now.toDateString());
+                console.log('⏰ Granted all-day pass for:', now.toDateString());
+                break;
+                
+            case 'monthly':
+                // Grant unlimited games for 30 days
+                const monthlyExpiry = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000));
+                localStorage.setItem('monthlyPassExpiry', monthlyExpiry.toISOString());
+                console.log('🎯 Granted monthly pass until:', monthlyExpiry.toDateString());
+                break;
+        }
+        
+        // Track purchase for analytics
+        this.trackPurchase(tier);
+    }
+    
+    getTierDisplayName(tier) {
+        const names = {
+            single: 'Single Game',
+            daily: 'All Day Pass',
+            monthly: 'Roll of Quarters'
+        };
+        return names[tier] || tier;
+    }
+    
+    getAccessDetails(tier) {
+        switch(tier) {
+            case 'single':
+                return '<div class="access-item">🎮 1 Tournament Entry Added</div>';
+            case 'daily':
+                return '<div class="access-item">⏰ Unlimited Games Until Midnight</div>';
+            case 'monthly':
+                return '<div class="access-item">🎯 Unlimited Games for 30 Days</div>';
+            default:
+                return '';
+        }
+    }
+    
+    rebindPricingEvents(modal) {
+        // Re-add event listeners for pricing tiers
+        modal.querySelectorAll('.pricing-tier').forEach(tier => {
+            tier.onclick = () => {
+                const tierType = tier.dataset.tier;
+                this.selectPricingTier(tierType, modal);
+            };
+        });
+    }
+    
+    startPaidGame() {
+        console.log('🎮 Starting paid game');
+        
+        this.hide();
+        
+        // Start the game
+        if (window.neonDrop && window.neonDrop.uiStateManager) {
+            window.neonDrop.engine.returnToMenu();
+            window.neonDrop.uiStateManager.beginGameplay();
+        } else {
+            window.location.reload();
+        }
+    }
+    
+    trackPurchase(tier) {
+        // Track purchase for analytics/backend integration
+        const purchase = {
+            tier: tier,
+            timestamp: new Date().toISOString(),
+            playerId: this.currentPlayer?.id || 'anonymous',
+            amount: this.getTierPrice(tier)
+        };
+        
+        // Store locally for now, will sync to backend later
+        const purchases = JSON.parse(localStorage.getItem('playerPurchases') || '[]');
+        purchases.push(purchase);
+        localStorage.setItem('playerPurchases', JSON.stringify(purchases));
+        
+        console.log('📊 Tracked purchase:', purchase);
+    }
+    
+    getTierPrice(tier) {
+        const prices = {
+            single: 0.25,
+            daily: 3.00,
+            monthly: 10.00
+        };
+        return prices[tier] || 0;
     }
 
-    playAgain() {
-        // Legacy method - now redirects to smart logic
-        this.smartPlayNeonDrop();
-    }showLeaderboard() {
+    // ...existing code...
+    showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
         console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
         console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);
@@ -412,5 +759,68 @@ export class EverythingCard {    constructor() {
                 tier: 'anonymous'
             };
         }
+    }
+
+    getPlayerStatusDisplay() {
+        const now = new Date();
+        
+        // Check for monthly pass
+        const monthlyExpiry = localStorage.getItem('monthlyPassExpiry');
+        if (monthlyExpiry) {
+            const expiryDate = new Date(monthlyExpiry);
+            if (now < expiryDate) {
+                const daysLeft = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                return {
+                    icon: '🎯',
+                    status: 'Roll of Quarters',
+                    detail: `${daysLeft} days remaining`,
+                    tier: 'monthly'
+                };
+            }
+        }
+        
+        // Check for all-day pass
+        const allDayDate = localStorage.getItem('allDayPassDate');
+        if (allDayDate === now.toDateString()) {
+            const midnight = new Date(now);
+            midnight.setHours(23, 59, 59, 999);
+            const hoursLeft = Math.ceil((midnight - now) / (1000 * 60 * 60));
+            return {
+                icon: '⏰',
+                status: 'All Day Pass',
+                detail: `${hoursLeft} hours remaining`,
+                tier: 'daily'
+            };
+        }
+        
+        // Check for remaining paid games
+        const paidGames = parseInt(localStorage.getItem('paidGamesRemaining') || '0');
+        if (paidGames > 0) {
+            return {
+                icon: '🪙',
+                status: 'Paid Games',
+                detail: `${paidGames} games remaining`,
+                tier: 'single'
+            };
+        }
+        
+        // Check if used free game today
+        const lastFreeGame = localStorage.getItem('lastFreeGameDate');
+        if (lastFreeGame === now.toDateString()) {
+            return {
+                icon: '🎮',
+                status: 'Free Player',
+                detail: 'Daily game used',
+                tier: 'free-used'
+            };
+        }
+        
+        // Free game available
+        return {
+            icon: '✨',
+            status: 'Free Player',
+            detail: 'Daily game available',
+            tier: 'free-available'
+        };
     }
 }
