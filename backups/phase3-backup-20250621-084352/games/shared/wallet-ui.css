@@ -1,0 +1,112 @@
+/* BlockZone Web3 Wallet UI Components */
+.wallet-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ff88;
+    border-radius: 10px;
+    padding: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.wallet-connect-btn {
+    background: linear-gradient(45deg, #00ff88, #00cc6a);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.wallet-connect-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+}
+
+.wallet-connect-btn.connected {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+}
+
+.wallet-status {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.wallet-status.connected {
+    color: #00ff88;
+}
+
+.wallet-status.disconnected {
+    color: #ff4757;
+}
+
+.network-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+    animation: pulse 2s infinite;
+}
+
+.network-indicator.sonic-testnet {
+    background: #ffa726;
+}
+
+.network-indicator.sonic-mainnet {
+    background: #00ff88;
+}
+
+.network-indicator.other {
+    background: #ff4757;
+}
+
+/* Compact wallet button for in-game UI */
+.wallet-compact {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: #00ff88;
+    font-size: 0.8rem;
+}
+
+.wallet-compact .wallet-connect-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .wallet-overlay {
+        top: 10px;
+        right: 10px;
+        padding: 10px;
+    }
+
+    .wallet-connect-btn {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Animation for pulse effect */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}

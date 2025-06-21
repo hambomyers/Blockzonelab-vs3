@@ -21,13 +21,12 @@ const CORE_FILES = [
 ];
 
 // Game assets for offline play
-const GAME_FILES = [
-  '/games/neondrop/',
+const GAME_FILES = [  '/games/neondrop/',
   '/games/neondrop/index.html',
   '/games/neondrop/style.css',
   '/games/neondrop/main.js',
-  '/games/shared/game-framework.js',
-  '/games/shared/web3-integration.js'
+  '/shared/components/game-framework.js',
+  '/shared/web3/web3-integration.js'
 ];
 
 // Web3/API endpoints that can be cached

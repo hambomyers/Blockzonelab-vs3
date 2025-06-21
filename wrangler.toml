@@ -1,17 +1,11 @@
-name = "blockzone-identity-api"
-main = "./worker/identity-manager.js"
+name = "blockzone-api"
+main = "./worker/leaderboard.js"
 compatibility_date = "2023-12-01"
 
-# Wallet identity system (using existing KV with new bindings)
 [[kv_namespaces]]
-binding = "WALLETS"
+binding = "PLAYERS"
 id = "afdca5fda8b343b99541432574cfa5c3"
 
-[[kv_namespaces]]
-binding = "DEVICES"
-id = "9472d4328eda428090494844a4cdba9b"
-
-# Tournament and game data
 [[kv_namespaces]]
 binding = "SCORES"
 id = "8e4d3de3c359495186eabf9032d08d8f"
@@ -19,6 +13,10 @@ id = "8e4d3de3c359495186eabf9032d08d8f"
 [[kv_namespaces]]
 binding = "TOURNAMENTS"
 id = "d4f40a571cdc49a98d5dd1d9f3a983ea"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "9472d4328eda428090494844a4cdba9b"
 
 [[kv_namespaces]]
 binding = "REWARDS"
