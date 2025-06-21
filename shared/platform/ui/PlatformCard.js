@@ -1,10 +1,8 @@
 /**
  * PlatformCard.js - Universal Platform UI Component
- * Updated with standardized imports
+ * Base card component that can be extended by all games
  */
 
-// Standardized imports using path constants
-import { UTILS_PATHS, PLATFORM_PATHS } from '../../utils/ImportPaths.js';
 import EventEmitter from '../../utils/EventEmitter.js';
 import gameRegistry from '../core/GameRegistry.js';
 import platformConfig from '../core/PlatformConfig.js';

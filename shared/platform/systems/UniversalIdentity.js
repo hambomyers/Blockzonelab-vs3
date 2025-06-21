@@ -1,11 +1,9 @@
 /**
  * UniversalIdentity.js - Cross-Game Player Identity System
- * Updated with standardized imports
+ * Manages player identity, stats, and progression across all games
  */
 
-// Standardized imports using path constants
-import { UTILS_PATHS, PLATFORM_PATHS } from '../../utils/ImportPaths.js';
-import EventEmitter from '../../utils/EventEmitter.js';
+import { EventEmitter } from '../../utils/EventEmitter.js';
 import platformConfig from '../core/PlatformConfig.js';
 
 class UniversalIdentity extends EventEmitter {

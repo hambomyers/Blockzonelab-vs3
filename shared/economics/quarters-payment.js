@@ -143,10 +143,9 @@ export class QuartersSystem {
     // Implement web-based payment fallback
     return { success: false, error: 'Web payment not implemented' };
   }
-  
   async getPlayerId() {
-    if (window.UniversalPlayerIdentity) {
-      const identity = await window.UniversalPlayerIdentity.getIdentity();
+    if (window.UniversalIdentity) {
+      const identity = await window.UniversalIdentity.getIdentity();
       return identity.playerId;
     }
     return 'anonymous';

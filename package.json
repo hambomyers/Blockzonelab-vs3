@@ -1,0 +1,11 @@
+{
+  "name": "blockzone-lab",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "BlockZone Lab Gaming Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
+  }
+}

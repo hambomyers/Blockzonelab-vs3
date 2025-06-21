@@ -28,94 +28,38 @@
       "label": "Desktop gaming hub"
     }
   ],
-  
-  "icons": [
+    "icons": [
     {
-      "src": "/assets/icons/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "badge"
-    },
-    {
-      "src": "/assets/icons/icon-96.png",
-      "sizes": "96x96", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icons/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-512.png",
+      "src": "/assets/icons/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  
-  "shortcuts": [
+    "shortcuts": [
     {
       "name": "Play Neon Drop",
       "short_name": "Neon Drop",
       "description": "Jump into the arcade action",
-      "url": "/games/neondrop/",
-      "icons": [
-        {
-          "src": "/assets/icons/shortcut-neondrop.png",
-          "sizes": "192x192"
-        }
-      ]
+      "url": "/games/neondrop/"
     },
     {
       "name": "Tournament Leaderboard", 
       "short_name": "Leaderboard",
       "description": "Check daily rankings",
-      "url": "/games/?view=leaderboard",
-      "icons": [
-        {
-          "src": "/assets/icons/shortcut-leaderboard.png", 
-          "sizes": "192x192"
-        }
-      ]
+      "url": "/games/?view=leaderboard"
     },
     {
       "name": "Crypto Academy",
       "short_name": "Academy", 
       "description": "Learn blockchain fundamentals",
-      "url": "/academy/",
-      "icons": [
-        {
-          "src": "/assets/icons/shortcut-academy.png",
-          "sizes": "192x192"
-        }
-      ]
+      "url": "/academy/"
     }
   ],
   
@@ -128,10 +72,10 @@
       "url": "/games/?tournament=%s"
     }
   ],
-  
-  "share_target": {
+    "share_target": {
     "action": "/games/",
     "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
       "text": "text", 

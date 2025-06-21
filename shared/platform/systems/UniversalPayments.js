@@ -1,340 +1,436 @@
+// shared/platform/systems/UniversalPayments.js
 /**
- * UniversalPayments.js - Cross-Game Payment System
- * Updated with standardized imports
+ * Universal Payment System
+ * Handles USDC, QUARTERS, free credits, and tournament payments
  */
 
-// Standardized imports using path constants
-import { UTILS_PATHS, PLATFORM_PATHS } from '../../utils/ImportPaths.js';
-import EventEmitter from '../../utils/EventEmitter.js';
-import platformConfig from '../core/PlatformConfig.js';
+export class UniversalPayments {
+  constructor(config = {}) {
+    this.config = {
+      enableUSDC: true,
+      enableQuarters: true,
+      enableFreeCredits: true,
+      retryAttempts: 3,
+      retryDelay: 1000,
+      ...config
+    };
+    
+    this.isInitialized = false;
+    this.eventListeners = new Map();
+    this.pendingTransactions = new Map();
+    
+    // Bind methods
+    this.initialize = this.initialize.bind(this);
+    this.processPayment = this.processPayment.bind(this);
+    this.refundPayment = this.refundPayment.bind(this);
+  }
 
-class UniversalPayments extends EventEmitter {
-    constructor() {
-        super();
-        this.providers = new Map();
-        this.activeProvider = null;
-        this.isInitialized = false;
-        this.balances = new Map();
-        
-        this.init();
+  /**
+   * Initialize payment system
+   */
+  async initialize() {
+    try {
+      console.log('💳 Initializing Universal Payment System...');
+      
+      // Initialize payment providers
+      if (this.config.enableUSDC) {
+        await this.initializeUSDC();
+      }
+      
+      if (this.config.enableQuarters) {
+        await this.initializeQuarters();
+      }
+      
+      this.isInitialized = true;
+      this.emit('initialized');
+      
+      console.log('✅ Universal Payment System ready');
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to initialize payment system:', error);
+      throw new Error(`Payment initialization failed: ${error.message}`);
     }
+  }
 
-    async init() {
-        try {
-            await this.initializeProviders();
-            this.loadBalances();
-            this.isInitialized = true;
-            this.emit('payments:ready');
-            console.log('✅ UniversalPayments initialized');
-        } catch (error) {
-            console.error('❌ UniversalPayments init failed:', error);
+  /**
+   * Process a payment
+   */
+  async processPayment(paymentData) {
+    try {
+      const {
+        amount,
+        currency,
+        playerId,
+        description,
+        metadata = {}
+      } = paymentData;
+
+      if (!this.isInitialized) {
+        await this.initialize();
+      }
+
+      console.log(`💰 Processing ${currency} payment:`, amount);
+      
+      // Validate payment data
+      this.validatePaymentData(paymentData);
+      
+      // Generate transaction ID
+      const transactionId = this.generateTransactionId();
+      
+      // Store pending transaction
+      this.pendingTransactions.set(transactionId, {
+        ...paymentData,
+        id: transactionId,
+        status: 'pending',
+        createdAt: Date.now()
+      });
+      
+      let result;
+      
+      switch (currency.toLowerCase()) {
+        case 'usdc':
+          result = await this.processUSDCPayment(paymentData, transactionId);
+          break;
+        case 'quarters':
+          result = await this.processQuartersPayment(paymentData, transactionId);
+          break;
+        case 'free':
+          result = await this.processFreeCredits(paymentData, transactionId);
+          break;
+        default:
+          throw new Error(`Unsupported currency: ${currency}`);
+      }
+      
+      // Update transaction status
+      const transaction = this.pendingTransactions.get(transactionId);
+      transaction.status = 'completed';
+      transaction.completedAt = Date.now();
+      transaction.result = result;
+      
+      this.emit('paymentCompleted', transaction);
+      console.log('✅ Payment completed:', transactionId);
+      
+      return transaction;
+    } catch (error) {
+      console.error('❌ Payment failed:', error);
+      throw new Error(`Payment processing failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Process USDC payment
+   */
+  async processUSDCPayment(paymentData, transactionId) {
+    try {
+      const { amount, walletAddress } = paymentData;
+      
+      // Simulate USDC transaction processing
+      console.log(`🔗 Processing USDC payment: ${amount} USDC`);
+      
+      // In real implementation, this would interact with Sonic blockchain
+      await this.delay(2000); // Simulate network delay
+      
+      const txHash = this.generateTransactionHash();
+      
+      return {
+        success: true,
+        transactionHash: txHash,
+        currency: 'USDC',
+        amount,
+        network: 'Sonic',
+        walletAddress
+      };
+    } catch (error) {
+      throw new Error(`USDC payment failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Process QUARTERS payment
+   */
+  async processQuartersPayment(paymentData, transactionId) {
+    try {
+      const { amount, walletAddress } = paymentData;
+      
+      console.log(`🪙 Processing QUARTERS payment: ${amount} QUARTERS`);
+      
+      // Simulate QUARTERS transaction processing
+      await this.delay(1500);
+      
+      const txHash = this.generateTransactionHash();
+      
+      return {
+        success: true,
+        transactionHash: txHash,
+        currency: 'QUARTERS',
+        amount,
+        network: 'Ethereum',
+        walletAddress
+      };
+    } catch (error) {
+      throw new Error(`QUARTERS payment failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Process free credits
+   */
+  async processFreeCredits(paymentData, transactionId) {
+    try {
+      const { amount, playerId } = paymentData;
+      
+      console.log(`🎁 Processing free credits: ${amount} credits`);
+      
+      // Update player's free credit balance
+      const creditBalance = await this.getFreeCreditsBalance(playerId);
+      const newBalance = creditBalance + amount;
+      
+      await this.setFreeCreditsBalance(playerId, newBalance);
+      
+      return {
+        success: true,
+        currency: 'FREE_CREDITS',
+        amount,
+        newBalance,
+        playerId
+      };
+    } catch (error) {
+      throw new Error(`Free credits processing failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Get player's balance for specific currency
+   */
+  async getBalance(playerId, currency) {
+    try {
+      switch (currency.toLowerCase()) {
+        case 'usdc':
+          return await this.getUSDCBalance(playerId);
+        case 'quarters':
+          return await this.getQuartersBalance(playerId);
+        case 'free':
+          return await this.getFreeCreditsBalance(playerId);
+        default:
+          throw new Error(`Unknown currency: ${currency}`);
+      }
+    } catch (error) {
+      console.error('❌ Failed to get balance:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Handle tournament entry payment
+   */
+  async handleTournamentEntry(playerId, tournamentId, entryFee, currency = 'usdc') {
+    try {
+      console.log(`🏆 Processing tournament entry: ${entryFee} ${currency}`);
+      
+      const paymentData = {
+        amount: entryFee,
+        currency,
+        playerId,
+        description: `Tournament entry: ${tournamentId}`,
+        metadata: {
+          type: 'tournament_entry',
+          tournamentId
         }
+      };
+      
+      const transaction = await this.processPayment(paymentData);
+      
+      this.emit('tournamentEntryProcessed', {
+        playerId,
+        tournamentId,
+        transaction
+      });
+      
+      return transaction;
+    } catch (error) {
+      throw new Error(`Tournament entry payment failed: ${error.message}`);
     }
+  }
 
-    async initializeProviders() {
-        // Wallet Provider (Web3/Sonic)
-        this.providers.set('wallet', {
-            name: 'Crypto Wallet',
-            type: 'blockchain',
-            available: false,
-            methods: ['QUARTERS', 'USDC'],
-            pay: this.payWithWallet.bind(this),
-            getBalance: this.getWalletBalance.bind(this)
-        });
-
-        // Apple Pay Provider
-        this.providers.set('apple-pay', {
-            name: 'Apple Pay',
-            type: 'fiat',
-            available: this.isApplePayAvailable(),
-            methods: ['USD'],
-            pay: this.payWithApplePay.bind(this),
-            getBalance: () => Promise.resolve(null) // Fiat doesn't have "balance"
-        });
-
-        // Mock Provider (for testing)
-        this.providers.set('mock', {
-            name: 'Mock Payment',
-            type: 'test',
-            available: platformConfig.isDevelopment(),
-            methods: ['QUARTERS', 'USDC', 'USD'],
-            pay: this.payWithMock.bind(this),
-            getBalance: this.getMockBalance.bind(this)
-        });
-
-        // Check wallet availability
-        if (window.ethereum || window.sonic) {
-            this.providers.get('wallet').available = true;
-        }
-
-        console.log(`💳 Payment providers initialized: ${Array.from(this.providers.keys()).join(', ')}`);
+  /**
+   * Distribute tournament prize
+   */
+  async distributeTournamentPrize(playerId, amount, currency, tournamentId) {
+    try {
+      console.log(`🏆 Distributing prize: ${amount} ${currency} to ${playerId}`);
+      
+      // For now, add to free credits (in production, would send to wallet)
+      if (currency.toLowerCase() === 'usdc') {
+        await this.addFreeCredits(playerId, amount);
+      }
+      
+      this.emit('prizeDistributed', {
+        playerId,
+        amount,
+        currency,
+        tournamentId
+      });
+      
+      return true;
+    } catch (error) {
+      throw new Error(`Prize distribution failed: ${error.message}`);
     }
+  }
 
-    isApplePayAvailable() {
-        return window.ApplePaySession && ApplePaySession.canMakePayments();
+  /**
+   * Add free credits to player
+   */
+  async addFreeCredits(playerId, amount) {
+    try {
+      const currentBalance = await this.getFreeCreditsBalance(playerId);
+      const newBalance = currentBalance + amount;
+      await this.setFreeCreditsBalance(playerId, newBalance);
+      
+      this.emit('freeCreditsAdded', {
+        playerId,
+        amount,
+        newBalance
+      });
+      
+      return newBalance;
+    } catch (error) {
+      throw new Error(`Failed to add free credits: ${error.message}`);
     }
+  }
 
-    async setActiveProvider(providerId) {
-        const provider = this.providers.get(providerId);
-        if (!provider) {
-            throw new Error(`Payment provider not found: ${providerId}`);
-        }
-        
-        if (!provider.available) {
-            throw new Error(`Payment provider not available: ${providerId}`);
-        }
-
-        this.activeProvider = provider;
-        this.emit('payments:provider-changed', { providerId, provider });
-        console.log(`💳 Active payment provider: ${provider.name}`);
-        return true;
+  /**
+   * Get free credits balance
+   */
+  async getFreeCreditsBalance(playerId) {
+    try {
+      const key = `credits_${playerId}`;
+      const balance = localStorage.getItem(key);
+      return balance ? parseFloat(balance) : 0;
+    } catch (error) {
+      console.warn('Failed to get free credits balance:', error);
+      return 0;
     }
+  }
 
-    async pay(amount, currency, metadata = {}) {
-        if (!this.activeProvider) {
-            await this.setActiveProvider(this.getDefaultProvider());
-        }
-
-        if (!this.activeProvider.methods.includes(currency)) {
-            throw new Error(`Currency ${currency} not supported by ${this.activeProvider.name}`);
-        }
-
-        const paymentRequest = {
-            amount,
-            currency,
-            metadata: {
-                ...metadata,
-                timestamp: new Date().toISOString(),
-                provider: this.activeProvider.name
-            }
-        };
-
-        this.emit('payments:started', paymentRequest);
-
-        try {
-            const result = await this.activeProvider.pay(paymentRequest);
-            this.emit('payments:success', { ...paymentRequest, result });
-            await this.updateBalances();
-            return result;
-        } catch (error) {
-            this.emit('payments:error', { ...paymentRequest, error });
-            throw error;
-        }
+  /**
+   * Set free credits balance
+   */
+  async setFreeCreditsBalance(playerId, balance) {
+    try {
+      const key = `credits_${playerId}`;
+      localStorage.setItem(key, balance.toString());
+    } catch (error) {
+      console.warn('Failed to set free credits balance:', error);
     }
+  }
 
-    async payWithWallet(paymentRequest) {
-        const { amount, currency } = paymentRequest;
-        
-        // This would integrate with the existing wallet systems
-        // For now, we'll simulate the call to existing payment functions
-        
-        try {
-            if (currency === 'QUARTERS') {
-                // Call existing QUARTERS payment
-                if (window.payWithQuarters) {
-                    const result = await window.payWithQuarters(amount);
-                    return { success: true, txHash: result.hash, method: 'QUARTERS' };
-                }
-            } else if (currency === 'USDC') {
-                // Call existing USDC payment
-                if (window.payWithUSDC) {
-                    const result = await window.payWithUSDC(amount);
-                    return { success: true, txHash: result.hash, method: 'USDC' };
-                }
-            }
-            
-            throw new Error(`Wallet payment not implemented for ${currency}`);
-        } catch (error) {
-            console.error('Wallet payment failed:', error);
-            throw error;
-        }
+  /**
+   * Validate payment data
+   */
+  validatePaymentData(paymentData) {
+    const { amount, currency, playerId } = paymentData;
+    
+    if (!amount || amount <= 0) {
+      throw new Error('Invalid payment amount');
     }
+    
+    if (!currency) {
+      throw new Error('Currency is required');
+    }
+    
+    if (!playerId) {
+      throw new Error('Player ID is required');
+    }
+    
+    const validCurrencies = ['usdc', 'quarters', 'free'];
+    if (!validCurrencies.includes(currency.toLowerCase())) {
+      throw new Error(`Invalid currency: ${currency}`);
+    }
+  }
 
-    async payWithApplePay(paymentRequest) {
-        const { amount, currency, metadata } = paymentRequest;
-        
-        // Convert to USD if needed
-        const usdAmount = currency === 'USD' ? amount : await this.convertToUSD(amount, currency);
-        
-        try {
-            const result = await this.processApplePayment(usdAmount, metadata);
-            
-            // If payment was for crypto, credit the appropriate token
-            if (currency !== 'USD') {
-                await this.creditPurchasedTokens(amount, currency, result.transactionId);
-            }
-            
-            return { success: true, transactionId: result.transactionId, method: 'ApplePay' };
-        } catch (error) {
-            console.error('Apple Pay failed:', error);
-            throw error;
-        }
-    }
+  /**
+   * Generate unique transaction ID
+   */
+  generateTransactionId() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2);
+    return `tx_${timestamp}_${random}`;
+  }
 
-    async payWithMock(paymentRequest) {
-        const { amount, currency } = paymentRequest;
-        
-        // Simulate payment delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Simulate 90% success rate
-        if (Math.random() > 0.9) {
-            throw new Error('Mock payment failed (simulated)');
-        }
-        
-        const mockTxId = 'mock_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Update mock balances
-        this.updateMockBalance(currency, -amount);
-        
-        return { 
-            success: true, 
-            txHash: mockTxId, 
-            method: 'Mock',
-            timestamp: new Date().toISOString()
-        };
-    }
+  /**
+   * Generate mock transaction hash
+   */
+  generateTransactionHash() {
+    return '0x' + Array.from({length: 64}, () => 
+      Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+  }
 
-    async processApplePayment(amount, metadata) {
-        // This would integrate with Apple Pay Web APIs
-        // For now, return a mock response
-        return {
-            transactionId: 'apple_' + Date.now(),
-            amount,
-            currency: 'USD',
-            status: 'completed'
-        };
-    }
+  /**
+   * Initialize USDC provider
+   */
+  async initializeUSDC() {
+    console.log('🔗 Initializing USDC provider...');
+    // In production, initialize Sonic blockchain connection
+  }
 
-    async convertToUSD(amount, fromCurrency) {
-        // This would call a price API
-        // For now, use mock conversion rates
-        const rates = {
-            'QUARTERS': 0.01, // 1 QUARTER = $0.01
-            'USDC': 1.00      // 1 USDC = $1.00
-        };
-        
-        return amount * (rates[fromCurrency] || 1);
-    }
+  /**
+   * Initialize QUARTERS provider
+   */
+  async initializeQuarters() {
+    console.log('🪙 Initializing QUARTERS provider...');
+    // In production, initialize QUARTERS token contract
+  }
 
-    async creditPurchasedTokens(amount, currency, transactionId) {
-        // This would call smart contracts to credit tokens
-        console.log(`💰 Crediting ${amount} ${currency} for transaction ${transactionId}`);
-    }
+  /**
+   * Get USDC balance (mock)
+   */
+  async getUSDCBalance(playerId) {
+    // In production, query blockchain
+    return 0;
+  }
 
-    async getBalance(currency) {
-        if (!this.activeProvider) {
-            return 0;
-        }
-        
-        return await this.activeProvider.getBalance(currency);
-    }
+  /**
+   * Get QUARTERS balance (mock)
+   */
+  async getQuartersBalance(playerId) {
+    // In production, query token contract
+    return 0;
+  }
 
-    async getWalletBalance(currency) {
-        try {
-            const tokenConfig = platformConfig.getTokenConfig(currency);
-            if (!tokenConfig) return 0;
-            
-            // This would call the actual wallet balance check
-            // For now, return cached balance or 0
-            return this.balances.get(`wallet:${currency}`) || 0;
-        } catch (error) {
-            console.error(`Failed to get wallet balance for ${currency}:`, error);
-            return 0;
-        }
-    }
+  /**
+   * Utility delay function
+   */
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-    getMockBalance(currency) {
-        return this.balances.get(`mock:${currency}`) || 1000; // Start with 1000 of each
-    }
+  /**
+   * Event emitter methods
+   */
+  emit(event, data) {
+    const listeners = this.eventListeners.get(event) || [];
+    listeners.forEach(listener => {
+      try {
+        listener(data);
+      } catch (error) {
+        console.error(`Error in payment event listener for ${event}:`, error);
+      }
+    });
+  }
 
-    updateMockBalance(currency, change) {
-        const key = `mock:${currency}`;
-        const current = this.balances.get(key) || 1000;
-        this.balances.set(key, Math.max(0, current + change));
+  on(event, listener) {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, []);
     }
+    this.eventListeners.get(event).push(listener);
+  }
 
-    async updateBalances() {
-        if (!this.activeProvider) return;
-        
-        for (const currency of this.activeProvider.methods) {
-            try {
-                const balance = await this.activeProvider.getBalance(currency);
-                const key = `${this.getActiveProviderId()}:${currency}`;
-                this.balances.set(key, balance);
-            } catch (error) {
-                console.warn(`Failed to update balance for ${currency}:`, error);
-            }
-        }
-        
-        this.emit('payments:balances-updated', Object.fromEntries(this.balances));
+  off(event, listener) {
+    const listeners = this.eventListeners.get(event) || [];
+    const index = listeners.indexOf(listener);
+    if (index > -1) {
+      listeners.splice(index, 1);
     }
-
-    loadBalances() {
-        try {
-            const saved = localStorage.getItem('blockzone:payment:balances');
-            if (saved) {
-                const balancesArray = JSON.parse(saved);
-                this.balances = new Map(balancesArray);
-            }
-        } catch (error) {
-            console.warn('Could not load saved balances:', error);
-        }
-    }
-
-    async saveBalances() {
-        try {
-            localStorage.setItem('blockzone:payment:balances', JSON.stringify([...this.balances]));
-        } catch (error) {
-            console.error('Failed to save balances:', error);
-        }
-    }
-
-    getAvailableProviders() {
-        return Array.from(this.providers.entries())
-            .filter(([_, provider]) => provider.available)
-            .map(([id, provider]) => ({ id, ...provider }));
-    }
-
-    getActiveProviderId() {
-        return Array.from(this.providers.entries())
-            .find(([_, provider]) => provider === this.activeProvider)?.[0] || null;
-    }
-
-    getDefaultProvider() {
-        const preferred = platformConfig.get('payments.defaultMethod');
-        if (this.providers.get(preferred)?.available) {
-            return preferred;
-        }
-        
-        // Fallback priority: wallet > apple-pay > mock
-        const priorities = ['wallet', 'apple-pay', 'mock'];
-        for (const providerId of priorities) {
-            if (this.providers.get(providerId)?.available) {
-                return providerId;
-            }
-        }
-        
-        throw new Error('No payment providers available');
-    }
-
-    // Convenience methods
-    async payForTournamentEntry(gameId) {
-        const tournamentConfig = platformConfig.getTournamentConfig();
-        return await this.pay(tournamentConfig.entryFee, 'QUARTERS', { 
-            type: 'tournament-entry',
-            gameId 
-        });
-    }
-
-    async payForPowerup(powerupId, cost, currency = 'QUARTERS') {
-        return await this.pay(cost, currency, { 
-            type: 'powerup',
-            powerupId 
-        });
-    }
+  }
 }
-
-// Export singleton instance
-const universalPayments = new UniversalPayments();
-export default universalPayments;

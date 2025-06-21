@@ -1,15 +1,10 @@
 /**
  * GameRegistry.js - Platform Game Registration & Discovery System
- * Updated with standardized imports
+ * Centralized registry for all games on the BlockZone platform
  */
 
-// Use centralized path constants
-import { UTILS_PATHS } from '../../utils/ImportPaths.js';
-import EventEmitter from '../../utils/EventEmitter.js';
-
-class GameRegistry extends EventEmitter {
+class GameRegistry {
     constructor() {
-        super();
         this.games = new Map();
         this.currentGame = null;
         this.initializeRegistry();
@@ -35,21 +30,22 @@ class GameRegistry extends EventEmitter {
                 card: 'EverythingCard',
                 leaderboard: 'TournamentLeaderboard'
             },
-            status: 'active'        });
+            status: 'active'
+        });
 
-        this.emit('registry:initialized', { gameCount: this.games.size });
         console.log(`✅ GameRegistry initialized with ${this.games.size} games`);
     }
 
     registerGame(gameConfig) {
         if (!gameConfig.id || !gameConfig.name) {
             throw new Error('Game must have id and name');
-        }        this.games.set(gameConfig.id, {
+        }
+
+        this.games.set(gameConfig.id, {
             ...gameConfig,
             registeredAt: new Date().toISOString()
         });
 
-        this.emit('game:registered', gameConfig);
         console.log(`📝 Registered game: ${gameConfig.name} (${gameConfig.id})`);
         return true;
     }
@@ -64,13 +60,14 @@ class GameRegistry extends EventEmitter {
 
     getActiveGames() {
         return this.getAllGames().filter(game => game.status === 'active');
-    }    setCurrentGame(gameId) {
+    }
+
+    setCurrentGame(gameId) {
         const game = this.getGame(gameId);
         if (!game) {
             throw new Error(`Game not found: ${gameId}`);
         }
         this.currentGame = game;
-        this.emit('game:current-changed', game);
         console.log(`🎮 Current game set to: ${game.name}`);
         return game;
     }
