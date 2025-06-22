@@ -1,9 +1,16 @@
 /**
- * Legacy Bridge Pattern for Consolidated Systems
- * Ensures smooth transition from old to new unified systems
- * Provides fallback support and feature flag toggles
- * Browser-compatible with safe imports
+ * DISABLED: Legacy bridge system replaced by UnifiedSystemsIntegration
+ * 
+ * This file has been disabled as it's replaced by the new unified systems.
+ * All functionality is now handled by UnifiedSystemsIntegration.js
+ * 
+ * Original purpose: Legacy Bridge Pattern for Consolidated Systems
+ * Replacement: shared/platform/UnifiedSystemsIntegration.js
  */
+
+/*
+// DISABLED - All code commented out to prevent execution
+// The entire LegacyBridge system has been replaced
 
 /**
  * Safe dynamic import helper
@@ -346,17 +353,16 @@ export class LeaderboardBridge {
       console.warn('🏆 LeaderboardBridge: Unified system failed, falling back:', error);
       if (this.fallbackEnabled) {
         this.useUnified = false;
-      }
-    }
+      }    }
     
     try {
-      console.log('🏆 LeaderboardBridge: Loading legacy leaderboard system');
-      const LegacyLeaderboard = await safeImport('../../ui/TournamentLeaderboard.js', MockLeaderboardSystem);
-      this.legacySystem = new LegacyLeaderboard();
-      console.log('✅ LeaderboardBridge: Legacy system loaded successfully');
-      return { success: true, system: 'legacy' };
+      console.log('🏆 LeaderboardBridge: TournamentLeaderboard removed, using mock system');
+      // const LegacyLeaderboard = await safeImport('../../ui/TournamentLeaderboard.js', MockLeaderboardSystem);
+      this.legacySystem = new MockLeaderboardSystem();
+      console.log('✅ LeaderboardBridge: Using mock system (TournamentLeaderboard stub removed)');
+      return { success: true, system: 'mock' };
     } catch (error) {
-      console.warn('🏆 LeaderboardBridge: Legacy system failed, using mock:', error);
+      console.warn('🏆 LeaderboardBridge: Mock system fallback:', error);
       this.legacySystem = new MockLeaderboardSystem();
       return { success: true, system: 'mock' };
     }
@@ -655,8 +661,7 @@ export class LegacyBridge {
         fallbackEnabled: this.leaderboard.fallbackEnabled,
         available: !!(this.leaderboard.unifiedSystem || this.leaderboard.legacySystem)
       },
-      api: {
-        using: this.api.useUnified ? 'unified' : 'legacy',
+      api: {        using: this.api.useUnified ? 'unified' : 'legacy',
         fallbackEnabled: this.api.fallbackEnabled,
         available: !!(this.api.unifiedAPI || this.api.legacyAPI)
       }
@@ -666,3 +671,7 @@ export class LegacyBridge {
 
 // Export individual bridges and master controller
 export default LegacyBridge;
+
+// END DISABLED CODE */
+
+// Replacement functionality is in UnifiedSystemsIntegration.js

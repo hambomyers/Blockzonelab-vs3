@@ -3,7 +3,7 @@
  * Beautiful Netflix-style card for all game states
  */
 
-import { TournamentLeaderboard } from '../../../shared/ui/TournamentLeaderboard.js';
+// Removed: TournamentLeaderboard stub - replaced by UnifiedTournamentSystem
 
 export class EverythingCard {
     constructor() {
@@ -12,7 +12,7 @@ export class EverythingCard {
         this.isVisible = false;
         this.animationInProgress = false;
         this.currentPlayer = null;
-        this.tournamentLeaderboard = new TournamentLeaderboard();
+        // Removed: tournamentLeaderboard stub - using UnifiedTournamentSystem instead
         
         this.createContainer();
     }
@@ -673,24 +673,19 @@ export class EverythingCard {
             single: 0.25,
             daily: 3.00,
             monthly: 10.00
-        };
-        return prices[tier] || 0;
+        };        return prices[tier] || 0;
     }
 
-    // ...existing code...
     showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
-        console.log('🏆 Tournament leaderboard instance:', this.tournamentLeaderboard);
-        console.log('🏆 Tournament leaderboard container:', this.tournamentLeaderboard?.container);
+        // TODO: Replace with UnifiedTournamentSystem leaderboard
+        console.log('🏆 Leaderboard functionality moved to UnifiedTournamentSystem');
         
-        if (this.tournamentLeaderboard && this.tournamentLeaderboard.show) {
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-                this.tournamentLeaderboard.show();
-                console.log('🏆 Leaderboard show() method called');
-            }, 100);
+        // Placeholder for unified system integration
+        if (window.unifiedTournament && window.unifiedTournament.showLeaderboard) {
+            window.unifiedTournament.showLeaderboard();
         } else {
-            console.error('❌ Tournament leaderboard not properly initialized');
+            console.log('🏆 UnifiedTournamentSystem not yet integrated');
         }
     }
 

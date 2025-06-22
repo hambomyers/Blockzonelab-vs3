@@ -25,10 +25,9 @@ class GameRegistry {
                 hasTournaments: true,
                 entryCost: 'QUARTERS',
                 rewardToken: 'USDC'
-            },
-            ui: {
+            },            ui: {
                 card: 'EverythingCard',
-                leaderboard: 'TournamentLeaderboard'
+                leaderboard: 'UnifiedTournamentSystem' // Updated from TournamentLeaderboard stub
             },
             status: 'active'
         });
