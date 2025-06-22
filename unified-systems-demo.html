@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Systems Demo - BlockZone Lab</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .demo-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .demo-section {
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .demo-section h3 {
+            color: #00d4ff;
+            margin-top: 0;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .demo-button {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+        
+        .demo-button.secondary {
+            background: linear-gradient(45deg, #666, #888);
+        }
+        
+        .demo-button.primary {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+        }
+        
+        .status-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-item {
+            margin: 8px 0;
+            font-family: monospace;
+        }
+        
+        .log-area {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-success { color: #4ade80; }
+        .log-error { color: #f87171; }
+        .log-info { color: #60a5fa; }
+        .log-warning { color: #fbbf24; }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">🎮 Unified Systems Demo</h1>
+            <p>Interactive demonstration of BlockZone Lab's consolidated player, tournament, and UI systems</p>
+        </div>
+
+        <div class="demo-section">
+            <h3>🧑‍💼 Player System Demo</h3>
+            <p>Test player creation, login, experience, and balance management</p>
+            
+            <div class="button-grid">
+                <button class="demo-button primary" onclick="demo.createPlayer()">Create New Player</button>
+                <button class="demo-button" onclick="demo.addExperience()">Add Experience (+50 XP)</button>
+                <button class="demo-button" onclick="demo.addBalance()">Add Balance (+$5 USDC)</button>
+                <button class="demo-button secondary" onclick="demo.showPlayerStats()">Show Player Stats</button>
+            </div>
+            
+            <div class="status-display" id="playerStatus">
+                <div class="status-item">Player: <span id="playerName">Not logged in</span></div>
+                <div class="status-item">Level: <span id="playerLevel">-</span> | XP: <span id="playerXP">-</span></div>
+                <div class="status-item">USDC: $<span id="playerUSDC">0</span> | QUARTERS: <span id="playerQuarters">0</span> | Free Credits: <span id="playerFree">0</span></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🏆 Tournament System Demo</h3>
+            <p>Test tournament participation, score submission, and leaderboard</p>
+            
+            <div class="button-grid">
+                <button class="demo-button primary" onclick="demo.submitScore()">Submit Random Score</button>
+                <button class="demo-button" onclick="demo.showLeaderboard()">Show Leaderboard</button>
+                <button class="demo-button" onclick="demo.getTournamentInfo()">Tournament Info</button>
+                <button class="demo-button secondary" onclick="demo.refreshTournament()">Refresh Tournament</button>
+            </div>
+            
+            <div class="status-display" id="tournamentStatus">
+                <div class="status-item">Tournament: <span id="tournamentName">Loading...</span></div>
+                <div class="status-item">Your Rank: <span id="playerRank">-</span> | Best Score: <span id="bestScore">-</span></div>
+                <div class="status-item">Total Players: <span id="totalPlayers">-</span> | Games Played: <span id="totalGames">-</span></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎨 Player Card UI Demo</h3>
+            <p>Test the beautiful player card UI with different states</p>
+            
+            <div class="button-grid">
+                <button class="demo-button primary" onclick="demo.showWelcome()">Show Welcome Card</button>
+                <button class="demo-button" onclick="demo.showDashboard()">Show Dashboard</button>
+                <button class="demo-button" onclick="demo.showGameResults()">Show Game Results</button>
+                <button class="demo-button" onclick="demo.showLeaderboardCard()">Show Leaderboard Card</button>
+                <button class="demo-button secondary" onclick="demo.showPaymentModal()">Show Payment Modal</button>
+                <button class="demo-button secondary" onclick="demo.hideCard()">Hide Card</button>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>📊 System Integration Demo</h3>
+            <p>Test complete game flow and system communication</p>
+            
+            <div class="button-grid">
+                <button class="demo-button primary" onclick="demo.simulateGame()">Simulate Complete Game</button>
+                <button class="demo-button" onclick="demo.connectWallet()">Connect Wallet (Mock)</button>
+                <button class="demo-button" onclick="demo.processPayment()">Process Payment ($1.00)</button>
+                <button class="demo-button secondary" onclick="demo.runTests()">Run All Tests</button>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>📝 Activity Log</h3>
+            <div class="log-area" id="logArea"></div>
+            <button class="demo-button secondary" onclick="demo.clearLog()" style="margin-top: 10px;">Clear Log</button>
+        </div>
+    </div>
+
+    <!-- Import the unified systems -->
+    <script type="module">
+        import { UnifiedSystemsIntegration } from './shared/platform/UnifiedSystemsIntegration.js';
+        import { UnifiedSystemsTest } from './test-unified-systems.js';
+
+        class UnifiedSystemsDemo {
+            constructor() {
+                this.systems = null;
+                this.initialized = false;
+            }
+
+            async init() {
+                if (this.initialized) return;
+                
+                this.log('🚀 Initializing unified systems...', 'info');
+                
+                try {
+                    this.systems = new UnifiedSystemsIntegration({
+                        gameContainer: document.body,
+                        apiClient: null // Demo mode without backend
+                    });
+                    
+                    await this.systems.init();
+                    this.initialized = true;
+                    
+                    this.log('✅ Unified systems initialized successfully!', 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to initialize: ${error.message}`, 'error');
+                    throw error;
+                }
+            }
+
+            async createPlayer() {
+                await this.ensureInitialized();
+                
+                const names = ['CryptoGamer', 'BlockchainMaster', 'NeonDropper', 'QuantumPlayer', 'SonicSpeed'];
+                const randomName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
+                
+                try {
+                    const player = await this.systems.playerSystem.createPlayer({
+                        displayName: randomName,
+                        email: `${randomName.toLowerCase()}@demo.com`
+                    });
+                    
+                    this.log(`👤 Created player: ${player.displayName}`, 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to create player: ${error.message}`, 'error');
+                }
+            }
+
+            async addExperience() {
+                await this.ensureInitialized();
+                
+                try {
+                    await this.systems.playerSystem.addExperience(50);
+                    this.log('⭐ Added 50 XP', 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to add XP: ${error.message}`, 'error');
+                }
+            }
+
+            async addBalance() {
+                await this.ensureInitialized();
+                
+                try {
+                    await this.systems.playerSystem.updateBalance('usdc', 5);
+                    this.log('💰 Added $5 USDC', 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to add balance: ${error.message}`, 'error');
+                }
+            }
+
+            async showPlayerStats() {
+                await this.ensureInitialized();
+                
+                try {
+                    const player = await this.systems.getPlayer();
+                    if (!player) {
+                        this.log('⚠️ No player found. Create a player first.', 'warning');
+                        return;
+                    }
+                    
+                    this.log(`📊 Player Stats:`, 'info');
+                    this.log(`  Name: ${player.displayName}`, 'info');
+                    this.log(`  Level: ${player.level} (${player.experience} XP)`, 'info');
+                    this.log(`  Balances: $${player.balances.usdc} USDC, ${player.balances.quarters} QUARTERS, ${player.balances.freeCredits} Free`, 'info');
+                    this.log(`  Games Played: ${player.totalGamesPlayed}`, 'info');
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to show stats: ${error.message}`, 'error');
+                }
+            }
+
+            async submitScore() {
+                await this.ensureInitialized();
+                
+                try {
+                    const player = await this.systems.getPlayer();
+                    if (!player) {
+                        this.log('⚠️ No player found. Create a player first.', 'warning');
+                        return;
+                    }
+                    
+                    const randomScore = Math.floor(Math.random() * 10000) + 1000;
+                    const result = await this.systems.tournamentSystem.submitScore(
+                        player.id, 
+                        randomScore, 
+                        { playerName: player.displayName }
+                    );
+                    
+                    this.log(`🎮 Submitted score: ${randomScore} (Rank #${result.rank})`, 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to submit score: ${error.message}`, 'error');
+                }
+            }
+
+            async showLeaderboard() {
+                await this.ensureInitialized();
+                
+                try {
+                    const leaderboard = this.systems.tournamentSystem.getLeaderboard(5);
+                    this.log('🏆 Top 5 Leaderboard:', 'info');
+                    
+                    if (leaderboard.length === 0) {
+                        this.log('  No scores yet!', 'info');
+                    } else {
+                        leaderboard.forEach((entry, index) => {
+                            this.log(`  #${entry.rank}: ${entry.playerName} - ${entry.score.toLocaleString()}`, 'info');
+                        });
+                    }
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to show leaderboard: ${error.message}`, 'error');
+                }
+            }
+
+            async getTournamentInfo() {
+                await this.ensureInitialized();
+                
+                try {
+                    const tournament = this.systems.getCurrentTournament();
+                    if (!tournament) {
+                        this.log('⚠️ No active tournament', 'warning');
+                        return;
+                    }
+                    
+                    this.log(`🏆 Tournament Info:`, 'info');
+                    this.log(`  ID: ${tournament.id}`, 'info');
+                    this.log(`  Name: ${tournament.name}`, 'info');
+                    this.log(`  Type: ${tournament.type}`, 'info');
+                    this.log(`  Status: ${tournament.status}`, 'info');
+                    this.log(`  Total Players: ${tournament.totalPlayers}`, 'info');
+                    this.log(`  Highest Score: ${tournament.highestScore}`, 'info');
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to get tournament info: ${error.message}`, 'error');
+                }
+            }
+
+            async refreshTournament() {
+                await this.ensureInitialized();
+                
+                try {
+                    await this.systems.tournamentSystem.refreshLeaderboard();
+                    this.log('🔄 Tournament data refreshed', 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Failed to refresh tournament: ${error.message}`, 'error');
+                }
+            }
+
+            // UI Card Methods
+            async showWelcome() {
+                await this.ensureInitialized();
+                await this.systems.playerCard.showWelcome();
+                this.log('👋 Showing welcome card', 'info');
+            }
+
+            async showDashboard() {
+                await this.ensureInitialized();
+                await this.systems.playerCard.showPlayerDashboard();
+                this.log('📊 Showing dashboard card', 'info');
+            }
+
+            async showGameResults() {
+                await this.ensureInitialized();
+                const randomScore = Math.floor(Math.random() * 5000) + 1000;
+                await this.systems.playerCard.showGameResults(randomScore);
+                this.log(`🎮 Showing game results: ${randomScore}`, 'info');
+            }
+
+            async showLeaderboardCard() {
+                await this.ensureInitialized();
+                await this.systems.playerCard.showLeaderboard();
+                this.log('🏆 Showing leaderboard card', 'info');
+            }
+
+            async showPaymentModal() {
+                await this.ensureInitialized();
+                await this.systems.playerCard.showPaymentModal();
+                this.log('💰 Showing payment modal', 'info');
+            }
+
+            async hideCard() {
+                await this.ensureInitialized();
+                await this.systems.playerCard.hide();
+                this.log('✖️ Hiding player card', 'info');
+            }
+
+            // Integration Methods
+            async simulateGame() {
+                await this.ensureInitialized();
+                
+                try {
+                    this.log('🎮 Starting simulated game...', 'info');
+                    
+                    // Simulate game duration
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    const finalScore = Math.floor(Math.random() * 8000) + 2000;
+                    await this.systems.endGame(finalScore);
+                    
+                    this.log(`🏁 Game completed! Score: ${finalScore}`, 'success');
+                    
+                } catch (error) {
+                    this.log(`❌ Simulated game failed: ${error.message}`, 'error');
+                }
+            }
+
+            async connectWallet() {
+                await this.ensureInitialized();
+                
+                try {
+                    // Mock wallet connection
+                    const mockAddress = '0x' + Math.random().toString(16).substr(2, 40);
+                    await this.systems.playerSystem.connectWallet(mockAddress);
+                    this.log(`🔗 Mock wallet connected: ${mockAddress.substr(0, 8)}...`, 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Wallet connection failed: ${error.message}`, 'error');
+                }
+            }
+
+            async processPayment() {
+                await this.ensureInitialized();
+                
+                try {
+                    const result = await this.systems.playerSystem.processPayment({
+                        amount: 1.00,
+                        currency: 'usdc',
+                        description: 'Demo payment'
+                    });
+                    
+                    this.log(`💳 Payment processed: $1.00 (${result.method})`, 'success');
+                    await this.updateDisplay();
+                    
+                } catch (error) {
+                    this.log(`❌ Payment failed: ${error.message}`, 'error');
+                }
+            }
+
+            async runTests() {
+                this.log('🧪 Running test suite...', 'info');
+                
+                try {
+                    const test = new UnifiedSystemsTest();
+                    await test.runAllTests();
+                    this.log('✅ Test suite completed! Check console for details.', 'success');
+                    
+                } catch (error) {
+                    this.log(`❌ Test suite failed: ${error.message}`, 'error');
+                }
+            }
+
+            // Utility Methods
+            async ensureInitialized() {
+                if (!this.initialized) {
+                    await this.init();
+                }
+            }
+
+            async updateDisplay() {
+                try {
+                    const player = await this.systems.getPlayer();
+                    const tournament = this.systems.getCurrentTournament();
+                    
+                    // Update player display
+                    document.getElementById('playerName').textContent = player?.displayName || 'Not logged in';
+                    document.getElementById('playerLevel').textContent = player?.level || '-';
+                    document.getElementById('playerXP').textContent = player?.experience || '-';
+                    document.getElementById('playerUSDC').textContent = player?.balances.usdc || '0';
+                    document.getElementById('playerQuarters').textContent = player?.balances.quarters || '0';
+                    document.getElementById('playerFree').textContent = player?.balances.freeCredits || '0';
+                    
+                    // Update tournament display
+                    document.getElementById('tournamentName').textContent = tournament?.name || 'No active tournament';
+                    document.getElementById('totalPlayers').textContent = tournament?.totalPlayers || '-';
+                    document.getElementById('totalGames').textContent = tournament?.totalGames || '-';
+                    
+                    if (player) {
+                        const playerStats = this.systems.tournamentSystem.getPlayerStats(player.id);
+                        document.getElementById('playerRank').textContent = playerStats?.rank ? `#${playerStats.rank}` : '-';
+                        document.getElementById('bestScore').textContent = playerStats?.bestScore?.toLocaleString() || '-';
+                    }
+                    
+                } catch (error) {
+                    console.warn('Failed to update display:', error);
+                }
+            }
+
+            log(message, type = 'info') {
+                const logArea = document.getElementById('logArea');
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+                
+                logArea.appendChild(entry);
+                logArea.scrollTop = logArea.scrollHeight;
+            }
+
+            clearLog() {
+                document.getElementById('logArea').innerHTML = '';
+            }
+        }
+
+        // Make demo globally available
+        window.demo = new UnifiedSystemsDemo();
+        
+        // Auto-initialize
+        demo.init().catch(error => {
+            console.error('Failed to initialize demo:', error);
+        });
+    </script>
+</body>
+</html>
