@@ -15,13 +15,13 @@ import { Config } from './config.js';
 import { initializeUnifiedSystems } from '../../shared/platform/UnifiedSystemsIntegration.js';
 // Legacy imports removed - using unified systems
 import UniversalPaymentSystem from './UniversalPaymentSystem.js';
-import { EverythingCard } from './ui/EverythingCard.js';
+import { SimpleGameOver } from './ui/SimpleGameOver.js';
 
 // UI components
 import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
-// Removed: EverythingCard - using UnifiedPlayerCard via unified systems
+// Removed: EverythingCard - using SimpleGameOver for frictionless flow
 import { TournamentUI } from './ui/tournament-ui.js';
 
 // Shared systems
@@ -50,12 +50,11 @@ class NeonDrop {
         this.gameOverHandler = null;
         this.playerSystem = null;
         this.isUnifiedSystemsReady = false;
-        
-        // Unified Systems Integration
+          // Unified Systems Integration
         this.unifiedSystems = null; // Will be initialized async
         this.playerIdentity = null; // Legacy compatibility
         this.tournament = null; // Legacy compatibility  
-        this.everythingCard = null; // Legacy compatibility
+        // REMOVED: everythingCard - using SimpleGameOver
         
         // Payment system (still uses legacy for now)
         this.universalPayments = null; // Will be set after unified systems init        
@@ -81,11 +80,10 @@ class NeonDrop {
             window.tournamentSystem = this.unifiedSystems.tournamentSystem;
             window.playerCard = this.unifiedSystems.playerCard;
         }
-        
-        // Legacy compatibility references (for existing code)
+          // Legacy compatibility references (for existing code)
         window.universalIdentity = this.playerIdentity;
         window.leaderboard = this.tournament;
-        window.gameOverSequence = this.everythingCard;
+        // REMOVED: gameOverSequence - using SimpleGameOver
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;
         
@@ -106,20 +104,18 @@ class NeonDrop {
               // Initialize unified systems
             console.log('🚀 Initializing unified systems...');
             this.unifiedSystems = await initializeUnifiedSystems();
-            
-            // FIXED: Set up proper references
+              // FIXED: Set up proper references
             this.playerSystem = this.unifiedSystems.playerSystem;
             this.tournament = this.unifiedSystems.tournamentSystem;
-            
-            // FIXED: Initialize the beautiful EverythingCard with proper connections
-            this.gameOverHandler = new EverythingCard();
+              // FIXED: Initialize the simple, frictionless game over system
+            this.gameOverHandler = new SimpleGameOver();
             
             // FIXED: Set up compatibility aliases
             this.playerIdentity = this.playerSystem;
-            this.everythingCard = this.gameOverHandler;
+            // REMOVED: everythingCard legacy compatibility - using SimpleGameOver directly
             
             this.isUnifiedSystemsReady = true;
-            console.log('✅ Unified systems initialized with EverythingCard');
+            console.log('✅ Unified systems initialized with SimpleGameOver');
               // Set up compatibility aliases
             this.identity = this.playerIdentity;
             this.universalIdentity = this.playerIdentity;
@@ -192,14 +188,12 @@ class NeonDrop {
         // Beautiful tournament UI (keep for tournament mode)
         this.tournamentUI = new TournamentUI();
         this.tournamentUI.setTournament(this.tournament);
-        
-        // Use unified systems everythingCard (already set in initialize)
-        // this.everythingCard is already set from unified systems
-          // Make EverythingCard globally accessible
-        window.neonDrop.everythingCard = this.everythingCard;
+          // Use unified systems (SimpleGameOver already set in initialize)
+        // Make SimpleGameOver globally accessible
+        window.neonDrop.gameOverHandler = this.gameOverHandler;
           
         // FIXED: Skip UI state manager - using event-based system instead
-        // this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.everythingCard);
+        // this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.gameOverHandler);
         
         // Start with menu card visible instead of tournament modal
         // The menu card will be shown in setupGameMenuCard()
@@ -345,10 +339,10 @@ class NeonDrop {
         }, delay);
     }    // FIXED: Clean event binding
     bindEvents() {
-        // FIXED: Game over event - routes to EverythingCard
+        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
         document.addEventListener('gameOver', async (e) => {
             const { score, level, lines, time } = e.detail;
-            console.log('🎮 Game over event received - showing EverythingCard');
+            console.log('🎮 Game over event received - showing SimpleGameOver');
             
             if (this.gameOverHandler) {
                 await this.gameOverHandler.show(score, { level, lines, time });
@@ -357,17 +351,17 @@ class NeonDrop {
             }
         });
 
-        // FIXED: Game over choice handling
-        document.addEventListener('gameOverChoice', (e) => {
+        // FIXED: Simple game over choice handling
+        document.addEventListener('simpleGameOver', (e) => {
             const { action } = e.detail;
-            console.log('🎮 Game over choice:', action);
+            console.log('🎮 Simple game over action:', action);
             
             switch (action) {
                 case 'play-again':
                     this.startNewGame();
                     break;
-                case 'menu':
-                    this.returnToMenu();
+                case 'show-leaderboard':
+                    this.showLeaderboard();
                     break;
                 case 'leaderboard':
                     if (this.tournament && this.tournament.show) {
@@ -604,6 +598,19 @@ class NeonDrop {
         }
         
         this.showGameMenuCardWithDelay(500);
+    }
+
+    showLeaderboard() {
+        console.log('🏆 Showing leaderboard');
+        
+        // Use tournament system if available
+        if (this.tournament?.show) {
+            this.tournament.show();
+        } else if (this.tournamentUI?.show) {
+            this.tournamentUI.show();
+        } else {
+            console.warn('⚠️ No leaderboard system available');
+        }
     }
 }
 

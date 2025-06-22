@@ -667,9 +667,7 @@ export class UnifiedPlayerCard {
         `;
         
         this.bindPaymentEvents();
-    }
-
-    /**
+    }    /**
      * Show tournament leaderboard
      */
     async showLeaderboard() {
@@ -678,7 +676,8 @@ export class UnifiedPlayerCard {
         const tournament = this.tournamentSystem.getCurrentTournament();
         const leaderboard = this.tournamentSystem.getLeaderboard(20);
         const player = await this.playerSystem.getPlayer();
-        const playerStats = this.tournamentSystem.getPlayerStats(player.id);
+        const playerId = player?.id || 'anonymous';
+        const playerStats = player ? this.tournamentSystem.getPlayerStats(player.id) : null;
         
         this.container.innerHTML = `
             <div class="unified-card">
@@ -709,11 +708,10 @@ export class UnifiedPlayerCard {
                         </div>
                     </div>
                 ` : ''}
-                
-                <div class="leaderboard-list">
+                  <div class="leaderboard-list">
                     ${leaderboard.map(entry => `
-                        <div class="leaderboard-item ${entry.playerId === player.id ? 'current-player' : ''}" 
-                             style="${entry.playerId === player.id ? 'background: rgba(0,212,255,0.2); border: 1px solid #00d4ff;' : ''}">
+                        <div class="leaderboard-item ${entry.playerId === playerId ? 'current-player' : ''}" 
+                             style="${entry.playerId === playerId ? 'background: rgba(0,212,255,0.2); border: 1px solid #00d4ff;' : ''}">
                             <div class="leaderboard-rank">#${entry.rank}</div>
                             <div class="leaderboard-name">${entry.playerName}</div>
                             <div class="leaderboard-score">${entry.score.toLocaleString()}</div>
