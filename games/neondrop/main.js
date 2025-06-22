@@ -134,7 +134,8 @@ class NeonDrop {
             this.createSystems();
             this.setupUI();
             this.cleanupOldUI(); // Remove any old tournament UI elements
-            this.setupGameMenuCard(); // Add our elegant menu card
+            // TEMP DISABLED: Testing removal of unused game menu card
+            // this.setupGameMenuCard(); // Add our elegant menu card
             this.bindEvents();
             this.startLoop();
             
@@ -197,8 +198,10 @@ class NeonDrop {
         
         // Start with menu card visible instead of tournament modal
         // The menu card will be shown in setupGameMenuCard()
-    }
-
+    }    // REMOVED: setupGameMenuCard() - was unused (no HTML element, empty JS file)
+    // The game menu card was referenced but never implemented
+    // Game works perfectly without it
+    /*
     setupGameMenuCard() {
         // Wait for DOM to be ready
         const initCard = () => {            this.gameMenuCard = document.getElementById('game-menu-card');
@@ -232,6 +235,7 @@ class NeonDrop {
             initCard();
         }
     }
+    */
 
     /**
      * Clean up any old/legacy UI elements that might still exist
@@ -274,7 +278,7 @@ class NeonDrop {
         console.log('🎮 Menu choice:', mode);
         
         // Hide the menu card with elegant animation
-        this.hideGameMenuCard();
+        // REMOVED: hideGameMenuCard(); - unused menu system
         
         // Handle different game modes
         switch (mode) {
@@ -317,9 +321,10 @@ class NeonDrop {
             this.engine.startFreePlay();
         }
         // Hide UI panels for clean gameplay
-        this.uiStateManager.setState('GAME_ACTIVE');
-    }
+        this.uiStateManager.setState('GAME_ACTIVE');    }
 
+    // REMOVED: All gameMenuCard methods - unused (no HTML element)
+    /*
     showGameMenuCard() {
         if (this.gameMenuCard) {
             this.gameMenuCard.classList.remove('hidden');
@@ -337,7 +342,8 @@ class NeonDrop {
         setTimeout(() => {
             this.showGameMenuCard();
         }, delay);
-    }    // FIXED: Clean event binding
+    }
+    */// FIXED: Clean event binding
     bindEvents() {
         // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
         document.addEventListener('gameOver', async (e) => {
@@ -557,7 +563,7 @@ class NeonDrop {
         this.uiStateManager.returnToMenu();
         
         // Show the elegant menu card after a brief delay
-        this.showGameMenuCardWithDelay(1000);
+        // REMOVED: showGameMenuCardWithDelay(1000); - unused menu system
     }
 
     destroy() {
@@ -597,7 +603,7 @@ class NeonDrop {
             this.engine.returnToMenu();
         }
         
-        this.showGameMenuCardWithDelay(500);
+        // REMOVED: showGameMenuCardWithDelay(500); - unused menu system
     }
 
     showLeaderboard() {
