@@ -31,16 +31,37 @@ export class UniversalPaymentSystem {
         this.initialize();
     }
 
-    async initialize() {
-        try {
-            // Initialize based on current player tier
+    async initialize() {        try {
+            // Safety check for player identity
+            if (!this.playerIdentity || !this.playerIdentity.getIdentity) {
+                console.warn('⚠️ Player identity not available, using anonymous tier');
+                const identity = { tier: 'anonymous' };
+                await this.handleInitialization(identity);
+                return;
+            }
+              // Initialize based on current player tier
             const identity = await this.playerIdentity.getIdentity();
             
+            // Additional safety check for null identity
+            if (!identity) {
+                console.warn('⚠️ Identity is null, using anonymous fallback');
+                await this.handleInitialization({ tier: 'anonymous' });
+                return;
+            }
+            
+            await this.handleInitialization(identity);
+            
+        } catch (error) {
+            console.error('❌ Payment system initialization failed:', error);
+        }
+    }
+
+    async handleInitialization(identity) {
+        try {
             // Platform detection
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             const isMac = /Macintosh/.test(navigator.userAgent);
-            const supportsApplePay = isIOS || isMac;
-            
+            const supportsApplePay = isIOS || isMac;            
             // Initialize available payment methods
             if (supportsApplePay && identity.tier !== 'anonymous') {
                 await this.initializeApplePay();
@@ -60,7 +81,7 @@ export class UniversalPaymentSystem {
             console.log('✅ Payment system ready');
             
         } catch (error) {
-            console.error('❌ Payment system initialization failed:', error);
+            console.error('❌ Payment system handleInitialization failed:', error);
         }
     }
 

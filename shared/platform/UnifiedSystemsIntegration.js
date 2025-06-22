@@ -33,8 +33,105 @@ export class UnifiedSystemsIntegration {
             tournamentEvents: [],
             uiEvents: []
         };
+          this.log('🚀 Unified Systems Integration initialized');
+    }
+
+    /**
+     * Logging utility
+     */    log(...args) {
+        if (this.config.enableLogging) {
+            console.log(...args);
+        }
+    }
+
+    /**
+     * Set up legacy compatibility mappings
+     */    setupLegacyCompatibility() {
+        this.log('🔗 Setting up legacy compatibility...');
         
-        this.log('🚀 Unified Systems Integration initialized');
+        // Create legacy mappings for existing code
+        this.legacyMappings = new Map();
+        
+        // Add legacy methods to player system for backward compatibility
+        this.playerSystem.getIdentity = async () => {
+            const player = await this.playerSystem.getPlayer();
+            return player ? {
+                id: player.id,
+                displayName: player.displayName,
+                walletAddress: player.walletAddress,
+                tier: player.tier || 'free'
+            } : null;
+        };
+        
+        this.legacyMappings.set('UniversalIdentity', this.playerSystem);
+        this.legacyMappings.set('DailyTournament', this.tournamentSystem);
+        this.legacyMappings.set('EverythingCard', this.playerCard);
+        
+        this.log('✅ Legacy compatibility configured');
+    }
+
+    /**
+     * Set up global references for existing code
+     */
+    setupGlobalReferences() {
+        this.log('🌐 Setting up global references...');
+        
+        // Modern unified system references
+        if (typeof window !== 'undefined') {
+            window.unifiedSystems = this;
+            window.playerSystem = this.playerSystem;
+            window.tournamentSystem = this.tournamentSystem;
+            window.playerCard = this.playerCard;
+        }
+        
+        this.log('✅ Global references configured');
+    }
+
+    /**
+     * Set up event bridging between systems
+     */
+    setupEventBridging() {
+        this.log('🌉 Setting up event bridging...');
+        
+        // Bridge events between systems
+        if (this.playerSystem && this.tournamentSystem) {
+            this.playerSystem.on('player-updated', (data) => {
+                this.tournamentSystem.updatePlayerInfo(data);
+            });
+            
+            this.tournamentSystem.on('score-submitted', (data) => {
+                this.playerSystem.updateGameStats(data.gameId, data.stats);
+            });
+        }
+        
+        this.log('✅ Event bridging configured');
+    }
+
+    /**
+     * Migrate existing data to unified systems
+     */
+    async migrateExistingData() {
+        this.log('📦 Migrating existing data...');
+        
+        try {
+            // Check for existing player data in localStorage
+            const existingData = localStorage.getItem('blockzone-player');
+            if (existingData) {
+                const playerData = JSON.parse(existingData);
+                this.log('🔄 Found existing player data, migrating...');
+                
+                // Migrate to unified player system
+                await this.playerSystem.createPlayer({
+                    displayName: playerData.displayName || 'Player',
+                    walletAddress: playerData.walletAddress,
+                    stats: playerData.stats || {}
+                });
+            }
+            
+            this.log('✅ Data migration complete');
+        } catch (error) {
+            this.log('⚠️ Data migration failed:', error);
+        }
     }
 
     /**
@@ -43,10 +140,9 @@ export class UnifiedSystemsIntegration {
     async initialize() {
         try {
             this.log('🔄 Initializing unified systems...');
-            
-            // Initialize core systems
-            await this.playerSystem.initialize();
-            await this.tournamentSystem.initialize();
+              // Initialize core systems
+            await this.playerSystem.init();
+            await this.tournamentSystem.init();
             
             // Set up legacy compatibility
             this.setupLegacyCompatibility();
@@ -333,6 +429,20 @@ export class UnifiedSystemsIntegration {
         
         console.log('🛑 Unified Systems Integration destroyed');
     }
+}
+
+/**
+ * Initialize Unified Systems - Drop-in replacement function
+ * Creates and initializes all unified systems with legacy compatibility
+ */
+export async function initializeUnifiedSystems(config = {}) {
+    console.log('🚀 Initializing unified systems integration...');
+    
+    const integration = new UnifiedSystemsIntegration(config);
+    await integration.initialize();
+    
+    console.log('✅ Unified systems integration complete');
+    return integration;
 }
 
 export default UnifiedSystemsIntegration;

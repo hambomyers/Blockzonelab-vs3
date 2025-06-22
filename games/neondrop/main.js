@@ -39,11 +39,17 @@ class NeonDrop {
         this.renderer = null;
         this.audio = null;
         this.input = null;
-        
-        // UI systems
+          // UI systems
         this.guide = null;
         this.stats = null;
-        this.tournamentUI = null;        this.uiStateManager = new UIStateManager();          
+        this.tournamentUI = null;
+        // FIXED: Remove conflicting UI state manager
+        // this.uiStateManager = new UIStateManager();          
+        
+        // FIXED: Single source of truth for game over handling
+        this.gameOverHandler = null;
+        this.playerSystem = null;
+        this.isUnifiedSystemsReady = false;
         
         // Unified Systems Integration
         this.unifiedSystems = null; // Will be initialized async
@@ -97,26 +103,33 @@ class NeonDrop {
         try {
             await this.config.load();
             this.setupDisplay();
-            
-            // Initialize unified systems
+              // Initialize unified systems
             console.log('🚀 Initializing unified systems...');
             this.unifiedSystems = await initializeUnifiedSystems();
-              // Set up legacy compatibility references
-            this.playerIdentity = this.unifiedSystems.legacyMappings.get('UniversalIdentity');
-            this.tournament = this.unifiedSystems.legacyMappings.get('DailyTournament');
-
-            // Keep beautiful EverythingCard but connect to unified systems
-            if (!this.everythingCard) {
-                this.everythingCard = new EverythingCard();
-            }
-            this.everythingCard.connectToUnifiedSystems(this.unifiedSystems);
             
-            // Set up compatibility aliases
+            // FIXED: Set up proper references
+            this.playerSystem = this.unifiedSystems.playerSystem;
+            this.tournament = this.unifiedSystems.tournamentSystem;
+            
+            // FIXED: Initialize the beautiful EverythingCard with proper connections
+            this.gameOverHandler = new EverythingCard();
+            
+            // FIXED: Set up compatibility aliases
+            this.playerIdentity = this.playerSystem;
+            this.everythingCard = this.gameOverHandler;
+            
+            this.isUnifiedSystemsReady = true;
+            console.log('✅ Unified systems initialized with EverythingCard');
+              // Set up compatibility aliases
             this.identity = this.playerIdentity;
             this.universalIdentity = this.playerIdentity;
             
-            // Initialize payment system with unified identity
-            this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
+            // Initialize payment system with unified identity (with safety check)
+            if (this.playerIdentity) {
+                this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
+            } else {
+                console.warn('⚠️ Player identity not ready, skipping payment system for now');
+            }
               console.log('✅ Unified systems initialized with legacy compatibility');
             
             // Update global references with unified systems
@@ -182,12 +195,11 @@ class NeonDrop {
         
         // Use unified systems everythingCard (already set in initialize)
         // this.everythingCard is already set from unified systems
-        
-        // Make EverythingCard globally accessible
+          // Make EverythingCard globally accessible
         window.neonDrop.everythingCard = this.everythingCard;
           
-        // Initialize professional UI state management with all UI elements
-        this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.everythingCard);
+        // FIXED: Skip UI state manager - using event-based system instead
+        // this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.everythingCard);
         
         // Start with menu card visible instead of tournament modal
         // The menu card will be shown in setupGameMenuCard()
@@ -195,10 +207,9 @@ class NeonDrop {
 
     setupGameMenuCard() {
         // Wait for DOM to be ready
-        const initCard = () => {
-            this.gameMenuCard = document.getElementById('game-menu-card');
+        const initCard = () => {            this.gameMenuCard = document.getElementById('game-menu-card');
             if (!this.gameMenuCard) {
-                console.error('Game menu card not found');
+                console.log('Game menu card not found - this is optional for core gameplay');
                 return;
             }
 
@@ -332,34 +343,48 @@ class NeonDrop {
         setTimeout(() => {
             this.showGameMenuCard();
         }, delay);
-    }bindEvents() {        // Game over choices - now handled by state manager
-        document.addEventListener('gameOverChoice', e => {
-            const { action, score } = e.detail;
-            console.log('🎮 Game over choice received:', action);
+    }    // FIXED: Clean event binding
+    bindEvents() {
+        // FIXED: Game over event - routes to EverythingCard
+        document.addEventListener('gameOver', async (e) => {
+            const { score, level, lines, time } = e.detail;
+            console.log('🎮 Game over event received - showing EverythingCard');
             
-            switch (action) {                case 'leaderboard': 
-                    window.leaderboard.show(score); 
-                    break;case 'play-again': 
-                    this.returnToMenuViaStateManager();
+            if (this.gameOverHandler) {
+                await this.gameOverHandler.show(score, { level, lines, time });
+            } else {
+                console.error('❌ Game over handler not initialized');
+            }
+        });
+
+        // FIXED: Game over choice handling
+        document.addEventListener('gameOverChoice', (e) => {
+            const { action } = e.detail;
+            console.log('🎮 Game over choice:', action);
+            
+            switch (action) {
+                case 'play-again':
+                    this.startNewGame();
                     break;
-                case 'menu': 
-                    this.returnToMenuViaStateManager();
+                case 'menu':
+                    this.returnToMenu();
+                    break;
+                case 'leaderboard':
+                    if (this.tournament && this.tournament.show) {
+                        this.tournament.show();
+                    }
                     break;
             }
-        });// Game over state transition - move to results modal
-        document.addEventListener('gameOver', e => {
-            const { score, level, lines, time } = e.detail;
-            console.log('🎮 Game over event received - transitioning to results modal');
-            console.log('📊 Score:', score, 'Level:', level, 'Lines:', lines, 'Time:', time);
-            this.uiStateManager.setState('RESULTS_MODAL', { score, level, lines, time });
-        });        // Leaderboard dismissed - return to tournament modal
-        document.addEventListener('leaderboardDismissed', e => {
-            console.log('🏆 Leaderboard dismissed, returning to tournament modal');
-            this.returnToMenuViaStateManager();
-        });// Tournament selection/start game
+        });
+
+        // Tournament selection/start game
         document.addEventListener('startGame', e => {
             console.log('🎮 Starting game from tournament UI');
-            this.uiStateManager.beginGameplay();        });
+            if (this.gameOverHandler) {
+                this.gameOverHandler.hide();
+            }
+            this.startNewGame();
+        });
 
         // Window resize (debounced)
         let resizeTimer;
@@ -476,13 +501,13 @@ class NeonDrop {
         // Initialize audio on first interaction
         if (!this.audio.initialized) {
             this.audio.init();
-        }
-
-        // Ensure input system is ready when starting a game
+        }        // Ensure input system is ready when starting a game
         if (action.type === 'START_GAME') {
             console.log('🎮 Starting game - beginning gameplay session');
-            // Input controller is already initialized, no need for ensureReady
-            this.uiStateManager.beginGameplay();
+            // FIXED: Direct game engine interaction instead of UI state manager
+            if (this.engine) {
+                this.engine.startFreePlay();
+            }
         }
         
         this.engine.handleInput(action);
@@ -542,18 +567,52 @@ class NeonDrop {
     }
 
     destroy() {
-        this.running = false;
-        this.audio?.destroy();
+        this.running = false;        this.audio?.destroy();
         console.log('🛑 NeonDrop shutdown');
+    }
+
+    // FIXED: Clean game start
+    async startNewGame() {
+        console.log('🎮 Starting new game');
+        
+        if (this.gameOverHandler) {
+            this.gameOverHandler.hide();
+        }
+        
+        if (this.engine) {
+            this.engine.returnToMenu();
+        }
+        
+        // Brief delay for smooth transition
+        setTimeout(() => {
+            if (this.engine) {
+                this.engine.startFreePlay();
+            }
+        }, 300);
+    }
+
+    // FIXED: Clean menu return
+    returnToMenu() {
+        console.log('🔄 Returning to menu');
+        
+        if (this.gameOverHandler) {
+            this.gameOverHandler.hide();
+        }
+        
+        if (this.engine) {
+            this.engine.returnToMenu();
+        }
+        
+        this.showGameMenuCardWithDelay(500);
     }
 }
 
 
 // Auto-initialize
-function startGame() {
+async function startGame() {
     try {
         const game = new NeonDrop();
-        game.initialize();
+        await game.initialize();
         // Global reference is set in setupGlobals()
     } catch (error) {
         console.error('Failed to start NeonDrop:', error);
