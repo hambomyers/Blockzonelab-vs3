@@ -12,18 +12,20 @@ import { ViewportManager } from './core/viewport-manager.js';
 
 // Game configuration and identity
 import { Config } from './config.js';
-import UniversalIdentity from '../../shared/platform/systems/UniversalIdentity.js';
+import { initializeUnifiedSystems } from '../../shared/platform/UnifiedSystemsIntegration.js';
+// Legacy imports removed - using unified systems
 import UniversalPaymentSystem from './UniversalPaymentSystem.js';
+import { EverythingCard } from './ui/EverythingCard.js';
 
 // UI components
 import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
-import { EverythingCard } from './ui/EverythingCard.js';
+// Removed: EverythingCard - using UnifiedPlayerCard via unified systems
 import { TournamentUI } from './ui/tournament-ui.js';
 
 // Shared systems
-import { DailyTournament } from '../../shared/tournaments/daily-tournament.js';
+// Removed: DailyTournament - using UnifiedTournamentSystem via unified systems
 import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
 
 class NeonDrop {
@@ -41,38 +43,47 @@ class NeonDrop {
         // UI systems
         this.guide = null;
         this.stats = null;
-        this.tournamentUI = null;
-        this.uiStateManager = new UIStateManager();          // Simple identity system (username + optional wallet)
-        this.playerIdentity = UniversalIdentity;
+        this.tournamentUI = null;        this.uiStateManager = new UIStateManager();          
         
-        // Payment system
-        this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
+        // Unified Systems Integration
+        this.unifiedSystems = null; // Will be initialized async
+        this.playerIdentity = null; // Legacy compatibility
+        this.tournament = null; // Legacy compatibility  
+        this.everythingCard = null; // Legacy compatibility
         
-        // Alias for compatibility
-        this.identity = this.playerIdentity;
-        this.universalIdentity = this.playerIdentity; // Keep for existing code
-        // Leaderboard is now handled by EverythingCard/tournament system
+        // Payment system (still uses legacy for now)
+        this.universalPayments = null; // Will be set after unified systems init        
+        // Alias for compatibility  
+        this.identity = null; // Will be set after unified systems init
+        this.universalIdentity = null; // Will be set after unified systems init
         
         // Web3 systems (bulletproof)
-        this.tournament = new DailyTournament();
         this.payment = new USDCPaymentSystem();
-        
-        // State
+          // State
         this.running = false;
         this.lastTime = performance.now();
         this.accumulator = 0;
         
-        // Global access for UI systems
+        // Setup basic globals (unified systems will be added after init)
         this.setupGlobals();
-    }
-
-    setupGlobals() {
-        // Set up the complete global API that panels expect
-        window.neonDrop = this;  // Panels expect the game instance directly
-        window.leaderboard = this.tournament; // Use tournament system for leaderboard
-        window.gameOverSequence = this.everythingCard; // Use EverythingCard instead
+    }    setupGlobals() {
+        // Modern unified system references (when available)
+        window.neonDrop = this;
+        if (this.unifiedSystems) {
+            window.unifiedSystems = this.unifiedSystems;
+            window.playerSystem = this.unifiedSystems.playerSystem;
+            window.tournamentSystem = this.unifiedSystems.tournamentSystem;
+            window.playerCard = this.unifiedSystems.playerCard;
+        }
+        
+        // Legacy compatibility references (for existing code)
+        window.universalIdentity = this.playerIdentity;
+        window.leaderboard = this.tournament;
+        window.gameOverSequence = this.everythingCard;
         window.dailyTournament = this.tournament;
         window.usdcPayment = this.payment;
+        
+        console.log('🌐 Global references configured for unified systems');
     }
     
     // Methods expected by panels
@@ -82,12 +93,35 @@ class NeonDrop {
 
     getConfig() {
         return this.config || {};
-    }
-
-    async initialize() {
+    }    async initialize() {
         try {
             await this.config.load();
             this.setupDisplay();
+            
+            // Initialize unified systems
+            console.log('🚀 Initializing unified systems...');
+            this.unifiedSystems = await initializeUnifiedSystems();
+              // Set up legacy compatibility references
+            this.playerIdentity = this.unifiedSystems.legacyMappings.get('UniversalIdentity');
+            this.tournament = this.unifiedSystems.legacyMappings.get('DailyTournament');
+
+            // Keep beautiful EverythingCard but connect to unified systems
+            if (!this.everythingCard) {
+                this.everythingCard = new EverythingCard();
+            }
+            this.everythingCard.connectToUnifiedSystems(this.unifiedSystems);
+            
+            // Set up compatibility aliases
+            this.identity = this.playerIdentity;
+            this.universalIdentity = this.playerIdentity;
+            
+            // Initialize payment system with unified identity
+            this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
+              console.log('✅ Unified systems initialized with legacy compatibility');
+            
+            // Update global references with unified systems
+            this.setupGlobals();
+            
             this.createSystems();
             this.setupUI();
             this.cleanupOldUI(); // Remove any old tournament UI elements
@@ -135,19 +169,19 @@ class NeonDrop {
             this.config,
             () => this.tournamentUI ? this.tournamentUI.isVisible : false
         );
-    }
-
-    setupUI() {
+    }    setupUI() {
         this.guide = new GuidePanel();
         this.guide.positionPanel();
         
         this.stats = new StatsPanel();
-        this.stats.positionPanel();        // Beautiful tournament UI (keep for tournament mode)
+        this.stats.positionPanel();        
+        
+        // Beautiful tournament UI (keep for tournament mode)
         this.tournamentUI = new TournamentUI();
         this.tournamentUI.setTournament(this.tournament);
         
-        // Initialize EverythingCard as the universal interface
-        this.everythingCard = new EverythingCard();
+        // Use unified systems everythingCard (already set in initialize)
+        // this.everythingCard is already set from unified systems
         
         // Make EverythingCard globally accessible
         window.neonDrop.everythingCard = this.everythingCard;

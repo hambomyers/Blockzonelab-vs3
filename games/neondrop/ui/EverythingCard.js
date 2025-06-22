@@ -12,7 +12,10 @@ export class EverythingCard {
         this.isVisible = false;
         this.animationInProgress = false;
         this.currentPlayer = null;
-        // Removed: tournamentLeaderboard stub - using UnifiedTournamentSystem instead
+        // Unified systems integration
+        this.unifiedSystems = null;
+        this.playerSystem = null;
+        this.tournamentSystem = null;
         
         this.createContainer();
     }
@@ -674,19 +677,24 @@ export class EverythingCard {
             daily: 3.00,
             monthly: 10.00
         };        return prices[tier] || 0;
-    }
-
-    showLeaderboard() {
+    }    showLeaderboard() {
         console.log('🏆 Opening tournament leaderboard');
-        // TODO: Replace with UnifiedTournamentSystem leaderboard
-        console.log('🏆 Leaderboard functionality moved to UnifiedTournamentSystem');
         
-        // Placeholder for unified system integration
-        if (window.unifiedTournament && window.unifiedTournament.showLeaderboard) {
-            window.unifiedTournament.showLeaderboard();
-        } else {
-            console.log('🏆 UnifiedTournamentSystem not yet integrated');
+        // Use unified tournament system if available
+        if (this.tournamentSystem) {
+            console.log('🏆 Using unified tournament system leaderboard');
+            this.tournamentSystem.show(); // This should show UnifiedPlayerCard leaderboard
+            return;
         }
+        
+        // Fallback to global leaderboard
+        if (window.leaderboard && window.leaderboard.show) {
+            console.log('🏆 Using global leaderboard');
+            window.leaderboard.show();
+            return;
+        }
+        
+        console.warn('🏆 No leaderboard system available');
     }
 
     hide() {
@@ -742,10 +750,30 @@ export class EverythingCard {
         });
         
         return container;
-    }
-
-    async submitScoreToTournament() {
+    }    async submitScoreToTournament() {
         try {
+            // Use unified tournament system if available
+            if (this.tournamentSystem && this.currentPlayer) {
+                console.log('🏆 Submitting score via unified tournament system');
+                
+                const result = await this.tournamentSystem.submitScore(
+                    this.currentPlayer.id,
+                    this.finalScore,
+                    {
+                        playerName: this.currentPlayer.displayName,
+                        gameData: { level: 5, lines: 25 } // Add actual game data
+                    }
+                );
+                
+                if (result) {
+                    console.log('🏆 Score submitted successfully via unified system:', result);
+                    this.currentPlayer.rank = result.rank;
+                    this.currentPlayer.totalPlayers = result.totalPlayers;
+                    return;
+                }
+            }
+            
+            // Fallback to original API call
             const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/tournament/submit-score', {
                 method: 'POST',
                 headers: {
@@ -755,26 +783,43 @@ export class EverythingCard {
                     playerId: this.currentPlayer.id,
                     playerName: this.currentPlayer.displayName,
                     score: this.finalScore,
-                    walletAddress: '0x742d35Cc6548C6532C' // Future: get from wallet connection
+                    walletAddress: this.currentPlayer.walletAddress || '0x742d35Cc6548C6532C'
                 })
             });
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('🏆 Score submitted successfully:', result);
+                console.log('🏆 Score submitted successfully via API:', result);
                 this.currentPlayer.rank = result.newRank;
                 this.currentPlayer.totalPlayers = result.totalPlayers;
             } else {
-                console.warn('Failed to submit score to tournament');
+                console.warn('Failed to submit score to tournament API');
             }
         } catch (error) {
             console.error('Error submitting score:', error);
         }
-    }
-
-    async loadCurrentPlayer() {
+    }async loadCurrentPlayer() {
         try {
-            // Get the real player identity from the main game system
+            // Use unified systems if available
+            if (this.playerSystem) {
+                const player = await this.playerSystem.getPlayer();
+                
+                this.currentPlayer = {
+                    id: player.id,
+                    displayName: player.displayName || 'Anonymous Player',
+                    score: this.finalScore,
+                    walletAddress: player.walletAddress,
+                    level: player.level,
+                    experience: player.experience,
+                    stats: player.stats,
+                    tier: player.tier || 'anonymous'
+                };
+                
+                console.log('🎮 Loaded player from unified systems:', this.currentPlayer.displayName);
+                return;
+            }
+            
+            // Fallback to original logic
             if (window.neonDrop && window.neonDrop.playerIdentity) {
                 const identity = await window.neonDrop.playerIdentity.getIdentity();
                 
@@ -786,9 +831,9 @@ export class EverythingCard {
                     tier: identity.tier || 'anonymous'
                 };
                 
-                console.log('🎮 Loaded real player identity:', this.currentPlayer.displayName);
+                console.log('🎮 Loaded player from legacy identity:', this.currentPlayer.displayName);
             } else {
-                // Fallback if identity system isn't available
+                // Emergency fallback
                 this.currentPlayer = {
                     id: 'fallback_player',
                     displayName: 'Player',
@@ -1130,5 +1175,43 @@ export class EverythingCard {
         } else {
             window.location.reload();
         }
+    }
+
+    /**
+     * Connect EverythingCard to unified systems for data access
+     */
+    connectToUnifiedSystems(unifiedSystems) {
+        console.log('🔗 Connecting EverythingCard to unified systems');
+        
+        this.unifiedSystems = unifiedSystems;
+        this.playerSystem = unifiedSystems.playerSystem;
+        this.tournamentSystem = unifiedSystems.tournamentSystem;
+        
+        // Set up real-time data access
+        this.setupUnifiedDataAccess();
+        
+        console.log('✅ EverythingCard connected to unified systems');
+    }
+
+    /**
+     * Set up real-time data access from unified systems
+     */
+    setupUnifiedDataAccess() {
+        // Listen for player updates
+        this.playerSystem.on('player:level-up', (data) => {
+            console.log('🎉 Player leveled up:', data);
+            // Could show celebration animation
+        });
+        
+        this.playerSystem.on('player:achievement-unlocked', (data) => {
+            console.log('🏆 Achievement unlocked:', data);
+            // Could show achievement notification
+        });
+        
+        // Listen for tournament updates
+        this.tournamentSystem.on('tournament:score-submitted', (data) => {
+            console.log('📊 Score submitted:', data);
+            // Update display with new rank
+        });
     }
 }
