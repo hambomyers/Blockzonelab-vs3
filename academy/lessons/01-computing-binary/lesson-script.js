@@ -1,237 +1,303 @@
-// Lesson 1: Computing & Binary Fundamentals - Quiz Engine
-// This script handles the interactive binary demo and quiz functionality
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Computing & Binary Fundamentals - The Academy</title>
+    <!-- Import centralized CSS system -->
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    <!-- Dynamic Bitcoin Price Updates -->
+    <script src="../../../core-systems/bitcoin-price.js"></script>
+    <style>
+        /* All your existing styles remain exactly the same */
+        .lesson-hero-redesigned {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(212, 175, 55, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+            padding: var(--space-8) var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
 
-// Binary Demo Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Binary Interactive Demo
-    const bits = document.querySelectorAll('.bit');
-    const binaryDisplay = document.getElementById('binaryValue');
-    const decimalDisplay = document.getElementById('decimalValue');
-    
-    bits.forEach(bit => {
-        bit.addEventListener('click', function() {
-            const currentValue = this.textContent;
-            this.textContent = currentValue === '0' ? '1' : '0';
-            this.classList.toggle('active', this.textContent === '1');
-            updateBinaryDisplay();
-        });
-    });
-    
-    function updateBinaryDisplay() {
-        let binaryString = '';
-        let decimalValue = 0;
-        
-        bits.forEach((bit, index) => {
-            const bitValue = bit.textContent;
-            binaryString += bitValue;
-            if (bitValue === '1') {
-                decimalValue += Math.pow(2, 7 - index);
-            }
-        });
-        
-        binaryDisplay.textContent = binaryString;
-        decimalDisplay.textContent = decimalValue;
-    }
-    
-    // Quiz Data
-    const quizQuestions = [
-        // Information Theory & Binary (5 questions)
-        {
-            question: "Who proved that any information could be encoded using just two symbols?",
-            options: ["Alan Turing", "Claude Shannon", "John von Neumann", "Charles Babbage"],
-            correct: 1
-        },
-        {
-            question: "In what year was 'A Mathematical Theory of Communication' published?",
-            options: ["1937", "1948", "1969", "1991"],
-            correct: 1
-        },
-        {
-            question: "What is the fundamental unit of information in computing?",
-            options: ["Byte", "Bit", "Nibble", "Word"],
-            correct: 1
-        },
-        {
-            question: "What does 'bit' stand for?",
-            options: ["Basic Information Type", "Binary Digit", "Byte Information Transfer", "Binary Information Technology"],
-            correct: 1
-        },
-        {
-            question: "How many different values can one bit store?",
-            options: ["1", "2", "4", "8"],
-            correct: 1
-        },
-        
-        // Binary Math (5 questions)
-        {
-            question: "What is 1010 in binary converted to decimal?",
-            options: ["8", "10", "12", "16"],
-            correct: 1
-        },
-        {
-            question: "What is the binary representation of decimal 15?",
-            options: ["1111", "1110", "1101", "1100"],
-            correct: 0
-        },
-        {
-            question: "In an 8-bit system, what is the largest decimal number you can represent?",
-            options: ["128", "255", "256", "512"],
-            correct: 1
-        },
-        {
-            question: "What is 101 + 110 in binary?",
-            options: ["1011", "1100", "1001", "1111"],
-            correct: 0
-        },
-        {
-            question: "How many bits are in one byte?",
-            options: ["4", "6", "8", "16"],
-            correct: 2
+        .lesson-hero-redesigned::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
         }
-    ];
 
-    // Quiz Logic
-    let currentQuestion = 0;
-    let score = 0;
-    let quizCompleted = false;
-    
-    const quizContainer = document.getElementById('quizContainer');
-    const questionElement = document.getElementById('questionText');
-    const optionsContainer = document.getElementById('optionsContainer');
-    const nextButton = document.getElementById('nextQuestion');
-    const resultContainer = document.getElementById('resultContainer');
-    const progressBar = document.querySelector('.progress-fill');
-    
-    function startQuiz() {
-        currentQuestion = 0;
-        score = 0;
-        quizCompleted = false;
-        quizContainer.style.display = 'block';
-        resultContainer.style.display = 'none';
-        displayQuestion();
-    }
-    
-    function displayQuestion() {
-        const question = quizQuestions[currentQuestion];
-        questionElement.textContent = question.question;
-        
-        optionsContainer.innerHTML = '';
-        question.options.forEach((option, index) => {
-            const optionButton = document.createElement('button');
-            optionButton.className = 'option-btn';
-            optionButton.textContent = option;
-            optionButton.onclick = () => selectOption(index);
-            optionsContainer.appendChild(optionButton);
-        });
-        
-        nextButton.style.display = 'none';
-        updateProgressBar();
-    }
-    
-    function selectOption(selectedIndex) {
-        const options = document.querySelectorAll('.option-btn');
-        const question = quizQuestions[currentQuestion];
-        
-        options.forEach((option, index) => {
-            option.disabled = true;
-            if (index === question.correct) {
-                option.classList.add('correct');
-            } else if (index === selectedIndex && index !== question.correct) {
-                option.classList.add('incorrect');
+        @keyframes heroGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: var(--space-3);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--color-white), var(--color-gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-6);
+            font-weight: 400;
+        }
+
+        .hero-story-hook {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4) var(--space-5);
+            margin: var(--space-6) auto;
+            max-width: 600px;
+            font-style: italic;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            transition: all var(--transition-base);
+        }
+
+        .hero-stat:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        .stat-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-gold);
+            line-height: 1;
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
             }
-        });
-        
-        if (selectedIndex === question.correct) {
-            score++;
+            
+            .hero-stats-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-3);
+            }
+            
+            .hero-stat {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .stat-info {
+                text-align: center;
+            }
         }
-        
-        nextButton.style.display = 'block';
-    }
-    
-    function nextQuestion() {
-        currentQuestion++;
-        if (currentQuestion < quizQuestions.length) {
-            displayQuestion();
-        } else {
-            finishQuiz();
+
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            padding: var(--space-3);
+            background: rgba(37, 40, 54, 0.5);
+            border-radius: var(--radius-lg);
         }
-    }
-    
-    function finishQuiz() {
-        const correctCount = score;
-        const totalQuestions = quizQuestions.length;
-        const percentage = Math.round((correctCount / totalQuestions) * 100);
-        
-        // Save progress (progress tracking only, no rewards)
-        saveProgress(percentage);
-        
-        // Show results
-        showResults(correctCount, percentage);
-    }
-    
-    function saveProgress(percentage) {
-        const progress = {
-            lesson: 'binary-fundamentals',
-            completed: true,
-            score: percentage,
-            timestamp: new Date().toISOString()
-        };
-        
-        localStorage.setItem('lesson_binary_progress', JSON.stringify(progress));
-        
-        // Update overall academy progress
-        const overallProgress = JSON.parse(localStorage.getItem('academy_progress') || '{}');
-        overallProgress['binary-fundamentals'] = progress;
-        localStorage.setItem('academy_progress', JSON.stringify(overallProgress));
-    }
-    
-    function showResults(correct, percentage) {
-        quizContainer.style.display = 'none';
-        resultContainer.style.display = 'block';
-        
-        let grade = 'F';
-        let message = 'Keep studying! You can retake this lesson.';
-        
-        if (percentage >= 90) {
-            grade = 'A';
-            message = 'Excellent! You have mastered binary fundamentals!';
-        } else if (percentage >= 80) {
-            grade = 'B';
-            message = 'Great job! You understand the core concepts well.';
-        } else if (percentage >= 70) {
-            grade = 'C';
-            message = 'Good work! Review the material to strengthen your understanding.';
-        } else if (percentage >= 60) {
-            grade = 'D';
-            message = 'You\'re getting there! Practice more with binary conversions.';
+
+        .nav-button {
+            padding: var(--space-2) var(--space-3);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--color-gold);
+            text-decoration: none;
+            transition: all var(--transition-base);
         }
-        
-        document.getElementById('finalScore').textContent = `${correct}/${quizQuestions.length}`;
-        document.getElementById('finalGrade').textContent = grade;
-        document.getElementById('finalMessage').textContent = message;
-        document.getElementById('lessonProgress').textContent = `${percentage}%`;
-        
-        // Update progress display
-        updateProgressDisplay();
-    }
-    
-    function updateProgressBar() {
-        const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-    
-    function updateProgressDisplay() {
-        const progress = JSON.parse(localStorage.getItem('lesson_binary_progress') || '{}');
-        if (progress.score) {
-            document.getElementById('lessonProgress').textContent = `${progress.score}%`;
+
+        .nav-button:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
         }
-    }
-    
-    // Event Listeners
-    document.getElementById('startQuiz').addEventListener('click', startQuiz);
-    document.getElementById('nextQuestion').addEventListener('click', nextQuestion);
-    document.getElementById('retakeQuiz').addEventListener('click', startQuiz);
-    
-    // Initialize progress display
-    updateProgressDisplay();
-});
+
+        .content-section {
+            background: rgba(37, 40, 54, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .key-concept {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 4px solid var(--color-gold);
+            padding: var(--space-3);
+            margin: var(--space-4) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .binary-demo {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: center;
+            margin: var(--space-4) 0;
+            font-family: var(--font-mono);
+            font-size: 2rem;
+        }
+
+        .bit {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 29, 41, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .bit:hover {
+            border-color: var(--color-gold);
+            transform: scale(1.1);
+        }
+
+        .bit.active {
+            background: var(--color-gold);
+            color: var(--color-navy);
+            border-color: var(--color-gold);
+        }
+
+        .formula-box {
+            background: rgba(26, 29, 41, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            text-align: center;
+            font-family: var(--font-mono);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: var(--space-8);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--color-gold), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-4);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: var(--space-1);
+        }
+
+        /* CONVERTER STYLES - keeping your exact design */
+        .converter-section {
+            margin: var(--space-8) 0;
+            text-align: center;
+        }
+
+        .converter-container.wide {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.92), 
+                rgba(212, 175, 55, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.4),
+                0 8px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(212

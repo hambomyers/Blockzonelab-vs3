@@ -108,10 +108,9 @@
                 .catch(err => console.log('⚠️ SW registration failed (non-critical):', err));
         }
         */
-        console.log('🚫 Service Worker DISABLED for testing');        // Load game (main functionality) - AGGRESSIVE cache bust
-        const cacheBust = Math.random().toString(36) + Date.now();
-        console.log('🔄 Cache bust:', cacheBust);
-        import(`./main.js?v=${cacheBust}&nocache=${Math.random()}`).catch(e => {
+        console.log('🚫 Service Worker DISABLED for testing');        // Load game (main functionality) - Simple import for testing
+        console.log('🔄 Loading game with simple import...');
+        import('./main.js').catch(e => {
             console.error('Failed to load game:', e);
             document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px; font-family: Inter, sans-serif;">Game failed to load. Please refresh the page.</div>';
         });

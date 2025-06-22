@@ -1,6 +1,7 @@
 /**
  * SimpleGameOver.js - The Frictionless Flow
  * Beautiful, minimal post-game experience inspired by Apple Arcade + Coinbase
+ * Pure elegance with neon drop animations
  */
 
 export class SimpleGameOver {
@@ -13,8 +14,9 @@ export class SimpleGameOver {
         this.playerId = this.getOrCreatePlayerId();
         this.leaderboardData = null;
         this.playerRank = null;
-          this.createContainer();
-        console.log('✨ SimpleGameOver initialized - Frictionless Flow ready');
+        
+        this.createContainer();
+        console.log('✨ SimpleGameOver initialized - Pure Elegant Flow');
         
         // Initialize systems asynchronously
         this.initializeSystems();
@@ -38,8 +40,7 @@ export class SimpleGameOver {
             opacity: 0;
             transition: opacity 0.3s ease-out;
         `;
-        document.body.appendChild(this.container);
-    }
+        document.body.appendChild(this.container);    }
 
     getOrCreatePlayerId() {
         let playerId = localStorage.getItem('playerId');
@@ -48,6 +49,10 @@ export class SimpleGameOver {
             localStorage.setItem('playerId', playerId);
         }
         return playerId;
+    }
+
+    getStoredPlayerName() {
+        return localStorage.getItem('neonDropPlayerName');
     }    async show(finalScore) {
         if (this.isVisible) return;
         
@@ -61,7 +66,9 @@ export class SimpleGameOver {
         await this.loadTournamentInfo();
         
         // Show container
-        this.container.style.display = 'flex';        if (this.playerName) {
+        this.container.style.display = 'flex';
+        
+        if (this.playerName) {
             // Returning player - go straight to leaderboard with their new score
             console.log('🔍 DEBUG: Returning player detected, calling showLeaderboardWithNewScore()');
             await this.showLeaderboardWithNewScore();
@@ -276,7 +283,7 @@ export class SimpleGameOver {
         // Store locally
         localStorage.setItem('neonDropPlayerName', name);
         
-        // FIXED: Submit directly to Cloudflare API to ensure it works
+        // Submit directly to Cloudflare API
         try {
             console.log('📤 Submitting score to Cloudflare API:', this.score, 'for player:', name);
             
@@ -588,13 +595,8 @@ export class SimpleGameOver {
             const data = await response.json();
             return data.scores ? data.scores.length : 1;
         } catch (error) {
-            console.warn('Failed to get total players:', error);
-            return 1;
+            console.warn('Failed to get total players:', error);            return 1;
         }
-    }
-
-    getStoredPlayerName() {
-        return localStorage.getItem('neonDropPlayerName');
     }
 
     hide() {
@@ -872,12 +874,13 @@ export class SimpleGameOver {
                 overflow-y: auto;
             ">                <!-- Header -->
                 <div class="leaderboard-header" style="margin-bottom: 30px;">
-                    <h2 style="color: #00d4ff; font-size: 28px; margin: 0 0 10px 0; font-weight: 700;">
-                        🏆 Daily Leaderboard
+                    <div style="font-size: 32px; margin-bottom: 10px;">🏆</div>
+                    <h2 style="color: #00d4ff; font-size: 28px; margin: 0 0 5px 0; font-weight: 700;">
+                        Daily Leaderboard
                     </h2>
-                    <p style="color: #aaa; font-size: 16px; margin: 0;">
+                    <div style="color: #aaa; font-size: 16px;">
                         ${leaderboardData.length} players competing today
-                    </p>
+                    </div>
                 </div>
 
                 <!-- Global Navigation -->
@@ -1080,18 +1083,16 @@ export class SimpleGameOver {
 
         // Add navigation events
         this.bindNavigationEvents();
-    }
-
-    async initializeSystems() {
+    }    async initializeSystems() {
         try {
             // Initialize tournament system
-            if (window.neonDrop?.tournament) {
+            if (window.neonDrop && window.neonDrop.tournament) {
                 this.tournamentSystem = window.neonDrop.tournament;
                 console.log('🏆 Tournament system connected');
             }
             
             // Initialize payment system
-            if (window.neonDrop?.paymentSystem) {
+            if (window.neonDrop && window.neonDrop.paymentSystem) {
                 this.paymentSystem = window.neonDrop.paymentSystem;
                 console.log('💰 Payment system connected');
             }
@@ -1102,7 +1103,7 @@ export class SimpleGameOver {
         } catch (error) {
             console.warn('⚠️ Systems initialization failed:', error);
         }
-    }    async loadTournamentInfo() {
+    }async loadTournamentInfo() {
         try {
             if (this.tournamentSystem) {
                 // Use the current tournament data directly
@@ -1804,6 +1805,7 @@ export class SimpleGameOver {
                     </button>
                 </div>
             </div>            <style>
+               
                 @keyframes pulseHighlight {
                     0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
                     50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 212, 255, 0.5); }

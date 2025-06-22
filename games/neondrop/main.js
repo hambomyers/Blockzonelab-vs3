@@ -1,6 +1,6 @@
 /**
- * NeonDrop - Optimized Main Controller
- * Clean, bulletproof, 25% smaller than previous versions
+ * NeonDrop - Elegant Main Controller  
+ * Pure, simple, elegant - focused on the beautiful neon drop experience
  */
 
 // Core game systems
@@ -10,22 +10,17 @@ import { InputController } from './core/input-controller.js';
 import { AudioSystem } from './core/audio-system.js';
 import { ViewportManager } from './core/viewport-manager.js';
 
-// Game configuration and identity
+// Game configuration and elegant game over
 import { Config } from './config.js';
-import { initializeUnifiedSystems } from '../../shared/platform/UnifiedSystemsIntegration.js';
-// Legacy imports removed - using unified systems
-import UniversalPaymentSystem from './UniversalPaymentSystem.js';
-import { SimpleGameOver } from './ui/SimpleGameOver.js';
+import { SimpleGameOver } from './ui/SimpleGameOver.js'; // Pure elegance
 
-// UI components
+// Essential UI components
 import { GuidePanel } from './ui/guide-panel.js';
 import { UIStateManager } from './ui/ui-state-manager.js';
 import { StatsPanel } from './ui/stats-panel.js';
-// Removed: EverythingCard - using SimpleGameOver for frictionless flow
 import { TournamentUI } from './ui/tournament-ui.js';
 
-// Shared systems
-// Removed: DailyTournament - using UnifiedTournamentSystem via unified systems
+// Payment systems (simplified)
 import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
 
 class NeonDrop {
@@ -39,60 +34,31 @@ class NeonDrop {
         this.renderer = null;
         this.audio = null;
         this.input = null;
-          // UI systems
+        
+        // UI systems
         this.guide = null;
         this.stats = null;
         this.tournamentUI = null;
-        // FIXED: Remove conflicting UI state manager
-        // this.uiStateManager = new UIStateManager();          
+        this.uiStateManager = new UIStateManager();
         
-        // FIXED: Single source of truth for game over handling
+        // Elegant game over system
         this.gameOverHandler = null;
-        this.playerSystem = null;
-        this.isUnifiedSystemsReady = false;
-          // Unified Systems Integration
-        this.unifiedSystems = null; // Will be initialized async
-        this.playerIdentity = null; // Legacy compatibility
-        this.tournament = null; // Legacy compatibility  
-        // REMOVED: everythingCard - using SimpleGameOver
-        
-        // Payment system (still uses legacy for now)
-        this.universalPayments = null; // Will be set after unified systems init        
-        // Alias for compatibility  
-        this.identity = null; // Will be set after unified systems init
-        this.universalIdentity = null; // Will be set after unified systems init
-        
-        // Web3 systems (bulletproof)
+          // Payment systems
         this.payment = new USDCPaymentSystem();
-          // State
+        
+        // State
         this.running = false;
         this.lastTime = performance.now();
         this.accumulator = 0;
         
-        // Setup basic globals (unified systems will be added after init)
-        this.setupGlobals();
-    }    setupGlobals() {
-        // Modern unified system references (when available)
+        // Setup globals
         window.neonDrop = this;
-        if (this.unifiedSystems) {
-            window.unifiedSystems = this.unifiedSystems;
-            window.playerSystem = this.unifiedSystems.playerSystem;
-            window.tournamentSystem = this.unifiedSystems.tournamentSystem;
-            window.playerCard = this.unifiedSystems.playerCard;
-        }
-          // Legacy compatibility references (for existing code)
-        window.universalIdentity = this.playerIdentity;
-        window.leaderboard = this.tournament;
-        // REMOVED: gameOverSequence - using SimpleGameOver
-        window.dailyTournament = this.tournament;
-        window.usdcPayment = this.payment;
-        
-        console.log('🌐 Global references configured for unified systems');
+        console.log('🌐 NeonDrop initialized - Ready for elegant experience');
     }
-    
+
     // Methods expected by panels
     state() {
-        return this.engine?.getState() || {};
+        return this.engine && this.engine.getState ? this.engine.getState() : {};
     }
 
     getConfig() {
@@ -101,41 +67,19 @@ class NeonDrop {
         try {
             await this.config.load();
             this.setupDisplay();
-              // Initialize unified systems
-            console.log('🚀 Initializing unified systems...');
-            this.unifiedSystems = await initializeUnifiedSystems();
-              // FIXED: Set up proper references
-            this.playerSystem = this.unifiedSystems.playerSystem;
-            this.tournament = this.unifiedSystems.tournamentSystem;
-              // FIXED: Initialize the simple, frictionless game over system
+            
+            // Enhanced: Initialize SimpleGameOver (includes UnifiedPlayerSystem)
+            console.log('🚀 Initializing enhanced game over system...');
             this.gameOverHandler = new SimpleGameOver();
+              // Wait for systems to be ready
+            await new Promise(resolve => setTimeout(resolve, 100));
+            this.isGameOverReady = true;
             
-            // FIXED: Set up compatibility aliases
-            this.playerIdentity = this.playerSystem;
-            // REMOVED: everythingCard legacy compatibility - using SimpleGameOver directly
-            
-            this.isUnifiedSystemsReady = true;
-            console.log('✅ Unified systems initialized with SimpleGameOver');
-              // Set up compatibility aliases
-            this.identity = this.playerIdentity;
-            this.universalIdentity = this.playerIdentity;
-            
-            // Initialize payment system with unified identity (with safety check)
-            if (this.playerIdentity) {
-                this.universalPayments = new UniversalPaymentSystem(this.playerIdentity);
-            } else {
-                console.warn('⚠️ Player identity not ready, skipping payment system for now');
-            }
-              console.log('✅ Unified systems initialized with legacy compatibility');
-            
-            // Update global references with unified systems
-            this.setupGlobals();
+            console.log('✅ SimpleGameOver system initialized');
             
             this.createSystems();
             this.setupUI();
-            this.cleanupOldUI(); // Remove any old tournament UI elements
-            // TEMP DISABLED: Testing removal of unused game menu card
-            // this.setupGameMenuCard(); // Add our elegant menu card
+            this.cleanupOldUI();
             this.bindEvents();
             this.startLoop();
             
