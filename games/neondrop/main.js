@@ -571,6 +571,16 @@ async function startGame() {
         const game = new NeonDrop();
         await game.initialize();
         // Global reference is set in setupGlobals()
+        
+        // Expose clear function for fresh testing
+        window.clearPlayerData = () => {
+            if (window.neonDrop?.gameOverHandler?.clearAllPlayerData) {
+                window.neonDrop.gameOverHandler.clearAllPlayerData();
+                location.reload(); // Refresh page for clean state
+            }
+        };
+        
+        console.log('🧹 Type clearPlayerData() in console to reset for fresh testing');
     } catch (error) {
         console.error('Failed to start NeonDrop:', error);
     }

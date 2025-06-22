@@ -4,6 +4,9 @@
  * Pure elegance with neon drop animations
  */
 
+// Import the real prize calculation system
+import { PrizeCalculator } from '../../../shared/economics/prize-calculator.js';
+
 export class SimpleGameOver {
     constructor() {
         this.container = null;
@@ -15,8 +18,14 @@ export class SimpleGameOver {
         this.leaderboardData = null;
         this.playerRank = null;
         
+        // Initialize the real prize calculator with new 50%/hyperbolic/$1 system
+        this.prizeCalculator = new PrizeCalculator();
+        this.prizeCalculator.winnerShare = 0.50;        // 50% to 1st place
+        this.prizeCalculator.minimumPrize = 1.00;       // $1 minimum
+        this.prizeCalculator.prizePoolRate = 0.90;      // 90% to prizes, 10% platform
+        
         this.createContainer();
-        console.log('✨ SimpleGameOver initialized - Pure Elegant Flow');
+        console.log('✨ SimpleGameOver initialized - Pure Elegant Flow with Real Prize System');
         
         // Initialize systems asynchronously
         this.initializeSystems();
@@ -49,6 +58,33 @@ export class SimpleGameOver {
             localStorage.setItem('playerId', playerId);
         }
         return playerId;
+    }
+
+    // Method to clear all data for fresh testing
+    clearAllPlayerData() {
+        console.log('🧹 Clearing all player data for fresh experience...');
+        localStorage.removeItem('playerId');
+        localStorage.removeItem('neonDropPlayerName');
+        localStorage.removeItem('neonDropHighScore');
+        localStorage.removeItem('playerStats');
+        localStorage.removeItem('tournamentHistory');
+        localStorage.removeItem('neonDropScores'); // Clear local leaderboard
+        
+        // Clear all tournament entries
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('tournament_entered_') || key.startsWith('tournament_skipped_')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        // Reset internal state
+        this.playerId = this.getOrCreatePlayerId();
+        this.playerName = null;
+        this.leaderboardData = null;
+        this.playerRank = null;
+        
+        console.log('✨ Fresh player experience ready! Leaderboard reset for testing.');
     }
 
     getStoredPlayerName() {
@@ -382,10 +418,8 @@ export class SimpleGameOver {
                             (rank <= 10 ? '🏆 Top 10!' : rank <= 50 ? '🎯 Top 50!' : '🎮 Great job!')
                         }
                     </div>
-                </div>
-
-                <!-- Tournament Prize Info -->
-                ${isInTournament && tournamentRank <= 3 ? `
+                </div>                <!-- Tournament Prize Info -->
+                ${isInTournament && tournamentRank <= 5 ? `
                     <div style="
                         background: rgba(255, 215, 0, 0.1);
                         border: 1px solid rgba(255, 215, 0, 0.3);
@@ -397,10 +431,12 @@ export class SimpleGameOver {
                             💰 Prize Eligible!
                         </div>
                         <div style="color: #aaa; font-size: 14px;">
-                            ${tournamentRank === 1 ? `$${tournamentInfo.prizePool?.amounts?.[1] || 10} USDC` :
-                              tournamentRank === 2 ? `$${tournamentInfo.prizePool?.amounts?.[2] || 5} USDC` :
-                              `$${tournamentInfo.prizePool?.amounts?.[3] || 2} USDC`
-                            }
+                            ${this.getPrizeForRank(tournamentRank)}
+                        </div>
+                        <div style="color: #666; font-size: 12px; margin-top: 8px;">
+                            ${tournamentRank === 1 ? '🏆 50% of prize pool!' : 
+                              tournamentRank <= 3 ? '🥉 Hyperbolic distribution' : 
+                              '💵 $1 minimum guaranteed'}
                         </div>
                     </div>
                 ` : ''}
@@ -1105,36 +1141,62 @@ export class SimpleGameOver {
         }
     }async loadTournamentInfo() {
         try {
-            if (this.tournamentSystem) {
-                // Use the current tournament data directly
-                this.tournamentInfo = {
-                    isActive: true,
-                    participants: 0,
-                    prizePool: { amounts: { 1: 10, 2: 5, 3: 2 } },
-                    entryFee: 0.25
-                };
-                
-                // Get leaderboard to count real participants
-                const leaderboard = this.tournamentSystem.getLeaderboard(100);
-                this.tournamentInfo.participants = leaderboard.length;
-                
-                this.playerStats = this.tournamentSystem.getPlayerStats(this.playerId);
-                
-                // Check free plays remaining
-                const playerData = localStorage.getItem(`player_${this.playerId}_daily`);
-                const todayKey = new Date().toDateString();
-                const dailyData = playerData ? JSON.parse(playerData) : {};
-                
-                this.hasFreePlays = !dailyData[todayKey] || dailyData[todayKey].freePlaysUsed < 1;
-                
-                console.log('🎯 Tournament info loaded:', {
-                    active: this.tournamentInfo?.isActive,
-                    players: this.tournamentInfo?.participants,
-                    hasFreePlays: this.hasFreePlays
-                });
+            // Get real tournament data from API or fallback
+            const entryFee = 2.50;
+            let participants = 10; // Default minimum
+            
+            // Try to get real participant count from API
+            try {
+                const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100`);
+                const data = await response.json();
+                if (data.scores && data.scores.length > 0) {
+                    participants = data.scores.length;
+                }
+            } catch (error) {
+                console.warn('Could not fetch participant count, using default');
             }
+            
+            // Calculate REAL prizes using the new 50%/hyperbolic/$1 system
+            const totalRevenue = participants * entryFee;
+            const prizeData = this.prizeCalculator.calculatePrizes(totalRevenue);
+            
+            this.tournamentInfo = {
+                isActive: true,
+                participants: participants,
+                entryFee: entryFee,
+                totalRevenue: totalRevenue,
+                prizePool: prizeData.prizePool,
+                prizes: prizeData.prizes,
+                distribution: prizeData.distribution,
+                minimumGuaranteed: prizeData.minimumGuaranteed
+            };
+            
+            // Check free plays remaining
+            const playerData = localStorage.getItem(`player_${this.playerId}_daily`);
+            const todayKey = new Date().toDateString();
+            const dailyData = playerData ? JSON.parse(playerData) : {};
+            
+            this.hasFreePlays = !dailyData[todayKey] || dailyData[todayKey].freePlaysUsed < 1;
+            
+            console.log('🎯 Real Tournament Prizes Calculated:', {
+                participants: participants,
+                totalRevenue: `$${totalRevenue}`,
+                prizePool: `$${prizeData.prizePool}`,
+                prizes: prizeData.prizes.map((p, i) => `${i+1}st: $${p}`),
+                system: '50% winner + hyperbolic + $1 minimum'
+            });
+            
         } catch (error) {
             console.warn('⚠️ Failed to load tournament info:', error);
+            // Fallback to minimal tournament info
+            this.tournamentInfo = {
+                isActive: true,
+                participants: 10,
+                entryFee: 2.50,
+                prizePool: 22.50,
+                prizes: [11.25, 5.62, 2.81, 1.41, 1.00], // Example with 50% system
+                minimumGuaranteed: true
+            };
         }
     }
 
@@ -1150,11 +1212,10 @@ export class SimpleGameOver {
         const enteredToday = localStorage.getItem(`tournament_entered_${todayKey}`);
         
         return !enteredToday;
-    }
-
-    async showTournamentEntry() {
-        const prizeInfo = this.tournamentInfo?.prizePool || { amounts: { 1: 10, 2: 5, 3: 2 } };
-        const entryFee = this.tournamentInfo?.entryFee || 0.25;
+    }    async showTournamentEntry() {
+        const entryFee = this.tournamentInfo?.entryFee || 2.50;
+        const prizes = this.tournamentInfo?.prizes || [11.25, 5.62, 2.81, 1.41, 1.00];
+        const prizePool = this.tournamentInfo?.prizePool || 22.50;
         
         this.container.innerHTML = `
             <div class="game-over-card" style="
@@ -1193,23 +1254,34 @@ export class SimpleGameOver {
                     <div style="color: white; font-size: 32px; font-weight: 700; margin: 0;">
                         ${this.score.toLocaleString()}
                     </div>
-                </div>
-
-                <!-- Prize Pool -->
+                </div>                <!-- Prize Pool with Real Calculations -->
                 <div style="margin-bottom: 30px;">
-                    <h3 style="color: #ffd700; font-size: 18px; margin: 0 0 15px 0;">Prize Pool</h3>
+                    <h3 style="color: #ffd700; font-size: 18px; margin: 0 0 15px 0;">
+                        Prize Pool: $${prizePool.toFixed(2)}
+                    </h3>
+                    <div style="color: #aaa; font-size: 12px; margin-bottom: 15px;">
+                        50% to winner • Hyperbolic distribution • $1 minimum
+                    </div>
                     <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
                         <div style="text-align: center;">
                             <div style="font-size: 24px; margin-bottom: 5px;">🥇</div>
-                            <div style="color: #ffd700; font-weight: 600;">$${prizeInfo.amounts[1] || 10}</div>
+                            <div style="color: #ffd700; font-weight: 600; font-size: 14px;">$${prizes[0]?.toFixed(2) || '0'}</div>
+                            <div style="color: #666; font-size: 10px;">50%</div>
                         </div>
                         <div style="text-align: center;">
                             <div style="font-size: 24px; margin-bottom: 5px;">🥈</div>
-                            <div style="color: #c0c0c0; font-weight: 600;">$${prizeInfo.amounts[2] || 5}</div>
+                            <div style="color: #c0c0c0; font-weight: 600; font-size: 14px;">$${prizes[1]?.toFixed(2) || '0'}</div>
+                            <div style="color: #666; font-size: 10px;">Hyperbolic</div>
                         </div>
                         <div style="text-align: center;">
                             <div style="font-size: 24px; margin-bottom: 5px;">🥉</div>
-                            <div style="color: #cd7f32; font-weight: 600;">$${prizeInfo.amounts[3] || 2}</div>
+                            <div style="color: #cd7f32; font-weight: 600; font-size: 14px;">$${prizes[2]?.toFixed(2) || '0'}</div>
+                            <div style="color: #666; font-size: 10px;">Hyperbolic</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; margin-bottom: 5px;">🏆</div>
+                            <div style="color: #00d4ff; font-weight: 600; font-size: 14px;">$${prizes[3]?.toFixed(2) || '1.00'}</div>
+                            <div style="color: #666; font-size: 10px;">4th-5th</div>
                         </div>
                     </div>
                 </div>
@@ -1778,7 +1850,7 @@ export class SimpleGameOver {
                             color: white;
                             border: none;
                             padding: 15px 30px;
-                            border-radius: 10px;
+                            border-radius:  10px;
                             font-size: 16px;
                             font-weight: 600;
                             cursor: pointer;
@@ -1808,7 +1880,7 @@ export class SimpleGameOver {
                
                 @keyframes pulseHighlight {
                     0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-                    50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 212, 255, 0.5); }
+                    50% { transform: scale(1.02); box-shadow: 0  0 30px rgba(0, 212, 255, 0.5); }
                 }
                 
                 @keyframes chicletEntrance {
@@ -1935,5 +2007,67 @@ export class SimpleGameOver {
             toast.style.animation = 'slideUp 0.3s ease-out forwards';
             setTimeout(() => toast.remove(), 300);
         }, 2000);
+    }
+
+    // Get the prize amount for a specific rank using real prize calculator
+    getPrizeForRank(rank) {
+        if (!this.tournamentInfo || !this.tournamentInfo.prizes) {
+            return '$1.00'; // Fallback minimum
+        }
+        
+        const prizes = this.tournamentInfo.prizes;
+        if (rank <= prizes.length) {
+            const amount = prizes[rank - 1];
+            return `$${amount.toFixed(2)}`;
+        }
+        
+        return '$1.00'; // Minimum guarantee
+   }
+
+    // Admin method to clear backend KV leaderboard data
+    async clearBackendLeaderboard() {
+        console.log('🧹 Clearing backend KV leaderboard data...');
+        
+        try {
+            const response = await fetch(`${this.apiBase}/admin/clear-leaderboard`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Backend leaderboard cleared:', result);
+                return true;
+            } else {
+                console.warn('⚠️ Failed to clear backend leaderboard:', response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Error clearing backend leaderboard:', error);
+            return false;
+        }
+    }
+
+    // Enhanced clear method that clears EVERYTHING
+    async clearEverything() {
+        console.log('🧹 NUCLEAR RESET: Clearing ALL player and leaderboard data...');
+        
+        // Clear local storage
+        this.clearAllPlayerData();
+        
+        // Clear backend KV data
+        const backendCleared = await this.clearBackendLeaderboard();
+        
+        if (backendCleared) {
+            console.log('✨ COMPLETE RESET: Both local and backend data cleared!');
+            this.showToast('🧹 Complete data reset successful!');
+        } else {
+            console.log('⚠️ Local data cleared, but backend may still have data');
+            this.showToast('⚠️ Local data cleared (backend may need manual reset)');
+        }
+        
+        return backendCleared;
     }
 }

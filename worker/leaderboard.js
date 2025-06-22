@@ -42,6 +42,11 @@ export default {
         return handleUpdatePlayerProfile(request, env, headers);
       }
 
+      // NEW: Admin endpoint to clear all leaderboard data
+      if (url.pathname === '/api/admin/clear-leaderboard' && request.method === 'POST') {
+        return handleClearLeaderboard(request, env, headers);
+      }
+
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
         headers
@@ -301,8 +306,45 @@ async function handleUpdatePlayerProfile(request, env, headers) {
 
   return new Response(JSON.stringify({
     success: true,
-    player: updatedProfile
-  }), { headers });
+    player: updatedProfile  }), { headers });
+}
+
+// Admin function to clear all leaderboard data
+async function handleClearLeaderboard(request, env, headers) {
+  try {
+    console.log('🧹 ADMIN: Clearing all leaderboard data from KV...');
+    
+    // Clear all leaderboard data
+    const leaderboardKeys = [
+      'leaderboard:neon_drop:daily',
+      'leaderboard:neon_drop:weekly',
+      'leaderboard:neon_drop:monthly',
+      'leaderboard:neon_drop:all-time'
+    ];
+    
+    // Reset each leaderboard to empty
+    for (const key of leaderboardKeys) {
+      await env.SCORES.put(key, JSON.stringify({ scores: [] }));
+    }
+    
+    // Note: We're not clearing individual player scores/profiles
+    // Only clearing the aggregated leaderboards
+    
+    console.log('✅ All leaderboards cleared successfully');
+    
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'All leaderboard data cleared successfully',
+      cleared: leaderboardKeys
+    }), { headers });
+    
+  } catch (error) {
+    console.error('❌ Failed to clear leaderboard data:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      error: error.message
+    }), { status: 500, headers });
+  }
 }
 
 // Helper functions
