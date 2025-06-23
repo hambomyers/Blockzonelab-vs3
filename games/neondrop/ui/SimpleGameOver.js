@@ -1186,19 +1186,9 @@ export class SimpleGameOver {
  */
 async showFullScreenLeaderboard() {
     console.log('🎯 Loading full-screen leaderboard with hyperbolic scaling');
-    
-    let leaderboardData = [];
+      let leaderboardData = [];
     
     try {
-        // Fetch leaderboard data
-        const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100&game=neon_drop`);
-        
-        if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
-        }
-        
-        const data = await response.json();
-      try {
         // Fetch leaderboard data
         const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100&game=neon_drop`);
         
@@ -1212,7 +1202,8 @@ async showFullScreenLeaderboard() {
             leaderboardData = data.scores;
         }
         // If no scores from API, leaderboardData stays empty array - that's fine
-          } catch (error) {
+        
+    } catch (error) {
         console.log('🎮 API unavailable, showing leaderboard with current player only');
         leaderboardData = []; // Start with empty array
     }
