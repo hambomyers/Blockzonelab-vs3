@@ -13,7 +13,7 @@ export class SimpleGameOver {
         this.isVisible = false;
         this.score = 0;
         this.playerName = null;
-        this.apiBase = 'https://blockzone-api.hambomyers.workers.dev/api';
+        this.apiBase = 'https://blockzone-api.hambomyers.workers.dev';
         this.playerId = this.getOrCreatePlayerId();
         this.leaderboardData = null;
         this.playerRank = null;        // Initialize the real prize calculator with new 50%/hyperbolic/$1 system
@@ -446,7 +446,7 @@ export class SimpleGameOver {
         try {
             console.log('📤 Submitting score to Cloudflare API:', this.score, 'for player:', displayName);
             
-            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/scores', {
+            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/scores', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1204,12 +1204,9 @@ async showFullScreenLeaderboard() {
         } else {
             throw new Error('No scores available');
         }
-        
-    } catch (error) {
-        console.log('🎮 API unavailable, using mock data for hyperbolic scaling demo');
-        
-        // Generate mock leaderboard data for testing
-        leaderboardData = this.generateMockLeaderboardData();
+          } catch (error) {
+        console.log('🎮 API unavailable, showing empty leaderboard');
+        leaderboardData = [];
     }
     
     if (leaderboardData.length === 0) {
@@ -1349,42 +1346,7 @@ async showFullScreenLeaderboard() {
 }
 
 /**
- * Generate mock leaderboard data for testing hyperbolic font scaling
- */
-generateMockLeaderboardData() {
-    const mockNames = [
-        'CryptoKing', 'NeonMaster', 'BlockChain', 'DigitalAce', 'CyberPro',
-        'TechWizard', 'GameLegend', 'PixelHero', 'CodeNinja', 'DataGuru',
-        'WebWarrior', 'ByteBeast', 'NetGamer', 'CloudStar', 'DevLord',
-        'HackMaster', 'ScriptKid', 'LogicBomb', 'QuantumX', 'MatrixGod',
-        'BinaryBoss', 'AlgoAce', 'SyntaxSage', 'DebugKing', 'FlowState',
-        'ZeroOne', 'HashHero', 'ApiMaster', 'JsonJedi', 'SqlStar'
-    ];
-    
-    const mockData = [];
-    let baseScore = 50000;
-    
-    for (let i = 0; i < 30; i++) {
-        const score = Math.max(100, Math.floor(baseScore * Math.pow(0.85, i) + Math.random() * 1000));
-        mockData.push({
-            player_id: `mock_${i}`,
-            display_name: `${mockNames[i % mockNames.length]}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
-            high_score: score,
-            timestamp: Date.now() - (i * 3600000) // Spread over hours
-        });
-        
-        // Add current player to position 5 if it's them
-        if (i === 4 && this.playerName) {
-            mockData[i].display_name = this.playerName;
-            mockData[i].player_id = this.playerId;
-            mockData[i].high_score = Math.max(this.score, score);
-        }
-    }
-    
-    return mockData;
-}
-
-/**
+ * Generate mock leaderboard data for testing hyperbolic font scaling/**
  * Show empty full-screen leaderboard (for when API fails or no data)
  */
 showEmptyFullScreenLeaderboard() {
@@ -1443,15 +1405,14 @@ showEmptyFullScreenLeaderboard() {
                 </h1>
                 
                 <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
-                
-                <p style="
+                  <p style="
                     color: #aaa;
                     font-size: 18px;
                     margin-bottom: 30px;
                     line-height: 1.5;
                 ">
-                    Leaderboard data is currently unavailable.<br>
-                    This might be due to network issues or the server being offline.
+                    No scores available yet.<br>
+                    Be the first to set a high score and claim your spot!
                 </p>
                 
                 <button id="closeEmptyLeaderboard" style="
