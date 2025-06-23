@@ -1198,18 +1198,58 @@ async showFullScreenLeaderboard() {
         }
         
         const data = await response.json();
+      try {
+        // Fetch leaderboard data
+        const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100&game=neon_drop`);
+        
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
         
         if (data.scores && data.scores.length > 0) {
             leaderboardData = data.scores;
-        } else {
-            throw new Error('No scores available');
         }
+        // If no scores from API, leaderboardData stays empty array - that's fine
           } catch (error) {
-        console.log('🎮 API unavailable, showing empty leaderboard');
-        leaderboardData = [];
+        console.log('🎮 API unavailable, showing leaderboard with current player only');
+        leaderboardData = []; // Start with empty array
     }
     
+    // Always add current player's score if we have one
+    if (this.playerName && this.score > 0) {
+        const currentPlayerEntry = {
+            player_id: this.playerId,
+            display_name: this.playerName,
+            high_score: this.score,
+            timestamp: Date.now(),
+            is_current_player: true
+        };
+        
+        // Add current player if they're not already in the list
+        const existingPlayerIndex = leaderboardData.findIndex(entry => 
+            entry.player_id === this.playerId || entry.display_name === this.playerName
+        );
+        
+        if (existingPlayerIndex === -1) {
+            leaderboardData.push(currentPlayerEntry);
+        } else {
+            // Update existing entry if current score is higher
+            if (this.score > leaderboardData[existingPlayerIndex].high_score) {
+                leaderboardData[existingPlayerIndex] = currentPlayerEntry;
+            }
+        }
+        
+        // Sort by score descending
+        leaderboardData.sort((a, b) => b.high_score - a.high_score);
+        
+        console.log('🎯 Leaderboard with current player:', leaderboardData.length, 'entries');
+    }
+    
+    // Only show empty screen if we truly have no data at all
     if (leaderboardData.length === 0) {
+        console.log('🎮 No scores and no current player data');
         this.showEmptyFullScreenLeaderboard();
         return;
     }
@@ -1404,15 +1444,14 @@ showEmptyFullScreenLeaderboard() {
                     HALL OF FAME
                 </h1>
                 
-                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
-                  <p style="
+                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>                <p style="
                     color: #aaa;
                     font-size: 18px;
                     margin-bottom: 30px;
                     line-height: 1.5;
                 ">
-                    No scores available yet.<br>
-                    Be the first to set a high score and claim your spot!
+                    Leaderboard service temporarily unavailable.<br>
+                    Your score will be saved when the service returns.
                 </p>
                 
                 <button id="closeEmptyLeaderboard" style="
