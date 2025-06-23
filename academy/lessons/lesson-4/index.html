@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 4: Smart Contracts & Solidity - The Academy</title>
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    
+    <style>
+        /* Academy Enhanced Styles */
+        :root {
+            --academy-primary: #00f5ff;
+            --academy-accent: #ffd700;
+            --academy-dark: #1a1d29;
+            --academy-card: rgba(37, 40, 54, 0.95);
+            --academy-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --academy-success: #00ff88;
+            --academy-error: #ff4757;
+            --academy-warning: #ff8c00;
+        }
+
+        .academy-page {
+            background: linear-gradient(135deg, var(--academy-dark) 0%, #2d314a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .academy-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23ffd700" opacity="0.1"/></svg>');
+            animation: academyDrift 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes academyDrift {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(26, 29, 41, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            text-decoration: none;
+        }
+
+        .progress-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--academy-card);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            color: var(--academy-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Lesson Hero */
+        .lesson-hero-premium {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(212, 175, 55, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 2rem;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .lesson-hero-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, var(--academy-accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        /* Code Editor */
+        .code-editor-container {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.92), rgba(212, 175, 55, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .editor-title {
+            font-size: 1.5rem;
+            color: var(--academy-accent);
+            font-weight: 700;
+        }
+
+        .editor-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .editor-tab {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .editor-tab.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--academy-accent);
+            color: var(--academy-accent);
+        }
+
+        .code-editor {
+            background: #0d1117;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #c9d1d9;
+            min-height: 400px;
+            resize: vertical;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .editor-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .editor-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--academy-transition);
+            font-size: 0.9rem;
+        }
+
+        .editor-button.compile {
+            background: var(--academy-primary);
+            color: var(--academy-dark);
+        }
+
+        .editor-button.deploy {
+            background: var(--academy-success);
+            color: var(--academy-dark);
+        }
+
+        .editor-button.reset {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .editor-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .editor-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Output Console */
+        .output-console {
+            background: #000000;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .console-line {
+            margin-bottom: 0.25rem;
+        }
+
+        .console-line.success {
+            color: var(--academy-success);
+        }
+
+        .console-line.error {
+            color: var(--academy-error);
+        }
+
+        .console-line.warning {
+            color: var(--academy-warning);
+        }
+
+        .console-line.info {
+            color: var(--academy-primary);
+        }
+
+        /* Gas Calculator */
+        .gas-calculator {
+            background: var(--academy-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gas-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gas-metric {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .gas-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .gas-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Contract Examples */
+        .contract-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .example-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--academy-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--academy-accent);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .example-card:hover::before {
+            opacity: 1;
+        }
+
+        .example-title {
+            font-size: 1.2rem;
+            color: var(--academy-accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .example-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .example-complexity {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--academy-primary);
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Deployment Simulator */
+        .deployment-simulator {
+            background: var(--academy-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .deployment-steps {
+            margin-top: 1.5rem;
+        }
+
+        .deployment-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.5rem;
+            border-left: 4px solid rgba(212, 175, 55, 0.3);
+            transition: var(--academy-transition);
+        }
+
+        .deployment-step.active {
+            border-left-color: var(--academy-accent);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .deployment-step.completed {
+            border-left-color: var(--academy-success);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--academy-accent);
+            font-weight: 700;
+        }
+
+        .step-icon.completed {
+            background: var(--academy-success);
+            color: var(--academy-dark);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Contract Interaction */
+        .contract-interaction {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .function-call {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            align-items: flex-end;
+        }
+
+        .function-input {
+            flex: 1;
+        }
+
+        .function-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--academy-accent);
+            font-weight: 500;
+        }
+
+        .function-input input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .function-input input:focus {
+            outline: none;
+            border-color: var(--academy-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .editor-controls {
+                flex-direction: column;
+            }
+            
+            .gas-display {
+                grid-template-columns: 1fr;
+            }
+            
+            .function-call {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="academy-page">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <span>✧</span> The Academy
+            </a>
+            <div class="progress-counter">
+                <span>🎓</span>
+                <span id="lessonProgress">0</span>
+                <span>% Complete</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Lesson Hero -->
+        <div class="lesson-hero-premium">
+            <div class="hero-content">
+                <div class="hero-icon">📜</div>
+                <h1 class="hero-title">Smart Contracts & Solidity</h1>
+                <p class="hero-subtitle">Programming self-executing contracts that run on the blockchain</p>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 1rem; padding: 1.5rem; margin: 2rem auto; max-width: 600px;">
+                    <p style="font-style: italic; line-height: 1.6;">
+                        "Smart contracts are the future of automated business logic. They eliminate the need for trusted intermediaries and create truly programmable money." — Vitalik Buterin
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contract Examples -->
+        <section style="margin: 3rem 0;">
+            <h2 style="text-align: center; font-size: 2.5rem; color: var(--academy-accent); margin-bottom: 2rem;">
+                🎯 Interactive Smart Contract Examples
+            </h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Click on any example to load it into the editor and experiment with real Solidity code
+            </p>
+            
+            <div class="contract-examples">
+                <div class="example-card" onclick="loadExample('hello')">
+                    <h3 class="example-title">Hello World</h3>
+                    <p class="example-description">Your first smart contract! Store and retrieve a simple message on the blockchain.</p>
+                    <span class="example-complexity">Beginner</span>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('token')">
+                    <h3 class="example-title">ERC-20 Token</h3>
+                    <p class="example-description">Create your own cryptocurrency with transfers, allowances, and total supply management.</p>
+                    <span class="example-complexity" style="background: rgba(255, 140, 0, 0.2); color: var(--academy-warning);">Intermediate</span>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('voting')">
+                    <h3 class="example-title">Voting System</h3>
+                    <p class="example-description">Transparent, tamper-proof voting with candidate registration and vote counting.</p>
+                    <span class="example-complexity" style="background: rgba(255, 140, 0, 0.2); color: var(--academy-warning);">Intermediate</span>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('auction')">
+                    <h3 class="example-title">Auction House</h3>
+                    <p class="example-description">Decentralized auction with bidding, automatic payouts, and escrow functionality.</p>
+                    <span class="example-complexity" style="background: rgba(255, 71, 87, 0.2); color: var(--academy-error);">Advanced</span>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('defi')">
+                    <h3 class="example-title">DeFi Lending</h3>
+                    <p class="example-description">Decentralized lending protocol with collateral, interest rates, and liquidation.</p>
+                    <span class="example-complexity" style="background: rgba(255, 71, 87, 0.2); color: var(--academy-error);">Advanced</span>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('nft')">
+                    <h3 class="example-title">NFT Collection</h3>
+                    <p class="example-description">Mint and manage unique digital assets with metadata and ownership tracking.</p>
+                    <span class="example-complexity" style="background: rgba(255, 140, 0, 0.2); color: var(--academy-warning);">Intermediate</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Code Editor -->
+        <section class="code-editor-container">
+            <div class="editor-header">
+                <h2 class="editor-title">🔥 Live Solidity Editor</h2>
+                <div class="editor-tabs">
+                    <div class="editor-tab active" onclick="switchTab('contract')">Contract.sol</div>
+                    <div class="editor-tab" onclick="switchTab('test')">Test.js</div>
+                </div>
+            </div>
+            
+            <textarea class="code-editor" id="contractEditor" placeholder="// Select an example above or write your own Solidity code...">
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract HelloWorld {
+    string private message;
+    
+    constructor() {
+        message = "Hello, Blockchain!";
+    }
+    
+    function getMessage() public view returns (string memory) {
+        return message;
+    }
+    
+    function setMessage(string memory _newMessage) public {
+        message = _newMessage;
+    }
+}
+            </textarea>
+            
+            <div class="editor-controls">
+                <button class="editor-button compile" onclick="compileContract()">
+                    <span>⚡</span> Compile
+                </button>
+                <button class="editor-button deploy" onclick="deployContract()" disabled>
+                    <span>🚀</span> Deploy
+                </button>
+                <button class="editor-button reset" onclick="resetEditor()">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+            
+            <div class="output-console" id="console">
+                <div class="console-line info">💡 Welcome to the Solidity playground! Select an example or write your own contract.</div>
+                <div class="console-line">📝 Click "Compile" to check your code for errors.</div>
+                <div class="console-line">🚀 Click "Deploy" to simulate contract deployment.</div>
+            </div>
+        </section>
+
+        <!-- Gas Calculator -->
+        <section class="gas-calculator">
+            <h3 style="color: var(--academy-accent); margin-bottom: 1rem; text-align: center;">
+                ⛽ Smart Contract Gas Calculator
+            </h3>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">
+                Understanding the cost of executing smart contract functions
+            </p>
+            
+            <div class="gas-display">
+                <div class="gas-metric">
+                    <div class="gas-value" id="gasUsed">21,000</div>
+                    <div class="gas-label">Gas Used</div>
+                </div>
+                <div class="gas-metric">
+                    <div class="gas-value" id="gasPrice">20</div>
+                    <div class="gas-label">Gas Price (Gwei)</div>
+                </div>
+                <div class="gas-metric">
+                    <div class="gas-value" id="ethCost">0.00042</div>
+                    <div class="gas-label">ETH Cost</div>
+                </div>
+                <div class="gas-metric">
+                    <div class="gas-value" id="usdCost">$1.26</div>
+                    <div class="gas-label">USD Cost</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <input type="range" id="gasPriceSlider" min="1" max="100" value="20" 
+                       style="width: 80%; margin: 1rem 0;"
+                       oninput="updateGasCalculation()">
+                <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    Adjust gas price to see cost changes
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Simulator -->
+        <section class="deployment-simulator">
+            <h3 style="color: var(--academy-accent); margin-bottom: 1rem; text-align: center;">
+                🏗️ Contract Deployment Simulator
+            </h3>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8);">
+                Experience the step-by-step process of deploying a smart contract
+            </p>
+            
+            <div class="deployment-steps">
+                <div class="deployment-step" id="step1">
+                    <div class="step-icon">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Compile Contract</div>
+                        <div class="step-description">Convert Solidity code to bytecode and generate ABI</div>
+                    </div>
+                </div>
+                
+                <div class="deployment-step" id="step2">
+                    <div class="step-icon">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Estimate Gas</div>
+                        <div class="step-description">Calculate deployment cost and set gas limit</div>
+                    </div>
+                </div>
+                
+                <div class="deployment-step" id="step3">
+                    <div class="step-icon">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Sign Transaction</div>
+                        <div class="step-description">Cryptographically sign the deployment transaction</div>
+                    </div>
+                </div>
+                
+                <div class="deployment-step" id="step4">
+                    <div class="step-icon">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Broadcast to Network</div>
+                        <div class="step-description">Send transaction to blockchain network</div>
+                    </div>
+                </div>
+                
+                <div class="deployment-step" id="step5">
+                    <div class="step-icon">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Mine Block</div>
+                        <div class="step-description">Wait for miners to include transaction in block</div>
+                    </div>
+                </div>
+                
+                <div class="deployment-step" id="step6">
+                    <div class="step-icon">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Contract Live</div>
+                        <div class="step-description">Contract deployed! Address assigned and ready for interaction</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contract Interaction -->
+        <section class="contract-interaction" id="contractInteraction" style="display: none;">
+            <h3 style="color: var(--academy-accent); margin-bottom: 1rem;">
+                🔄 Interact with Deployed Contract
+            </h3>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">
+                Contract Address: <span id="contractAddress" style="font-family: 'Fira Code', monospace; color: var(--academy-primary);">0x742d35Cc6554C4cA19b5a48F6A8a8DAd1e5A3e78</span>
+            </p>
+            
+            <div id="contractFunctions">
+                <!-- Functions will be populated based on deployed contract -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Contract examples
+        const contractExamples = {
+            hello: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract HelloWorld {
+    string private message;
+    
+    constructor() {
+        message = "Hello, Blockchain!";
+    }
+    
+    function getMessage() public view returns (string memory) {
+        return message;
+    }
+    
+    function setMessage(string memory _newMessage) public {
+        message = _newMessage;
+    }
+}`,
+            
+            token: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleToken {
+    string public name = "Academy Token";
+    string public symbol = "ACAD";
+    uint8 public decimals = 18;
+    uint256 public totalSupply = 1000000 * 10**decimals;
+    
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    
+    constructor() {
+        balanceOf[msg.sender] = totalSupply;
+    }
+    
+    function transfer(address to, uint256 value) public returns (bool) {
+        require(balanceOf[msg.sender] >= value, "Insufficient balance");
+        balanceOf[msg.sender] -= value;
+        balanceOf[to] += value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+    
+    function approve(address spender, uint256 value) public returns (bool) {
+        allowance[msg.sender][spender] = value;
+        emit Approval(msg.sender, spender, value);
+        return true;
+    }
+}`,
+
+            voting: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Voting {
+    struct Candidate {
+        string name;
+        uint256 voteCount;
+    }
+    
+    mapping(address => bool) public hasVoted;
+    mapping(uint256 => Candidate) public candidates;
+    uint256 public candidatesCount;
+    
+    event VoteCast(address voter, uint256 candidateId);
+    
+    constructor() {
+        addCandidate("Alice");
+        addCandidate("Bob");
+        addCandidate("Charlie");
+    }
+    
+    function addCandidate(string memory _name) private {
+        candidates[candidatesCount] = Candidate(_name, 0);
+        candidatesCount++;
+    }
+    
+    function vote(uint256 _candidateId) public {
+        require(!hasVoted[msg.sender], "You have already voted");
+        require(_candidateId < candidatesCount, "Invalid candidate");
+        
+        hasVoted[msg.sender] = true;
+        candidates[_candidateId].voteCount++;
+        
+        emit VoteCast(msg.sender, _candidateId);
+    }
+    
+    function getResults() public view returns (string[] memory names, uint256[] memory votes) {
+        names = new string[](candidatesCount);
+        votes = new uint256[](candidatesCount);
+        
+        for (uint256 i = 0; i < candidatesCount; i++) {
+            names[i] = candidates[i].name;
+            votes[i] = candidates[i].voteCount;
+        }
+    }
+}`,
+
+            auction: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Auction {
+    address public owner;
+    uint256 public endTime;
+    address public highestBidder;
+    uint256 public highestBid;
+    bool public ended;
+    
+    mapping(address => uint256) public pendingReturns;
+    
+    event HighestBidIncreased(address bidder, uint256 amount);
+    event AuctionEnded(address winner, uint256 amount);
+    
+    constructor(uint256 _biddingTime) {
+        owner = msg.sender;
+        endTime = block.timestamp + _biddingTime;
+    }
+    
+    function bid() public payable {
+        require(block.timestamp <= endTime, "Auction has ended");
+        require(msg.value > highestBid, "Bid not high enough");
+        
+        if (highestBid != 0) {
+            pendingReturns[highestBidder] += highestBid;
+        }
+        
+        highestBidder = msg.sender;
+        highestBid = msg.value;
+        
+        emit HighestBidIncreased(msg.sender, msg.value);
+    }
+    
+    function withdraw() public returns (bool) {
+        uint256 amount = pendingReturns[msg.sender];
+        if (amount > 0) {
+            pendingReturns[msg.sender] = 0;
+            if (!payable(msg.sender).send(amount)) {
+                pendingReturns[msg.sender] = amount;
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function endAuction() public {
+        require(block.timestamp >= endTime, "Auction not yet ended");
+        require(!ended, "Auction already ended");
+        
+        ended = true;
+        emit AuctionEnded(highestBidder, highestBid);
+        
+        payable(owner).transfer(highestBid);
+    }
+}`,
+
+            defi: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleLending {
+    mapping(address => uint256) public deposits;
+    mapping(address => uint256) public borrowed;
+    uint256 public totalDeposits;
+    uint256 public totalBorrowed;
+    uint256 public constant INTEREST_RATE = 5; // 5% annual
+    uint256 public constant COLLATERAL_RATIO = 150; // 150% collateralization
+    
+    event Deposit(address user, uint256 amount);
+    event Withdraw(address user, uint256 amount);
+    event Borrow(address user, uint256 amount);
+    event Repay(address user, uint256 amount);
+    
+    function deposit() public payable {
+        require(msg.value > 0, "Must deposit some ETH");
+        deposits[msg.sender] += msg.value;
+        totalDeposits += msg.value;
+        emit Deposit(msg.sender, msg.value);
+    }
+    
+    function withdraw(uint256 amount) public {
+        require(deposits[msg.sender] >= amount, "Insufficient deposits");
+        require(address(this).balance >= amount, "Insufficient liquidity");
+        
+        deposits[msg.sender] -= amount;
+        totalDeposits -= amount;
+        payable(msg.sender).transfer(amount);
+        emit Withdraw(msg.sender, amount);
+    }
+    
+    function borrow(uint256 amount) public {
+        uint256 maxBorrow = (deposits[msg.sender] * 100) / COLLATERAL_RATIO;
+        require(borrowed[msg.sender] + amount <= maxBorrow, "Insufficient collateral");
+        require(address(this).balance >= amount, "Insufficient liquidity");
+        
+        borrowed[msg.sender] += amount;
+        totalBorrowed += amount;
+        payable(msg.sender).transfer(amount);
+        emit Borrow(msg.sender, amount);
+    }
+    
+    function repay() public payable {
+        require(msg.value > 0, "Must repay some amount");
+        require(borrowed[msg.sender] >= msg.value, "Repaying more than borrowed");
+        
+        borrowed[msg.sender] -= msg.value;
+        totalBorrowed -= msg.value;
+        emit Repay(msg.sender, msg.value);
+    }
+    
+    function getAccountInfo(address user) public view returns (uint256 depositAmount, uint256 borrowAmount, uint256 maxBorrow) {
+        depositAmount = deposits[user];
+        borrowAmount = borrowed[user];
+        maxBorrow = (depositAmount * 100) / COLLATERAL_RATIO;
+    }
+}`,
+
+            nft: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleNFT {
+    string public name = "Academy NFT";
+    string public symbol = "ANFT";
+    uint256 public totalSupply = 0;
+    
+    mapping(uint256 => address) public ownerOf;
+    mapping(address => uint256) public balanceOf;
+    mapping(uint256 => string) public tokenURI;
+    
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    
+    function mint(address to, string memory _tokenURI) public returns (uint256) {
+        uint256 tokenId = totalSupply;
+        totalSupply++;
+        
+        ownerOf[tokenId] = to;
+        balanceOf[to]++;
+        tokenURI[tokenId] = _tokenURI;
+        
+        emit Transfer(address(0), to, tokenId);
+        return tokenId;
+    }
+    
+    function transfer(address to, uint256 tokenId) public {
+        require(ownerOf[tokenId] == msg.sender, "Not the owner");
+        
+        balanceOf[msg.sender]--;
+        balanceOf[to]++;
+        ownerOf[tokenId] = to;
+        
+        emit Transfer(msg.sender, to, tokenId);
+    }
+    
+    function getTokenURI(uint256 tokenId) public view returns (string memory) {
+        require(tokenId < totalSupply, "Token does not exist");
+        return tokenURI[tokenId];
+    }
+}`
+        };
+
+        let deployedContract = null;
+        let compilationSuccess = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGasCalculation();
+        });
+
+        // Load contract example
+        function loadExample(exampleKey) {
+            const editor = document.getElementById('contractEditor');
+            if (contractExamples[exampleKey]) {
+                editor.value = contractExamples[exampleKey];
+                logToConsole('info', `📝 Loaded ${exampleKey} contract example`);
+                
+                // Reset compilation status
+                compilationSuccess = false;
+                document.querySelector('.editor-button.deploy').disabled = true;
+                
+                // Reset deployment steps
+                resetDeploymentSteps();
+            }
+        }
+
+        // Switch editor tabs
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.editor-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'test') {
+                logToConsole('info', '🧪 Test tab selected (feature coming soon!)');
+            }
+        }
+
+        // Compile contract
+        function compileContract() {
+            const code = document.getElementById('contractEditor').value;
+            
+            if (!code.trim()) {
+                logToConsole('error', '❌ No contract code to compile');
+                return;
+            }
+            
+            logToConsole('info', '⚡ Compiling contract...');
+            
+            // Simulate compilation delay
+            setTimeout(() => {
+                // Simple validation checks
+                const errors = [];
+                
+                if (!code.includes('pragma solidity')) {
+                    errors.push('Missing pragma directive');
+                }
+                
+                if (!code.includes('contract ')) {
+                    errors.push('No contract definition found');
+                }
+                
+                // Check for basic syntax
+                const openBraces = (code.match(/{/g) || []).length;
+                const closeBraces = (code.match(/}/g) || []).length;
+                
+                if (openBraces !== closeBraces) {
+                    errors.push('Mismatched braces');
+                }
+                
+                if (errors.length > 0) {
+                    errors.forEach(error => {
+                        logToConsole('error', `❌ ${error}`);
+                    });
+                    compilationSuccess = false;
+                } else {
+                    logToConsole('success', '✅ Compilation successful!');
+                    logToConsole('info', '📦 Bytecode generated');
+                    logToConsole('info', '📋 ABI generated');
+                    compilationSuccess = true;
+                    document.querySelector('.editor-button.deploy').disabled = false;
+                    
+                    // Update gas estimation
+                    updateGasForContract(code);
+                }
+            }, 1000);
+        }
+
+        // Deploy contract
+        function deployContract() {
+            if (!compilationSuccess) {
+                logToConsole('error', '❌ Contract must be compiled first');
+                return;
+            }
+            
+            logToConsole('info', '🚀 Starting deployment...');
+            simulateDeployment();
+        }
+
+        // Reset editor
+        function resetEditor() {
+            document.getElementById('contractEditor').value = contractExamples.hello;
+            clearConsole();
+            logToConsole('info', '🔄 Editor reset to Hello World example');
+            compilationSuccess = false;
+            document.querySelector('.editor-button.deploy').disabled = true;
+            resetDeploymentSteps();
+            document.getElementById('contractInteraction').style.display = 'none';
+        }
+
+        // Console logging
+        function logToConsole(type, message) {
+            const console = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '';
+        }
+
+        // Gas calculation
+        function updateGasCalculation() {
+            const gasPrice = parseInt(document.getElementById('gasPriceSlider').value);
+            const gasUsed = parseInt(document.getElementById('gasUsed').textContent.replace(',', ''));
+            
+            const ethCost = (gasUsed * gasPrice) / 1e9; // Convert from Gwei to ETH
+            const usdCost = ethCost * 3000; // Assume $3000 ETH price
+            
+            document.getElementById('gasPrice').textContent = gasPrice;
+            document.getElementById('ethCost').textContent = ethCost.toFixed(6);
+            document.getElementById('usdCost').textContent = `$${usdCost.toFixed(2)}`;
+        }
+
+        function updateGasForContract(code) {
+            // Estimate gas based on contract complexity
+            let baseGas = 200000; // Base deployment cost
+            
+            // Add gas for contract size
+            baseGas += code.length * 10;
+            
+            // Add gas for functions
+            const functions = (code.match(/function /g) || []).length;
+            baseGas += functions * 10000;
+            
+            // Add gas for storage variables
+            const mappings = (code.match(/mapping/g) || []).length;
+            const variables = (code.match(/uint256|string|bool/g) || []).length;
+            baseGas += (mappings + variables) * 5000;
+            
+            document.getElementById('gasUsed').textContent = baseGas.toLocaleString();
+            updateGasCalculation();
+        }
+
+        // Deployment simulation
+        function simulateDeployment() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
+            let currentStep = 0;
+            
+            function nextStep() {
+                if (currentStep > 0) {
+                    // Mark previous step as completed
+                    const prevStep = document.getElementById(steps[currentStep - 1]);
+                    prevStep.classList.remove('active');
+                    prevStep.classList.add('completed');
+                    prevStep.querySelector('.step-icon').textContent = '✓';
+                }
+                
+                if (currentStep < steps.length) {
+                    // Activate current step
+                    const step = document.getElementById(steps[currentStep]);
+                    step.classList.add('active');
+                    
+                    // Log step
+                    const stepTitle = step.querySelector('.step-title').textContent;
+                    logToConsole('info', `🔄 ${stepTitle}...`);
+                    
+                    currentStep++;
+                    
+                    // Schedule next step
+                    setTimeout(nextStep, 1500);
+                } else {
+                    // Deployment complete
+                    logToConsole('success', '🎉 Contract deployed successfully!');
+                    const address = '0x' + Math.random().toString(16).substr(2, 40);
+                    logToConsole('info', `📍 Contract address: ${address}`);
+                    
+                    // Show interaction interface
+                    showContractInteraction(address);
+                }
+            }
+            
+            nextStep();
+        }
+
+        // Reset deployment steps
+        function resetDeploymentSteps() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
+            steps.forEach((stepId, index) => {
+                const step = document.getElementById(stepId);
+                step.classList.remove('active', 'completed');
+                step.querySelector('.step-icon').textContent = index + 1;
+            });
+        }
+
+        // Show contract interaction
+        function showContractInteraction(address) {
+            const interaction = document.getElementById('contractInteraction');
+            const code = document.getElementById('contractEditor').value;
+            
+            document.getElementById('contractAddress').textContent = address;
+            
+            // Parse contract functions (simplified)
+            const functions = [];
+            const functionMatches = code.match(/function\s+(\w+)\s*\([^)]*\)\s*(public|external)/g);
+            
+            if (functionMatches) {
+                functionMatches.forEach(match => {
+                    const nameMatch = match.match(/function\s+(\w+)/);
+                    if (nameMatch) {
+                        functions.push(nameMatch[1]);
+                    }
+                });
+            }
+            
+            // Create interaction UI
+            const functionsContainer = document.getElementById('contractFunctions');
+            functionsContainer.innerHTML = '';
+            
+            functions.forEach(func => {
+                const funcDiv = document.createElement('div');
+                funcDiv.innerHTML = `
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 0.5rem;">
+                        <h4 style="color: var(--academy-accent); margin-bottom: 0.5rem;">${func}()</h4>
+                        <div class="function-call">
+                            <div class="function-input">
+                                <label>Parameter (if any):</label>
+                                <input type="text" placeholder="Enter value..." id="input_${func}">
+                            </div>
+                            <button class="editor-button" onclick="callFunction('${func}')" style="height: fit-content;">Call</button>
+                        </div>
+                        <div id="result_${func}" style="margin-top: 0.5rem; font-family: 'Fira Code', monospace; color: var(--academy-success);"></div>
+                    </div>
+                `;
+                functionsContainer.appendChild(funcDiv);
+            });
+            
+            interaction.style.display = 'block';
+        }
+
+        // Call contract function
+        function callFunction(functionName) {
+            const input = document.getElementById(`input_${functionName}`).value;
+            const result = document.getElementById(`result_${functionName}`);
+            
+            logToConsole('info', `📞 Calling ${functionName}(${input || ''})...`);
+            
+            // Simulate function call
+            setTimeout(() => {
+                let response;
+                switch(functionName) {
+                    case 'getMessage':
+                        response = '"Hello, Blockchain!"';
+                        break;
+                    case 'setMessage':
+                        response = 'Transaction successful. Message updated.';
+                        break;
+                    case 'balanceOf':
+                        response = '1000000000000000000000000'; // 1M tokens
+                        break;
+                    case 'transfer':
+                        response = 'Transfer successful. Transaction hash: 0x123...';
+                        break;
+                    default:
+                        response = 'Function executed successfully.';
+                }
+                
+                result.textContent = `→ ${response}`;
+                logToConsole('success', `✅ ${functionName} executed successfully`);
+            }, 500);
+        }
+
+        // Initialize progress
+        const savedProgress = localStorage.getItem('lesson4_progress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            document.getElementById('lessonProgress').textContent = progress.score || 0;
+        }
+    </script>
+</body>
+</html>

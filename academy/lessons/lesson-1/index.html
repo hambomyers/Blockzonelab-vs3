@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Computing & Binary Fundamentals - The Academy</title>
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    
+    <style>
+        /* Academy Enhanced Styles */
+        :root {
+            --academy-primary: #00f5ff;
+            --academy-accent: #ffd700;
+            --academy-dark: #1a1d29;
+            --academy-card: rgba(37, 40, 54, 0.95);
+            --academy-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --academy-success: #00ff88;
+            --academy-error: #ff4757;
+            --academy-warning: #ff8c00;
+        }
+
+        .academy-page {
+            background: linear-gradient(135deg, var(--academy-dark) 0%, #2d314a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .academy-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23ffd700" opacity="0.1"/></svg>');
+            animation: academyDrift 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes academyDrift {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(26, 29, 41, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            text-decoration: none;
+        }
+
+        .progress-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--academy-card);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            color: var(--academy-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Lesson Hero */
+        .lesson-hero-premium {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(212, 175, 55, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 2rem;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .lesson-hero-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, var(--academy-accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .hero-story-hook {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .bitcoin-pizza-value {
+            color: var(--academy-accent);
+            font-weight: 700;
+        }
+
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: var(--academy-transition);
+        }
+
+        .hero-stat:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        .stat-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        /* Enhanced Binary Converter - Your Design but AAA Quality */
+        .converter-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.95), 
+                rgba(212, 175, 55, 0.05));
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 2rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 10px 20px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .converter-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 25%, 
+                rgba(212, 175, 55, 0.03) 25%, 
+                rgba(212, 175, 55, 0.03) 50%, 
+                transparent 50%, 
+                transparent 75%, 
+                rgba(212, 175, 55, 0.03) 75%);
+            background-size: 60px 60px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .converter-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #f8f9fa 25%, 
+                #d4af37 75%, 
+                #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 2;
+        }
+
+        .number-system-section {
+            margin: 2rem 0;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .system-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .decimal-title {
+            color: #ffffff;
+            text-shadow: 0 6px 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .binary-title {
+            color: #d4af37;
+            text-shadow: 0 6px 15px rgba(212, 175, 55, 0.6);
+        }
+
+        .decimal-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .binary-grid {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 1rem;
+            flex-wrap: nowrap;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 0 1rem;
+        }
+
+        .digit-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .place-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        .decimal-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.98), 
+                rgba(248, 249, 250, 0.95));
+            color: #1a1d29;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 8px 20px rgba(255, 255, 255, 0.2),
+                0 4px 10px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            position: relative;
+        }
+
+        .decimal-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.2));
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .decimal-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.8);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            box-shadow: 
+                0 12px 30px rgba(255, 255, 255, 0.3),
+                0 8px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .decimal-btn:hover::before {
+            opacity: 1;
+        }
+
+        .binary-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            border: 3px solid rgba(212, 175, 55, 0.5);
+            border-radius: 12px;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.98), 
+                rgba(212, 175, 55, 0.15));
+            color: #d4af37;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 6px 15px rgba(212, 175, 55, 0.2),
+                0 3px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(212, 175, 55, 0.4);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .binary-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.3));
+            border-radius: 9px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .binary-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            border-color: rgba(212, 175, 55, 0.9);
+            box-shadow: 
+                0 10px 25px rgba(212, 175, 55, 0.5),
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(212, 175, 55, 0.6);
+        }
+
+        .binary-btn:hover::before {
+            opacity: 1;
+        }
+
+        .binary-btn.active {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1d29;
+            border-color: #d4af37;
+            box-shadow: 
+                0 0 30px rgba(212, 175, 55, 0.9),
+                0 6px 20px rgba(212, 175, 55, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transform: scale(1.08);
+            font-weight: 1000;
+        }
+
+        .binary-btn.active::before {
+            opacity: 0;
+        }
+
+        .exponent-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Fira Code', monospace;
+            margin-top: 0.25rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .representation-display {
+            margin: 3rem 0 2rem 0;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .representation-text {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+            text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.02em;
+        }
+
+        .pulsing {
+            font-weight: 800;
+            font-size: 1.8rem !important;
+            animation: luxuryPulse 3s ease-in-out infinite;
+            display: inline-block;
+            position: relative;
+        }
+
+        .decimal-number {
+            color: #ffffff;
+            text-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.9),
+                0 6px 15px rgba(255, 255, 255, 0.5);
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
+        }
+
+        .binary-number {
+            color: #d4af37;
+            text-shadow: 
+                0 0 30px rgba(212, 175, 55, 0.9),
+                0 6px 15px rgba(212, 175, 55, 0.5);
+            font-family: 'Fira Code', monospace;
+            font-weight: 800 !important;
+            font-size: 1.8rem !important;
+        }
+
+        .dot-canvas-container {
+            margin: 2rem 0 0 0;
+            padding: 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.5) inset,
+                0 2px 0 rgba(255, 255, 255, 0.1) inset,
+                0 8px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        #dotCanvas {
+            display: block;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.9), 
+                rgba(0, 0, 0, 0.6));
+            border-radius: 18px;
+        }
+
+        @keyframes luxuryPulse {
+            0%, 100% { 
+                opacity: 0.85; 
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            25% { 
+                opacity: 0.95; 
+                transform: scale(1.02);
+                filter: brightness(1.05);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.1);
+                filter: brightness(1.3);
+            }
+            75% { 
+                opacity: 0.95; 
+                transform: scale(1.02);
+                filter: brightness(1.05);
+            }
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.08) 0%, 
+                rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .content-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--academy-accent);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .card-content h3 {
+            color: var(--academy-accent);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .card-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Hot Links */
+        .hot-link {
+            color: var(--academy-accent);
+            text-decoration: underline dotted;
+            cursor: pointer;
+            transition: color 0.3s;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .hot-link:hover {
+            color: #f4d03f;
+        }
+
+        .hotlink-expansion {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 29, 41, 0.98);
+            border: 2px solid var(--academy-accent);
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2), 0 0 30px rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            max-width: 450px;
+            min-width: 300px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .hotlink-expansion.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .hotlink-expansion h3 {
+            color: var(--academy-accent);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Quiz System */
+        .quiz-premium {
+            background: var(--academy-card);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--academy-accent);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--academy-accent), #f4d03f);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin: 2rem 0;
+            line-height: 1.6;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .option-button {
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--academy-transition);
+            text-align: left;
+        }
+
+        .option-button:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .option-button.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgb(34, 197, 94);
+        }
+
+        .option-button.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgb(239, 68, 68);
+        }
+
+        .quiz-button {
+            padding: 1rem 2rem;
+            background: var(--academy-accent);
+            color: var(--academy-dark);
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .quiz-button:hover {
+            background: #f4d03f;
+            transform: translateY(-2px);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .hero-stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .hero-stat {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .converter-container {
+                margin: 2rem 0.5rem;
+                padding: 2rem 1rem;
+            }
+            
+            .converter-title {
+                font-size: 2.2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .binary-grid {
+                gap: 0.6rem;
+                padding: 0 0.5rem;
+            }
+            
+            .binary-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+            
+            .decimal-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body class="academy-page">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <span>✧</span> The Academy
+            </a>
+            <div class="progress-counter">
+                <span>🎓</span>
+                <span id="lessonProgress">0</span>
+                <span>% Complete</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Lesson Hero -->
+        <div class="lesson-hero-premium">
+            <div class="hero-content">
+                <div class="hero-icon">🔢</div>
+                <h1 class="hero-title">Computing & Binary Fundamentals</h1>
+                <p class="hero-subtitle">How Zeros and Ones Created the Digital Revolution</p>
+                
+                <div class="hero-story-hook">
+                    <p>In 2010, a programmer bought two pizzas for 10,000 Bitcoin—now worth <span class="bitcoin-pizza-value">over $1.2 billion</span>. This simple transaction proved that pure information could have real economic value. But how did we get here?</p>
+                </div>
+                
+                <div class="hero-stats-grid">
+                    <div class="hero-stat">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-info">
+                            <div class="stat-number">Free</div>
+                            <div class="stat-label">Lesson</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Story Cards</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <div class="stat-number">25</div>
+                            <div class="stat-label">Minutes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claude Shannon Story Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h2 class="card-title">🧠 Claude Shannon: The Playful Genius Who Invented the Digital Age</h2>
+                <p class="card-subtitle">The man who proved that all information could become zeros and ones</p>
+            </div>
+            
+            <div class="card-content">
+                <p><strong>1948:</strong> Claude Shannon revolutionized the world by proving that any information—words, images, even music—could be encoded using just two symbols: 0 and 1. His work launched the digital age, making everything from computers to cryptocurrencies possible. Shannon's insight was that all digital data is, at its core, a series of on/off switches—just like the electricity running through a circuit.</p>
+
+                <p>Imagine a world without computers, smartphones, or the internet. That world would still exist—if not for <span class="hot-link" data-hot="shannon">Claude Shannon</span>, the brilliant mind who showed us how to turn information into zeros and ones.</p>
+
+                <p>As a boy, Shannon strung a <span class="hot-link" data-hot="telegraph">telegraph wire</span> between his house and a friend's, sending secret messages in true binary style. He built model airplanes and a <span class="hot-link" data-hot="rc-boat">radio-controlled boat</span> before he was a teenager, always tinkering, always curious.</p>
+
+                <p>At <span class="hot-link" data-hot="bell-labs">Bell Labs</span>, Shannon became legendary—not just for inventing <span class="hot-link" data-hot="info-theory">information theory</span>, but for riding a <span class="hot-link" data-hot="unicycle">unicycle</span> down the hallways (sometimes while juggling!). His office was a playground of invention, from a juggling machine to a maze-solving mouse named <span class="hot-link" data-hot="theseus">Theseus</span>—an early ancestor of artificial intelligence.</p>
+
+                <p>Below, you'll find our enhanced binary/decimal converter. As you experiment—typing in your age, your favorite number, or even the current year—pay close attention to the exponents and place values above each digit. Notice how, in decimal, each place is a power of 10, while in binary, each place is a power of 2. See if you can spot the patterns and differences between the two systems as you play with it!</p>
+            </div>
+        </div>
+
+        <!-- Enhanced Binary Converter -->
+        <div class="converter-container">
+            <h2 class="converter-title">Interactive Binary Converter</h2>
+            
+            <!-- Decimal Section -->
+            <div class="number-system-section">
+                <h3 class="system-title decimal-title">Decimal (Base 10)</h3>
+                <div class="decimal-grid">
+                    <div class="digit-group">
+                        <span class="place-label">Thousands</span>
+                        <button class="decimal-btn" data-place="3">0</button>
+                        <span class="exponent-label">10³</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">Hundreds</span>
+                        <button class="decimal-btn" data-place="2">0</button>
+                        <span class="exponent-label">10²</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">Tens</span>
+                        <button class="decimal-btn" data-place="1">0</button>
+                        <span class="exponent-label">10¹</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">Ones</span>
+                        <button class="decimal-btn" data-place="0">0</button>
+                        <span class="exponent-label">10⁰</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Binary Section -->
+            <div class="number-system-section">
+                <h3 class="system-title binary-title">Binary (Base 2)</h3>
+                <div class="binary-grid">
+                    <div class="digit-group">
+                        <span class="place-label">4096s</span>
+                        <button class="binary-btn" data-bit="12">0</button>
+                        <span class="exponent-label">2¹²</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">2048s</span>
+                        <button class="binary-btn" data-bit="11">0</button>
+                        <span class="exponent-label">2¹¹</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">1024s</span>
+                        <button class="binary-btn" data-bit="10">0</button>
+                        <span class="exponent-label">2¹⁰</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">512s</span>
+                        <button class="binary-btn" data-bit="9">0</button>
+                        <span class="exponent-label">2⁹</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">256s</span>
+                        <button class="binary-btn" data-bit="8">0</button>
+                        <span class="exponent-label">2⁸</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">128s</span>
+                        <button class="binary-btn" data-bit="7">0</button>
+                        <span class="exponent-label">2⁷</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">64s</span>
+                        <button class="binary-btn" data-bit="6">0</button>
+                        <span class="exponent-label">2⁶</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">32s</span>
+                        <button class="binary-btn" data-bit="5">0</button>
+                        <span class="exponent-label">2⁵</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">16s</span>
+                        <button class="binary-btn" data-bit="4">0</button>
+                        <span class="exponent-label">2⁴</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">8s</span>
+                        <button class="binary-btn" data-bit="3">0</button>
+                        <span class="exponent-label">2³</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">4s</span>
+                        <button class="binary-btn" data-bit="2">0</button>
+                        <span class="exponent-label">2²</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">2s</span>
+                        <button class="binary-btn" data-bit="1">0</button>
+                        <span class="exponent-label">2¹</span>
+                    </div>
+                    <div class="digit-group">
+                        <span class="place-label">Ones</span>
+                        <button class="binary-btn" data-bit="0">0</button>
+                        <span class="exponent-label">2⁰</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Display -->
+            <div class="representation-display">
+                <p class="representation-text">
+                    This represents 
+                    <span class="binary-number pulsing">0</span> 
+                    and 
+                    <span class="decimal-number pulsing">0</span> 
+                    dots
+                </p>
+            </div>
+
+            <!-- Enhanced Dot Visualization -->
+            <div class="dot-canvas-container">
+                <canvas id="dotCanvas" width="1400" height="300" aria-label="Enhanced Dot Visualization"></canvas>
+            </div>
+        </div>
+
+        <!-- The Binary Universe Story Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h2 class="card-title">🌌 The Binary Universe: From Leibniz to Blockchain</h2>
+                <p class="card-subtitle">How brilliant minds across centuries built the foundation of digital reality</p>
+            </div>
+            
+            <div class="card-content">
+                <h3>The Philosopher's Vision (1679)</h3>
+                <p>Picture a brilliant German philosopher sitting in his study three centuries ago, contemplating the nature of existence itself. <span class="hot-link" data-hot="leibniz">Gottfried Leibniz</span> wasn't just creating a number system—he was discovering what he believed to be the language of creation. To Leibniz, 0 represented the void, nothingness, while 1 represented divine perfection. His binary system wasn't just mathematics; it was theology made manifest in symbols.</p>
+
+                <h3>The Logician's Revolution (1847)</h3>
+                <p>Nearly two centuries later, an English mathematician named <span class="hot-link" data-hot="boole">George Boole</span> was grappling with a different puzzle: how to make logic itself mathematical. Boole's breakthrough was revolutionary—he showed that logical statements could be reduced to binary operations. "True" became 1, "false" became 0, and suddenly all of human reasoning could be expressed in Leibniz's mystical language.</p>
+
+                <h3>The Codebreaker's Machine (1937)</h3>
+                <p>Fast forward to 1937, and a young Cambridge mathematician named <span class="hot-link" data-hot="turing">Alan Turing</span> was asking a deceptively simple question: what problems can be computed? His answer would change everything. Turing imagined a theoretical machine—infinitely long tape divided into squares, each containing either a 0 or a 1, with a simple head that could read, write, and move according to basic rules.</p>
+
+                <h3>The Information Theorist's Revelation (1948)</h3>
+                <p>But it was Claude Shannon who truly unlocked the door between the physical and digital worlds. In his landmark 1948 paper, Shannon proved that any information—a love letter, a photograph, a symphony—could be perfectly encoded using just 0s and 1s. He called the fundamental unit of information a <span class="hot-link" data-hot="bit">bit</span>, short for "binary digit."</p>
+
+                <h3>The Mysterious Coder's Legacy (2009)</h3>
+                <p>And then, sixty years after Shannon's revelation, a figure emerged from the shadows of the internet. <span class="hot-link" data-hot="bitcoin">Satoshi Nakamoto</span>—whoever they were—took all these mathematical insights and created something unprecedented: truly scarce digital money. From Leibniz's mystical vision to Satoshi's revolutionary blockchain, each genius built upon the last.</p>
+            </div>
+        </div>
+
+        <!-- Digital Scarcity Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h2 class="card-title">🍕 Digital Scarcity: From Pizza to Programmable Money</h2>
+                <p class="card-subtitle">How binary made money truly digital for the first time in history</p>
+            </div>
+            
+            <div class="card-content">
+                <h3>The Most Expensive Pizza in History</h3>
+                <p>On May 22, 2010, a programmer named <span class="hot-link" data-hot="laszlo">Laszlo Hanyecz</span> made history by purchasing two Papa John's pizzas for 10,000 bitcoins. At the time, those bitcoins were worth about $41. Today? Those same bitcoins would be worth hundreds of millions of dollars.</p>
+
+                <p>But this wasn't just an expensive lunch mistake. It was the first real-world transaction that proved <span class="hot-link" data-hot="digital-scarcity">digital scarcity</span> could work. For the first time in human history, we had created something that was both digital AND scarce—something that couldn't be copied, duplicated, or counterfeited like a regular computer file.</p>
+
+                <h3>Programming Scarcity Into Reality</h3>
+                <p>Traditional money is just numbers in a database that banks can change at will. But Bitcoin's scarcity is <span class="hot-link" data-hot="math-scarcity">mathematically guaranteed</span>. The binary code literally hardcodes the rule: only 21 million bitcoins will ever exist.</p>
+
+                <p>Every piece of digital information—from this text you're reading to the Bitcoin in digital wallets—is ultimately just a sequence of 0s and 1s. The bit truly is the atom of our digital universe, and these visionaries gave us the tools to build an entire civilization from those atoms.</p>
+            </div>
+        </div>
+
+        <!-- Quiz System -->
+        <div class="quiz-premium">
+            <h2 class="quiz-title">🎯 Master Your Binary Knowledge</h2>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Test your understanding of computing fundamentals and binary systems</p>
+            
+            <div class="quiz-progress">
+                <div class="quiz-progress-fill" id="quizProgress"></div>
+            </div>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">10</span></p>
+            
+            <div id="quizContainer">
+                <div class="question-text" id="questionText">What is the primary purpose of Claude Shannon's information theory?</div>
+                
+                <div class="options-container" id="optionsContainer">
+                    <button class="option-button" onclick="selectAnswer(0)">To create faster computers</button>
+                    <button class="option-button" onclick="selectAnswer(1)">To prove any information can be encoded as binary digits</button>
+                    <button class="option-button" onclick="selectAnswer(2)">To invent the internet</button>
+                    <button class="option-button" onclick="selectAnswer(3)">To build better calculators</button>
+                </div>
+                
+                <button class="quiz-button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+            </div>
+            
+            <div id="quizResults" style="display: none; text-align: center;">
+                <h3 style="color: var(--academy-accent); font-size: 2rem;">Quiz Complete!</h3>
+                <div id="finalScore" style="font-size: 3rem; margin: 1rem 0; color: var(--academy-accent);"></div>
+                <div id="scoreMessage" style="margin: 1rem 0; font-size: 1.2rem;"></div>
+                <button class="quiz-button" onclick="restartQuiz()">Retake Quiz</button>
+            </div>
+        </div>
+
+        <!-- Hot Link Expansions -->
+        <div class="hotlink-expansion" id="exp-shannon">
+            <h3>Claude Shannon (1916-2001)</h3>
+            <p>Known as the "father of information theory," Shannon proved that all information could be encoded as binary digits. His work made digital computers, the internet, and cryptocurrencies possible.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-telegraph">
+            <h3>The Backyard Telegraph</h3>
+            <p>As a kid, Shannon built a working telegraph line using barbed wire and homemade switches. He and his friend sent secret messages between their houses—his first real binary system!</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-rc-boat">
+            <h3>Radio-Controlled Boat</h3>
+            <p>Shannon's early inventions included a model airplane and a radio-controlled boat, showing his knack for engineering and foreshadowing his later work in robotics and control systems.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-bell-labs">
+            <h3>Bell Labs</h3>
+            <p>Bell Labs was the Silicon Valley of its day—a hub of innovation where Shannon worked alongside other legends to invent the future. It was here that he developed information theory.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-info-theory">
+            <h3>Information Theory</h3>
+            <p>Shannon's 1948 theory proved that any message—words, images, even music—can be encoded as a sequence of bits. This breakthrough launched the digital age.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-unicycle">
+            <h3>Unicycling Down the Hall</h3>
+            <p>Shannon was famous for riding his unicycle through Bell Labs, sometimes while juggling! His playful approach to life and work made him a legend among his colleagues.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-theseus">
+            <h3>Theseus the Maze Mouse</h3>
+            <p>Shannon built a mechanical mouse named Theseus that could solve a maze and "learn" the correct path. This was one of the earliest examples of machine learning and artificial intelligence.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-leibniz">
+            <h3>Gottfried Leibniz (1646-1716)</h3>
+            <p>German polymath who invented calculus, founded symbolic logic, and designed one of the first mechanical calculators. His binary insights came from studying ancient Chinese I Ching hexagrams.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-boole">
+            <h3>George Boole (1815-1864)</h3>
+            <p>Self-taught English mathematician who revolutionized logic by showing that logical statements could be reduced to binary operations. Boolean logic is the foundation of all computer programming.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-turing">
+            <h3>Alan Turing (1912-1954)</h3>
+            <p>A child prodigy who defined what computation means through his theoretical "Turing Machine." During WWII, he used binary logic to crack the Nazi Enigma code, shortening the war.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-bit">
+            <h3>The Bit: Information's Atom</h3>
+            <p>Shannon's greatest insight: all information, no matter how complex, reduces to binary choices. A bit represents the information gained by learning the answer to a yes/no question.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-bitcoin">
+            <h3>Satoshi Nakamoto: The Digital Ghost</h3>
+            <p>The pseudonymous creator whose true identity remains one of technology's greatest mysteries. They vanished in 2011, leaving behind only forum posts, emails, and a revolutionary technology.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-laszlo">
+            <h3>Laszlo Hanyecz</h3>
+            <p>The programmer who made the first real-world Bitcoin transaction on May 22, 2010. He paid 10,000 bitcoins for two Papa John's pizzas, proving that digital currency could have real economic value.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-digital-scarcity">
+            <h3>Digital Scarcity</h3>
+            <p>The ability to create genuinely limited digital resources through cryptographic proofs rather than legal restrictions. Unlike traditional digital files that can be copied infinitely, cryptocurrencies use mathematics to ensure only a fixed supply can ever exist.</p>
+        </div>
+
+        <div class="hotlink-expansion" id="exp-math-scarcity">
+            <h3>Mathematical Scarcity</h3>
+            <p>Bitcoin's supply is hardcoded into its protocol—only 21 million bitcoins will ever exist. This isn't enforced by law or trust, but by mathematical rules that no single entity can change without network consensus.</p>
+        </div>
+    </main>
+
+    <script>
+        // Enhanced Binary Converter Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const decimalBtns = document.querySelectorAll('.decimal-btn');
+            const binaryBtns = document.querySelectorAll('.binary-btn');
+            const canvas = document.getElementById('dotCanvas');
+            const ctx = canvas.getContext('2d');
+            const binaryDisplay = document.querySelector('.binary-number');
+            const decimalDisplay = document.querySelector('.decimal-number');
+            
+            let currentValue = 0;
+            let decimalDigits = [0, 0, 0, 0];
+            let binaryBits = Array(13).fill(0);
+            
+            // Enhanced color palette for dots
+            const dotColors = [
+                '#d4af37', '#f4d03f', '#00f5ff', '#4ecdc4',
+                '#ff6b6b', '#45b7d1', '#96ceb4', '#ffeaa7',
+                '#fd79a8', '#fdcb6e', '#6c5ce7', '#a29bfe',
+                '#00ff88', '#ff8c00'
+            ];
+            
+            updateDisplays();
+            renderDots();
+            
+            // Decimal button handlers
+            decimalBtns.forEach((btn, index) => {
+                btn.addEventListener('click', function() {
+                    const place = parseInt(this.dataset.place);
+                    decimalDigits[3 - place] = (decimalDigits[3 - place] + 1) % 10;
+                    
+                    calculateFromDecimal();
+                    updateDisplays();
+                    renderDots();
+                    
+                    // Enhanced visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // Binary button handlers  
+            binaryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bit = parseInt(this.dataset.bit);
+                    binaryBits[bit] = binaryBits[bit] === 0 ? 1 : 0;
+                    
+                    calculateFromBinary();
+                    updateDisplays();
+                    renderDots();
+                    
+                    // Enhanced visual feedback
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            function calculateFromDecimal() {
+                currentValue = decimalDigits[0] * 1000 + 
+                              decimalDigits[1] * 100 + 
+                              decimalDigits[2] * 10 + 
+                              decimalDigits[3];
+                
+                binaryBits.fill(0);
+                let remaining = currentValue;
+                
+                for (let i = 12; i >= 0; i--) {
+                    const power = Math.pow(2, i);
+                    if (remaining >= power) {
+                        binaryBits[i] = 1;
+                        remaining -= power;
+                    }
+                }
+            }
+            
+            function calculateFromBinary() {
+                currentValue = 0;
+                for (let i = 0; i < 13; i++) {
+                    if (binaryBits[i] === 1) {
+                        currentValue += Math.pow(2, i);
+                    }
+                }
+                
+                // Convert to decimal digits - decimals always show exact value
+                if (currentValue > 9999) {
+                    // Show 9999 max in decimal display but use actual value for dots
+                    decimalDigits = [9, 9, 9, 9];
+                } else {
+                    const str = currentValue.toString().padStart(4, '0');
+                    for (let i = 0; i < 4; i++) {
+                        decimalDigits[i] = parseInt(str[i]);
+                    }
+                }
+            }
+            
+            function updateDisplays() {
+                // Update decimal buttons
+                decimalBtns.forEach((btn, index) => {
+                    const place = parseInt(btn.dataset.place);
+                    btn.textContent = decimalDigits[3 - place];
+                });
+                
+                // Update binary buttons
+                binaryBtns.forEach(btn => {
+                    const bit = parseInt(btn.dataset.bit);
+                    btn.textContent = binaryBits[bit];
+                    btn.classList.toggle('active', binaryBits[bit] === 1);
+                });
+                
+                // Update display numbers
+                let binaryString;
+                if (currentValue > 8191) {
+                    binaryString = 'E';
+                } else {
+                    binaryString = binaryBits.slice().reverse().join('').replace(/^0+/, '') || '0';
+                }
+                
+                binaryDisplay.textContent = binaryString;
+                decimalDisplay.textContent = currentValue.toLocaleString();
+            }
+
+            function renderDots() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                if (currentValue === 0) return;
+                
+                // Use the full canvas dimensions
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const padding = 20;
+                
+                // Calculate usable area
+                const usableWidth = canvasWidth - (2 * padding);
+                const usableHeight = canvasHeight - (2 * padding);
+                
+                // Dynamic dot sizing based on number count
+                let dotSize;
+                if (currentValue <= 100) {
+                    dotSize = 8;
+                } else if (currentValue <= 1000) {
+                    dotSize = 6;
+                } else if (currentValue <= 5000) {
+                    dotSize = 4;
+                } else {
+                    dotSize = 3;
+                }
+                
+                // Calculate how many dots we can actually render
+                const maxDotsToRender = 15000;
+                const actualDotsToRender = Math.min(maxDotsToRender, currentValue);
+                
+                // Render dots across the full canvas
+                for (let i = 0; i < actualDotsToRender; i++) {
+                    // Random position across the entire canvas area
+                    const x = padding + (Math.random() * usableWidth);
+                    const y = padding + (Math.random() * usableHeight);
+                    
+                    // Varied dot size for organic feel
+                    const thisDotSize = dotSize + (Math.random() - 0.5) * 2;
+                    
+                    // Random color with slight transparency
+                    const color = dotColors[Math.floor(Math.random() * dotColors.length)];
+                    const alpha = 0.7 + Math.random() * 0.3;
+                    
+                    // Draw glow effect first
+                    ctx.globalAlpha = alpha * 0.4;
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x, y, thisDotSize * 1.5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Draw main dot
+                    ctx.globalAlpha = alpha;
+                    ctx.beginPath();
+                    ctx.arc(x, y, Math.max(1, thisDotSize), 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                
+                // Add label if we couldn't render all dots
+                if (currentValue > maxDotsToRender) {
+                    ctx.globalAlpha = 0.8;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '14px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(
+                        'Showing ' + actualDotsToRender.toLocaleString() + ' of ' + currentValue.toLocaleString() + ' dots', 
+                        canvasWidth / 2, 
+                        canvasHeight - 10
+                    );
+                }
+                
+                ctx.globalAlpha = 1.0;
+            }
+
+            // Hot Link System
+            const hotLinks = document.querySelectorAll('.hot-link');
+            const expansions = document.querySelectorAll('.hotlink-expansion');
+
+            hotLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = `exp-${this.dataset.hot}`;
+                    const expansion = document.getElementById(targetId);
+                    
+                    if (expansion) {
+                        expansions.forEach(exp => {
+                            exp.classList.remove('active');
+                        });
+                        
+                        expansion.classList.add('active');
+                        
+                        setTimeout(() => {
+                            document.addEventListener('click', function hideExpansion(e) {
+                                if (!expansion.contains(e.target) && !link.contains(e.target)) {
+                                    expansion.classList.remove('active');
+                                    document.removeEventListener('click', hideExpansion);
+                                }
+                            });
+                        }, 100);
+                    }
+                });
+            });
+
+            // Quiz System
+            const quizQuestions = [
+                {
+                    question: "Who proved that any information could be encoded using just two symbols?",
+                    options: ["Alan Turing", "Claude Shannon", "John von Neumann", "Charles Babbage"],
+                    correct: 1
+                },
+                {
+                    question: "In what year was 'A Mathematical Theory of Communication' published?",
+                    options: ["1937", "1948", "1969", "1991"],
+                    correct: 1
+                },
+                {
+                    question: "What is the fundamental unit of information in computing?",
+                    options: ["Byte", "Bit", "Nibble", "Word"],
+                    correct: 1
+                },
+                {
+                    question: "What does 'bit' stand for?",
+                    options: ["Basic Information Type", "Binary Digit", "Byte Information Transfer", "Binary Information Technology"],
+                    correct: 1
+                },
+                {
+                    question: "How many different values can one bit store?",
+                    options: ["1", "2", "4", "8"],
+                    correct: 1
+                },
+                {
+                    question: "What is 1010 in binary converted to decimal?",
+                    options: ["8", "10", "12", "16"],
+                    correct: 1
+                },
+                {
+                    question: "What is the binary representation of decimal 15?",
+                    options: ["1111", "1110", "1101", "1100"],
+                    correct: 0
+                },
+                {
+                    question: "In an 8-bit system, what is the largest decimal number you can represent?",
+                    options: ["128", "255", "256", "512"],
+                    correct: 1
+                },
+                {
+                    question: "What is 101 + 110 in binary?",
+                    options: ["1011", "1100", "1001", "1111"],
+                    correct: 0
+                }
+            ];
+
+            let currentQuestion = 0;
+            let score = 0;
+            let totalQuestions = quizQuestions.length;
+
+            function displayQuestion() {
+                const question = quizQuestions[currentQuestion];
+                document.getElementById('questionText').textContent = question.question;
+                document.getElementById('currentQuestionNum').textContent = currentQuestion + 1;
+                document.getElementById('totalQuestions').textContent = totalQuestions;
+                
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = '';
+                
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option;
+                    button.onclick = () => selectAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
+                
+                document.getElementById('nextQuestionBtn').style.display = 'none';
+                updateProgress();
+            }
+
+            function selectAnswer(selectedIndex) {
+                const question = quizQuestions[currentQuestion];
+                const buttons = document.querySelectorAll('.option-button');
+                
+                buttons.forEach((button, index) => {
+                    button.disabled = true;
+                    if (index === question.correct) {
+                        button.classList.add('correct');
+                    } else if (index === selectedIndex && index !== question.correct) {
+                        button.classList.add('incorrect');
+                    }
+                });
+                
+                if (selectedIndex === question.correct) {
+                    score++;
+                }
+                
+                document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+            }
+
+            function nextQuestion() {
+                currentQuestion++;
+                
+                if (currentQuestion < totalQuestions) {
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            }
+
+            function updateProgress() {
+                const progress = (currentQuestion / totalQuestions) * 100;
+                document.getElementById('quizProgress').style.width = progress + '%';
+            }
+
+            function showResults() {
+                document.getElementById('quizContainer').style.display = 'none';
+                document.getElementById('quizResults').style.display = 'block';
+                
+                const percentage = Math.round((score / totalQuestions) * 100);
+                document.getElementById('finalScore').textContent = percentage + '%';
+                
+                let message = '';
+                if (percentage >= 90) {
+                    message = '🏆 Outstanding! You have mastered binary fundamentals!';
+                } else if (percentage >= 80) {
+                    message = '🌟 Excellent work! You have a strong understanding of binary concepts.';
+                } else if (percentage >= 70) {
+                    message = '👍 Good job! You understand most of the key concepts.';
+                } else if (percentage >= 60) {
+                    message = '📚 Not bad! Consider reviewing the lesson materials.';
+                } else {
+                    message = '🔄 Keep learning! Review the lesson and try again.';
+                }
+                
+                document.getElementById('scoreMessage').textContent = message;
+                
+                // Update progress to 100%
+                document.getElementById('quizProgress').style.width = '100%';
+            }
+
+            function restartQuiz() {
+                currentQuestion = 0;
+                score = 0;
+                document.getElementById('quizContainer').style.display = 'block';
+                document.getElementById('quizResults').style.display = 'none';
+                displayQuestion();
+            }
+
+            // Initialize quiz
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            displayQuestion();
+
+            // Update lesson progress
+            document.getElementById('lessonProgress').textContent = '85';
+        });
+    </script>
+</body>
+</html>

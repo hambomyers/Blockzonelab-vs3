@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 5: DeFi & DEXes - The Academy</title>
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    
+    <style>
+        /* Academy Enhanced Styles */
+        :root {
+            --academy-primary: #00f5ff;
+            --academy-accent: #ffd700;
+            --academy-dark: #1a1d29;
+            --academy-card: rgba(37, 40, 54, 0.95);
+            --academy-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --academy-success: #00ff88;
+            --academy-error: #ff4757;
+            --academy-warning: #ff8c00;
+            --defi-purple: #8a2be2;
+            --defi-gradient: linear-gradient(135deg, #00f5ff 0%, #8a2be2 100%);
+        }
+
+        .academy-page {
+            background: linear-gradient(135deg, var(--academy-dark) 0%, #2d314a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .academy-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23ffd700" opacity="0.1"/></svg>');
+            animation: academyDrift 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes academyDrift {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(26, 29, 41, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            text-decoration: none;
+        }
+
+        .progress-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--academy-card);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            color: var(--academy-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Lesson Hero */
+        .lesson-hero-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.3));
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--defi-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        /* AMM Simulator */
+        .amm-simulator {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.92), rgba(138, 43, 226, 0.05));
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .simulator-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--defi-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pool-display {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .token-display {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            transition: var(--academy-transition);
+        }
+
+        .token-display:hover {
+            border-color: var(--defi-purple);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .token-symbol {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--academy-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .token-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .token-value {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .vs-symbol {
+            font-size: 2rem;
+            color: var(--defi-purple);
+            font-weight: 700;
+        }
+
+        .curve-visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin: 2rem 0;
+        }
+
+        .trade-interface {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .trade-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-label {
+            color: var(--academy-accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .token-input {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .token-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .token-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .token-select {
+            background: var(--defi-purple);
+            color: #ffffff;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .swap-button {
+            width: 50px;
+            height: 50px;
+            background: var(--defi-gradient);
+            border: none;
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .swap-button:hover {
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .execute-trade {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--defi-gradient);
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .execute-trade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.3);
+        }
+
+        .execute-trade:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .trade-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .detail-row .value {
+            color: var(--academy-primary);
+            font-weight: 600;
+        }
+
+        /* Impermanent Loss Calculator */
+        .il-calculator {
+            background: var(--academy-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .il-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .il-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .il-input {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .il-input:focus {
+            outline: none;
+            border-color: var(--defi-purple);
+        }
+
+        .il-results {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .il-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .il-metric.negative {
+            border-left: 4px solid var(--academy-error);
+        }
+
+        .il-metric.positive {
+            border-left: 4px solid var(--academy-success);
+        }
+
+        .il-metric.neutral {
+            border-left: 4px solid var(--academy-warning);
+        }
+
+        /* Yield Farming Strategies */
+        .yield-strategies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .strategy-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: var(--academy-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--defi-purple);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
+        }
+
+        .strategy-card:hover::before {
+            opacity: 1;
+        }
+
+        .strategy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .strategy-title {
+            font-size: 1.2rem;
+            color: var(--academy-primary);
+            font-weight: 700;
+        }
+
+        .strategy-apy {
+            background: var(--defi-gradient);
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .strategy-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .strategy-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
+        }
+
+        .strategy-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .strategy-button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .strategy-button.primary {
+            background: var(--defi-gradient);
+            color: #ffffff;
+        }
+
+        .strategy-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .strategy-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Portfolio Tracker */
+        .portfolio-tracker {
+            background: var(--academy-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .portfolio-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .portfolio-metric {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .portfolio-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--academy-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .portfolio-positions {
+            margin-top: 2rem;
+        }
+
+        .position-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .position-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .position-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--defi-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .position-details h4 {
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .position-details p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .position-value {
+            text-align: right;
+        }
+
+        .position-amount {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--academy-primary);
+        }
+
+        .position-change {
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .position-change.positive {
+            color: var(--academy-success);
+        }
+
+        .position-change.negative {
+            color: var(--academy-error);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .pool-display {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .vs-symbol {
+                transform: rotate(90deg);
+            }
+            
+            .trade-inputs {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .swap-button {
+                transform: rotate(90deg);
+                margin: 1rem auto;
+            }
+            
+            .il-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .strategy-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes liquidityFlow {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+        }
+
+        .liquidity-animation {
+            animation: liquidityFlow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="academy-page">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <span>✧</span> The Academy
+            </a>
+            <div class="progress-counter">
+                <span>🎓</span>
+                <span id="lessonProgress">0</span>
+                <span>% Complete</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Lesson Hero -->
+        <div class="lesson-hero-premium">
+            <div class="hero-content">
+                <div class="hero-icon">🔄</div>
+                <h1 class="hero-title">DeFi & DEXes Revolution</h1>
+                <p class="hero-subtitle">Automated Market Makers, Yield Farming, and the Future of Finance</p>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(138, 43, 226, 0.2); border-radius: 1rem; padding: 1.5rem; margin: 2rem auto; max-width: 600px;">
+                    <p style="font-style: italic; line-height: 1.6;">
+                        "DeFi is the most important development in finance since the invention of double-entry bookkeeping. It's programmable money that doesn't need banks." — Chris Burniske
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AMM Simulator -->
+        <section class="amm-simulator">
+            <h2 class="simulator-title">🌊 Automated Market Maker Simulator</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                Experience how AMMs use mathematical formulas to enable decentralized trading
+            </p>
+            
+            <!-- Liquidity Pool Display -->
+            <div class="pool-display">
+                <div class="token-display">
+                    <div class="token-symbol">ETH</div>
+                    <div class="token-amount" id="ethAmount">1000</div>
+                    <div class="token-value">$3,000,000</div>
+                </div>
+                
+                <div class="vs-symbol">×</div>
+                
+                <div class="token-display">
+                    <div class="token-symbol">USDC</div>
+                    <div class="token-amount" id="usdcAmount">3000000</div>
+                    <div class="token-value">$3,000,000</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 1rem 0;">
+                <strong style="color: var(--academy-accent);">Constant Product:</strong> 
+                <span id="constantProduct" style="color: var(--academy-primary); font-family: 'Fira Code', monospace;">3,000,000,000</span>
+                <br>
+                <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">k = x × y (must remain constant)</span>
+            </div>
+
+            <!-- AMM Curve Visualization -->
+            <canvas class="curve-visualization" id="ammCurve" width="800" height="300"></canvas>
+
+            <!-- Trading Interface -->
+            <div class="trade-interface">
+                <h3 style="color: var(--academy-accent); margin-bottom: 1rem; text-align: center;">💱 Swap Tokens</h3>
+                
+                <div class="trade-inputs">
+                    <div class="input-group">
+                        <label class="input-label">From</label>
+                        <div class="token-input">
+                            <input type="number" placeholder="0.0" id="fromAmount" oninput="calculateSwap('from')">
+                            <select class="token-select" id="fromToken" onchange="updateTokenSelection()">
+                                <option value="ETH">ETH</option>
+                                <option value="USDC">USDC</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="swap-button" onclick="swapTokenDirection()">⇄</button>
+                    
+                    <div class="input-group">
+                        <label class="input-label">To</label>
+                        <div class="token-input">
+                            <input type="number" placeholder="0.0" id="toAmount" oninput="calculateSwap('to')" readonly>
+                            <select class="token-select" id="toToken">
+                                <option value="USDC">USDC</option>
+                                <option value="ETH">ETH</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trade-details">
+                    <div class="detail-row">
+                        <span>Exchange Rate:</span>
+                        <span class="value" id="exchangeRate">1 ETH = 3,000 USDC</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Price Impact:</span>
+                        <span class="value" id="priceImpact">0.00%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Trading Fee (0.3%):</span>
+                        <span class="value" id="tradingFee">0 USDC</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Slippage Tolerance:</span>
+                        <span class="value">0.5%</span>
+                    </div>
+                </div>
+                
+                <button class="execute-trade" onclick="executeTrade()" id="tradeButton" disabled>
+                    Enter an amount
+                </button>
+            </div>
+        </section>
+
+        <!-- Impermanent Loss Calculator -->
+        <section class="il-calculator">
+            <h3 style="color: var(--academy-accent); margin-bottom: 1rem; text-align: center;">
+                📉 Impermanent Loss Calculator
+            </h3>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                Calculate the potential impermanent loss when providing liquidity to AMM pools
+            </p>
+            
+            <div class="il-inputs">
+                <div class="il-input-group">
+                    <label class="input-label">Token A Initial Price</label>
+                    <input type="number" class="il-input" id="tokenAInitial" value="3000" oninput="calculateIL()">
+                </div>
+                <div class="il-input-group">
+                    <label class="input-label">Token A Current Price</label>
+                    <input type="number" class="il-input" id="tokenACurrent" value="3600" oninput="calculateIL()">
+                </div>
+                <div class="il-input-group">
+                    <label class="input-label">Token B Price (Stable)</label>
+                    <input type="number" class="il-input" id="tokenBPrice" value="1" readonly>
+                </div>
+                <div class="il-input-group">
+                    <label class="input-label">Initial Investment</label>
+                    <input type="number" class="il-input" id="initialInvestment" value="10000" oninput="calculateIL()">
+                </div>
+            </div>
+            
+            <div class="il-results" id="ilResults">
+                <!-- Results will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Yield Farming Strategies -->
+        <section style="margin: 3rem 0;">
+            <h2 style="text-align: center; font-size: 2.5rem; color: var(--academy-accent); margin-bottom: 2rem;">
+                🌾 Yield Farming Strategies
+            </h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Explore different DeFi strategies to maximize returns on your cryptocurrency holdings
+            </p>
+            
+            <div class="yield-strategies">
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">ETH-USDC Pool</h3>
+                        <span class="strategy-apy">12.4% APY</span>
+                    </div>
+                    <p class="strategy-description">
+                        Provide liquidity to the most popular ETH-USDC pair. Earn trading fees plus additional token rewards.
+                    </p>
+                    <div class="strategy-metrics">
+                        <div class="metric">
+                            <div class="metric-value">$2.4M</div>
+                            <div class="metric-label">TVL</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">Low</div>
+                            <div class="metric-label">Risk</div>
+                        </div>
+                    </div>
+                    <div class="strategy-actions">
+                        <button class="strategy-button primary" onclick="joinStrategy('eth-usdc')">Add Liquidity</button>
+                        <button class="strategy-button secondary" onclick="learnMore('eth-usdc')">Learn More</button>
+                    </div>
+                </div>
+                
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">BTC-ETH Pool</h3>
+                        <span class="strategy-apy">18.7% APY</span>
+                    </div>
+                    <p class="strategy-description">
+                        Pair two of the strongest cryptocurrencies. Higher volatility but potentially higher rewards.
+                    </p>
+                    <div class="strategy-metrics">
+                        <div class="metric">
+                            <div class="metric-value">$1.8M</div>
+                            <div class="metric-label">TVL</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">Medium</div>
+                            <div class="metric-label">Risk</div>
+                        </div>
+                    </div>
+                    <div class="strategy-actions">
+                        <button class="strategy-button primary" onclick="joinStrategy('btc-eth')">Add Liquidity</button>
+                        <button class="strategy-button secondary" onclick="learnMore('btc-eth')">Learn More</button>
+                    </div>
+                </div>
+                
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">SONIC Staking</h3>
+                        <span class="strategy-apy">45.2% APY</span>
+                    </div>
+                    <p class="strategy-description">
+                        Stake SONIC tokens to secure the network and earn high rewards on Sonic Labs blockchain.
+                    </p>
+                    <div class="strategy-metrics">
+                        <div class="metric">
+                            <div class="metric-value">$850K</div>
+                            <div class="metric-label">TVL</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">High</div>
+                            <div class="metric-label">Reward</div>
+                        </div>
+                    </div>
+                    <div class="strategy-actions">
+                        <button class="strategy-button primary" onclick="joinStrategy('sonic-stake')">Stake SONIC</button>
+                        <button class="strategy-button secondary" onclick="learnMore('sonic-stake')">Learn More</button>
+                    </div>
+                </div>
+                
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Multi-Pool Farm</h3>
+                        <span class="strategy-apy">24.1% APY</span>
+                    </div>
+                    <p class="strategy-description">
+                        Diversified strategy across multiple pools to reduce risk while maintaining good returns.
+                    </p>
+                    <div class="strategy-metrics">
+                        <div class="metric">
+                            <div class="metric-value">$3.2M</div>
+                            <div class="metric-label">TVL</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">Low</div>
+                            <div class="metric-label">Risk</div>
+                        </div>
+                    </div>
+                    <div class="strategy-actions">
+                        <button class="strategy-button primary" onclick="joinStrategy('multi-pool')">Join Farm</button>
+                        <button class="strategy-button secondary" onclick="learnMore('multi-pool')">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Tracker -->
+        <section class="portfolio-tracker">
+            <h3 style="color: var(--academy-accent); margin-bottom: 1rem; text-align: center;">
+                📊 DeFi Portfolio Tracker
+            </h3>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                Monitor your DeFi positions and track performance across protocols
+            </p>
+            
+            <div class="portfolio-summary">
+                <div class="portfolio-metric">
+                    <div class="portfolio-value" id="totalValue">$25,847</div>
+                    <div class="portfolio-label">Total Portfolio Value</div>
+                </div>
+                <div class="portfolio-metric">
+                    <div class="portfolio-value" id="dailyYield">$47.23</div>
+                    <div class="portfolio-label">24h Yield</div>
+                </div>
+                <div class="portfolio-metric">
+                    <div class="portfolio-value" id="apy">18.2%</div>
+                    <div class="portfolio-label">Average APY</div>
+                </div>
+                <div class="portfolio-metric">
+                    <div class="portfolio-value" id="ilLoss">-$124</div>
+                    <div class="portfolio-label">Impermanent Loss</div>
+                </div>
+            </div>
+            
+            <div class="portfolio-positions">
+                <h4 style="color: var(--academy-accent); margin-bottom: 1rem;">Active Positions</h4>
+                
+                <div class="position-item">
+                    <div class="position-info">
+                        <div class="position-icon">E/U</div>
+                        <div class="position-details">
+                            <h4>ETH-USDC LP</h4>
+                            <p>Uniswap V3 • 0.3% Fee Tier</p>
+                        </div>
+                    </div>
+                    <div class="position-value">
+                        <div class="position-amount">$12,450</div>
+                        <div class="position-change positive">+$89.23 (0.72%)</div>
+                    </div>
+                </div>
+                
+                <div class="position-item">
+                    <div class="position-info">
+                        <div class="position-icon">B/E</div>
+                        <div class="position-details">
+                            <h4>BTC-ETH LP</h4>
+                            <p>SushiSwap • 0.25% Fee Tier</p>
+                        </div>
+                    </div>
+                    <div class="position-value">
+                        <div class="position-amount">$8,200</div>
+                        <div class="position-change negative">-$45.67 (-0.55%)</div>
+                    </div>
+                </div>
+                
+                <div class="position-item">
+                    <div class="position-info">
+                        <div class="position-icon">S</div>
+                        <div class="position-details">
+                            <h4>SONIC Staking</h4>
+                            <p>Sonic Labs • 45.2% APY</p>
+                        </div>
+                    </div>
+                    <div class="position-value">
+                        <div class="position-amount">$5,197</div>
+                        <div class="position-change positive">+$156.78 (3.11%)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // AMM Pool State
+        let poolState = {
+            ethAmount: 1000,
+            usdcAmount: 3000000,
+            k: 3000000000, // Constant product
+            fee: 0.003 // 0.3% fee
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePoolDisplay();
+            drawAMMCurve();
+            calculateIL();
+        });
+
+        // Update pool display
+        function updatePoolDisplay() {
+            document.getElementById('ethAmount').textContent = poolState.ethAmount.toFixed(2);
+            document.getElementById('usdcAmount').textContent = poolState.usdcAmount.toLocaleString();
+            document.getElementById('constantProduct').textContent = poolState.k.toLocaleString();
+            
+            // Update exchange rate
+            const rate = poolState.usdcAmount / poolState.ethAmount;
+            document.getElementById('exchangeRate').textContent = `1 ETH = ${rate.toFixed(2)} USDC`;
+        }
+
+        // Draw AMM curve
+        function drawAMMCurve() {
+            const canvas = document.getElementById('ammCurve');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set up coordinate system
+            const padding = 50;
+            const width = canvas.width - 2 * padding;
+            const height = canvas.height - 2 * padding;
+            
+            // Draw axes
+            ctx.strokeStyle = '#8a2be2';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, height + padding);
+            ctx.lineTo(width + padding, height + padding);
+            ctx.moveTo(padding, height + padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+            
+            // Draw hyperbola (x * y = k)
+            ctx.strokeStyle = '#00f5ff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            for (let x = 100; x <= 2000; x += 10) {
+                const y = poolState.k / x;
+                const screenX = padding + (x / 2000) * width;
+                const screenY = height + padding - (y / 6000000) * height;
+                
+                if (x === 100) {
+                    ctx.moveTo(screenX, screenY);
+                } else {
+                    ctx.lineTo(screenX, screenY);
+                }
+            }
+            ctx.stroke();
+            
+            // Draw current pool position
+            const currentX = padding + (poolState.ethAmount / 2000) * width;
+            const currentY = height + padding - (poolState.usdcAmount / 6000000) * height;
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(currentX, currentY, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Labels
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '12px Inter';
+            ctx.fillText('ETH Amount', width + padding - 60, height + padding + 20);
+            ctx.save();
+            ctx.translate(25, height / 2 + padding);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('USDC Amount', 0, 0);
+            ctx.restore();
+        }
+
+        // Calculate swap output
+        function calculateSwap(direction) {
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value);
+            const fromToken = document.getElementById('fromToken').value;
+            
+            if (!fromAmount || fromAmount <= 0) {
+                document.getElementById('toAmount').value = '';
+                document.getElementById('priceImpact').textContent = '0.00%';
+                document.getElementById('tradingFee').textContent = '0 USDC';
+                document.getElementById('tradeButton').textContent = 'Enter an amount';
+                document.getElementById('tradeButton').disabled = true;
+                return;
+            }
+            
+            let amountOut, priceImpact, fee;
+            
+            if (fromToken === 'ETH') {
+                // ETH to USDC
+                const amountInWithFee = fromAmount * (1 - poolState.fee);
+                const newEthAmount = poolState.ethAmount + amountInWithFee;
+                const newUsdcAmount = poolState.k / newEthAmount;
+                amountOut = poolState.usdcAmount - newUsdcAmount;
+                
+                const currentPrice = poolState.usdcAmount / poolState.ethAmount;
+                const newPrice = newUsdcAmount / newEthAmount;
+                priceImpact = Math.abs((newPrice - currentPrice) / currentPrice) * 100;
+                
+                fee = fromAmount * poolState.fee * currentPrice;
+            } else {
+                // USDC to ETH
+                const amountInWithFee = fromAmount * (1 - poolState.fee);
+                const newUsdcAmount = poolState.usdcAmount + amountInWithFee;
+                const newEthAmount = poolState.k / newUsdcAmount;
+                amountOut = poolState.ethAmount - newEthAmount;
+                
+                const currentPrice = poolState.ethAmount / poolState.usdcAmount;
+                const newPrice = newEthAmount / newUsdcAmount;
+                priceImpact = Math.abs((newPrice - currentPrice) / currentPrice) * 100;
+                
+                fee = fromAmount * poolState.fee;
+            }
+            
+            document.getElementById('toAmount').value = amountOut.toFixed(6);
+            document.getElementById('priceImpact').textContent = priceImpact.toFixed(2) + '%';
+            document.getElementById('tradingFee').textContent = fee.toFixed(2) + ' ' + (fromToken === 'ETH' ? 'USDC' : 'USDC');
+            
+            document.getElementById('tradeButton').textContent = `Swap ${fromToken}`;
+            document.getElementById('tradeButton').disabled = false;
+            
+            // Update price impact color
+            const impactElement = document.getElementById('priceImpact');
+            if (priceImpact > 5) {
+                impactElement.style.color = '#ff4757';
+            } else if (priceImpact > 1) {
+                impactElement.style.color = '#ff8c00';
+            } else {
+                impactElement.style.color = '#00ff88';
+            }
+        }
+
+        // Swap token direction
+        function swapTokenDirection() {
+            const fromToken = document.getElementById('fromToken');
+            const toToken = document.getElementById('toToken');
+            const fromAmount = document.getElementById('fromAmount');
+            const toAmount = document.getElementById('toAmount');
+            
+            // Swap selections
+            const tempValue = fromToken.value;
+            fromToken.value = toToken.value;
+            toToken.value = tempValue;
+            
+            // Clear amounts
+            fromAmount.value = '';
+            toAmount.value = '';
+            
+            // Recalculate
+            calculateSwap('from');
+        }
+
+        // Execute trade simulation
+        function executeTrade() {
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value);
+            const fromToken = document.getElementById('fromToken').value;
+            const toAmount = parseFloat(document.getElementById('toAmount').value);
+            
+            if (fromToken === 'ETH') {
+                const amountInWithFee = fromAmount * (1 - poolState.fee);
+                poolState.ethAmount += amountInWithFee;
+                poolState.usdcAmount -= toAmount;
+            } else {
+                const amountInWithFee = fromAmount * (1 - poolState.fee);
+                poolState.usdcAmount += amountInWithFee;
+                poolState.ethAmount -= toAmount;
+            }
+            
+            // Update displays
+            updatePoolDisplay();
+            drawAMMCurve();
+            
+            // Clear inputs
+            document.getElementById('fromAmount').value = '';
+            document.getElementById('toAmount').value = '';
+            document.getElementById('tradeButton').textContent = 'Trade executed!';
+            document.getElementById('tradeButton').disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('tradeButton').textContent = 'Enter an amount';
+            }, 2000);
+        }
+
+        // Update token selection
+        function updateTokenSelection() {
+            const fromToken = document.getElementById('fromToken').value;
+            const toToken = document.getElementById('toToken');
+            
+            if (fromToken === 'ETH') {
+                toToken.value = 'USDC';
+            } else {
+                toToken.value = 'ETH';
+            }
+            
+            calculateSwap('from');
+        }
+
+        // Calculate Impermanent Loss
+        function calculateIL() {
+            const initialPrice = parseFloat(document.getElementById('tokenAInitial').value);
+            const currentPrice = parseFloat(document.getElementById('tokenACurrent').value);
+            const stablePrice = parseFloat(document.getElementById('tokenBPrice').value);
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+            
+            if (!initialPrice || !currentPrice || !stablePrice || !initialInvestment) return;
+            
+            // Calculate price ratio
+            const priceRatio = currentPrice / initialPrice;
+            
+            // Calculate impermanent loss percentage
+            const ilPercentage = (2 * Math.sqrt(priceRatio) / (1 + priceRatio) - 1) * 100;
+            
+            // Calculate values
+            const hodlValue = initialInvestment * (1 + (currentPrice - initialPrice) / initialPrice / 2);
+            const lpValue = initialInvestment * (1 + ilPercentage / 100);
+            const ilAmount = lpValue - hodlValue;
+            
+            // Display results
+            const resultsDiv = document.getElementById('ilResults');
+            resultsDiv.innerHTML = `
+                <div class="il-metric ${ilPercentage < 0 ? 'negative' : ilPercentage > 0 ? 'positive' : 'neutral'}">
+                    <span>Impermanent Loss:</span>
+                    <span style="color: ${ilPercentage < 0 ? '#ff4757' : '#00ff88'}; font-weight: 700;">
+                        ${ilPercentage.toFixed(2)}%
+                    </span>
+                </div>
+                <div class="il-metric neutral">
+                    <span>HODL Value:</span>
+                    <span style="color: #00f5ff; font-weight: 700;">${hodlValue.toFixed(2)}</span>
+                </div>
+                <div class="il-metric neutral">
+                    <span>LP Token Value:</span>
+                    <span style="color: #00f5ff; font-weight: 700;">${lpValue.toFixed(2)}</span>
+                </div>
+                <div class="il-metric ${ilAmount < 0 ? 'negative' : 'positive'}">
+                    <span>Difference:</span>
+                    <span style="color: ${ilAmount < 0 ? '#ff4757' : '#00ff88'}; font-weight: 700;">
+                        ${ilAmount >= 0 ? '+' : ''}${ilAmount.toFixed(2)}
+                    </span>
+                </div>
+            `;
+        }
+
+        // Strategy functions
+        function joinStrategy(strategy) {
+            alert(`Joining ${strategy} strategy! This would connect to your wallet and initiate the transaction.`);
+        }
+
+        function learnMore(strategy) {
+            const info = {
+                'eth-usdc': 'ETH-USDC is the most liquid pair with consistent trading volume. Lower risk due to ETH being less volatile against USDC.',
+                'btc-eth': 'BTC-ETH pair offers exposure to two major cryptocurrencies. Higher volatility but potentially higher rewards.',
+                'sonic-stake': 'SONIC staking helps secure the Sonic Labs network while earning high rewards. Single-asset staking reduces impermanent loss risk.',
+                'multi-pool': 'Diversified strategy automatically rebalances across multiple pools to optimize risk-adjusted returns.'
+            };
+            
+            alert(info[strategy] || 'Strategy information not available.');
+        }
+
+        // Initialize progress
+        const savedProgress = localStorage.getItem('lesson5_progress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            document.getElementById('lessonProgress').textContent = progress.score || 0;
+        }
+    </script>
+</body>
+</html>-premium {
+            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(138, 43, 226, 0.08));
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 2rem;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .lesson-hero

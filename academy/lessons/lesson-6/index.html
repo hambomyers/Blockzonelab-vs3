@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6: Sonic Labs - The Academy</title>
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    
+    <style>
+        /* Sonic Labs Theme */
+        :root {
+            --sonic-primary: #00ffcc;
+            --sonic-secondary: #ff00aa;
+            --sonic-accent: #ffd700;
+            --sonic-dark: #0a0d13;
+            --sonic-purple: #8a2be2;
+            --sonic-gradient: linear-gradient(135deg, #00ffcc 0%, #00f5ff 50%, #8a2be2 100%);
+            --sonic-glow: 0 0 30px rgba(0, 255, 204, 0.5);
+            --sonic-transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .academy-page {
+            background: radial-gradient(ellipse at center, #0a0d13 0%, #1a1d29 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Sonic Particles */
+        .academy-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="2" fill="%2300ffcc" opacity="0.1"/><circle cx="95" cy="25" r="1" fill="%2300f5ff" opacity="0.15"/><circle cx="25" cy="75" r="1.5" fill="%238a2be2" opacity="0.12"/></svg>');
+            animation: sonicDrift 25s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes sonicDrift {
+            from { transform: translateY(0) translateX(0) rotate(0deg); }
+            to { transform: translateY(-100vh) translateX(-50px) rotate(360deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(10, 13, 19, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--sonic-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .progress-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            color: var(--sonic-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Epic Hero Section */
+        .sonic-hero {
+            background: linear-gradient(135deg, 
+                rgba(10, 13, 19, 0.95) 0%, 
+                rgba(0, 255, 204, 0.05) 50%, 
+                rgba(138, 43, 226, 0.05) 100%);
+            border: 2px solid;
+            border-image: var(--sonic-gradient) 1;
+            border-radius: 2rem;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .sonic-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 204, 0.1), transparent, rgba(0, 245, 255, 0.1), transparent);
+            animation: sonicRotate 20s linear infinite;
+        }
+
+        @keyframes sonicRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .sonic-logo {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(var(--sonic-glow));
+            animation: sonicPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes sonicPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0, 255, 204, 0.5)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(0, 255, 204, 0.8)); }
+        }
+
+        .sonic-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--sonic-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
+        }
+
+        .sonic-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .sonic-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .sonic-stat {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--sonic-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sonic-stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .sonic-stat:hover {
+            transform: translateY(-5px);
+            border-color: var(--sonic-primary);
+            box-shadow: var(--sonic-glow);
+        }
+
+        .sonic-stat:hover::before {
+            left: 100%;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--sonic-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Network Comparison */
+        .network-comparison {
+            background: linear-gradient(135deg, 
+                rgba(10, 13, 19, 0.95) 0%, 
+                rgba(0, 255, 204, 0.03) 100%);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: var(--sonic-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .comparison-table {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 200px repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(0, 255, 204, 0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            min-width: 800px;
+        }
+
+        .grid-header {
+            background: rgba(0, 255, 204, 0.2);
+            padding: 1.5rem 1rem;
+            font-weight: 700;
+            color: var(--sonic-primary);
+            text-align: center;
+        }
+
+        .grid-cell {
+            background: rgba(10, 13, 19, 0.8);
+            padding: 1rem;
+            text-align: center;
+            color: #ffffff;
+            transition: var(--sonic-transition);
+        }
+
+        .grid-cell:hover {
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .grid-cell.sonic {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--sonic-primary);
+            font-weight: 700;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .metric-subtext {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.25rem;
+        }
+
+        /* Speed Demonstration */
+        .speed-demo {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--sonic-primary);
+        }
+
+        .speed-visualizer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .blockchain-demo {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .blockchain-demo.sonic {
+            border-color: var(--sonic-primary);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .demo-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .demo-name.sonic {
+            color: var(--sonic-primary);
+        }
+
+        .transaction-counter {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .transaction-counter.sonic {
+            color: var(--sonic-primary);
+            text-shadow: var(--sonic-glow);
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .demo-button {
+            padding: 1rem 2rem;
+            background: var(--sonic-gradient);
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--sonic-transition);
+            box-shadow: var(--sonic-glow);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.6);
+        }
+
+        .demo-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Tournament Integration */
+        .tournament-integration {
+            background: linear-gradient(135deg, 
+                rgba(138, 43, 226, 0.1) 0%, 
+                rgba(0, 255, 204, 0.05) 100%);
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #8a2be2, #00ffcc) 1;
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .integration-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #8a2be2, #00ffcc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tournament-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: var(--sonic-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--sonic-primary);
+            box-shadow: var(--sonic-glow);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.5));
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--sonic-primary);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* USDC Integration */
+        .usdc-integration {
+            background: rgba(10, 13, 19, 0.95);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .usdc-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #00ffcc, #ffd700);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .usdc-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--sonic-primary);
+            font-weight: 700;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--sonic-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--sonic-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Call to Action */
+        .cta-section {
+            background: var(--sonic-gradient);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: ctaGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes ctaGlow {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            100% { transform: rotate(180deg) scale(1.2); opacity: 0.1; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: var(--sonic-transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-button.primary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0a0d13;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button.primary:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Academy Completion */
+        .academy-completion {
+            background: rgba(10, 13, 19, 0.95);
+            border: 2px solid var(--sonic-primary);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .completion-badge {
+            width: 120px;
+            height: 120px;
+            background: var(--sonic-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+            box-shadow: var(--sonic-glow);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 50px rgba(0, 255, 204, 0.8); }
+        }
+
+        .completion-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--sonic-primary);
+            margin-bottom: 1rem;
+        }
+
+        .completion-message {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .completion-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .completion-stat {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .sonic-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                font-size: 0.9rem;
+            }
+            
+            .speed-visualizer {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Loading Animations */
+        .loading-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--sonic-primary);
+            margin: 0 2px;
+            animation: loadingPulse 1.4s ease-in-out infinite both;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes loadingPulse {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="academy-page">
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <span>⚡</span> Sonic Labs Academy
+            </a>
+            <div class="progress-counter">
+                <span>🏆</span>
+                <span id="lessonProgress">0</span>
+                <span>% Complete</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Epic Hero Section -->
+        <div class="sonic-hero">
+            <div class="hero-content">
+                <div class="sonic-logo">⚡</div>
+                <h1 class="sonic-title">Sonic Labs</h1>
+                <p class="sonic-subtitle">The Revolutionary High-Performance Blockchain Platform</p>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 1rem; padding: 2rem; margin: 3rem auto; max-width: 700px;">
+                    <p style="font-style: italic; line-height: 1.8; font-size: 1.1rem;">
+                        "Sonic Labs represents the next evolution of blockchain technology—combining the security of Ethereum with the speed of traditional payment systems, creating a platform where DeFi applications can finally achieve mainstream adoption."
+                    </p>
+                </div>
+                
+                <div class="sonic-stats">
+                    <div class="sonic-stat">
+                        <div class="stat-value">65,000+</div>
+                        <div class="stat-label">Transactions Per Second</div>
+                    </div>
+                    <div class="sonic-stat">
+                        <div class="stat-value">0.8s</div>
+                        <div class="stat-label">Average Finality</div>
+                    </div>
+                    <div class="sonic-stat">
+                        <div class="stat-value">$0.001</div>
+                        <div class="stat-label">Average Gas Fee</div>
+                    </div>
+                    <div class="sonic-stat">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">Uptime Guarantee</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network Comparison -->
+        <section class="network-comparison">
+            <h2 class="comparison-title">🏆 Blockchain Performance Comparison</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                See how Sonic Labs outperforms other major blockchain networks across key metrics
+            </p>
+            
+            <div class="comparison-table">
+                <div class="comparison-grid">
+                    <div class="grid-header">Network</div>
+                    <div class="grid-header">TPS</div>
+                    <div class="grid-header">Finality</div>
+                    <div class="grid-header">Gas Fees</div>
+                    <div class="grid-header">EVM Compatible</div>
+                    
+                    <div class="grid-cell">Bitcoin</div>
+                    <div class="grid-cell">
+                        <div class="metric-value">7</div>
+                        <div class="metric-subtext">Very Limited</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">~60 min</div>
+                        <div class="metric-subtext">6 confirmations</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">$15-50</div>
+                        <div class="metric-subtext">High</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">❌</div>
+                        <div class="metric-subtext">No</div>
+                    </div>
+                    
+                    <div class="grid-cell">Ethereum</div>
+                    <div class="grid-cell">
+                        <div class="metric-value">15</div>
+                        <div class="metric-subtext">Limited</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">~6 min</div>
+                        <div class="metric-subtext">Multiple blocks</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">$20-200</div>
+                        <div class="metric-subtext">Very High</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">✅</div>
+                        <div class="metric-subtext">Native</div>
+                    </div>
+                    
+                    <div class="grid-cell">Polygon</div>
+                    <div class="grid-cell">
+                        <div class="metric-value">7,000</div>
+                        <div class="metric-subtext">Good</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">~2.3s</div>
+                        <div class="metric-subtext">Fast</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">$0.01-1</div>
+                        <div class="metric-subtext">Low</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">✅</div>
+                        <div class="metric-subtext">Compatible</div>
+                    </div>
+                    
+                    <div class="grid-cell">Solana</div>
+                    <div class="grid-cell">
+                        <div class="metric-value">50,000</div>
+                        <div class="metric-subtext">Excellent</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">~400ms</div>
+                        <div class="metric-subtext">Very Fast</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">$0.00025</div>
+                        <div class="metric-subtext">Ultra Low</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="metric-value">❌</div>
+                        <div class="metric-subtext">Custom VM</div>
+                    </div>
+                    
+                    <div class="grid-cell sonic">⚡ Sonic Labs</div>
+                    <div class="grid-cell sonic">
+                        <div class="metric-value">65,000+</div>
+                        <div class="metric-subtext">Revolutionary</div>
+                    </div>
+                    <div class="grid-cell sonic">
+                        <div class="metric-value">~800ms</div>
+                        <div class="metric-subtext">Lightning Fast</div>
+                    </div>
+                    <div class="grid-cell sonic">
+                        <div class="metric-value">$0.001</div>
+                        <div class="metric-subtext">Nearly Free</div>
+                    </div>
+                    <div class="grid-cell sonic">
+                        <div class="metric-value">✅</div>
+                        <div class="metric-subtext">Full EVM</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Speed Demonstration -->
+        <section class="speed-demo">
+            <h2 class="demo-title">⚡ Live Transaction Speed Demo</h2>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                Watch Sonic Labs process transactions in real-time compared to other networks
+            </p>
+            
+            <div class="speed-visualizer">
+                <div class="blockchain-demo">
+                    <div class="demo-name">Ethereum</div>
+                    <div class="transaction-counter" id="ethCounter">0</div>
+                    <div style="color: rgba(255, 255, 255, 0.6);">TPS: ~15</div>
+                </div>
+                
+                <div class="blockchain-demo">
+                    <div class="demo-name">Polygon</div>
+                    <div class="transaction-counter" id="polygonCounter">0</div>
+                    <div style="color: rgba(255, 255, 255, 0.6);">TPS: ~7,000</div>
+                </div>
+                
+                <div class="blockchain-demo sonic">
+                    <div class="demo-name sonic">⚡ Sonic Labs</div>
+                    <div class="transaction-counter sonic" id="sonicCounter">0</div>
+                    <div style="color: var(--sonic-primary);">TPS: 65,000+</div>
+                </div>
+            </div>
+            
+            <div class="demo-controls">
+                <button class="demo-button" onclick="startDemo()" id="demoButton">Start Demo</button>
+                <button class="demo-button" onclick="resetDemo()" id="resetButton">Reset</button>
+            </div>
+        </section>
+
+        <!-- Tournament Integration -->
+        <section class="tournament-integration">
+            <h2 class="integration-title">🎮 BlockZone Lab Tournament Integration</h2>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin: 0 auto;">
+                Experience how Sonic Labs powers the next generation of blockchain gaming and DeFi tournaments
+            </p>
+            
+            <div class="tournament-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🏃‍♂️</div>
+                    <h3 class="feature-title">Instant Tournament Execution</h3>
+                    <p class="feature-description">
+                        Sub-second transaction finality means tournament results are processed instantly, 
+                        enabling real-time competitive gameplay without delays.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Micro-Fee Competitions</h3>
+                    <p class="feature-description">
+                        With gas fees under $0.001, players can participate in multiple tournaments 
+                        without worrying about transaction costs eating into their winnings.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">High-Frequency Trading</h3>
+                    <p class="feature-description">
+                        Execute complex DeFi strategies and arbitrage opportunities in real-time 
+                        during tournaments, maximizing profit potential.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">MEV Protection</h3>
+                    <p class="feature-description">
+                        Built-in MEV protection ensures fair tournament conditions where skill, 
+                        not front-running, determines the winners.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="feature-title">Global Accessibility</h3>
+                    <p class="feature-description">
+                        Players worldwide can compete on equal footing with consistent performance 
+                        and ultra-low latency across all regions.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Real-Time Analytics</h3>
+                    <p class="feature-description">
+                        Live tournament statistics and player performance metrics updated 
+                        in real-time with every transaction.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- USDC Integration -->
+        <section class="usdc-integration">
+            <h2 class="usdc-title">💵 Seamless USDC Integration</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Experience frictionless USDC transactions with instant settlement and minimal fees
+            </p>
+            
+            <div class="usdc-flow">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Deposit USDC</div>
+                    <p class="step-description">Transfer USDC to your Sonic Labs wallet with bridge integration</p>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Join Tournament</div>
+                    <p class="step-description">Enter tournaments with USDC prizes processed instantly</p>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Execute Strategies</div>
+                    <p class="step-description">Trade, stake, and compete with lightning-fast USDC transactions</p>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Instant Payouts</div>
+                    <p class="step-description">Receive winnings immediately with sub-second finality</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Experience the Future?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of traders and DeFi enthusiasts already building on Sonic Labs
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="#" class="cta-button primary" onclick="joinTournament()">
+                        <span>🏆</span> Join Tournament
+                    </a>
+                    <a href="#" class="cta-button secondary" onclick="exploreMore()">
+                        <span>🚀</span> Explore Platform
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academy Completion -->
+        <section class="academy-completion" id="completionSection" style="display: none;">
+            <div class="completion-badge">🎓</div>
+            <h2 class="completion-title">Academy Complete!</h2>
+            <p class="completion-message">
+                Congratulations! You've mastered the fundamentals of blockchain technology, 
+                from binary systems to the cutting-edge innovations of Sonic Labs. 
+                You're now ready to participate in the future of decentralized finance.
+            </p>
+            
+            <div class="completion-stats">
+                <div class="completion-stat">
+                    <div class="stat-value">6/6</div>
+                    <div class="stat-label">Lessons Completed</div>
+                </div>
+                <div class="completion-stat">
+                    <div class="stat-value" id="finalGrade">A+</div>
+                    <div class="stat-label">Final Grade</div>
+                </div>
+                <div class="completion-stat">
+                    <div class="stat-value" id="totalTime">2.5h</div>
+                    <div class="stat-label">Total Time</div>
+                </div>
+                <div class="completion-stat">
+                    <div class="stat-value">Elite</div>
+                    <div class="stat-label">Academy Status</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let demoRunning = false;
+        let demoInterval;
+        
+        // Transaction counters
+        let ethTxCount = 0;
+        let polygonTxCount = 0;
+        let sonicTxCount = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAcademyCompletion();
+        });
+
+        // Start speed demonstration
+        function startDemo() {
+            if (demoRunning) return;
+            
+            demoRunning = true;
+            document.getElementById('demoButton').disabled = true;
+            document.getElementById('demoButton').innerHTML = 'Demo Running <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>';
+            
+            // Reset counters
+            ethTxCount = 0;
+            polygonTxCount = 0;
+            sonicTxCount = 0;
+            
+            // Start counting at different speeds
+            demoInterval = setInterval(() => {
+                // Ethereum: ~15 TPS
+                if (Math.random() < 0.15) {
+                    ethTxCount++;
+                    document.getElementById('ethCounter').textContent = ethTxCount.toLocaleString();
+                }
+                
+                // Polygon: ~7,000 TPS (scaled down for demo)
+                if (Math.random() < 0.7) {
+                    polygonTxCount += Math.floor(Math.random() * 10) + 1;
+                    document.getElementById('polygonCounter').textContent = polygonTxCount.toLocaleString();
+                }
+                
+                // Sonic Labs: 65,000+ TPS (scaled down for demo)
+                sonicTxCount += Math.floor(Math.random() * 50) + 20;
+                document.getElementById('sonicCounter').textContent = sonicTxCount.toLocaleString();
+                
+                // Add visual effects for Sonic
+                if (Math.random() < 0.3) {
+                    const counter = document.getElementById('sonicCounter');
+                    counter.style.textShadow = '0 0 40px rgba(0, 255, 204, 1)';
+                    setTimeout(() => {
+                        counter.style.textShadow = '0 0 30px rgba(0, 255, 204, 0.5)';
+                    }, 100);
+                }
+                
+            }, 100);
+            
+            // Stop demo after 30 seconds
+            setTimeout(() => {
+                if (demoRunning) {
+                    clearInterval(demoInterval);
+                    demoRunning = false;
+                    document.getElementById('demoButton').disabled = false;
+                    document.getElementById('demoButton').textContent = 'Start Demo';
+                }
+            }, 30000);
+        }
+
+        // Reset demonstration
+        function resetDemo() {
+            if (demoInterval) {
+                clearInterval(demoInterval);
+            }
+            
+            demoRunning = false;
+            ethTxCount = 0;
+            polygonTxCount = 0;
+            sonicTxCount = 0;
+            
+            document.getElementById('ethCounter').textContent = '0';
+            document.getElementById('polygonCounter').textContent = '0';
+            document.getElementById('sonicCounter').textContent = '0';
+            
+            document.getElementById('demoButton').disabled = false;
+            document.getElementById('demoButton').textContent = 'Start Demo';
+        }
+
+        // Join tournament
+        function joinTournament() {
+            alert('🏆 Redirecting to BlockZone Lab Tournament Platform...\n\nYou\'ve completed the Academy and are now ready to compete with real USDC prizes!\n\n• Instant transactions on Sonic Labs\n• Sub-second settlement\n• Minimal gas fees\n• Real-time leaderboards');
+        }
+
+        // Explore more
+        function exploreMore() {
+            alert('🚀 Welcome to the Sonic Labs Ecosystem!\n\nExplore:\n• DeFi protocols with 65,000+ TPS\n• Lightning-fast DEX trading\n• High-yield staking opportunities\n• Advanced portfolio management tools');
+        }
+
+        // Check academy completion
+        function checkAcademyCompletion() {
+            // Check if previous lessons are completed
+            const lesson1 = localStorage.getItem('lesson1_progress');
+            const lesson2 = localStorage.getItem('lesson2_progress');
+            const lesson3 = localStorage.getItem('lesson3_progress');
+            const lesson4 = localStorage.getItem('lesson4_progress');
+            const lesson5 = localStorage.getItem('lesson5_progress');
+            
+            let totalScore = 0;
+            let completedLessons = 0;
+            
+            [lesson1, lesson2, lesson3, lesson4, lesson5].forEach(lesson => {
+                if (lesson) {
+                    const progress = JSON.parse(lesson);
+                    if (progress.score >= 70) {
+                        completedLessons++;
+                        totalScore += progress.score;
+                    }
+                }
+            });
+            
+            // If 5 lessons completed, show completion section
+            if (completedLessons >= 4) { // Show completion if 4+ lessons done
+                document.getElementById('completionSection').style.display = 'block';
+                
+                const averageScore = Math.round(totalScore / Math.max(completedLessons, 1));
+                let grade = 'F';
+                
+                if (averageScore >= 95) grade = 'A+';
+                else if (averageScore >= 90) grade = 'A';
+                else if (averageScore >= 85) grade = 'A-';
+                else if (averageScore >= 80) grade = 'B+';
+                else if (averageScore >= 75) grade = 'B';
+                else if (averageScore >= 70) grade = 'B-';
+                
+                document.getElementById('finalGrade').textContent = grade;
+                document.getElementById('lessonProgress').textContent = '100';
+                
+                // Save completion
+                localStorage.setItem('academy_completed', JSON.stringify({
+                    completed: true,
+                    grade: grade,
+                    score: averageScore,
+                    timestamp: new Date().toISOString()
+                }));
+            }
+        }
+
+        // Initialize progress
+        const savedProgress = localStorage.getItem('lesson6_progress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            document.getElementById('lessonProgress').textContent = progress.score || 0;
+        } else {
+            // Mark this lesson as completed when viewed
+            localStorage.setItem('lesson6_progress', JSON.stringify({
+                completed: true,
+                score: 100,
+                timestamp: new Date().toISOString()
+            }));
+            document.getElementById('lessonProgress').textContent = '100';
+        }
+    </script>
+</body>
+</html>

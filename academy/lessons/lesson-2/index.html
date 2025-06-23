@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 2: Money, Information & Scarcity - The Academy</title>
+    <link rel="stylesheet" href="../../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    
+    <style>
+        /* Academy Enhanced Styles */
+        :root {
+            --academy-primary: #00f5ff;
+            --academy-accent: #ffd700;
+            --academy-dark: #1a1d29;
+            --academy-card: rgba(37, 40, 54, 0.95);
+            --academy-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --academy-success: #00ff88;
+            --academy-error: #ff4757;
+            --academy-warning: #ff8c00;
+            --conspiracy-gold: #d4af37;
+            --conspiracy-gradient: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+        }
+
+        .academy-page {
+            background: linear-gradient(135deg, var(--academy-dark) 0%, #2d314a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Conspiracy Particle System */
+        .academy-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="3" r="1.5" fill="%23ffd700" opacity="0.1"/><circle cx="85" cy="25" r="1" fill="%23ff8c00" opacity="0.12"/><circle cx="25" cy="75" r="1.2" fill="%23d4af37" opacity="0.08"/></svg>');
+            animation: conspiracyDrift 35s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes conspiracyDrift {
+            from { transform: translateY(0) translateX(0) rotate(0deg); }
+            to { transform: translateY(-100vh) translateX(-30px) rotate(180deg); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(26, 29, 41, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--academy-accent);
+            text-decoration: none;
+        }
+
+        .progress-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--academy-card);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            color: var(--academy-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Epic Conspiracy Hero */
+        .conspiracy-hero {
+            background: linear-gradient(135deg, 
+                rgba(26, 29, 41, 0.95) 0%, 
+                rgba(212, 175, 55, 0.05) 50%, 
+                rgba(255, 140, 0, 0.05) 100%);
+            border: 2px solid;
+            border-image: var(--conspiracy-gradient) 1;
+            border-radius: 2rem;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .conspiracy-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.08), transparent, rgba(255, 140, 0, 0.08), transparent);
+            animation: conspiracyRotate 25s linear infinite;
+        }
+
+        @keyframes conspiracyRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .conspiracy-logo {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.5));
+            animation: conspiracyPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes conspiracyPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.8)); }
+        }
+
+        .conspiracy-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--conspiracy-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .conspiracy-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .conspiracy-hook {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 700px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        /* Enhanced Timeline Container */
+        .timeline-container {
+            position: relative;
+            padding: 4rem 0;
+            background: linear-gradient(180deg, 
+                rgba(26, 29, 41, 0.8) 0%, 
+                rgba(45, 49, 74, 0.6) 50%, 
+                rgba(26, 29, 41, 0.8) 100%);
+            border-radius: 2rem;
+            margin: 3rem 0;
+            overflow: hidden;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 25%, 
+                rgba(212, 175, 55, 0.02) 25%, 
+                rgba(212, 175, 55, 0.02) 50%, 
+                transparent 50%, 
+                transparent 75%, 
+                rgba(212, 175, 55, 0.02) 75%);
+            background-size: 80px 80px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .timeline-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: var(--conspiracy-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                rgba(212, 175, 55, 0.3) 10%, 
+                rgba(212, 175, 55, 0.8) 50%, 
+                rgba(212, 175, 55, 0.3) 90%, 
+                transparent 100%);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, var(--conspiracy-gold) 0%, #ff8c00 100%);
+            transition: height 0.5s ease;
+            border-radius: 2px;
+        }
+
+        .timeline-line.active::before {
+            height: var(--scroll-progress, 0%);
+        }
+
+        /* Enhanced Timeline Events */
+        .timeline-event {
+            position: relative;
+            margin: 6rem 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .timeline-event.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-event:nth-child(odd) .event-content {
+            margin-left: auto;
+            margin-right: 55%;
+            text-align: right;
+        }
+
+        .timeline-event:nth-child(even) .event-content {
+            margin-left: 55%;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        .event-year {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            background: var(--conspiracy-gradient);
+            color: #1a1d29;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1.4rem;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.5),
+                0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 3;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .event-content {
+            background: linear-gradient(135deg, 
+                rgba(35, 38, 58, 0.95), 
+                rgba(212, 175, 55, 0.05));
+            border-radius: 1.5rem;
+            padding: 3rem;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-width: 550px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: var(--academy-transition);
+            overflow: hidden;
+        }
+
+        .event-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .event-content:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 20px 45px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(212, 175, 55, 0.2);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .event-content:hover::before {
+            opacity: 1;
+        }
+
+        .event-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--conspiracy-gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .event-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Enhanced Secret Documents */
+        .secret-document {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.08), 
+                rgba(255, 140, 0, 0.05));
+            border: 2px dashed rgba(255, 215, 0, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--academy-transition);
+            z-index: 2;
+        }
+
+        .secret-document::before {
+            content: '🔒 CLASSIFIED';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3.5rem;
+            opacity: 0.08;
+            color: var(--conspiracy-gold);
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .secret-document:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.15), 
+                rgba(255, 140, 0, 0.1));
+            border-color: var(--conspiracy-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+        }
+
+        .secret-label {
+            font-weight: 600;
+            color: var(--conspiracy-gold);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .secret-content {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .secret-document.revealed .secret-content {
+            display: block;
+            animation: secretReveal 0.6s ease;
+        }
+
+        @keyframes secretReveal {
+            from { 
+                opacity: 0; 
+                transform: translateY(10px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .secret-content ul {
+            margin-left: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .secret-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* Enhanced Philosopher Panels */
+        .philosopher-panel {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, 
+                rgba(35, 38, 58, 0.98), 
+                rgba(212, 175, 55, 0.05));
+            padding: 2rem;
+            border-radius: 1.5rem;
+            max-width: 350px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(212, 175, 55, 0.2);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        .philosopher-panel.left {
+            left: 2rem;
+            transform: translateY(-50%) translateX(-30px);
+        }
+
+        .philosopher-panel.right {
+            right: 2rem;
+            transform: translateY(-50%) translateX(30px);
+        }
+
+        .philosopher-panel.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .philosopher-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--conspiracy-gold);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .philosopher-quote {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Enhanced Concept Cards */
+        .concept-card-premium {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.08) 0%, 
+                rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            cursor: pointer;
+            transition: var(--academy-transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .concept-card-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .concept-card-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(212, 175, 55, 0.2);
+            border-color: var(--conspiracy-gold);
+        }
+
+        .concept-card-premium:hover::before {
+            opacity: 1;
+        }
+
+        .concept-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--conspiracy-gold);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .concept-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Quiz System */
+        .quiz-premium {
+            background: var(--academy-card);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--conspiracy-gold);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: var(--conspiracy-gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin: 2rem 0;
+            line-height: 1.6;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .option-button {
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--academy-transition);
+            text-align: left;
+        }
+
+        .option-button:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .option-button.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgb(34, 197, 94);
+        }
+
+        .option-button.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgb(239, 68, 68);
+        }
+
+        .quiz-button {
+            padding: 1rem 2rem;
+            background: var(--conspiracy-gradient);
+            color: #1a1d29;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--academy-transition);
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Enhanced Interactive Elements */
+        .interactive-stardust {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5rem;
+            color: var(--conspiracy-gold);
+            z-index: 50;
+            animation: stardustFloat 3s ease-out forwards;
+        }
+
+        @keyframes stardustFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-50vh) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(0.5);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .conspiracy-title {
+                font-size: 2.5rem;
+            }
+            
+            .timeline-event:nth-child(odd) .event-content,
+            .timeline-event:nth-child(even) .event-content {
+                margin: 0 1rem;
+                text-align: left;
+            }
+            
+            .timeline-line {
+                left: 2rem;
+            }
+            
+            .event-year {
+                left: 2rem;
+                transform: translateX(-50%);
+            }
+            
+            .philosopher-panel {
+                display: none;
+            }
+        }
+
+        /* Progress indicator enhancement */
+        .progress-indicator {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            z-index: 100;
+            opacity: 0.8;
+        }
+
+        .progress-circle {
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle-bg {
+            fill: none;
+            stroke: rgba(212, 175, 55, 0.2);
+            stroke-width: 4;
+        }
+
+        .progress-circle-fill {
+            fill: none;
+            stroke: var(--conspiracy-gold);
+            stroke-width: 4;
+            stroke-dasharray: 188.5;
+            stroke-dashoffset: 188.5;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--conspiracy-gold);
+        }
+    </style>
+</head>
+<body class="academy-page">
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <svg width="60" height="60" class="progress-circle">
+            <circle cx="30" cy="30" r="28" class="progress-circle-bg"></circle>
+            <circle cx="30" cy="30" r="28" class="progress-circle-fill" id="progressFill"></circle>
+        </svg>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <span>✧</span> The Academy
+            </a>
+            <div class="progress-counter">
+                <span>🎓</span>
+                <span id="lessonProgress">0</span>
+                <span>% Complete</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Epic Conspiracy Hero -->
+        <div class="conspiracy-hero">
+            <div class="hero-content">
+                <div class="conspiracy-logo">💰</div>
+                <h1 class="conspiracy-title">The $30 Trillion Conspiracy</h1>
+                <p class="conspiracy-subtitle">Journey through the secret history of money, from Jekyll Island to Bitcoin</p>
+                
+                <div class="conspiracy-hook">
+                    <p>In 1910, six of America's most powerful men met in secret on a remote Georgia island. Their plan would control the world's money for over a century. But in 2008, an anonymous genius released the antidote to their system. This is that story.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Timeline Container -->
+        <div class="timeline-container" id="timeline">
+            <h2 class="timeline-title">🕰️ The Secret History of Money</h2>
+            <div class="timeline-line" id="timelineLine"></div>
+            
+            <!-- 1910 Era -->
+            <div class="timeline-event" data-year="1910">
+                <div class="event-year">1910</div>
+                <div class="event-content">
+                    <h3 class="event-title">The Jekyll Island Conspiracy</h3>
+                    <p class="event-description">
+                        Six of America's most powerful men meet in secret on a remote Georgia island. 
+                        Their mission: design a banking system that appears public but serves private interests.
+                        They travel under false names to avoid detection, calling each other only by first names.
+                    </p>
+                    <div class="secret-document" onclick="revealSecret(this)">
+                        <div class="secret-label">🔍 Click to reveal classified attendees</div>
+                        <div class="secret-content">
+                            <p><strong>The Secret Attendees:</strong></p>
+                            <ul>
+                                <li><strong>Nelson Aldrich</strong> - Senate Finance Committee Chairman</li>
+                                <li><strong>A. Piatt Andrew</strong> - Assistant Treasury Secretary</li>
+                                <li><strong>Frank Vanderlip</strong> - National City Bank President</li>
+                                <li><strong>Paul Warburg</strong> - Kuhn, Loeb & Co. Partner</li>
+                                <li><strong>Charles Norton</strong> - First National Bank President</li>
+                                <li><strong>Benjamin Strong</strong> - J.P. Morgan's Lieutenant</li>
+                            </ul>
+                            <p style="margin-top: 1rem; color: var(--conspiracy-gold); font-weight: 600;">
+                                Combined, they represented 1/4 of the world's wealth.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="concept-card-premium" onclick="showPhilosopher('griffin')">
+                        <div class="concept-title">G. Edward Griffin's Analysis</div>
+                        <div class="concept-content">
+                            "The Creature from Jekyll Island" exposed how this meeting created a cartel disguised as a government agency—a system designed to privatize profits and socialize losses.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-event" data-year="1913">
+                <div class="event-year">1913</div>
+                <div class="event-content">
+                    <h3 class="event-title">The Federal Reserve Act</h3>
+                    <p class="event-description">
+                        The Jekyll Island plan succeeds. Congress passes the Federal Reserve Act on December 23rd—
+                        when many senators are away for Christmas. The era of elastic currency begins, 
+                        giving a private cartel control over America's money supply.
+                    </p>
+                    <div class="secret-document" onclick="revealSecret(this)">
+                        <div class="secret-label">📜 The Deception Revealed</div>
+                        <div class="secret-content">
+                            <p><strong>The Marketing Trick:</strong></p>
+                            <ul>
+                                <li>Called it "Federal" but it's privately owned</li>
+                                <li>Called it a "Reserve" but reserves are minimal</li>
+                                <li>Not a single government building houses the Fed</li>
+                                <li>Shareholders are private banks, not the public</li>
+                            </ul>
+                            <p style="margin-top: 1rem; font-style: italic;">
+                                "Neither the President nor Congress nor the Secretary of the Treasury 
+                                has any voice in the Fed's monetary policy decisions."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1944-1971 Era -->
+            <div class="timeline-event" data-year="1944">
+                <div class="event-year">1944</div>
+                <div class="event-content">
+                    <h3 class="event-title">Bretton Woods Agreement</h3>
+                    <p class="event-description">
+                        World War II is ending. 44 nations gather at Bretton Woods to create a new monetary order. 
+                        The dollar becomes the world's reserve currency, backed by gold at $35/ounce. 
+                        America promises foreign governments can always exchange dollars for gold.
+                    </p>
+                    <div class="concept-card-premium">
+                        <div class="concept-title">The Golden Promise</div>
+                        <div class="concept-content">
+                            Foreign central banks could exchange dollars for gold at a fixed rate. 
+                            This gave the dollar global legitimacy and made America the world's banker. 
+                            But promises made in desperation are often broken in convenience...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-event" data-year="1971">
+                <div class="event-year">1971</div>
+                <div class="event-content">
+                    <h3 class="event-title">The Nixon Shock</h3>
+                    <p class="event-description">
+                        President Nixon "temporarily" suspends gold convertibility on August 15th. 
+                        The last link between currency and physical reality is severed. 
+                        Pure fiat money is born—currency backed by nothing but faith and force.
+                    </p>
+                    <div class="secret-document" onclick="revealSecret(this)">
+                        <div class="secret-label">📺 Nixon's Deceptive Speech</div>
+                        <div class="secret-content">
+                            <p style="font-style: italic; margin-bottom: 1rem;">
+                                "I have directed Secretary Connally to suspend temporarily the convertibility 
+                                of the dollar into gold or other reserve assets..."
+                            </p>
+                            <p style="color: var(--conspiracy-gold); font-weight: 600;">
+                                That "temporary" suspension continues to this day—over 50 years later.
+                            </p>
+                            <p style="margin-top: 1rem;">
+                                Nixon blamed "international money speculators" while fundamentally 
+                                changing the nature of money itself.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="concept-card-premium" onclick="showPhilosopher('cantillon')">
+                        <div class="concept-title">The Cantillon Effect Unleashed</div>
+                        <div class="concept-content">
+                            With no gold constraint, money printing accelerated. Those closest to money creation 
+                            benefited most, while savers and workers saw their purchasing power erode.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2008-2009 Era -->
+            <div class="timeline-event" data-year="2008">
+                <div class="event-year">2008</div>
+                <div class="event-content">
+                    <h3 class="event-title">The Financial Crisis</h3>
+                    <p class="event-description">
+                        The house of cards collapses. Banks that were "too big to fail" are bailed out with 
+                        trillions in newly printed money. Main Street suffers while Wall Street profits. 
+                        The Cantillon Effect reaches new extremes as inequality soars.
+                    </p>
+                    <div class="secret-document" onclick="revealSecret(this)">
+                        <div class="secret-label">💸 The Hidden Bailout Numbers</div>
+                        <div class="secret-content">
+                            <p><strong>Official Bailout Total:</strong> $700 billion TARP</p>
+                            <p><strong>Actual Fed Support:</strong> Over $16 trillion in secret loans</p>
+                            <ul style="margin-top: 1rem;">
+                                <li>Citigroup: $2.5 trillion</li>
+                                <li>Morgan Stanley: $2.04 trillion</li>
+                                <li>Merrill Lynch: $1.95 trillion</li>
+                                <li>Bank of America: $1.34 trillion</li>
+                            </ul>
+                            <p style="margin-top: 1rem; font-style: italic;">
+                                These numbers weren't revealed until 2011 after Bloomberg sued the Fed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="concept-card-premium" onclick="showPhilosopher('sowell')">
+                        <div class="concept-title">Thomas Sowell's Warning</div>
+                        <div class="concept-content">
+                            "The first lesson of economics is scarcity. The first lesson of politics 
+                            is to disregard the first lesson of economics."
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-event" data-year="2009">
+                <div class="event-year">2009</div>
+                <div class="event-content">
+                    <h3 class="event-title">Bitcoin Genesis Block</h3>
+                    <p class="event-description">
+                        An anonymous programmer called Satoshi Nakamoto releases Bitcoin on January 3rd. 
+                        The genesis block contains a hidden message that reveals the true motivation behind this revolution.
+                        For the first time in history, money exists without any central authority.
+                    </p>
+                    <div class="secret-document" onclick="revealSecret(this)">
+                        <div class="secret-label">💎 The Genesis Message</div>
+                        <div class="secret-content">
+                            <p style="font-family: 'Fira Code', monospace; background: rgba(0, 0, 0, 0.5); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+                                "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+                            </p>
+                            <p style="color: var(--conspiracy-gold); font-weight: 600; margin-top: 1rem;">
+                                A permanent protest against monetary manipulation, embedded forever in the blockchain.
+                            </p>
+                            <p style="margin-top: 1rem;">
+                                Satoshi watched the 2008 crisis unfold and decided to build an alternative—
+                                money that couldn't be inflated away by central banks or governments.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="concept-card-premium" onclick="showPhilosopher('satoshi')">
+                        <div class="concept-title">Satoshi's Vision</div>
+                        <div class="concept-content">
+                            "The root problem with conventional currency is all the trust that's required to make it work. 
+                            The central bank must be trusted not to debase the currency, but the history of fiat currencies 
+                            is full of breaches of that trust."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz System -->
+        <div class="quiz-premium">
+            <h2 class="quiz-title">🎯 Test Your Conspiracy Knowledge</h2>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                How well do you understand the secret history of money?
+            </p>
+            
+            <div class="quiz-progress">
+                <div class="quiz-progress-fill" id="quizProgress"></div>
+            </div>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">
+                Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">8</span>
+            </p>
+            
+            <div id="quizContainer">
+                <div class="question-text" id="questionText">
+                    Where did the secret meeting to design the Federal Reserve take place?
+                </div>
+                
+                <div class="options-container" id="optionsContainer">
+                    <button class="option-button" onclick="selectAnswer(0)">Wall Street, New York</button>
+                    <button class="option-button" onclick="selectAnswer(1)">Jekyll Island, Georgia</button>
+                    <button class="option-button" onclick="selectAnswer(2)">Washington D.C.</button>
+                    <button class="option-button" onclick="selectAnswer(3)">Philadelphia, Pennsylvania</button>
+                </div>
+                
+                <button class="quiz-button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">
+                    Next Question
+                </button>
+            </div>
+            
+            <div id="quizResults" style="display: none; text-align: center;">
+                <h3 style="color: var(--conspiracy-gold); font-size: 2rem;">Conspiracy Decoded!</h3>
+                <div id="finalScore" style="font-size: 3rem; margin: 1rem 0; color: var(--conspiracy-gold);"></div>
+                <div id="scoreMessage" style="margin: 1rem 0; font-size: 1.2rem;"></div>
+                <button class="quiz-button" onclick="restartQuiz()">Decode Again</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Philosopher Panels -->
+    <div class="philosopher-panel left" id="philosopherLeft">
+        <h4 class="philosopher-name"></h4>
+        <p class="philosopher-quote"></p>
+    </div>
+    
+    <div class="philosopher-panel right" id="philosopherRight">
+        <h4 class="philosopher-name"></h4>
+        <p class="philosopher-quote"></p>
+    </div>
+
+    <script>
+        // Enhanced Timeline Data
+        const philosophers = {
+            griffin: {
+                name: 'G. Edward Griffin',
+                quote: 'The Federal Reserve is a cartel operating against the public interest. It was conceived in secrecy by bankers, for bankers.',
+                side: 'left'
+            },
+            cantillon: {
+                name: 'Richard Cantillon Effect',
+                quote: 'Those closest to money creation benefit most. New money enters the economy unevenly, creating wealth inequality.',
+                side: 'right'
+            },
+            sowell: {
+                name: 'Thomas Sowell',
+                quote: 'The first lesson of economics is scarcity. The first lesson of politics is to disregard the first lesson of economics.',
+                side: 'left'
+            },
+            satoshi: {
+                name: 'Satoshi Nakamoto',
+                quote: 'The root problem with conventional currency is all the trust that\'s required to make it work.',
+                side: 'right'
+            }
+        };
+
+        // Quiz Questions
+        const quizQuestions = [
+            {
+                question: "Where did the secret meeting to design the Federal Reserve take place?",
+                options: ["Wall Street, New York", "Jekyll Island, Georgia", "Washington D.C.", "Philadelphia, Pennsylvania"],
+                correct: 1
+            },
+            {
+                question: "In what year was the Federal Reserve Act passed?",
+                options: ["1910", "1913", "1916", "1920"],
+                correct: 1
+            },
+            {
+                question: "What was deceptive about the Federal Reserve's name?",
+                options: ["It's not actually federal", "It doesn't hold reserves", "It's privately owned", "All of the above"],
+                correct: 3
+            },
+            {
+                question: "When did Nixon end dollar-gold convertibility?",
+                options: ["1969", "1971", "1973", "1975"],
+                correct: 1
+            },
+            {
+                question: "What was embedded in Bitcoin's genesis block?",
+                options: ["Satoshi's real name", "A newspaper headline about bank bailouts", "The Federal Reserve's address", "A secret code"],
+                correct: 1
+            },
+            {
+                question: "What is the Cantillon Effect?",
+                options: ["Interest rate manipulation", "Those closest to money creation benefit most", "Banking secrecy laws", "Gold price fixing"],
+                correct: 1
+            },
+            {
+                question: "How much did the Fed secretly lend during the 2008 crisis?",
+                options: ["$700 billion", "$2 trillion", "$16 trillion", "$30 trillion"],
+                correct: 2
+            },
+            {
+                question: "What makes Bitcoin different from fiat currency?",
+                options: ["It's digital", "It has a fixed supply", "It's faster", "It's anonymous"],
+                correct: 1
+            }
+        ];
+
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTimeline();
+            initializeScrollEffects();
+            createStardustParticles();
+            updateQuizProgress();
+        });
+
+        // Timeline Animation
+        function initializeTimeline() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Trigger philosopher panels
+                        const year = entry.target.getAttribute('data-year');
+                        if (year === '1910') {
+                            setTimeout(() => showPhilosopher('griffin'), 500);
+                        } else if (year === '2008') {
+                            setTimeout(() => showPhilosopher('sowell'), 500);
+                        }
+                        
+                        // Create stardust burst
+                        createStardustBurst(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            document.querySelectorAll('.timeline-event').forEach(function(event) {
+                observer.observe(event);
+            });
+        }
+
+        // Enhanced Scroll Effects
+        function initializeScrollEffects() {
+            let ticking = false;
+            
+            function updateScrollProgress() {
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollProgress = (window.scrollY / scrollHeight) * 100;
+                
+                // Update timeline line
+                const timelineLine = document.getElementById('timelineLine');
+                if (timelineLine) {
+                    timelineLine.classList.add('active');
+                    timelineLine.style.setProperty('--scroll-progress', scrollProgress + '%');
+                }
+                
+                // Update progress indicator
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                if (progressFill && progressText) {
+                    const dashOffset = 188.5 - (188.5 * scrollProgress / 100);
+                    progressFill.style.strokeDashoffset = dashOffset;
+                    progressText.textContent = Math.round(scrollProgress) + '%';
+                }
+                
+                ticking = false;
+            }
+            
+            function requestTick() {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScrollProgress);
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', requestTick);
+            updateScrollProgress();
+        }
+
+        // Secret Document Reveal
+        function revealSecret(element) {
+            element.classList.toggle('revealed');
+            createStardustBurst(element);
+        }
+
+        // Show Philosopher Panels
+        function showPhilosopher(philosopherId) {
+            const philosopher = philosophers[philosopherId];
+            if (!philosopher) return;
+            
+            const panel = philosopher.side === 'left' ? 
+                document.getElementById('philosopherLeft') : 
+                document.getElementById('philosopherRight');
+            
+            if (!panel) return;
+            
+            const nameEl = panel.querySelector('.philosopher-name');
+            const quoteEl = panel.querySelector('.philosopher-quote');
+            
+            if (nameEl) nameEl.textContent = philosopher.name;
+            if (quoteEl) quoteEl.textContent = philosopher.quote;
+            
+            panel.classList.add('visible');
+            
+            setTimeout(function() {
+                panel.classList.remove('visible');
+            }, 6000);
+        }
+
+        // Enhanced Stardust Effects
+        function createStardustParticles() {
+            setInterval(function() {
+                if (Math.random() > 0.8) {
+                    createStardustParticle();
+                }
+            }, 3000);
+        }
+
+        function createStardustParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'interactive-stardust';
+            particle.textContent = ['✨', '💰', '🔮', '⭐'][Math.floor(Math.random() * 4)];
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.bottom = '0px';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(function() {
+                particle.remove();
+            }, 3000);
+        }
+
+        function createStardustBurst(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'interactive-stardust';
+                particle.textContent = ['✨', '💰', '🔮'][Math.floor(Math.random() * 3)];
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.position = 'fixed';
+                
+                const angle = (Math.PI * 2 * i) / 6;
+                const velocity = 80 + Math.random() * 40;
+                const deltaX = Math.cos(angle) * velocity;
+                const deltaY = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--dx', deltaX + 'px');
+                particle.style.setProperty('--dy', deltaY + 'px');
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(function() {
+                    particle.remove();
+                }, 1500);
+            }
+        }
+
+        // Quiz Functions
+        function selectAnswer(answerIndex) {
+            const options = document.querySelectorAll('.option-button');
+            const correct = quizQuestions[currentQuizQuestion].correct;
+            
+            options.forEach(option => option.disabled = true);
+            
+            options[correct].classList.add('correct');
+            if (answerIndex !== correct) {
+                options[answerIndex].classList.add('incorrect');
+            } else {
+                quizScore++;
+            }
+            
+            document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+            updateQuizProgress();
+        }
+
+        function nextQuestion() {
+            currentQuizQuestion++;
+            
+            if (currentQuizQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuizQuestion];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestionNum').textContent = currentQuizQuestion + 1;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('nextQuestionBtn').style.display = 'none';
+            updateQuizProgress();
+        }
+
+        function updateQuizProgress() {
+            const progress = ((currentQuizQuestion + 1) / quizQuestions.length) * 100;
+            document.getElementById('quizProgress').style.width = progress + '%';
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            
+            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('finalScore').textContent = `${quizScore}/${quizQuestions.length}`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🏆 Conspiracy Expert! You see through the monetary deception!';
+            } else if (percentage >= 70) {
+                message = '🎯 Well Done! You understand the secret history of money!';
+            } else if (percentage >= 50) {
+                message = '📚 Good Start! Keep studying the monetary conspiracy!';
+            } else {
+                message = '💪 The rabbit hole goes deeper! Review the timeline again!';
+            }
+            
+            document.getElementById('scoreMessage').textContent = message;
+            
+            // Save progress
+            localStorage.setItem('lesson2_progress', JSON.stringify({
+                completed: true,
+                score: percentage,
+                timestamp: new Date().toISOString()
+            }));
+            
+            document.getElementById('lessonProgress').textContent = percentage;
+            
+            // Create celebration burst
+            createStardustBurst(document.getElementById('quizResults'));
+        }
+
+        function restartQuiz() {
+            currentQuizQuestion = 0;
+            quizScore = 0;
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('quizResults').style.display = 'none';
+            
+            const question = quizQuestions[0];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestionNum').textContent = '1';
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('nextQuestionBtn').style.display = 'none';
+            updateQuizProgress();
+        }
+
+        // Set total questions
+        document.getElementById('totalQuestions').textContent = quizQuestions.length;
+
+        // Initialize progress from localStorage
+        const savedProgress = localStorage.getItem('lesson2_progress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            document.getElementById('lessonProgress').textContent = progress.score || 0;
+        }
+
+        // Make functions global
+        window.revealSecret = revealSecret;
+        window.showPhilosopher = showPhilosopher;
+        window.selectAnswer = selectAnswer;
+        window.nextQuestion = nextQuestion;
+        window.restartQuiz = restartQuiz;
+    </script>
+</body>
+</html>
