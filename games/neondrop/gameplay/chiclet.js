@@ -49,10 +49,15 @@ export class ChicletRenderer {
         if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
             // ChicletRenderer: Caches cleared
         }
-    }
-      drawBlock(ctx, x, y, color, row, col, pieceData = null) {
+    }      drawBlock(ctx, x, y, color, row, col, pieceData = null) {
         if (!this.initialized) {
             this.initialize();
+        }
+
+        // Validate inputs to prevent rendering errors
+        if (!ctx || !Number.isFinite(x) || !Number.isFinite(y) || 
+            !this.blockSize || this.blockSize <= 0) {
+            return; // Skip invalid draw calls
         }
 
         // Update animation state
@@ -100,10 +105,13 @@ export class ChicletRenderer {
             }
 
             this.cache.set(cacheKey, cachedBlock);
+        }        // Draw the cached block with error handling
+        try {
+            ctx.drawImage(cachedBlock, x, y);
+        } catch (error) {
+            console.warn('ChicletRenderer: Error drawing cached block:', error);
+            return; // Skip drawing this block
         }
-
-        // Draw the cached block
-        ctx.drawImage(cachedBlock, x, y);
 
         // Draw FLOAT piece overlay (not cached for animation)
         if (pieceData && pieceData.type === 'FLOAT') {
@@ -143,16 +151,21 @@ export class ChicletRenderer {
             const pulse = Math.sin(this.floatPulse) * 0.15 + 0.85;
 
             // Arrow with number
-            this.drawFloatArrowWithNumber(ctx, centerX, centerY, movesRemaining, pulse);
+            this.drawFloatArrowWithNumber(ctx, centerX, centerY, movesRemaining, pulse);            // Edge glow for unused FLOAT
+            const glowRadius = Math.max(1, this.blockSize * 0.7);
+            if (Number.isFinite(centerX) && Number.isFinite(centerY) && Number.isFinite(glowRadius)) {
+                try {
+                    const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowRadius);
+                    glow.addColorStop(0, 'rgba(255, 255, 255, 0)');
+                    glow.addColorStop(0.7, `rgba(255, 255, 255, ${0.1 * pulse})`);
+                    glow.addColorStop(1, `rgba(255, 255, 255, ${0.2 * pulse})`);
 
-            // Edge glow for unused FLOAT
-            const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, this.blockSize * 0.7);
-            glow.addColorStop(0, 'rgba(255, 255, 255, 0)');
-            glow.addColorStop(0.7, `rgba(255, 255, 255, ${0.1 * pulse})`);
-            glow.addColorStop(1, `rgba(255, 255, 255, ${0.2 * pulse})`);
-
-            ctx.fillStyle = glow;
-            ctx.fillRect(x, y, this.blockSize, this.blockSize);
+                    ctx.fillStyle = glow;
+                    ctx.fillRect(x, y, this.blockSize, this.blockSize);
+                } catch (error) {
+                    // Skip glow effect on render error
+                }
+            }
         }
         // No visual indicator after first use - just the darkening
 
@@ -205,13 +218,14 @@ export class ChicletRenderer {
         ctx.globalAlpha = 1;
 
         // Draw number below arrow
-        const numberY = centerY + this.blockSize * 0.25;
-
-        // Number background circle
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.beginPath();
-        ctx.arc(centerX, numberY, numberSize * 0.6, 0, Math.PI * 2);
-        ctx.fill();
+        const numberY = centerY + this.blockSize * 0.25;        // Number background circle with validation
+        const radius = Math.max(1, numberSize * 0.6); // Ensure positive radius
+        if (Number.isFinite(centerX) && Number.isFinite(numberY) && Number.isFinite(radius)) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.beginPath();
+            ctx.arc(centerX, numberY, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
 
         // Number text
         ctx.font = `bold ${numberSize}px monospace`;
@@ -250,17 +264,38 @@ export class ChicletRenderer {
         ctx.stroke();
 
         ctx.globalAlpha = 1;
-    }
+    }    createCachedBlock(color, variant, pieceData = null) {
+        // Validate inputs to prevent IndexSizeError
+        if (!this.blockSize || this.blockSize <= 0 || !Number.isFinite(this.blockSize)) {
+            console.warn('ChicletRenderer: Invalid blockSize:', this.blockSize);
+            return this.createEmptyCanvas();
+        }
 
-    createCachedBlock(color, variant, pieceData = null) {
         const canvas = document.createElement('canvas');
         canvas.width = this.blockSize;
         canvas.height = this.blockSize;
         const ctx = canvas.getContext('2d', { alpha: true });
 
-        // Use variant as consistent seed for this piece
-        this.drawChiclet(ctx, 0, 0, color, variant, pieceData);
+        if (!ctx) {
+            console.warn('ChicletRenderer: Failed to get canvas context');
+            return this.createEmptyCanvas();
+        }
 
+        try {
+            // Use variant as consistent seed for this piece
+            this.drawChiclet(ctx, 0, 0, color, variant, pieceData);
+        } catch (error) {
+            console.warn('ChicletRenderer: Error drawing chiclet:', error);
+            return this.createEmptyCanvas();
+        }
+
+        return canvas;
+    }
+
+    createEmptyCanvas() {
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, this.blockSize || 24);
+        canvas.height = Math.max(1, this.blockSize || 24);
         return canvas;
     }
       getChicletStyle(variant, color, isPiece = false) {
@@ -436,29 +471,47 @@ export class ChicletRenderer {
 
         // Fill with edge color
         ctx.fillStyle = style.edge;
-        ctx.fill();
+        ctx.fill();        // Gradient fill with validation        const centerX = x + size/2;
+        const centerY = y + size/2;
+        const innerRadius = Math.max(0, size * 0.15);
+        const outerRadius = Math.max(innerRadius + 1, size * 0.9);
+        
+        // Validate gradient parameters
+        if (!Number.isFinite(centerX) || !Number.isFinite(centerY) || 
+            !Number.isFinite(innerRadius) || !Number.isFinite(outerRadius) ||
+            outerRadius <= 0) {
+            return; // Skip invalid gradient
+        }
+        
+        try {
+            const gradient = ctx.createRadialGradient(
+                centerX, centerY, innerRadius,
+                centerX, centerY, outerRadius
+            );
 
-        // Gradient fill
-        const gradient = ctx.createRadialGradient(
-            x + size/2, y + size/2, size * 0.15,
-            x + size/2, y + size/2, size * 0.9
-        );
+            gradient.addColorStop(0, style.middle);
+            gradient.addColorStop(0.6, color);
+            gradient.addColorStop(1, style.edge);
 
-        gradient.addColorStop(0, style.middle);
-        gradient.addColorStop(0.6, color);
-        gradient.addColorStop(1, style.edge);
-
-        ctx.fillStyle = gradient;
-        ctx.fill();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        } catch (error) {
+            // Fallback to solid color
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
 
         // Draw shine spots
         ctx.save();
-        ctx.clip();
-
-        style.shineSpots.forEach(spot => {
+        ctx.clip();        style.shineSpots.forEach(spot => {
             const spotX = x + spot.x * size;
             const spotY = y + spot.y * size;
-            const spotSize = spot.size * size;
+            const spotSize = Math.max(0.1, spot.size * size); // Prevent zero/negative size
+
+            // Validate spot position
+            if (!Number.isFinite(spotX) || !Number.isFinite(spotY) || !Number.isFinite(spotSize)) {
+                return; // Skip invalid spots
+            }
 
             if (spot.isEdge) {
                 // Elongated edge highlights
@@ -467,27 +520,35 @@ export class ChicletRenderer {
                 ctx.rotate(spot.angle);
                 ctx.scale(1, 2.5);
 
-                const shine = ctx.createRadialGradient(0, 0, 0, 0, 0, spotSize);
-                shine.addColorStop(0, `rgba(255, 255, 255, ${spot.intensity})`);
-                shine.addColorStop(0.5, `rgba(255, 255, 255, ${spot.intensity * 0.3})`);
-                shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                try {
+                    const shine = ctx.createRadialGradient(0, 0, 0, 0, 0, spotSize);
+                    shine.addColorStop(0, `rgba(255, 255, 255, ${spot.intensity})`);
+                    shine.addColorStop(0.5, `rgba(255, 255, 255, ${spot.intensity * 0.3})`);
+                    shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
-                ctx.fillStyle = shine;
-                ctx.beginPath();
-                ctx.arc(0, 0, spotSize, 0, Math.PI * 2);
-                ctx.fill();
+                    ctx.fillStyle = shine;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, spotSize, 0, Math.PI * 2);
+                    ctx.fill();
+                } catch (error) {
+                    // Skip this spot on error
+                }
                 ctx.restore();
             } else {
                 // Round shine spots
-                const shine = ctx.createRadialGradient(spotX, spotY, 0, spotX, spotY, spotSize);
-                shine.addColorStop(0, `rgba(255, 255, 255, ${spot.intensity})`);
-                shine.addColorStop(0.6, `rgba(255, 255, 255, ${spot.intensity * 0.5})`);
-                shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                try {
+                    const shine = ctx.createRadialGradient(spotX, spotY, 0, spotX, spotY, spotSize);
+                    shine.addColorStop(0, `rgba(255, 255, 255, ${spot.intensity})`);
+                    shine.addColorStop(0.6, `rgba(255, 255, 255, ${spot.intensity * 0.5})`);
+                    shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
-                ctx.fillStyle = shine;
-                ctx.beginPath();
-                ctx.arc(spotX, spotY, spotSize, 0, Math.PI * 2);
-                ctx.fill();
+                    ctx.fillStyle = shine;
+                    ctx.beginPath();
+                    ctx.arc(spotX, spotY, spotSize, 0, Math.PI * 2);
+                    ctx.fill();
+                } catch (error) {
+                    // Skip this spot on error
+                }
             }
         });
 
