@@ -467,36 +467,39 @@ export class ChicletRenderer {
 
         // Top-left corner
         ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
-        ctx.closePath();
-
-        // Fill with edge color
+        ctx.closePath();        // Fill with edge color
         ctx.fillStyle = style.edge;
-        ctx.fill();        // Gradient fill with validation        const centerX = x + size/2;
+        ctx.fill();
+
+        // Gradient fill with validation
+        const centerX = x + size/2;
         const centerY = y + size/2;
         const innerRadius = Math.max(0, size * 0.15);
         const outerRadius = Math.max(innerRadius + 1, size * 0.9);
         
-        // Validate gradient parameters
-        if (!Number.isFinite(centerX) || !Number.isFinite(centerY) || 
-            !Number.isFinite(innerRadius) || !Number.isFinite(outerRadius) ||
-            outerRadius <= 0) {
-            return; // Skip invalid gradient
-        }
-        
-        try {
-            const gradient = ctx.createRadialGradient(
-                centerX, centerY, innerRadius,
-                centerX, centerY, outerRadius
-            );
+        // Apply gradient if parameters are valid
+        if (Number.isFinite(centerX) && Number.isFinite(centerY) && 
+            Number.isFinite(innerRadius) && Number.isFinite(outerRadius) &&
+            outerRadius > 0) {
+            try {
+                const gradient = ctx.createRadialGradient(
+                    centerX, centerY, innerRadius,
+                    centerX, centerY, outerRadius
+                );
 
-            gradient.addColorStop(0, style.middle);
-            gradient.addColorStop(0.6, color);
-            gradient.addColorStop(1, style.edge);
+                gradient.addColorStop(0, style.middle);
+                gradient.addColorStop(0.6, color);
+                gradient.addColorStop(1, style.edge);
 
-            ctx.fillStyle = gradient;
-            ctx.fill();
-        } catch (error) {
-            // Fallback to solid color
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            } catch (error) {
+                // Fallback to solid color
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+        } else {
+            // Fallback to solid color for invalid parameters
             ctx.fillStyle = color;
             ctx.fill();
         }
