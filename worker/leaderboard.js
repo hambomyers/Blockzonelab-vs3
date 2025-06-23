@@ -47,6 +47,24 @@ export default {
         return handleClearLeaderboard(request, env, headers);
       }
 
+      // Tournament endpoints (basic implementation)
+      if (url.pathname === '/api/tournaments/current' && request.method === 'GET') {
+        return handleGetCurrentTournament(request, env, headers);
+      }
+
+      if (url.pathname.startsWith('/api/tournaments/') && url.pathname.endsWith('/join') && request.method === 'POST') {
+        return handleJoinTournament(request, env, headers);
+      }
+
+      if (url.pathname.startsWith('/api/tournaments/') && !url.pathname.endsWith('/join') && request.method === 'GET') {
+        return handleGetTournament(request, env, headers);
+      }
+
+      // Session tracking endpoint
+      if (url.pathname === '/api/sessions' && request.method === 'POST') {
+        return handleSessionData(request, env, headers);
+      }
+
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
         headers
@@ -96,9 +114,9 @@ async function handleSubmitScore(request, env, headers) {
     metrics,
     timestamp: timestamp || Date.now(),
     verified: true
-  };
-
-  // Save to KV
+  };  // Save to KV and ensure player profile exists FIRST
+  await ensurePlayerProfile(env, player_id, metrics.player_name || 'Anonymous');
+  
   await Promise.all([
     env.SCORES.put(`replay:${replay_hash}`, JSON.stringify(scoreData)),
     env.SCORES.put(`score:${scoreId}`, JSON.stringify(scoreData)),
@@ -178,11 +196,10 @@ async function handleGetLargeLeaderboard(request, env, headers) {
 async function handleGetPlayerStats(request, env, headers) {
   const url = new URL(request.url);
   const playerId = url.pathname.split('/')[3];
-
   // Get player profile from PLAYERS namespace
   const playerProfile = await env.PLAYERS.get(`profile:${playerId}`, 'json') || {
     player_id: playerId,
-    display_name: `Player ${playerId.slice(0, 6)}`,
+    display_name: 'Anonymous',
     tier: 'anonymous',
     created_at: Date.now()
   };
@@ -228,11 +245,10 @@ async function handlePlayerRegistration(request, env, headers) {
       headers
     });
   }
-
   // Create new player profile
   const newProfile = {
     player_id,
-    display_name: display_name || `Player ${player_id.slice(0, 6)}`,
+    display_name: display_name || 'Anonymous',
     tier: tier || 'anonymous',
     email: email || null,
     wallet_address: wallet_address || null,
@@ -347,6 +363,91 @@ async function handleClearLeaderboard(request, env, headers) {
   }
 }
 
+// TOURNAMENT ENDPOINTS (Basic implementation)
+async function handleGetCurrentTournament(request, env, headers) {
+  // Simple daily tournament - always active
+  const today = new Date().toDateString();
+  const tournamentId = `daily_${today.replace(/\s/g, '_')}`;
+  
+  return new Response(JSON.stringify({
+    id: tournamentId,
+    name: "Daily Championship",
+    type: "daily",
+    status: "active",
+    entry_fee: 0, // Free for now
+    prize_pool: 0, // Calculated dynamically
+    max_players: 1000,
+    current_players: 0, // TODO: Get from leaderboard
+    start_time: new Date().setHours(0,0,0,0),
+    end_time: new Date().setHours(23,59,59,999),
+    rules: {
+      max_attempts: 0, // Unlimited
+      scoring: "highest_score"
+    }
+  }), { headers });
+}
+
+async function handleJoinTournament(request, env, headers) {
+  const url = new URL(request.url);
+  const tournamentId = url.pathname.split('/')[3];
+  const data = await request.json();
+  const { player_id } = data;
+
+  // For daily tournaments, joining is automatic on first score
+  return new Response(JSON.stringify({
+    success: true,
+    tournament_id: tournamentId,
+    player_id: player_id,
+    joined_at: Date.now(),
+    message: "Successfully joined daily tournament"
+  }), { headers });
+}
+
+async function handleGetTournament(request, env, headers) {
+  const url = new URL(request.url);
+  const tournamentId = url.pathname.split('/')[3];
+  
+  // Get tournament leaderboard
+  const leaderboard = await env.SCORES.get('leaderboard:neon_drop:daily', 'json') || { scores: [] };
+  
+  return new Response(JSON.stringify({
+    id: tournamentId,
+    name: "Daily Championship",
+    status: "active",
+    leaderboard: leaderboard.scores.slice(0, 10), // Top 10
+    total_players: leaderboard.scores.length,
+    prize_distribution: {
+      "1st": "50%",
+      "2nd": "25%", 
+      "3rd": "15%",
+      "4th": "10%"
+    }
+  }), { headers });
+}
+
+// SESSION TRACKING
+async function handleSessionData(request, env, headers) {
+  const data = await request.json();
+  const { player_id, session_id, game_data, timestamp } = data;
+
+  // Store session data for analytics
+  const sessionKey = `session:${session_id}`;
+  const sessionData = {
+    player_id,
+    session_id,
+    game_data,
+    timestamp: timestamp || Date.now(),
+    stored_at: Date.now()
+  };
+
+  await env.SESSIONS.put(sessionKey, JSON.stringify(sessionData));
+
+  return new Response(JSON.stringify({
+    success: true,
+    session_id: session_id
+  }), { headers });
+}
+
 // Helper functions
 function validateScore(score, metrics) {
   if (metrics.apm > 300) {
@@ -390,8 +491,7 @@ async function updatePlayerHighScore(env, playerId, score) {
   // Get or create player profile in PLAYERS namespace
   const profileKey = `profile:${playerId}`;
   const playerProfile = await env.PLAYERS.get(profileKey, 'json') || {
-    player_id: playerId,
-    display_name: `Player ${playerId.slice(0, 6)}`,
+    player_id: playerId,    display_name: 'Anonymous',
     tier: 'anonymous',
     created_at: Date.now()
   };
@@ -411,9 +511,8 @@ async function updateLeaderboard(env, period, playerId, score, game = 'neon_drop
   // Remove player's previous entry
   leaderboard.scores = leaderboard.scores.filter(s => s.player_id !== playerId);
 
-  // Get player profile from PLAYERS namespace for display name
-  const playerProfile = await env.PLAYERS.get(`profile:${playerId}`, 'json');
-  const displayName = playerProfile?.display_name || `Player ${playerId.slice(0, 6)}`;
+  // Get player profile from PLAYERS namespace for display name  const playerProfile = await env.PLAYERS.get(`profile:${playerId}`, 'json');
+  const displayName = playerProfile?.display_name || 'Anonymous';
   
   leaderboard.scores.push({
     player_id: playerId,
@@ -458,5 +557,31 @@ export async function cleanupDailyLeaderboards(env) {
   if (dailyData) {
     dailyData.scores = dailyData.scores.filter(score => score.timestamp > oneDayAgo);
     await env.SCORES.put('leaderboard:neon_drop:daily', JSON.stringify(dailyData));
+  }
+}
+
+async function ensurePlayerProfile(env, playerId, displayName) {
+  const profileKey = `profile:${playerId}`;
+  
+  // Get existing profile or create new one
+  const existing = await env.PLAYERS.get(profileKey, 'json');
+  
+  if (existing) {
+    // Update display name if provided and different
+    if (displayName && displayName !== 'Anonymous' && displayName !== existing.display_name) {
+      existing.display_name = displayName;
+      existing.last_activity = Date.now();
+      await env.PLAYERS.put(profileKey, JSON.stringify(existing));
+    }
+  } else {
+    // Create new profile
+    const newProfile = {
+      player_id: playerId,      display_name: displayName || 'Anonymous',
+      tier: 'anonymous',
+      created_at: Date.now(),
+      last_activity: Date.now(),
+      current_high_score: 0
+    };
+    await env.PLAYERS.put(profileKey, JSON.stringify(newProfile));
   }
 }

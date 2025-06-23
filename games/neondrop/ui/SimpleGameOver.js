@@ -16,9 +16,7 @@ export class SimpleGameOver {
         this.apiBase = 'https://blockzone-api.hambomyers.workers.dev/api';
         this.playerId = this.getOrCreatePlayerId();
         this.leaderboardData = null;
-        this.playerRank = null;
-        
-        // Initialize the real prize calculator with new 50%/hyperbolic/$1 system
+        this.playerRank = null;        // Initialize the real prize calculator with new 50%/hyperbolic/$1 system
         this.prizeCalculator = new PrizeCalculator();
         this.prizeCalculator.winnerShare = 0.50;        // 50% to 1st place
         this.prizeCalculator.minimumPrize = 1.00;       // $1 minimum
@@ -49,47 +47,51 @@ export class SimpleGameOver {
             opacity: 0;
             transition: opacity 0.3s ease-out;
         `;
-        document.body.appendChild(this.container);    }
-
-    getOrCreatePlayerId() {
+        document.body.appendChild(this.container);    }    getOrCreatePlayerId() {
         let playerId = localStorage.getItem('playerId');
         if (!playerId) {
-            playerId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            // Generate a wallet-style player ID
+            const walletSuffix = this.generateWalletSuffix();
+            playerId = `player_${Date.now()}_${walletSuffix}`;
             localStorage.setItem('playerId', playerId);
+            localStorage.setItem('playerWalletSuffix', walletSuffix);
         }
         return playerId;
     }
 
-    // Method to clear all data for fresh testing
-    clearAllPlayerData() {
-        console.log('🧹 Clearing all player data for fresh experience...');
-        localStorage.removeItem('playerId');
-        localStorage.removeItem('neonDropPlayerName');
-        localStorage.removeItem('neonDropHighScore');
-        localStorage.removeItem('playerStats');
-        localStorage.removeItem('tournamentHistory');
-        localStorage.removeItem('neonDropScores'); // Clear local leaderboard
+    // Generate a 8-character wallet-style suffix
+    generateWalletSuffix() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 8; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }    // Get the last 4 characters of the wallet suffix for display
+    getWalletDisplaySuffix() {
+        const suffix = localStorage.getItem('playerWalletSuffix');
+        if (suffix) {
+            return suffix.slice(-4).toUpperCase();
+        }
+        // Generate new suffix if none exists
+        const playerId = this.playerId || this.getOrCreatePlayerId();
+        const match = playerId.match(/_([a-z0-9]+)$/);
+        return match ? match[1].slice(-4).toUpperCase() : 'ANON';
+    }    // Create the display name: "Username-WXYZ"
+    createDisplayName(username) {
+        if (!username || username.trim() === '') {
+            return null; // Require username - no anonymous players
+        }
         
-        // Clear all tournament entries
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-            if (key.startsWith('tournament_entered_') || key.startsWith('tournament_skipped_')) {
-                localStorage.removeItem(key);
-            }
-        });
-        
-        // Reset internal state
-        this.playerId = this.getOrCreatePlayerId();
-        this.playerName = null;
-        this.leaderboardData = null;
-        this.playerRank = null;
-        
-        console.log('✨ Fresh player experience ready! Leaderboard reset for testing.');
+        // Limit username to 12 characters and clean it
+        const cleanUsername = username.trim().slice(0, 12);
+        const walletSuffix = this.getWalletDisplaySuffix();        
+        return `${cleanUsername}-${walletSuffix}`;
     }
 
     getStoredPlayerName() {
         return localStorage.getItem('neonDropPlayerName');
-    }    async show(finalScore) {
+    }async show(finalScore) {
         if (this.isVisible) return;
         
         this.score = finalScore;
@@ -100,17 +102,13 @@ export class SimpleGameOver {
         
         // Refresh tournament and player data
         await this.loadTournamentInfo();
-        
-        // Show container
+          // Show container
         this.container.style.display = 'flex';
-        
-        if (this.playerName) {
-            // Returning player - go straight to leaderboard with their new score
-            console.log('🔍 DEBUG: Returning player detected, calling showLeaderboardWithNewScore()');
-            await this.showLeaderboardWithNewScore();
+          if (this.playerName) {
+            // Returning player - show simple game over card with their score
+            await this.showGameOverCard();
         } else {
             // New player - the magic moment
-            console.log('🔍 DEBUG: New player detected, calling showNameCapture()');
             await this.showNameCapture();
         }
         
@@ -118,6 +116,107 @@ export class SimpleGameOver {
         requestAnimationFrame(() => {
             this.container.style.opacity = '1';
         });
+    }
+
+    async showGameOverCard() {
+        console.log('🎮 Showing basic game over card for returning player');
+        
+        // Submit score first
+        try {
+            await this.submitScore(this.score, this.playerName);
+        } catch (error) {
+            console.error('❌ Score submission failed:', error);
+        }
+        
+        this.container.innerHTML = `
+            <div class="game-over-card" style="
+                background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 450px;
+                width: 90%;
+                border: 1px solid rgba(0, 212, 255, 0.3);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                animation: slideIn 0.4s ease-out;
+            ">
+                <h2 style="color: #00d4ff; font-size: 32px; margin: 0 0 30px 0; font-weight: 700;">
+                    Game Over
+                </h2>
+                
+                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
+                
+                <div style="margin-bottom: 30px;">
+                    <div style="color: #00d4ff; font-size: 48px; font-weight: 900; margin-bottom: 10px;">
+                        ${this.score.toLocaleString()}
+                    </div>
+                    <div style="color: #aaa; font-size: 18px;">
+                        Great job, ${this.playerName}!
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button 
+                        id="playAgainBtn"
+                        style="
+                            background: linear-gradient(135deg, #00d4ff, #0099cc);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            min-width: 120px;
+                        "
+                    >
+                        🎮 Play Again
+                    </button>
+                    
+                    <button 
+                        id="leaderboardBtn"
+                        style="
+                            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            min-width: 120px;
+                        "
+                    >
+                        🏆 Leaderboard
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Bind button events
+        this.bindGameOverCardEvents();
+    }
+
+    bindGameOverCardEvents() {
+        const playAgainBtn = this.container.querySelector('#playAgainBtn');
+        const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
+        
+        if (playAgainBtn) {
+            playAgainBtn.addEventListener('click', () => {
+                this.hide();
+                this.emit('play-again');
+            });
+        }
+        
+        if (leaderboardBtn) {
+            leaderboardBtn.addEventListener('click', async () => {
+                console.log('🏆 Leaderboard clicked - showing full-screen leaderboard');
+                await this.showFullScreenLeaderboard();
+            });
+        }
     }
 
     async showNameCapture() {
@@ -143,19 +242,22 @@ export class SimpleGameOver {
                     <div style="color: #fff; font-size: 24px; font-weight: 600;">
                         ${this.score.toLocaleString()}
                     </div>
-                </div>
-
-                <!-- The Ask -->
+                </div>                <!-- The Ask -->
                 <div class="name-capture" style="margin-bottom: 30px;">
-                    <p style="color: #aaa; font-size: 18px; margin-bottom: 20px; line-height: 1.4;">
-                        Save your score to the leaderboard?
+                    <p style="color: #aaa; font-size: 18px; margin-bottom: 15px; line-height: 1.4;">
+                        Game Name?
                     </p>
+                    
+                    <div style="margin-bottom: 15px;">                        <div style="color: #888; font-size: 14px; margin-bottom: 5px;">
+                            Your display name will be: <span id="namePreview" style="color: #00d4ff; font-weight: bold;">[Username]-${this.getWalletDisplaySuffix()}</span>
+                        </div>
+                    </div>
                     
                     <input 
                         type="text" 
                         id="playerNameInput" 
-                        placeholder="Enter your player name"
-                        maxlength="20"
+                        placeholder="Game name (max 12 chars)"
+                        maxlength="12"
                         style="
                             width: 100%;
                             padding: 15px 20px;
@@ -166,11 +268,15 @@ export class SimpleGameOver {
                             color: white;
                             text-align: center;
                             transition: all 0.3s ease;
-                            margin-bottom: 20px;
+                            margin-bottom: 15px;
                             box-sizing: border-box;
                         "
                         autocomplete="off"
                     >
+                    
+                    <div style="color: #666; font-size: 12px; margin-bottom: 15px;">
+                        Your unique Web3 signature: -${this.getWalletDisplaySuffix()}
+                    </div>
                     
                     <div class="validation-feedback" style="
                         height: 20px;
@@ -269,18 +375,32 @@ export class SimpleGameOver {
         const nameInput = this.container.querySelector('#playerNameInput');
         const saveBtn = this.container.querySelector('#saveScoreBtn');
         const skipBtn = this.container.querySelector('#skipBtn');
-        const feedback = this.container.querySelector('.validation-feedback');
+        const feedback = this.container.querySelector('.validation-feedback');        // Pre-fill with existing username (without wallet suffix)
+        const existingUsername = localStorage.getItem('neonDropUsername');
+        if (existingUsername) {
+            nameInput.value = existingUsername;
+            // Update preview immediately
+            const namePreview = this.container.querySelector('#namePreview');
+            if (namePreview) {
+                namePreview.textContent = this.createDisplayName(existingUsername);
+            }
+        }
 
         // Auto-focus and select
         setTimeout(() => {
             nameInput.focus();
             nameInput.select();
-        }, 500);
-
-        // Real-time validation
+        }, 500);// Real-time validation and name preview
         nameInput.addEventListener('input', (e) => {
             const name = e.target.value.trim();
-            const isValid = name.length >= 3;
+            const isValid = name.length >= 2; // Reduced minimum to 2 chars
+            
+            // Update live preview
+            const namePreview = this.container.querySelector('#namePreview');
+            if (namePreview) {
+                const displayName = this.createDisplayName(name);
+                namePreview.textContent = displayName;
+            }
             
             saveBtn.disabled = !isValid;
             
@@ -314,14 +434,17 @@ export class SimpleGameOver {
             this.savePlayerName(`Player${Math.floor(Math.random() * 10000)}`);
         });
     }    async savePlayerName(name) {
-        this.playerName = name;
+        // Create the display name with username + wallet suffix
+        const displayName = this.createDisplayName(name);
+        this.playerName = displayName;
         
-        // Store locally
-        localStorage.setItem('neonDropPlayerName', name);
+        // Store both the raw username and display name locally
+        localStorage.setItem('neonDropPlayerName', displayName);
+        localStorage.setItem('neonDropUsername', name); // Raw username for editing
         
         // Submit directly to Cloudflare API
         try {
-            console.log('📤 Submitting score to Cloudflare API:', this.score, 'for player:', name);
+            console.log('📤 Submitting score to Cloudflare API:', this.score, 'for player:', displayName);
             
             const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/scores', {
                 method: 'POST',
@@ -331,10 +454,11 @@ export class SimpleGameOver {
                 body: JSON.stringify({
                     player_id: this.playerId,
                     score: this.score,
-                    replay_hash: `${this.playerId}_${Date.now()}_${this.score}`,
-                    metrics: {
+                    replay_hash: `${this.playerId}_${Date.now()}_${this.score}`,                    metrics: {
                         game: 'neon_drop',
-                        player_name: name,
+                        player_name: displayName, // Send the full display name to backend
+                        username: name, // Also send raw username for reference
+                        wallet_suffix: this.getWalletDisplaySuffix(),
                         duration: 0
                     },
                     timestamp: Date.now()
@@ -512,34 +636,13 @@ export class SimpleGameOver {
             this.hide();
             this.emit('play-again');
         });        leaderboardBtn.addEventListener('click', async () => {
-            // FIXED: Direct API call with correct parameters
+            // Enhanced: Show full-screen leaderboard with hyperbolic font scaling
             try {
-                console.log('🏆 Fetching leaderboard from Cloudflare API directly');
-                
-                const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/leaderboard?period=daily&limit=50&game=neon_drop', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('📊 Leaderboard API response:', data);
-                
-                if (data.scores && data.scores.length > 0) {
-                    console.log('✅ Found', data.scores.length, 'scores, showing leaderboard');
-                    this.showBeautifulLeaderboard(data.scores);
-                } else {
-                    console.warn('⚠️ No scores in leaderboard data');
-                    this.showEmptyLeaderboard();
-                }
-                
+                console.log('🏆 Opening enhanced full-screen leaderboard');
+                await this.showFullScreenLeaderboard();
             } catch (error) {
-                console.error('❌ Failed to load leaderboard:', error);
+                console.error('❌ Failed to open full-screen leaderboard:', error);
+                // Fallback to regular leaderboard
                 this.showEmptyLeaderboard();
             }
         });
@@ -973,10 +1076,9 @@ export class SimpleGameOver {
 
                 <!-- Leaderboard List -->
                 <div class="leaderboard-list" style="margin-bottom: 30px;">
-                    ${leaderboardData.slice(0, 20).map((entry, index) => {
-                        const isCurrentPlayer = entry.player_id === this.playerId || 
+                    ${leaderboardData.slice(0, 20).map((entry, index) => {                        const isCurrentPlayer = entry.player_id === this.playerId || 
                                               entry.playerId === this.playerId ||
-                                              (this.playerName && (entry.playerName === this.playerName || entry.player_name === this.playerName));
+                                              (this.playerName && (entry.playerName === this.playerName || entry.player_name === this.playerName || entry.metrics?.player_name === this.playerName));
                         return `
                             <div class="leaderboard-item" style="
                                 display: flex;
@@ -995,7 +1097,7 @@ export class SimpleGameOver {
                                     color: ${index < 3 ? '#ffd700' : '#00d4ff'};
                                     min-width: 40px;
                                 ">
-                                    ${index < 3 ? ['🥇', '🥈', '🥉'][index] : `#${index + 1}`}
+                                    ${index < 3 ? this.getRankEmoji(index) : `#${index + 1}`}
                                 </div>
                                 <div class="player-name" style="
                                     flex: 1;
@@ -1003,8 +1105,7 @@ export class SimpleGameOver {
                                     font-weight: ${isCurrentPlayer ? '600' : '400'};
                                     text-align: left;
                                     margin-left: 15px;
-                                ">
-                                    ${isCurrentPlayer ? '👑 ' : ''}${entry.playerName || entry.player_name || `Player ${(entry.player_id || entry.playerId || '').slice(-4)}`}
+                                ">                                    ${isCurrentPlayer ? '👑 ' : ''}${entry.display_name || 'Anonymous'}
                                     ${isCurrentPlayer ? ' (You)' : ''}
                                 </div>
                                 <div class="score" style="
@@ -1060,47 +1161,7 @@ export class SimpleGameOver {
         this.bindLeaderboardEvents();
     }
 
-    showEmptyLeaderboard() {
-        this.container.innerHTML = `
-            <div class="game-over-card" style="
-                background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));
-                border-radius: 20px;
-                padding: 40px;
-                max-width: 500px;
-                width: 90%;
-                border: 1px solid rgba(0, 212, 255, 0.3);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-                text-align: center;
-                animation: slideIn 0.4s ease-out;
-            ">
-                <h2 style="color: #00d4ff; font-size: 28px; margin: 0 0 20px 0; font-weight: 700;">
-                    🏆 Daily Leaderboard
-                </h2>
-                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
-                <p style="color: #aaa; font-size: 18px; margin-bottom: 30px;">
-                    Be the first to set a score today!
-                </p>
-                <button 
-                    id="playAgainFromLeaderboard"
-                    style="
-                        background: linear-gradient(135deg, #00d4ff, #0099cc);
-                        color: white;
-                        border: none;
-                        padding: 15px 30px;
-                        border-radius: 10px;
-                        font-size: 16px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    "
-                >
-                    🎮 Play Now
-                </button>
-            </div>
-        `;
-
-        this.bindLeaderboardEvents();
-    }    bindLeaderboardEvents() {
+    bindLeaderboardEvents() {
         const playAgainBtn = this.container.querySelector('#playAgainFromLeaderboard');
         const closeBtn = this.container.querySelector('#closeLeaderboard');
 
@@ -1119,7 +1180,447 @@ export class SimpleGameOver {
 
         // Add navigation events
         this.bindNavigationEvents();
-    }    async initializeSystems() {
+    }    /**
+ * Enhanced Full-Screen Leaderboard with Hyperbolic Font Scaling
+ * Uses the same mathematical elegance as the prize pool distribution
+ */
+async showFullScreenLeaderboard() {
+    console.log('🎯 Loading full-screen leaderboard with hyperbolic scaling');
+    
+    let leaderboardData = [];
+    
+    try {
+        // Fetch leaderboard data
+        const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100&game=neon_drop`);
+        
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.scores && data.scores.length > 0) {
+            leaderboardData = data.scores;
+        } else {
+            throw new Error('No scores available');
+        }
+        
+    } catch (error) {
+        console.log('🎮 API unavailable, using mock data for hyperbolic scaling demo');
+        
+        // Generate mock leaderboard data for testing
+        leaderboardData = this.generateMockLeaderboardData();
+    }
+    
+    if (leaderboardData.length === 0) {
+        this.showEmptyFullScreenLeaderboard();
+        return;
+    }
+        
+        // Create full-screen container
+        this.container.innerHTML = `
+            <div class="fullscreen-leaderboard-backdrop" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: linear-gradient(135deg, 
+                    rgba(0, 0, 0, 0.95) 0%,
+                    rgba(20, 0, 40, 0.98) 50%,
+                    rgba(0, 0, 0, 0.95) 100%);
+                backdrop-filter: blur(10px);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+                <div class="leaderboard-content" style="
+                    width: 90vw;
+                    max-width: 1200px;
+                    height: 85vh;
+                    background: linear-gradient(145deg, 
+                        rgba(30, 0, 60, 0.9) 0%,
+                        rgba(60, 0, 120, 0.8) 50%,
+                        rgba(30, 0, 60, 0.9) 100%);
+                    border: 2px solid var(--neon-cyan);
+                    border-radius: 20px;
+                    box-shadow: 
+                        0 0 50px rgba(0, 255, 255, 0.3),
+                        inset 0 0 30px rgba(0, 255, 255, 0.1);
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                ">
+                    <div class="leaderboard-header" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 20px 30px;
+                        border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+                        background: linear-gradient(90deg, 
+                            transparent 0%,
+                            rgba(0, 255, 255, 0.1) 50%,
+                            transparent 100%);
+                    ">
+                        <h1 style="
+                            margin: 0;
+                            font-size: clamp(24px, 4vw, 48px);
+                            font-weight: 900;
+                            text-transform: uppercase;
+                            letter-spacing: 3px;
+                            color: var(--neon-cyan);
+                            text-shadow: 
+                                0 0 10px currentColor,
+                                0 0 20px currentColor,
+                                0 0 30px currentColor;
+                            animation: neonPulse 2s ease-in-out infinite alternate;
+                        ">
+                            HALL OF FAME
+                        </h1>
+                        <button id="closeFullScreenLeaderboard" style="
+                            background: none;
+                            border: 2px solid var(--neon-cyan);
+                            color: var(--neon-cyan);
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            font-size: 24px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        ">×</button>
+                    </div>
+                    <div class="leaderboard-viewport" style="
+                        flex: 1;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        padding: 20px 30px;
+                        position: relative;
+                    ">
+                        ${this.generateHyperbolicLeaderboard(leaderboardData)}
+                    </div>
+                    <div class="leaderboard-footer" style="
+                        padding: 15px 30px;
+                        border-top: 1px solid rgba(0, 255, 255, 0.3);
+                        background: linear-gradient(90deg, 
+                            transparent 0%,
+                            rgba(0, 255, 255, 0.05) 50%,
+                            transparent 100%);
+                        text-align: center;
+                        color: rgba(255, 255, 255, 0.7);
+                        font-size: 14px;
+                        font-weight: 500;
+                    ">
+                        Scroll for more • ESC to close
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add styles for neon pulse animation
+        if (!document.getElementById('neon-pulse-styles')) {
+            const style = document.createElement('style');
+            style.id = 'neon-pulse-styles';
+            style.textContent = `
+                @keyframes neonPulse {
+                    from { 
+                        text-shadow: 
+                            0 0 10px currentColor,
+                            0 0 20px currentColor,
+                            0 0 30px currentColor;
+                    }
+                    to { 
+                        text-shadow: 
+                            0 0 5px currentColor,
+                            0 0 15px currentColor,
+                            0 0 25px currentColor,
+                            0 0 35px currentColor;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+          // Bind close events
+        this.bindFullScreenLeaderboardEvents();
+}
+
+/**
+ * Generate mock leaderboard data for testing hyperbolic font scaling
+ */
+generateMockLeaderboardData() {
+    const mockNames = [
+        'CryptoKing', 'NeonMaster', 'BlockChain', 'DigitalAce', 'CyberPro',
+        'TechWizard', 'GameLegend', 'PixelHero', 'CodeNinja', 'DataGuru',
+        'WebWarrior', 'ByteBeast', 'NetGamer', 'CloudStar', 'DevLord',
+        'HackMaster', 'ScriptKid', 'LogicBomb', 'QuantumX', 'MatrixGod',
+        'BinaryBoss', 'AlgoAce', 'SyntaxSage', 'DebugKing', 'FlowState',
+        'ZeroOne', 'HashHero', 'ApiMaster', 'JsonJedi', 'SqlStar'
+    ];
+    
+    const mockData = [];
+    let baseScore = 50000;
+    
+    for (let i = 0; i < 30; i++) {
+        const score = Math.max(100, Math.floor(baseScore * Math.pow(0.85, i) + Math.random() * 1000));
+        mockData.push({
+            player_id: `mock_${i}`,
+            display_name: `${mockNames[i % mockNames.length]}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+            high_score: score,
+            timestamp: Date.now() - (i * 3600000) // Spread over hours
+        });
+        
+        // Add current player to position 5 if it's them
+        if (i === 4 && this.playerName) {
+            mockData[i].display_name = this.playerName;
+            mockData[i].player_id = this.playerId;
+            mockData[i].high_score = Math.max(this.score, score);
+        }
+    }
+    
+    return mockData;
+}
+
+/**
+ * Show empty full-screen leaderboard (for when API fails or no data)
+ */
+showEmptyFullScreenLeaderboard() {
+    console.log('🎮 Showing empty full-screen leaderboard');
+    
+    this.container.innerHTML = `
+        <div class="fullscreen-leaderboard-backdrop" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.95) 0%,
+                rgba(20, 0, 40, 0.98) 50%,
+                rgba(0, 0, 0, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <div class="leaderboard-content" style="
+                width: 90vw;
+                max-width: 600px;
+                height: 60vh;
+                background: linear-gradient(145deg, 
+                    rgba(30, 0, 60, 0.9) 0%,
+                    rgba(60, 0, 120, 0.8) 50%,
+                    rgba(30, 0, 60, 0.9) 100%);
+                border: 2px solid var(--neon-cyan);
+                border-radius: 20px;
+                box-shadow: 
+                    0 0 50px rgba(0, 255, 255, 0.3),
+                    inset 0 0 30px rgba(0, 255, 255, 0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 40px;
+            ">
+                <h1 style="
+                    margin: 0 0 30px 0;
+                    font-size: clamp(24px, 4vw, 48px);
+                    font-weight: 900;
+                    text-transform: uppercase;
+                    letter-spacing: 3px;
+                    color: var(--neon-cyan);
+                    text-shadow: 
+                        0 0 10px currentColor,
+                        0 0 20px currentColor,
+                        0 0 30px currentColor;
+                ">
+                    HALL OF FAME
+                </h1>
+                
+                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
+                
+                <p style="
+                    color: #aaa;
+                    font-size: 18px;
+                    margin-bottom: 30px;
+                    line-height: 1.5;
+                ">
+                    Leaderboard data is currently unavailable.<br>
+                    This might be due to network issues or the server being offline.
+                </p>
+                
+                <button id="closeEmptyLeaderboard" style="
+                    background: linear-gradient(135deg, #00d4ff, #0099cc);
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    border-radius: 10px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">
+                    🎮 Back to Game
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Bind close event
+    const closeBtn = this.container.querySelector('#closeEmptyLeaderboard');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            this.hide();
+            this.emit('play-again');
+        });
+    }
+    
+    // ESC key to close
+    const handleKeydown = (e) => {
+        if (e.key === 'Escape') {
+            this.hide();
+            this.emit('play-again');
+            document.removeEventListener('keydown', handleKeydown);
+        }
+    };
+    document.addEventListener('keydown', handleKeydown);
+}
+
+/**
+ * Generate leaderboard with hyperbolic font scaling
+ * Uses same formula as prize pool: larger font for higher ranks
+ */
+generateHyperbolicLeaderboard(scores) {
+    const maxFontSize = 48;  // #1 position
+    const minFontSize = 16;  // #100+ positions
+    const scalingCutoff = 100; // After position 100, use normal size
+    
+    const getFontSize = (position) => {
+        if (position > scalingCutoff) {
+            return minFontSize;
+        }
+        
+        // Use hyperbolic scaling: fontSize = maxSize / position
+        // With smooth interpolation to minimum
+        const hyperbolicSize = maxFontSize / position;
+        const t = Math.min(position / scalingCutoff, 1);
+        const smoothedSize = hyperbolicSize * (1 - t) + minFontSize * t;
+        
+        return Math.max(minFontSize, smoothedSize);
+    };
+    
+    return scores.map((entry, index) => {
+        const position = index + 1;
+        const fontSize = getFontSize(position);
+        const isCurrentPlayer = entry.player_id === this.playerId || 
+                               entry.display_name === this.playerName;
+        
+        // Special styling for top 3
+        let rankColor = 'var(--neon-cyan)';
+        let bgGradient = 'rgba(0, 255, 255, 0.05), rgba(255, 0, 255, 0.05)';
+        let borderColor = 'rgba(0, 255, 255, 0.2)';
+        
+        if (position === 1) {
+            rankColor = '#FFD700';
+            bgGradient = 'rgba(255, 215, 0, 0.3), rgba(255, 140, 0, 0.3)';
+            borderColor = '#FFD700';
+        } else if (position === 2) {
+            rankColor = '#C0C0C0';
+            bgGradient = 'rgba(192, 192, 192, 0.3), rgba(169, 169, 169, 0.3)';
+            borderColor = '#C0C0C0';
+        } else if (position === 3) {
+            rankColor = '#CD7F32';
+            bgGradient = 'rgba(205, 127, 50, 0.3), rgba(184, 115, 51, 0.3)';
+            borderColor = '#CD7F32';
+        }
+        
+        if (isCurrentPlayer) {
+            bgGradient = 'rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.2)';
+            borderColor = '#FFD700';
+        }
+        
+        return `
+            <div class="leaderboard-entry ${isCurrentPlayer ? 'current-player' : ''}" style="
+                display: flex;
+                align-items: center;
+                padding: ${Math.max(12, fontSize * 0.3)}px 20px;
+                margin: 8px 0;
+                background: linear-gradient(90deg, ${bgGradient});
+                border: 1px solid ${borderColor};
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                font-size: ${fontSize}px;
+                ${isCurrentPlayer ? 'box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);' : ''}
+            ">
+                <div style="
+                    font-weight: 900;
+                    color: ${rankColor};
+                    text-shadow: 0 0 10px currentColor;
+                    min-width: ${Math.max(80, fontSize * 2)}px;
+                    text-align: right;
+                    margin-right: 20px;
+                ">#${position}</div>
+                <div style="
+                    flex: 1;
+                    color: white;
+                    font-weight: 600;
+                ">${this.escapeHtml(entry.display_name || 'Anonymous')}</div>
+                <div style="
+                    font-weight: 900;
+                    color: var(--neon-magenta);
+                    text-shadow: 0 0 10px currentColor;
+                    min-width: ${Math.max(120, fontSize * 3)}px;
+                    text-align: right;
+                ">${entry.high_score.toLocaleString()}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+bindFullScreenLeaderboardEvents() {
+    const closeBtn = this.container.querySelector('#closeFullScreenLeaderboard');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            this.hide();
+            this.emit('play-again'); // Return to game
+        });
+    }
+    
+    // ESC key to close
+    const handleKeydown = (e) => {
+        if (e.key === 'Escape') {
+            this.hide();
+            this.emit('play-again');
+            document.removeEventListener('keydown', handleKeydown);
+        }
+    };
+    document.addEventListener('keydown', handleKeydown);
+    
+    // Close button hover effects
+    if (closeBtn) {
+        closeBtn.addEventListener('mouseover', () => {
+            closeBtn.style.background = 'var(--neon-cyan)';
+            closeBtn.style.color = 'black';
+            closeBtn.style.boxShadow = '0 0 20px var(--neon-cyan)';
+            closeBtn.style.transform = 'scale(1.1)';
+        });
+        
+        closeBtn.addEventListener('mouseout', () => {
+            closeBtn.style.background = 'none';
+            closeBtn.style.color = 'var(--neon-cyan)';
+            closeBtn.style.boxShadow = 'none';
+            closeBtn.style.transform = 'scale(1)';
+        });
+    }
+}
+
+async initializeSystems() {
         try {
             // Initialize tournament system
             if (window.neonDrop && window.neonDrop.tournament) {
@@ -1617,31 +2118,19 @@ export class SimpleGameOver {
             console.error('❌ Score submission failed:', error);
         }
         
-        // Get updated leaderboard with new score
-        try {            console.log('📊 Fetching leaderboard...');
-            const response = await fetch(`${this.apiBase}/leaderboard`);
-            const data = await response.json();
-            console.log('📊 Leaderboard response:', data);
+        // Hide the current game over UI
+        this.hide();
+          // Show the full-screen arcade leaderboard with current player highlighted
+        try {
+            console.log('🏆 Opening full-screen arcade leaderboard for returning player');
             
-            if (data.scores && data.scores.length > 0) {
-                console.log('✅ Found scores, showing leaderboard with highlight');
-                // Find player's new rank
-                const sortedScores = data.scores.sort((a, b) => b.score - a.score);
-                const playerName = this.getStoredPlayerName();
-                let playerRank = sortedScores.findIndex(entry => 
-                    entry.player_id === this.playerId || 
-                    entry.playerName === playerName ||
-                    entry.metrics?.player_name === playerName
-                ) + 1;
-                
-                console.log('🎯 Player rank found:', playerRank, 'for player:', playerName);
-                this.showBeautifulLeaderboardWithHighlight(data.scores, playerRank, this.score);
-            } else {
-                console.warn('⚠️ No scores found, showing empty leaderboard');
-                this.showEmptyLeaderboard();
-            }
+            await this.showFullScreenLeaderboard();
+            
         } catch (error) {
-            console.error('❌ Failed to load leaderboard:', error);
+            console.error('❌ Failed to open full-screen leaderboard:', error);
+            // Show the game over UI as fallback
+            this.container.style.display = 'flex';
+            this.container.style.opacity = '1';
             this.showEmptyLeaderboard();
         }
     }
@@ -1776,7 +2265,7 @@ export class SimpleGameOver {
                         background: rgba(255, 255, 255, 0.1);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         color: #aaa;
-                        padding: 8px 16px;
+                        padding:  8px 16px;
                         border-radius: 6px;
                         font-size: 14px;
                         cursor: pointer;
@@ -1812,7 +2301,7 @@ export class SimpleGameOver {
                                     color: ${index < 3 ? '#ffd700' : '#00d4ff'};
                                     min-width: 40px;
                                 ">
-                                    ${index < 3 ? ['🥇', '🥈', '🥉'][index] : `#${index + 1}`}
+                                    ${index < 3 ? this.getRankEmoji(index) : `#${index + 1}`}
                                 </div>
                                 <div class="player-info" style="flex: 1; margin: 0 15px; text-align: left;">
                                     <div style="
@@ -1821,7 +2310,7 @@ export class SimpleGameOver {
                                         font-size: 16px;
                                         margin-bottom: 2px;
                                     ">
-                                        ${entry.playerName || entry.player_name || entry.metrics?.player_name || `Player-${entry.player_id?.slice(-4) || '????'}`}
+                                        ${entry.display_name || 'Anonymous'}
                                         ${isCurrentPlayer ? ' (You)' : ''}
                                         ${isNewScore ? ' ✨' : ''}
                                     </div>
@@ -1912,13 +2401,12 @@ export class SimpleGameOver {
 
         this.bindNavigationEvents();
         this.bindLeaderboardActions();
-    }
-
-    bindNavigationEvents() {
+    }    bindNavigationEvents() {
         // Global navigation
         const navHome = this.container.querySelector('#navHome');
         const navGames = this.container.querySelector('#navGames');
         const navAcademy = this.container.querySelector('#navAcademy');
+        const navLeaderboard = this.container.querySelector('#navLeaderboard');
 
         if (navHome) {
             navHome.addEventListener('click', () => {
@@ -1935,6 +2423,21 @@ export class SimpleGameOver {
         if (navAcademy) {
             navAcademy.addEventListener('click', () => {
                 window.location.href = '/academy/';
+            });
+        }
+
+        if (navLeaderboard) {
+            navLeaderboard.addEventListener('click', async () => {
+                // If we're already showing leaderboard, change the button behavior
+                const isLeaderboardVisible = this.container.querySelector('.leaderboard-content');
+                if (isLeaderboardVisible) {
+                    // Already showing leaderboard, so "Play Again" instead
+                    this.hide();
+                    this.emit('play-again');
+                } else {
+                    // Show leaderboard
+                    await this.showLeaderboard();
+                }
             });
         }
     }
@@ -2069,5 +2572,28 @@ export class SimpleGameOver {
         }
         
         return backendCleared;
+    }
+
+    /**
+     * Update the leaderboard button text based on current view
+     */
+    updateLeaderboardButtonText() {
+        const navLeaderboard = this.container.querySelector('#navLeaderboard');
+        if (!navLeaderboard) return;
+
+        const isLeaderboardVisible = this.container.querySelector('.leaderboard-content');
+        if (isLeaderboardVisible) {
+            navLeaderboard.innerHTML = '🎮 Play Again';
+            navLeaderboard.title = 'Start a new game';
+        } else {
+            navLeaderboard.innerHTML = '🏆 Leaderboard';
+            navLeaderboard.title = 'View leaderboard';
+        }
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 }

@@ -280,17 +280,24 @@ export class InputController {
                 btn.classList.remove('active');
             });
         });
-    }
-
-    /**
+    }    /**
      * Keyboard key down handler
      */
     onKeyDown(e) {
         // Prevent key repeat
         if (this.keys.has(e.code)) return;
 
-        // Prevent default for game keys
-        if (this.isGameKey(e.code)) {
+        // SMART KEYBOARD DETECTION: Only hijack keys during actual gameplay
+        const shouldCaptureGameKeys = this.shouldCaptureGameKeys();
+        
+        // If not in gameplay mode, let the browser handle keys normally
+        if (!shouldCaptureGameKeys && this.isGameKey(e.code)) {
+            console.log('🎮 Keyboard available for typing - not in gameplay mode');
+            return; // Let the key work normally (typing, etc.)
+        }
+
+        // Prevent default for game keys only when in gameplay
+        if (this.isGameKey(e.code) && shouldCaptureGameKeys) {
             e.preventDefault();
         }
 
@@ -360,6 +367,42 @@ export class InputController {
         };
 
         return mapping[keyCode];
+    }
+
+    /**
+     * Smart detection: Only capture game keys during actual gameplay
+     */
+    shouldCaptureGameKeys() {
+        // 1. Check if any text input/textarea is focused
+        const focusedElement = document.activeElement;
+        if (focusedElement && (
+            focusedElement.tagName === 'INPUT' || 
+            focusedElement.tagName === 'TEXTAREA' ||
+            focusedElement.contentEditable === 'true'
+        )) {
+            return false; // Let typing work normally
+        }
+
+        // 2. Check if we're in the game over screen with username input
+        const gameOverVisible = document.querySelector('#simple-game-over-modal');
+        if (gameOverVisible && !gameOverVisible.classList.contains('hidden')) {
+            return false; // Let typing work in game over screen
+        }
+
+        // 3. Check if we're in any modal or overlay that might need typing
+        const modals = document.querySelectorAll('.modal, .overlay, [data-modal]');
+        for (const modal of modals) {
+            if (modal.style.display !== 'none' && !modal.classList.contains('hidden')) {
+                return false; // Let typing work in modals
+            }
+        }
+
+        // 4. Only capture keys if we're actually in gameplay phases
+        const state = this.getState();
+        const gameplayPhases = ['PLAYING', 'LOCKING', 'PAUSED', 'MENU', 'GAME_OVER'];
+        
+        // Allow game controls during these phases
+        return gameplayPhases.includes(state.phase);
     }
 
     /**

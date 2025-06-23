@@ -102,16 +102,8 @@ class NeonDrop {
         game.width = dims.canvasWidth;
         game.height = dims.canvasHeight;
         bg.width = innerWidth;
-        bg.height = innerHeight;
-          this.renderer = new Renderer(game, bg, this.config, dims);
+        bg.height = innerHeight;        this.renderer = new Renderer(game, bg, this.config, dims);
         this.renderer.viewportManager = this.viewport;
-        
-        // Check if renderer has zones for panel positioning
-        console.log('🔍 Renderer dimensions after creation:', {
-            hasZones: !!this.renderer.dimensions?.zones,
-            zones: this.renderer.dimensions?.zones,
-            dims: this.renderer.dimensions
-        });
     }
 
     createSystems() {
@@ -183,15 +175,11 @@ class NeonDrop {
 
     /**
      * Clean up any old/legacy UI elements that might still exist
-     */
-    cleanupOldUI() {
-        console.log('🧹 Cleaning up old UI elements...');
-        
+     */    cleanupOldUI() {
         // Remove any old tournament panels
         const oldTournamentPanel = document.getElementById('tournament-panel');
         if (oldTournamentPanel) {
             oldTournamentPanel.remove();
-            console.log('🗑️ Removed old tournament panel');
         }
         
         // Remove any old overlay elements
@@ -205,17 +193,12 @@ class NeonDrop {
         
         overlaySelectors.forEach(selector => {
             const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                el.remove();
-                console.log(`🗑️ Removed legacy element: ${selector}`);
-            });
+            elements.forEach(el => el.remove());
         });
         
         // Remove any old style elements that might conflict
         const oldStyles = document.querySelectorAll('style[data-legacy]');
         oldStyles.forEach(style => style.remove());
-        
-        console.log('✅ Old UI cleanup complete');
     }
 
     handleMenuChoice(mode) {
@@ -288,11 +271,10 @@ class NeonDrop {
         }, delay);
     }
     */// FIXED: Clean event binding
-    bindEvents() {
-        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
+    bindEvents() {        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
         document.addEventListener('gameOver', async (e) => {
             const { score, level, lines, time } = e.detail;
-            console.log('🎮 Game over event received - showing SimpleGameOver');
+            console.log('🎮 Game over event received');
             
             if (this.gameOverHandler) {
                 await this.gameOverHandler.show(score, { level, lines, time });
@@ -570,17 +552,6 @@ async function startGame() {
     try {
         const game = new NeonDrop();
         await game.initialize();
-        // Global reference is set in setupGlobals()
-        
-        // Expose clear function for fresh testing
-        window.clearPlayerData = () => {
-            if (window.neonDrop?.gameOverHandler?.clearAllPlayerData) {
-                window.neonDrop.gameOverHandler.clearAllPlayerData();
-                location.reload(); // Refresh page for clean state
-            }
-        };
-        
-        console.log('🧹 Type clearPlayerData() in console to reset for fresh testing');
     } catch (error) {
         console.error('Failed to start NeonDrop:', error);
     }
