@@ -377,8 +377,7 @@ async function syncTournamentScores() {
     const pendingScores = await getPendingScores();
     
     for (const score of pendingScores) {
-      try {
-        const response = await fetch('/api/scores', {
+      try {        const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/scores', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(score)

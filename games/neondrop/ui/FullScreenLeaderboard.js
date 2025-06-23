@@ -340,7 +340,7 @@ export class FullScreenLeaderboard {
 
   async loadLeaderboard() {
     try {
-      const response = await fetch(`${API_CONFIG.WORKER_URL}/leaderboard?limit=1000`);
+      const response = await fetch(`${API_CONFIG.WORKER_URL}/api/leaderboard?limit=1000`);
       const data = await response.json();
       
       if (data.success) {

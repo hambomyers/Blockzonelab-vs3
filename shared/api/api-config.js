@@ -6,13 +6,12 @@
 export const API_CONFIG = {
   // Main Cloudflare Worker API
   WORKER_URL: 'https://blockzone-api.hambomyers.workers.dev',
-  
-  // Endpoints
+    // Endpoints
   ENDPOINTS: {
-    LEADERBOARD: '/leaderboard',
-    SCORES: '/scores', 
-    PLAYERS: '/players',
-    TOURNAMENTS: '/tournaments'
+    LEADERBOARD: '/api/leaderboard',
+    SCORES: '/api/scores', 
+    PLAYERS: '/api/players',
+    TOURNAMENTS: '/api/tournaments'
   },
   
   // Request configuration

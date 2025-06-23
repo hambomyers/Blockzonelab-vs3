@@ -37,7 +37,7 @@ export class ApplePayIntegration {
       
       session.onvalidatemerchant = async (event) => {
         try {
-          const response = await fetch('/api/payments/apple_pay/validate', {
+          const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/payments/apple_pay/validate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -55,7 +55,7 @@ export class ApplePayIntegration {
       
       session.onpaymentauthorized = async (event) => {
         try {
-          const response = await fetch('/api/payments/apple_pay/process', {
+          const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/payments/apple_pay/process', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

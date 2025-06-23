@@ -11,12 +11,12 @@ export class SimpleGameOver {
     constructor() {
         this.container = null;
         this.isVisible = false;
-        this.score = 0;
-        this.playerName = null;
+        this.score = 0;        this.playerName = null;
         this.apiBase = 'https://blockzone-api.hambomyers.workers.dev';
+            
         this.playerId = this.getOrCreatePlayerId();
         this.leaderboardData = null;
-        this.playerRank = null;        // Initialize the real prize calculator with new 50%/hyperbolic/$1 system
+        this.playerRank = null;// Initialize the real prize calculator with new 50%/hyperbolic/$1 system
         this.prizeCalculator = new PrizeCalculator();
         this.prizeCalculator.winnerShare = 0.50;        // 50% to 1st place
         this.prizeCalculator.minimumPrize = 1.00;       // $1 minimum
@@ -390,10 +390,10 @@ export class SimpleGameOver {
         setTimeout(() => {
             nameInput.focus();
             nameInput.select();
-        }, 500);// Real-time validation and name preview
+        }, 500);        // Real-time validation and name preview
         nameInput.addEventListener('input', (e) => {
             const name = e.target.value.trim();
-            const isValid = name.length >= 2; // Reduced minimum to 2 chars
+            const isValid = name.length >= 2; // 2 chars minimum
             
             // Update live preview
             const namePreview = this.container.querySelector('#namePreview');
@@ -410,7 +410,7 @@ export class SimpleGameOver {
                 feedback.style.color = '#00ff88';
             } else if (name.length > 0) {
                 feedback.style.opacity = '1';
-                feedback.textContent = 'Need at least 3 characters';
+                feedback.textContent = 'Need at least 2 characters';
                 feedback.style.color = '#ff6b35';
             } else {
                 feedback.style.opacity = '0';
@@ -446,7 +446,7 @@ export class SimpleGameOver {
         try {
             console.log('📤 Submitting score to Cloudflare API:', this.score, 'for player:', displayName);
             
-            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/scores', {
+            const response = await fetch('https://blockzone-api.hambomyers.workers.dev/api/scores', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -646,9 +646,7 @@ export class SimpleGameOver {
                 this.showEmptyLeaderboard();
             }
         });
-    }
-
-    async submitScore(score, playerName) {
+    }    async submitScore(score, playerName) {
         try {
             const response = await fetch(`${this.apiBase}/scores`, {
                 method: 'POST',
@@ -679,11 +677,10 @@ export class SimpleGameOver {
             console.error('❌ Failed to submit score:', error);
             return null;
         }
-    }
-
-    async fetchLeaderboard(period = 'daily', limit = 100) {
+    }async fetchLeaderboard(period = 'daily', limit = 100) {
         try {
-            const response = await fetch(`${this.apiBase}/leaderboard?period=${period}&limit=${limit}&game=neon_drop`);
+            // Try simplified endpoint first
+            const response = await fetch(`${this.apiBase}/leaderboard`);
             
             if (!response.ok) {
                 throw new Error(`Leaderboard fetch failed: ${response.status}`);
@@ -695,9 +692,10 @@ export class SimpleGameOver {
             return data;
         } catch (error) {
             console.error('❌ Failed to fetch leaderboard:', error);
-            return null;
+            // Return empty but valid structure
+            return { scores: [], data: [] };
         }
-    }    async getPlayerRank() {
+    }async getPlayerRank() {
         try {
             // Get real leaderboard data from API
             const response = await fetch(`${this.apiBase}/leaderboard`);
@@ -1187,10 +1185,9 @@ export class SimpleGameOver {
 async showFullScreenLeaderboard() {
     console.log('🎯 Loading full-screen leaderboard with hyperbolic scaling');
       let leaderboardData = [];
-    
-    try {
-        // Fetch leaderboard data
-        const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100&game=neon_drop`);
+      try {
+        // Try simplified endpoint first
+        const response = await fetch(`${this.apiBase}/leaderboard`);
         
         if (!response.ok) {
             throw new Error(`API request failed with status ${response.status}`);
@@ -1200,11 +1197,13 @@ async showFullScreenLeaderboard() {
         
         if (data.scores && data.scores.length > 0) {
             leaderboardData = data.scores;
+        } else if (data.data && data.data.length > 0) {
+            // Handle alternative response format
+            leaderboardData = data.data;
         }
-        // If no scores from API, leaderboardData stays empty array - that's fine
         
     } catch (error) {
-        console.log('🎮 API unavailable, showing leaderboard with current player only');
+        console.log('🎮 API unavailable, showing leaderboard with current player only:', error.message);
         leaderboardData = []; // Start with empty array
     }
     
@@ -1636,16 +1635,19 @@ async initializeSystems() {
             // Get real tournament data from API or fallback
             const entryFee = 2.50;
             let participants = 10; // Default minimum
-            
-            // Try to get real participant count from API
+              // Try to get real participant count from API
             try {
-                const response = await fetch(`${this.apiBase}/leaderboard?period=daily&limit=100`);
-                const data = await response.json();
-                if (data.scores && data.scores.length > 0) {
-                    participants = data.scores.length;
+                const response = await fetch(`${this.apiBase}/leaderboard`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.scores && data.scores.length > 0) {
+                        participants = data.scores.length;
+                    } else if (data.data && data.data.length > 0) {
+                        participants = data.data.length;
+                    }
                 }
             } catch (error) {
-                console.warn('Could not fetch participant count, using default');
+                console.warn('Could not fetch participant count, using default:', error.message);
             }
             
             // Calculate REAL prizes using the new 50%/hyperbolic/$1 system
