@@ -1,6 +1,14 @@
 /**
  * BLOCKZONE LAB - Shared Web3 Integration
- * Core blockchain infrastructure for all games
+ *
+ * This is the SINGLE entry point for all wallet and blockchain logic across the platform.
+ *
+ * - Use window.BlockZoneWeb3 for all wallet connection, blockchain, and onboarding flows.
+ * - Internally, this module delegates to BlockchainBridge (core-systems/core/blockchain.js)
+ *   and WalletOnboarding (core-systems/core/wallet-onboarding.js) for advanced features.
+ * - All games and platform modules should use this interface for consistency and future-proofing.
+ *
+ * For AAA maintainability: Do NOT duplicate wallet/web3 logic elsewhere. Extend this module if needed.
  */
 export class BlockZoneWeb3 {
     constructor() {

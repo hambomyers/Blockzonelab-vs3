@@ -9,6 +9,27 @@
 
 import { CONSTANTS } from '../config.js';
 
+// Helper: Get CSS variable value in JS
+function getCSSVar(name, fallback) {
+    if (typeof window !== 'undefined' && window.getComputedStyle) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+    }
+    return fallback;
+}
+
+// Neon palette (from CSS variables)
+const NEON_PALETTE = {
+    blue: () => getCSSVar('--neon-blue', '#00f5ff'),
+    cyan: () => getCSSVar('--neon-cyan', '#00d4ff'),
+    pink: () => getCSSVar('--hot-pink', '#ff1493'),
+    green: () => getCSSVar('--laser-green', '#39ff14'),
+    purple: () => getCSSVar('--electric-purple', '#8a2be2'),
+    gold: () => getCSSVar('--gold-accent', '#ffd700'),
+    orange: () => getCSSVar('--neon-orange', '#ffa500'),
+    white: () => '#fff',
+    silver: () => '#C0C0C0',
+};
+
 export class ParticleSystem {
     constructor() {
         this.particles = [];
@@ -150,6 +171,22 @@ export class ParticleSystem {
         const sizeVariation = 0.8 + Math.random() * (0.4 * (1 + intensity));
         const size = (2 + intensity * 6) * sizeVariation;
 
+        // Visual properties
+        let particleColor = color;
+        // Use neon palette for all particles
+        if (typeof color === 'string' && color[0] === '#') {
+            // Map block color to neon palette if possible
+            if (color.toLowerCase() === '#ffd700') particleColor = NEON_PALETTE.gold();
+            else if (color.toLowerCase() === '#8a2be2') particleColor = NEON_PALETTE.purple();
+            else if (color.toLowerCase() === '#00f5ff') particleColor = NEON_PALETTE.blue();
+            else if (color.toLowerCase() === '#ff1493') particleColor = NEON_PALETTE.pink();
+            else if (color.toLowerCase() === '#39ff14') particleColor = NEON_PALETTE.green();
+            else if (color.toLowerCase() === '#ffa500') particleColor = NEON_PALETTE.orange();
+        }
+        // Slightly increase brightness for GPU pop
+        // (Use a CSS filter or just a lighter color for now)
+        // For now, just use the palette color directly
+
         // Create particle
         const particle = {
             // Position
@@ -163,7 +200,7 @@ export class ParticleSystem {
             vy: -Math.sin(angle) * velocity * velocityMultiplier, // Negative for upward
 
             // Visual properties
-            color: color,
+            color: particleColor,
             size: size,
             type: Math.random() > (1 - intensity * 0.5) ? 'glow' : 'spark',
 
@@ -181,12 +218,21 @@ export class ParticleSystem {
 
         // Color variations for multi-line clears
         if (lineCount >= 2 && Math.random() > 0.7) {
-            const hue = Math.random() * 360;
-            particle.color = `hsl(${hue}, 90%, 60%)`;
+            // Use neon palette for rainbow
+            const neonColors = [
+                NEON_PALETTE.blue(),
+                NEON_PALETTE.cyan(),
+                NEON_PALETTE.pink(),
+                NEON_PALETTE.green(),
+                NEON_PALETTE.purple(),
+                NEON_PALETTE.gold(),
+                NEON_PALETTE.orange(),
+            ];
+            particle.color = neonColors[Math.floor(Math.random() * neonColors.length)];
         }
 
         if (lineCount >= 3 && Math.random() > 0.6) {
-            particle.color = Math.random() > 0.5 ? '#FFD700' : '#C0C0C0';
+            particle.color = Math.random() > 0.5 ? NEON_PALETTE.gold() : NEON_PALETTE.silver();
         }
 
         return particle;

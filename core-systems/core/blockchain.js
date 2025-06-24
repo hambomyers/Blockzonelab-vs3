@@ -1,4 +1,10 @@
 /**
+ * INTERNAL MODULE: BlockchainBridge
+ * Used by BlockZoneWeb3 (shared/web3/blockzone-web3.js) as the core blockchain/game contract bridge.
+ * Do NOT use directly in games or platform modules. Use window.BlockZoneWeb3 for all blockchain interactions.
+ */
+
+/**
  * blockchain.js - Sonic Labs blockchain integration
  *
  * Handles all Web3 interactions:

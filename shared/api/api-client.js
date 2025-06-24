@@ -1,9 +1,14 @@
 /* Centralized API Client for BlockZone Lab */
 
-export async function fetchData(endpoint, options = {}) {
-  const response = await fetch(endpoint, options);
-  if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`);
-  }
-  return response.json();
-}
+import { UnifiedAPIClient } from '../platform/api/UnifiedAPIClient.js';
+import API_CONFIG from './api-config.js';
+
+// Pre-configured API client instance
+export const apiClient = new UnifiedAPIClient(API_CONFIG.WORKER_URL);
+
+// Usage:
+// import { apiClient } from './api-client.js';
+// await apiClient.get('/api/leaderboard');
+// await apiClient.post('/api/scores', { ... });
+
+export { UnifiedAPIClient };

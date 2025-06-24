@@ -1,10 +1,28 @@
 /* 01-variables.css - Colors, fonts, spacing ONLY */
 :root {
-  /* 80s Arcade Colors */
-  --neon-blue: #00f5ff;
-  --hot-pink: #ff1493;
-  --laser-green: #39ff14;
-  --electric-purple: #8a2be2;
+  /* ===================================================================
+     BLOCKZONE LAB - NEON DROP COLOR PALETTE (SOURCE OF TRUTH)
+     =================================================================== */
+  /* Neon Drop Core Palette */
+  --neon-blue: #00f5ff;    /* Primary neon blue - main accent, buttons, glows */
+  --neon-cyan: #00d4ff;    /* Secondary neon cyan - gradients, edge glows */
+  --hot-pink: #ff1493;     /* Neon magenta/pink - highlights, particles */
+  --laser-green: #39ff14;  /* Neon green - success, streaks, particles */
+  --electric-purple: #8a2be2; /* Main purple - edge glows, backgrounds */
+  --gold-accent: #ffd700;  /* Gold - leaderboards, rewards, highlights */
+  --neon-orange: #ffa500;  /* Orange - multi-line clears, gradients */
+  --background-dark: #0a0a0f; /* Main game background */
+  --background-card: #1a1a2e; /* Card/overlay backgrounds */
+  --text-primary: #ffffff; /* Main text */
+  --text-secondary: #b8b8cc; /* Secondary text */
+  /* Usage notes:
+     - Use --neon-blue and --neon-cyan for primary CTAs, glows, and highlights
+     - Use --electric-purple for edge glows, backgrounds, and arcade accents
+     - Use --hot-pink, --laser-green, --gold-accent, --neon-orange for particles, streaks, and special effects
+     - Use --background-dark and --background-card for backgrounds and overlays
+     - Use --text-primary and --text-secondary for all text
+     - In JS/canvas, reference these colors via getComputedStyle(document.documentElement).getPropertyValue('--neon-blue') etc.
+  */
   
   /* Background Colors */
   --dark-bg: #0a0a0f;
@@ -12,8 +30,6 @@
   --border-color: #333344;
   
   /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8cc;
   --text-accent: var(--neon-blue);
   
   /* Spacing */

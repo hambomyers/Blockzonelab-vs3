@@ -1,3 +1,7 @@
+// INTERNAL MODULE: WalletOnboarding
+// Used by BlockZoneWeb3 (shared/web3/blockzone-web3.js) for user-friendly wallet onboarding flows.
+// Do NOT use directly in games or platform modules. Use window.BlockZoneWeb3 for all onboarding.
+
 // WalletOnboarding.js - Friendly wallet creation flow
 export class WalletOnboarding {
     constructor(config, blockchain) {
