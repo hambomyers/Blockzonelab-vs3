@@ -1,0 +1,15 @@
+name = "blockzone-api"
+main = "leaderboard.js"
+compatibility_date = "2025-06-23"
+
+[[kv_namespaces]]
+binding = "SCORES"
+id = "8e4d3de3c359495186eabf9032d08d8f"
+
+[[kv_namespaces]]
+binding = "PLAYERS"
+id = "afdca5fda8b343b99541432574cfa5c3"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "9472d4328eda428090494844a4cdba9b"

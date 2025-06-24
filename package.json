@@ -1,11 +1,24 @@
 {
   "name": "blockzone-lab",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "BlockZone Lab Gaming Platform",
+  "description": "BlockZone Lab Gaming Platform - Version 2 with Integrated Backend API",
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
-    "dev": "python -m http.server 8000"
-  }
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "deploy-worker": "cd worker && wrangler deploy",
+    "test-api": "powershell -Command \"Invoke-WebRequest -Uri 'https://blockzone-api.hambomyers.workers.dev/api/leaderboard' -Method GET\""
+  },
+  "keywords": [
+    "blockchain",
+    "gaming",
+    "web3",
+    "neon-drop",
+    "leaderboard",
+    "cloudflare-workers"
+  ],
+  "author": "BlockZone Lab",
+  "license": "MIT"
 }
