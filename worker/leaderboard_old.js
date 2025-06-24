@@ -1398,3 +1398,78 @@ async function addToCurrentPrizePool(env, amount, game = 'neon_drop') {
 }
 
 // --- Enhanced leaderboard response with cycle info and prize previews ---
+async function handleApiLeaderboard(request, env, headers) {
+  try {
+    const url = new URL(request.url);
+    const period = url.searchParams.get('period') || 'current-cycle';
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '100'), 100);
+    const game = url.searchParams.get('game') || 'neon_drop';
+    
+    let leaderboardKey, data;
+    
+    if (period === 'all-time') {
+      // All-time leaderboard (never resets)
+      leaderboardKey = `leaderboard:${game}:all`;
+      data = await env.SCORES.get(leaderboardKey, 'json') || { scores: [] };
+    } else {
+      // Current cycle leaderboard
+      leaderboardKey = getCurrentCycleKey(game);
+      data = await env.SCORES.get(leaderboardKey, 'json') || { scores: [] };
+    }
+    
+    // Get current cycle info
+    const now = new Date();
+    const hour = now.getHours();
+    const cycle = hour < 12 ? 'am' : 'pm';
+    const cycleEnd = new Date(now);
+    cycleEnd.setHours(hour < 12 ? 12 : 24, 0, 0, 0);
+    
+    // Get current prize pool
+    const currentPool = await getCurrentPrizePoolAmount(env, game);
+    
+    // Get Bounty Boss info (if Saturday)
+    const isSaturday = now.getDay() === 6;
+    let bountyBossInfo = null;
+    if (isSaturday) {
+      const bountyScore = parseFloat(await env.SCORES.get('bountyboss:score')) || 0;
+      const jackpot = parseFloat(await env.SCORES.get('jackpot:saturday')) || 0;
+      bountyBossInfo = { bounty_score: bountyScore, current_jackpot: jackpot };
+    }
+    
+    // Normalize entries
+    const scores = (data.scores || [])
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((entry, index) => ({
+        player_id: entry.player_id,
+        display_name: entry.display_name || entry.playerName || 'Anonymous',
+        score: entry.score || 0,
+        timestamp: entry.timestamp || Date.now(),
+        rank: index + 1
+      }));
+    
+    return new Response(JSON.stringify({
+      period: period === 'all-time' ? 'all-time' : 'current-cycle',
+      cycle: period === 'all-time' ? null : cycle,
+      cycle_end: period === 'all-time' ? null : cycleEnd.toISOString(),
+      game,
+      scores,
+      total_players: scores.length,
+      current_prize_pool: currentPool,
+      entry_fee: 2.50,
+      is_saturday: isSaturday,
+      bounty_boss: bountyBossInfo,
+      updated_at: new Date().toISOString()
+    }), { headers });
+    
+  } catch (e) {
+    return new Response(JSON.stringify({ 
+      period: 'current-cycle', 
+      game: 'neon_drop', 
+      scores: [], 
+      total_players: 0, 
+      updated_at: new Date().toISOString(), 
+      error: e.message 
+    }), { status: 200, headers });
+  }
+}
