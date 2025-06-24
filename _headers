@@ -3,19 +3,23 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# HTML files - no cache for immediate updates
+# HTML files - no cache for immediate updates (v2.0)
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
   
-# CSS files - short cache with must-revalidate
+# CSS files - short cache with must-revalidate (v2.0)
 /*.css
   Content-Type: text/css
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
+  Pragma: no-cache
 
-# JS files - short cache with must-revalidate  
+# JS files - short cache with must-revalidate (v2.0)
 /*.js
   Content-Type: application/javascript
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
+  Pragma: no-cache
 
 /games/neondrop/*
   Cache-Control: public, max-age=31536000

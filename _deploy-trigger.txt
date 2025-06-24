@@ -1,0 +1,7 @@
+DEPLOY_VERSION=v2.0
+DEPLOY_TIMESTAMP=2025-06-24T14:30:00Z
+CACHE_BUST=true
+FORCE_REFRESH=enabled
+
+# This file triggers a fresh deployment and forces cache invalidation
+# Change this timestamp to force a complete refresh of all cached assets
