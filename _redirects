@@ -1,2 +1,16 @@
-# Main redirects
-/learn/* /academy/:splat 200
+# BlockZone Lab Platform v2.0.0 - Cloudflare Pages Redirects
+
+# API redirects to Cloudflare Workers
+/api/* https://blockzone-api.hambomyers.workers.dev/api/:splat 200
+
+# SPA routing - redirect all non-file requests to index.html
+/*    /index.html   200
+
+# Challenge links
+/challenge/* /index.html 200
+
+# Game routes
+/games/* /games/index.html 200
+
+# Academy routes  
+/academy/* /academy/index.html 200
