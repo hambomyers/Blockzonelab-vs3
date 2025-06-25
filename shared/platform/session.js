@@ -211,6 +211,169 @@ class SessionManager {
         if (migrated) {
             console.log('✅ Old data migration completed');
         }
+        
+        // NEW: Check for "Hambo" identity specifically
+        await this.restoreHamboIdentity();
+    }
+
+    // NEW: Restore Hambo identity if it exists
+    async restoreHamboIdentity() {
+        // Check if we have any reference to "Hambo" in localStorage
+        const hamboKeys = [
+            'neonDropPlayerName',
+            'neonDropUsername', 
+            'playerName',
+            'username',
+            'displayName'
+        ];
+        
+        for (const key of hamboKeys) {
+            const value = localStorage.getItem(key);
+            if (value && value.toLowerCase().includes('hambo')) {
+                console.log(`🎯 Found Hambo identity: ${key} = ${value}`);
+                
+                try {
+                    await this.upgradeSession({
+                        upgrade_type: 'social',
+                        display_name: value,
+                        email: null,
+                        wallet_address: null,
+                        signature: null
+                    });
+                    console.log('✅ Hambo identity restored!');
+                    return;
+                } catch (error) {
+                    console.warn('⚠️ Could not restore Hambo identity:', error);
+                }
+            }
+        }
+        
+        // If no Hambo found, check if current session is anonymous and prompt for name
+        if (this.getDisplayName() === 'Anonymous') {
+            console.log('🤔 No Hambo identity found, current user is anonymous');
+            this.showIdentityPrompt();
+        }
+    }
+
+    // NEW: Show identity prompt for anonymous users
+    showIdentityPrompt() {
+        // Don't show if already shown recently
+        if (localStorage.getItem('identity_prompt_shown')) {
+            return;
+        }
+        
+        // Create simple identity prompt
+        const prompt = document.createElement('div');
+        prompt.id = 'identity-prompt';
+        prompt.innerHTML = `
+            <div class="identity-prompt-content">
+                <h3>Welcome to BlockZone Lab!</h3>
+                <p>What should we call you?</p>
+                <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="20">
+                <div class="identity-prompt-buttons">
+                    <button id="save-name-btn">Save Name</button>
+                    <button id="skip-name-btn">Skip for now</button>
+                </div>
+            </div>
+        `;
+        
+        prompt.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: 'Inter', sans-serif;
+        `;
+        
+        const content = prompt.querySelector('.identity-prompt-content');
+        content.style.cssText = `
+            background: #1a1a1a;
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            width: 90%;
+        `;
+        
+        const input = prompt.querySelector('#player-name-input');
+        input.style.cssText = `
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #2a2a2a;
+            color: white;
+            font-size: 16px;
+        `;
+        
+        const buttons = prompt.querySelector('.identity-prompt-buttons');
+        buttons.style.cssText = `
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        `;
+        
+        const saveBtn = prompt.querySelector('#save-name-btn');
+        const skipBtn = prompt.querySelector('#skip-name-btn');
+        
+        [saveBtn, skipBtn].forEach(btn => {
+            btn.style.cssText = `
+                padding: 10px 20px;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+        });
+        
+        saveBtn.style.background = '#00d4ff';
+        saveBtn.style.color = '#000';
+        skipBtn.style.background = '#333';
+        skipBtn.style.color = '#fff';
+        
+        // Event listeners
+        saveBtn.addEventListener('click', async () => {
+            const name = input.value.trim();
+            if (name) {
+                try {
+                    await this.upgradeSession({
+                        upgrade_type: 'social',
+                        display_name: name,
+                        email: null,
+                        wallet_address: null,
+                        signature: null
+                    });
+                    console.log('✅ Identity set:', name);
+                    document.body.removeChild(prompt);
+                    localStorage.setItem('identity_prompt_shown', 'true');
+                } catch (error) {
+                    console.error('❌ Failed to set identity:', error);
+                }
+            }
+        });
+        
+        skipBtn.addEventListener('click', () => {
+            document.body.removeChild(prompt);
+            localStorage.setItem('identity_prompt_shown', 'true');
+        });
+        
+        // Auto-focus input
+        input.focus();
+        
+        // Add to page
+        document.body.appendChild(prompt);
     }
 
     // Handle referral tracking
