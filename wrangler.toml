@@ -2,9 +2,7 @@ name = "blockzone-lab-platform"
 compatibility_date = "2025-01-25"
 
 # Pages configuration for automatic deployment
-[build]
-command = "npm run build"
-output_dir = "."
+pages_build_output_dir = "."
 
 # Environment variables
 [vars]
@@ -30,14 +28,4 @@ id = "9472d4328eda428090494844a4cdba9b"
 
 [[kv_namespaces]]
 binding = "REWARDS"
-id = "66d8e0a1ead24a9c916bd22551cf1515"
-
-# Routes for the platform
-[[routes]]
-pattern = "blockzonelab.com/*"
-zone_name = "blockzonelab.com"
-
-# API routes
-[[routes]]
-pattern = "api.blockzonelab.com/*"
-zone_name = "api.blockzonelab.com" 
+id = "66d8e0a1ead24a9c916bd22551cf1515" 

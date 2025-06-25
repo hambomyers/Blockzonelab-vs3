@@ -65,6 +65,75 @@
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    
+    <!-- NEW PLATFORM v2.0.0 ANIMATIONS -->
+    <style>
+        @keyframes neonPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+        
+        @keyframes championshipGlow {
+            0% { 
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+                transform: scale(1.02);
+            }
+        }
+        
+        @keyframes challengeGlow {
+            0% { 
+                box-shadow: 0 0 20px rgba(255, 0, 170, 0.3);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 0 40px rgba(255, 0, 170, 0.6);
+                transform: scale(1.02);
+            }
+        }
+        
+        @keyframes buttonPulse {
+            0% { 
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+                transform: translateY(0);
+            }
+            100% { 
+                box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+                transform: translateY(-2px);
+            }
+        }
+        
+        /* Enhanced hover effects */
+        #championshipBtn:hover {
+            animation: championshipGlow 1s ease-in-out infinite alternate !important;
+            transform: scale(1.05) !important;
+        }
+        
+        #challengeFriendBtn:hover {
+            animation: challengeGlow 1s ease-in-out infinite alternate !important;
+            transform: scale(1.05) !important;
+        }
+        
+        /* NEW FEATURES announcement animation */
+        @keyframes announcementPulse {
+            0% { 
+                border-color: rgba(0, 212, 255, 0.3);
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            }
+            100% { 
+                border-color: rgba(255, 0, 170, 0.5);
+                box-shadow: 0 0 30px rgba(255, 0, 170, 0.3);
+            }
+        }
+        
+        /* Apply announcement animation */
+        .hero > div:first-of-type {
+            animation: announcementPulse 3s ease-in-out infinite alternate;
+        }
+    </style>
 </head>
 <body class="portal-container">
     <!-- Professional Starfield Background -->
@@ -93,40 +162,128 @@
 
     <!-- Professional Main Section -->
     <main class="hero">
-        <div class="hero-badge">🏆 PROFESSIONAL GAMING PLATFORM</div>
+        <div class="hero-badge">🏆 PROFESSIONAL GAMING PLATFORM v2.0.0</div>
         <h1 class="hero-title">Win Real USDC Playing Games</h1>
         <p class="hero-subtitle">
             Professional tournaments with 90/10 fee structure on Sonic Labs blockchain
         </p>
-          <!-- Professional Centered Cards - Two Primary Buttons -->
+        
+        <!-- NEW PLATFORM FEATURES ANNOUNCEMENT -->
+        <div style="
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 170, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: neonPulse 2s ease-in-out infinite alternate;
+        ">
+            <h2 style="color: #00d4ff; font-size: 24px; margin-bottom: 10px; font-weight: 700;">
+                🚀 NEW PLATFORM FEATURES AVAILABLE!
+            </h2>
+            <p style="color: #fff; font-size: 16px; margin: 0;">
+                Championship Cycles & Friend Challenges - Click the buttons below to explore!
+            </p>
+        </div>
+        
+        <!-- Professional Centered Cards - Two Primary Buttons -->
         <div class="grid grid-2">
-            <button id="championshipBtn" class="card card--hover card--glow" style="cursor: pointer; border: none; background: none; padding: 0;">
+            <button id="championshipBtn" class="card card--hover card--glow" style="
+                cursor: pointer; 
+                border: none; 
+                background: none; 
+                padding: 0;
+                position: relative;
+                overflow: hidden;
+                animation: championshipGlow 3s ease-in-out infinite alternate;
+            ">
+                <!-- Animated background effect -->
+                <div style="
+                    position: absolute;
+                    top: -2px;
+                    left: -2px;
+                    right: -2px;
+                    bottom: -2px;
+                    background: linear-gradient(45deg, #00d4ff, #0099cc, #00d4ff);
+                    border-radius: 20px;
+                    z-index: -1;
+                    opacity: 0.3;
+                    animation: neonPulse 2s ease-in-out infinite alternate;
+                "></div>
+                
                 <div class="card__header">
-                    <div class="card__title">🏆 CHAMPIONSHIP</div>
-                    <div class="card__subtitle">Pay Quarters Per Attempt</div>
+                    <div class="card__title" style="color: #00d4ff; text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);">
+                        🏆 CHAMPIONSHIP
+                    </div>
+                    <div class="card__subtitle" style="color: #00d4ff;">
+                        Pay Quarters Per Attempt
+                    </div>
                 </div>
                 
                 <div class="card__content">
-                    <p>Two 12-hour championships daily. $2.50 entry, $200+ daily prizes with 90% to winners.</p>
+                    <p style="color: #fff; font-weight: 500;">
+                        Two 12-hour championships daily. $2.50 entry, $200+ daily prizes with 90% to winners.
+                    </p>
                 </div>
                 
                 <div class="card__footer">
-                    <span class="btn btn--primary">Enter Championship</span>
+                    <span class="btn btn--primary" style="
+                        background: linear-gradient(135deg, #00d4ff, #0099cc);
+                        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+                        animation: buttonPulse 2s ease-in-out infinite alternate;
+                    ">
+                        🎮 Enter Championship
+                    </span>
                 </div>
             </button>
 
-            <button id="challengeFriendBtn" class="card card--hover card--neon" style="cursor: pointer; border: none; background: none; padding: 0;">
+            <button id="challengeFriendBtn" class="card card--hover card--neon" style="
+                cursor: pointer; 
+                border: none; 
+                background: none; 
+                padding: 0;
+                position: relative;
+                overflow: hidden;
+                animation: challengeGlow 3s ease-in-out infinite alternate;
+            ">
+                <!-- Animated background effect -->
+                <div style="
+                    position: absolute;
+                    top: -2px;
+                    left: -2px;
+                    right: -2px;
+                    bottom: -2px;
+                    background: linear-gradient(45deg, #ff00aa, #cc0088, #ff00aa);
+                    border-radius: 20px;
+                    z-index: -1;
+                    opacity: 0.3;
+                    animation: neonPulse 2s ease-in-out infinite alternate;
+                "></div>
+                
                 <div class="card__header">
-                    <div class="card__title">⚡ CHALLENGE FRIEND</div>
-                    <div class="card__subtitle">Create Viral Challenge Links</div>
+                    <div class="card__title" style="color: #ff00aa; text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);">
+                        ⚡ CHALLENGE FRIEND
+                    </div>
+                    <div class="card__subtitle" style="color: #ff00aa;">
+                        Create Viral Challenge Links
+                    </div>
                 </div>
                 
                 <div class="card__content">
-                    <p>Battle specific friends for quarters. Share challenge links and compete head-to-head.</p>
+                    <p style="color: #fff; font-weight: 500;">
+                        Battle specific friends for quarters. Share challenge links and compete head-to-head.
+                    </p>
                 </div>
                 
                 <div class="card__footer">
-                    <span class="btn btn--outline">Challenge Friend</span>
+                    <span class="btn btn--outline" style="
+                        background: linear-gradient(135deg, #ff00aa, #cc0088);
+                        color: white;
+                        box-shadow: 0 0 20px rgba(255, 0, 170, 0.3);
+                        animation: buttonPulse 2s ease-in-out infinite alternate;
+                    ">
+                        ⚡ Challenge Friend
+                    </span>
                 </div>
             </button>
         </div>
