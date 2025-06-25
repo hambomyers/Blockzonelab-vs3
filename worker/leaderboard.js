@@ -1332,83 +1332,97 @@ async function handleBountyBossCycle(env, leaderboard, cycleKey, headers) {
 
 // --- Modular Handler: /api/challenges ---
 async function handleApiChallenges(request, env, headers) {
+  const method = request.method;
   const url = new URL(request.url);
-  const path = url.pathname;
   
-  try {
-    if (path === '/api/challenges/create' && request.method === 'POST') {
-      // Create a new friend challenge
-      const data = await request.json();
-      const { challenger_id, entry_fee = 5.00, game = 'neon_drop', expires_in = 86400000 } = data; // 24 hours default
+  if (method === 'POST' && url.pathname === '/api/challenges/create') {
+    const data = await request.json();
+    const { creator_id, creator_name, score, entry_fee, message, type, timestamp } = data;
+    
+    if (!creator_id || !creator_name || !score || !entry_fee) {
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), { 
+        status: 400, 
+        headers 
+      });
+    }
+    
+    try {
+      // Generate challenge ID
+      const challengeId = `challenge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
-      const challengeId = `challenge_${Date.now()}_${challenger_id}`;
+      // Create challenge record
       const challenge = {
         id: challengeId,
-        challenger_id,
+        creator_id,
+        creator_name,
+        score,
         entry_fee,
-        game,
-        created_at: Date.now(),
-        expires_at: Date.now() + expires_in,
+        message: message || 'Beat my score for $2! 🎮',
+        type: type || 'friend_challenge',
         status: 'active',
-        participants: [challenger_id],
-        leaderboard: []
+        created_at: timestamp || Date.now(),
+        expires_at: (timestamp || Date.now()) + (24 * 60 * 60 * 1000), // 24 hours
+        participants: [],
+        total_pot: entry_fee * 2, // Both players pay $2
+        winner_prize: (entry_fee * 2) * 0.9, // 90% to winner
+        platform_fee: (entry_fee * 2) * 0.1 // 10% to platform
       };
       
+      // Store challenge in KV
       await env.SCORES.put(`challenge:${challengeId}`, JSON.stringify(challenge));
+      
+      // Generate challenge URL
+      const challengeUrl = `https://blockzone-lab-platform.hambomyers.workers.dev/challenge/${creator_name}/${score}?id=${challengeId}`;
+      
+      console.log(`✅ Challenge created: ${challengeId} by ${creator_name}`);
       
       return new Response(JSON.stringify({
         success: true,
         challenge_id: challengeId,
-        share_url: `/challenge/${challengeId}`,
-        challenge
+        challenge_url: challengeUrl,
+        challenge: challenge
       }), { headers });
+      
+    } catch (error) {
+      console.error('❌ Challenge creation failed:', error);
+      return new Response(JSON.stringify({ error: 'Challenge creation failed' }), { 
+        status: 500, 
+        headers 
+      });
     }
+  }
+  
+  if (method === 'GET' && url.pathname.startsWith('/api/challenges/')) {
+    const challengeId = url.pathname.split('/').pop();
     
-    if (path.startsWith('/api/challenges/') && path.endsWith('/join') && request.method === 'POST') {
-      // Join an existing challenge
-      const challengeId = url.pathname.split('/')[3];
-      const data = await request.json();
-      const { player_id } = data;
-      
-      const challenge = await env.SCORES.get(`challenge:${challengeId}`, 'json');
-      if (!challenge || challenge.status !== 'active') {
-        return new Response(JSON.stringify({ error: 'Challenge not found or expired' }), { status: 404, headers });
-      }
-      
-      if (challenge.participants.includes(player_id)) {
-        return new Response(JSON.stringify({ error: 'Already joined this challenge' }), { status: 400, headers });
-      }
-      
-      challenge.participants.push(player_id);
-      await env.SCORES.put(`challenge:${challengeId}`, JSON.stringify(challenge));
-      
-      return new Response(JSON.stringify({
-        success: true,
-        challenge_id: challengeId,
-        participant_count: challenge.participants.length
-      }), { headers });
-    }
-    
-    if (path.startsWith('/api/challenges/') && request.method === 'GET') {
-      // Get challenge details
-      const challengeId = url.pathname.split('/')[3];
+    try {
       const challenge = await env.SCORES.get(`challenge:${challengeId}`, 'json');
       
       if (!challenge) {
-        return new Response(JSON.stringify({ error: 'Challenge not found' }), { status: 404, headers });
+        return new Response(JSON.stringify({ error: 'Challenge not found' }), { 
+          status: 404, 
+          headers 
+        });
       }
       
-      return new Response(JSON.stringify(challenge), { headers });
+      return new Response(JSON.stringify({
+        success: true,
+        challenge
+      }), { headers });
+      
+    } catch (error) {
+      console.error('❌ Challenge fetch failed:', error);
+      return new Response(JSON.stringify({ error: 'Challenge fetch failed' }), { 
+        status: 500, 
+        headers 
+      });
     }
-    
-    return new Response(JSON.stringify({ 
-      status: 'challenges endpoint active',
-      available_endpoints: ['/create', '/{id}/join', '/{id}']
-    }), { headers });
-    
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers });
   }
+  
+  return new Response(JSON.stringify({ error: 'Not found' }), { 
+    status: 404, 
+    headers 
+  });
 }
 
 // --- Modular Handler: /api/payments ---
