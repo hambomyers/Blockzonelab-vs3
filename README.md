@@ -1,40 +1,104 @@
-# BlockZone Lab: Leaderboards & Prize Distribution
+# BlockZone Lab: Viral Gaming Platform
 
-## Vision & Feature Summary
+## Current Status
+✅ **Preserved Assets:**
+- Neon Drop gameplay mechanics, physics, visuals, and controls (exactly as original)
+- Educational platform components
+- Game aesthetics and user experience
 
-### Leaderboards & Prizes
+❌ **Critical Issues to Fix:**
+- Broken KV storage and session management
+- Player identity and authentication problems
+- No revenue systems implemented
+- No championship cycles or friend challenges
 
-- **Daily Leaderboard**
-  - Resets every 12 hours (AM/PM cycles)
-  - Top 5 players win prizes
-  - Hyperbolic prize distribution: 1st gets 40%, 2nd–5th share the rest (with $5 minimums)
-  - 90% of entry fees go to prizes, 10% to platform
+## ACTION PLAN - Phase 1: Core Platform
 
-- **All-Time Leaderboard**
-  - Never resets
-  - Legacy "Hall of Fame" for the highest scores ever
-  - Purely for prestige and long-term motivation
+### Priority 1: Fix Broken Infrastructure
+1. **Rebuild Session Management**
+   - Fix player authentication and persistent sessions
+   - Implement proper user identity system
+   - Restore KV storage functionality
 
-- **Saturday Bounty Boss Jackpot**
-  - Each Saturday, a "Bounty Boss" score is set (last week's top score)
-  - Beat the Bounty Boss on Saturday to win the entire jackpot (accumulated from unclaimed jackpots)
-  - If no one beats it, the jackpot rolls over and grows for the next week
-  - Simple, high-stakes, and viral
+2. **Payment System Foundation**
+   - Implement USDC.E integration on Sonic Labs blockchain
+   - Create wallet connection and authentication
+   - Build 90%/10% split system (winner gets 90%, platform gets 10%)
 
-### Simplicity-First Philosophy
-- All rules are clear, direct, and easy to understand
-- No unnecessary complexity—features are added only if they enhance fun, fairness, or viral growth
+### Priority 2: Revenue Systems
+3. **Championship Cycles**
+   - Two 12-hour championships daily (12 AM-12 PM GMT, 12 PM-12 AM GMT)
+   - Players pay 25¢ (quarters) per attempt
+   - Real-time leaderboards with Sonic Labs validation
+   - Championship finale system with dramatic freeze effects
+
+4. **Friend Challenges**
+   - Auto-generated challenge links: `blockzonelab.com/challenge/[username]/[score]`
+   - One-tap Apple Pay/Google Pay integration
+   - Viral challenge flow: "Beat [score] for 25¢!"
+
+### Priority 3: User Experience
+5. **Main Interface**
+   - Two clear primary buttons: "CHAMPIONSHIP" and "CHALLENGE FRIEND"
+   - Clean Apple-inspired minimalism with 80s arcade flair
+   - Use Neon Drop's neon colors as platform accent palette
+   - Mobile-responsive design
+
+6. **Navigation & Design**
+   - Uniform navigation system on every page
+   - Professional file structure for rapid game scaling
+   - Shared design system across platform
+
+### Priority 4: Engagement Features
+7. **Streak System**
+   - Friend challenge streak tracking
+   - 3-day streak = 2 free championship attempts
+   - 7-day streak = 3 free championship attempts
+
+8. **Championship Finale**
+   - All games freeze at championship end time
+   - Dramatic freeze effect with neon particles
+   - Live leaderboard updates
+   - 15-second victory celebration
+   - Immediate prize distribution
+
+## Technical Architecture
+
+### Modular System Design
+- Shared design system, payments, and scoring across all games
+- Professional file structure for easy addition of 4-5+ games
+- Unified CSS design system throughout entire platform
+
+### Payment & Tokenomics
+- **Entry Fees:** 25¢ (quarters) in USDC.E per attempt
+- **Prize Pool:** 90% of entry fees go to prizes, 10% to platform
+- **Display:** "25¢ in USDC.E (US Dollars)" or "Quarters (USDC.E - US Dollars)"
+- **Education:** "USDC.E is just US Dollars that work on the blockchain"
+
+### Data Storage
+- KV storage for user profiles, streaks, scores, payment history
+- Real-time anti-cheat validation built into Web3 scoring system
+- Persistent player sessions and authentication
+
+## Development Phases
+
+### Phase 1 (Current): Core Platform
+- Fix broken infrastructure
+- Implement championship cycles and friend challenges
+- Build payment and authentication systems
+- Create main user interface
+
+### Phase 2 (Future): Enhanced Features
+- Queue battles for instant random matchmaking
+- Additional engagement features
+
+### Phase 3 (Future): Game Expansion
+- Additional games using shared infrastructure
+- Advanced tournament systems
+
+## Original Vision
+Transform BlockZone Lab into a viral, quarters-based gaming platform with two main revenue systems while maintaining the educational platform components. The Neon Drop game should play identically to how it currently works - only improve the code quality and organization underneath.
 
 ---
 
-_This section is a living summary of the platform's core competitive and prize mechanics. For implementation details, see the backend and economics modules._ 
-
-## Business Model & Tokenomics
-
-- **Entry Fees:** Players pay to enter leaderboard cycles and challenges (QUARTERS, USDC, or other tokens).
-- **Prize Pool:** 90% of entry fees go to prizes, 10% to the platform.
-- **Token Flow:** QUARTERS are earned, spent, and can be won in tournaments; USDC is used for direct payments and challenges.
-- **Revenue:** Platform earns 10% of all entry fees, plus potential future revenue from premium features, sponsorships, or NFT sales.
-- **Sustainability:** Prize pools scale with participation; platform fee ensures long-term viability.
-- **Transparency:** All token flows and prize distributions are on-chain and auditable.
-- **Future Expansion:** Model supports new games, viral features, and additional tokens or payment methods. 
+*This README reflects the current state and action plan for completing the original BlockZone Lab vision.* 

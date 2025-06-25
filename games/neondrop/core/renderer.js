@@ -727,9 +727,7 @@ export class Renderer {
                 this.renderBoard(state);
                 break;
         }
-    }
-
-    renderMenu(state) {
+    }    renderMenu(state) {
         this.dimBoard(0.7);
 
         // Render the beautiful NEON DROP title
@@ -1129,75 +1127,66 @@ export class Renderer {
     }
 
     /**
-     * Render particles with enhanced effects
-     * @param {CanvasRenderingContext2D} ctx - Canvas context
-     * @param {Array} particles - Array of particle objects
+     * Render particles with shared drawing logic
      */
-    renderParticles(ctx, particles) {
-        if (!particles || particles.length === 0) return;
-
-        particles.forEach(particle => {
-            // Skip if particle is too faded
-            if (particle.opacity <= 0.01) return;
-
-            const x = Math.round(particle.x);
-            const y = Math.round(particle.y);
-            const size = Math.max(1, Math.round(particle.size * particle.opacity));
-
-            // Set up context for this particle
+    renderParticlesWithContext(ctx, particles, xOffset = 0, yOffset = 0, bounds = null) {
+        particles.forEach(p => {
             ctx.save();
-            ctx.globalAlpha = particle.opacity;
+            ctx.globalAlpha = p.opacity || 1;
 
-            // ENHANCED: Apply glow effect
-            if (particle.glow && particle.glowIntensity > 0.1) {
-                ctx.shadowColor = particle.color;
-                ctx.shadowBlur = 15 * particle.glowIntensity;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
+            const x = xOffset + p.x;
+            const y = yOffset + p.y;
+
+            // Check bounds if provided
+            if (bounds && (x < bounds.minX || x > bounds.maxX ||
+                          y < bounds.minY || y > bounds.maxY)) {
+                ctx.restore();
+                return;
             }
 
-            // ENHANCED: Draw particle with proper color handling
-            ctx.fillStyle = particle.color || '#ffffff';
-            ctx.beginPath();
-            
-            // ENHANCED: Different shapes for variety
-            if (particle.sparkle) {
-                // Sparkle effect - draw a small cross
-                const sparkleSize = size * 0.5;
-                ctx.moveTo(x - sparkleSize, y);
-                ctx.lineTo(x + sparkleSize, y);
-                ctx.moveTo(x, y - sparkleSize);
-                ctx.lineTo(x, y + sparkleSize);
-                ctx.strokeStyle = particle.color || '#ffffff';
-                ctx.lineWidth = 2;
+            if (p.type === 'glow') {
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, p.size);
+                gradient.addColorStop(0, p.color);
+                gradient.addColorStop(0.4, p.color);
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x - p.size, y - p.size, p.size * 2, p.size * 2);
+            } else if (p.type === 'spark') {
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = p.size * 0.5;
+                ctx.lineCap = 'round';
+
+                ctx.beginPath();
+                ctx.moveTo(x - p.vx * 0.1, y - p.vy * 0.1);
+                ctx.lineTo(x, y);
                 ctx.stroke();
             } else {
-                // Regular particle - draw circle
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // ENHANCED: Draw trail if particle has trail effect
-            if (particle.trail && particle.prevX !== undefined && particle.prevY !== undefined) {
-                const trailLength = 3;
-                const trailOpacity = particle.opacity * 0.3;
-                
-                ctx.globalAlpha = trailOpacity;
-                ctx.shadowBlur = 8 * particle.glowIntensity;
-                
-                for (let i = 1; i <= trailLength; i++) {
-                    const trailX = particle.prevX + (x - particle.prevX) * (i / trailLength);
-                    const trailY = particle.prevY + (y - particle.prevY) * (i / trailLength);
-                    const trailSize = size * (1 - i / trailLength);
-                    
-                    ctx.beginPath();
-                    ctx.arc(Math.round(trailX), Math.round(trailY), Math.max(1, trailSize), 0, Math.PI * 2);
-                    ctx.fill();
-                }
+                ctx.fillStyle = p.color;
+                ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
             }
 
             ctx.restore();
         });
+    }
+
+    renderParticles(particles) {
+        if (particles.length === 0) return;
+
+        const bounds = {
+            minX: 0,
+            maxX: this.dimensions.canvasWidth,
+            minY: 0,
+            maxY: this.dimensions.canvasHeight
+        };
+
+        this.renderParticlesWithContext(
+            this.ctx,
+            particles,
+            this.dimensions.boardX,
+            this.dimensions.boardY,
+            bounds
+        );
     }
 
     renderParticlesOverflow(particles) {
@@ -1216,7 +1205,12 @@ export class Renderer {
 
         if (overflowParticles.length === 0) return;
 
-        this.renderParticles(this.bgCtx, overflowParticles);
+        this.renderParticlesWithContext(
+            this.bgCtx,
+            overflowParticles,
+            gameRect.left + this.dimensions.boardX,
+            gameRect.top + this.dimensions.boardY
+        );
     }
 
     renderGrid() {
@@ -1618,6 +1612,8 @@ export class Renderer {
             return true;
         });
     }
+
+
 
     renderPracticeIndicator() {
         this.ctx.save();

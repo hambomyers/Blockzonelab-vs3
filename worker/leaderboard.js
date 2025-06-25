@@ -99,6 +99,10 @@ export default {
         return await handleApiSession(request, env, headers);
       }
 
+      if (url.pathname === '/api/auth/validate' && request.method === 'POST') {
+        return await handleValidateSession(request, env, headers);
+      }
+
       if (url.pathname === '/api/auth/upgrade' && request.method === 'POST') {
         return await handleApiSessionUpgrade(request, env, headers);
       }
@@ -698,13 +702,150 @@ async function handleGetTournament(request, env, headers) {
 
 // --- Modular Handlers: /api/sessions ---
 async function handleApiSession(request, env, headers) {
-  // Session creation/validation logic (moved from handleSession)
-  return await handleSession(request, env, headers);
+  // POST /api/auth/session
+  // Creates or resumes a session (anonymous by default)
+  // Body: { device_info, player_id (optional) }
+  const data = await request.json();
+  let { device_info, player_id } = data;
+  let session_id = crypto.randomUUID();
+  let is_new = true;
+
+  // If player_id provided, try to resume session
+  if (player_id) {
+    // Look up player profile
+    const profile = await env.PLAYERS.get(`profile:${player_id}`, 'json');
+    if (profile) {
+      // Resume session
+      session_id = `${player_id}-${Date.now()}`;
+      is_new = false;
+    }
+  } else {
+    // Create anonymous player profile
+    player_id = `anon_${session_id}`;
+    await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify({
+      player_id,
+      display_name: 'Anonymous',
+      tier: 'anonymous',
+      created_at: Date.now(),
+      last_activity: Date.now(),
+      current_high_score: 0,
+      streak: 0,
+      streak_updated: Date.now(),
+      payment_history: []
+    }));
+  }
+
+  // Store session in SESSIONS KV
+  await env.SESSIONS.put(`session:${session_id}`, JSON.stringify({
+    player_id,
+    session_id,
+    device_info: device_info || {},
+    timestamp: Date.now(),
+    stored_at: Date.now()
+  }));
+
+  // Return session info
+  return new Response(JSON.stringify({
+    success: true,
+    session_id,
+    player_id,
+    is_new
+  }), { headers });
+}
+
+async function handleValidateSession(request, env, headers) {
+  // POST /api/auth/validate
+  // Validates an existing session
+  // Body: { session_id }
+  const data = await request.json();
+  const { session_id } = data;
+
+  if (!session_id) {
+    return new Response(JSON.stringify({ error: 'Session ID required' }), { status: 400, headers });
+  }
+
+  // Look up session
+  const session = await env.SESSIONS.get(`session:${session_id}`, 'json');
+  if (!session) {
+    return new Response(JSON.stringify({ error: 'Session not found' }), { status: 404, headers });
+  }
+
+  // Check if session is expired (24 hours)
+  const sessionAge = Date.now() - session.timestamp;
+  if (sessionAge > 24 * 60 * 60 * 1000) {
+    // Session expired, clean up
+    await env.SESSIONS.delete(`session:${session_id}`);
+    return new Response(JSON.stringify({ error: 'Session expired' }), { status: 401, headers });
+  }
+
+  // Get player profile
+  const profile = await env.PLAYERS.get(`profile:${session.player_id}`, 'json');
+  if (!profile) {
+    return new Response(JSON.stringify({ error: 'Player profile not found' }), { status: 404, headers });
+  }
+
+  // Update last activity
+  profile.last_activity = Date.now();
+  await env.PLAYERS.put(`profile:${session.player_id}`, JSON.stringify(profile));
+
+  // Return session info
+  return new Response(JSON.stringify({
+    success: true,
+    session_id,
+    player_id: session.player_id,
+    profile
+  }), { headers });
 }
 
 async function handleApiSessionUpgrade(request, env, headers) {
-  // Session upgrade logic (moved from handleUpgradeSession)
-  return await handleUpgradeSession(request, env, headers);
+  // POST /api/auth/upgrade
+  // Upgrades an anonymous session to email/social or wallet
+  // Body: { session_id, upgrade_type, wallet_address, email, display_name, signature }
+  const data = await request.json();
+  const { session_id, upgrade_type, wallet_address, email, display_name, signature } = data;
+
+  // Validate session
+  const session = await env.SESSIONS.get(`session:${session_id}`, 'json');
+  if (!session) {
+    return new Response(JSON.stringify({ error: 'Session not found' }), { status: 404, headers });
+  }
+
+  let player_id = session.player_id;
+  let profile = await env.PLAYERS.get(`profile:${player_id}`, 'json');
+  if (!profile) {
+    return new Response(JSON.stringify({ error: 'Player profile not found' }), { status: 404, headers });
+  }
+
+  // Upgrade logic
+  if (upgrade_type === 'wallet' && wallet_address) {
+    // TODO: Verify wallet signature (Web3)
+    // For now, accept as valid
+    profile.wallet_address = wallet_address;
+    profile.tier = 'web3';
+    if (display_name) profile.display_name = display_name;
+    await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify(profile));
+    await env.PLAYERS.put(`wallet:${wallet_address}`, player_id);
+  } else if (upgrade_type === 'email' && email) {
+    profile.email = email;
+    profile.tier = 'social';
+    if (display_name) profile.display_name = display_name;
+    await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify(profile));
+    await env.PLAYERS.put(`email:${email}`, player_id);
+  } else if (upgrade_type === 'social' && display_name) {
+    // Social upgrade (just display name)
+    profile.display_name = display_name;
+    profile.tier = 'social';
+    await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify(profile));
+  } else {
+    return new Response(JSON.stringify({ error: 'Invalid upgrade type or missing info' }), { status: 400, headers });
+  }
+
+  // Return upgraded profile
+  return new Response(JSON.stringify({
+    success: true,
+    player_id,
+    profile
+  }), { headers });
 }
 
 async function handleApiSessionData(request, env, headers) {
@@ -826,6 +967,11 @@ async function handleUpgradeSession(request, env, headers) {
     if (display_name) profile.display_name = display_name;
     await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify(profile));
     await env.PLAYERS.put(`email:${email}`, player_id);
+  } else if (upgrade_type === 'social' && display_name) {
+    // Social upgrade (just display name)
+    profile.display_name = display_name;
+    profile.tier = 'social';
+    await env.PLAYERS.put(`profile:${player_id}`, JSON.stringify(profile));
   } else {
     return new Response(JSON.stringify({ error: 'Invalid upgrade type or missing info' }), { status: 400, headers });
   }

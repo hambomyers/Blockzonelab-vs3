@@ -6,6 +6,7 @@
 
 // Import the real prize calculation system
 import { PrizeCalculator } from '../../../shared/economics/prize-calculator.js';
+import { sessionManager } from '../../../shared/platform/session.js';
 
 export class SimpleGameOver {
     constructor() {
@@ -13,36 +14,52 @@ export class SimpleGameOver {
         this.isVisible = false;
         this.score = 0;
         this.playerName = null;
+        this.playerId = null;
+        this.playerRank = null;
         this.apiBase = 'https://blockzone-api.hambomyers.workers.dev';
         
         console.log('🔥 AGGRESSIVE SimpleGameOver initialized with API base:', this.apiBase);
             
-        this.playerId = this.getOrCreatePlayerId();
-        this.leaderboardData = null;
-        this.playerRank = null;// Initialize the real prize calculator with new 50%/hyperbolic/$1 system
         this.prizeCalculator = new PrizeCalculator();
         this.prizeCalculator.winnerShare = 0.50;        // 50% to 1st place
         this.prizeCalculator.minimumPrize = 1.00;       // $1 minimum
         this.prizeCalculator.prizePoolRate = 0.90;      // 90% to prizes, 10% platform
         
         this.createContainer();
+        this.initSession();
         console.log('✨ SimpleGameOver initialized - Pure Elegant Flow with Real Prize System');
         
         // Initialize systems asynchronously
         // this.initializeSystems(); // <-- Removed to fix TypeError
     }
 
+    async initSession() {
+        try {
+            await sessionManager.init();
+            await sessionManager.migrateOldData();
+            
+            this.playerId = sessionManager.getPlayerId();
+            this.playerName = sessionManager.getDisplayName();
+            
+            console.log('✅ Session initialized:', this.playerId, this.playerName);
+        } catch (error) {
+            console.error('❌ Session initialization failed:', error);
+            // Fallback to old system
+            this.playerId = this.getOrCreatePlayerId();
+            this.playerName = this.getStoredPlayerName();
+        }
+    }
+
     createContainer() {
         this.container = document.createElement('div');
-        this.container.className = 'simple-game-over-overlay';
         this.container.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -50,7 +67,11 @@ export class SimpleGameOver {
             opacity: 0;
             transition: opacity 0.3s ease-out;
         `;
-        document.body.appendChild(this.container);    }    getOrCreatePlayerId() {
+        document.body.appendChild(this.container);
+    }
+
+    // Fallback method for old localStorage system
+    getOrCreatePlayerId() {
         let playerId = localStorage.getItem('playerId');
         if (!playerId) {
             // Generate a wallet-style player ID
@@ -70,7 +91,9 @@ export class SimpleGameOver {
             result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         return result;
-    }    // Get the last 4 characters of the wallet suffix for display
+    }
+
+    // Get the last 4 characters of the wallet suffix for display
     getWalletDisplaySuffix() {
         const suffix = localStorage.getItem('playerWalletSuffix');
         if (suffix) {
@@ -80,7 +103,9 @@ export class SimpleGameOver {
         const playerId = this.playerId || this.getOrCreatePlayerId();
         const match = playerId.match(/_([a-z0-9]+)$/);
         return match ? match[1].slice(-4).toUpperCase() : 'ANON';
-    }    // Create the display name: "Username-WXYZ"
+    }
+
+    // Create the display name: "Username-WXYZ"
     createDisplayName(username) {
         if (!username || username.trim() === '') {
             return null; // Require username - no anonymous players
@@ -92,9 +117,12 @@ export class SimpleGameOver {
         return `${cleanUsername}-${walletSuffix}`;
     }
 
+    // Fallback method for old localStorage system
     getStoredPlayerName() {
         return localStorage.getItem('neonDropPlayerName');
-    }async show(finalScore) {
+    }
+
+    async show(finalScore) {
         if (this.isVisible) return;
         
         // Just get the damn score
@@ -106,7 +134,6 @@ export class SimpleGameOver {
         }
         
         this.isVisible = true;
-        this.playerName = this.getStoredPlayerName();
         
         console.log('🎮 Game Over - Score:', this.score, 'Player:', this.playerName || 'New Player');
         
@@ -126,7 +153,9 @@ export class SimpleGameOver {
         requestAnimationFrame(() => {
             this.container.style.opacity = '1';
         });
-    }    async showGameOverCard() {
+    }
+
+    async showGameOverCard() {
         console.log('🎮 Showing basic game over card for returning player');
         
         // Submit score first
@@ -447,10 +476,29 @@ export class SimpleGameOver {
         const displayName = this.createDisplayName(name);
         this.playerName = displayName;
         
-        localStorage.setItem('neonDropPlayerName', displayName);
-        localStorage.setItem('neonDropUsername', name);
+        // Use new session system to upgrade the session with the player name
+        try {
+            await sessionManager.upgradeSession({
+                upgrade_type: 'social',
+                display_name: displayName,
+                email: null,
+                wallet_address: null,
+                signature: null
+            });
+            
+            // Update local references
+            this.playerId = sessionManager.getPlayerId();
+            this.playerName = sessionManager.getDisplayName();
+            
+            console.log('✅ Session upgraded with player name:', this.playerName);
+        } catch (error) {
+            console.warn('⚠️ Could not upgrade session, using fallback:', error);
+            // Fallback to old localStorage system
+            localStorage.setItem('neonDropPlayerName', displayName);
+            localStorage.setItem('neonDropUsername', name);
+        }
         
-        // Try to submit but don't break if it fails
+        // Try to submit score but don't break if it fails
         try {
             console.log('📤 Submitting score:', this.score, 'for player:', displayName);
             
@@ -486,7 +534,9 @@ export class SimpleGameOver {
         }
         
         await this.showGameResults();
-    }async showGameResults(tournamentSuccess = false) {
+    }
+
+    async showGameResults(tournamentSuccess = false) {
         const rank = await this.getPlayerRank();
         const totalPlayers = await this.getTotalPlayers();
         
@@ -634,7 +684,9 @@ export class SimpleGameOver {
         `;
 
         this.bindResultsEvents();
-    }    bindResultsEvents() {
+    }
+
+    bindResultsEvents() {
         const playAgainBtn = this.container.querySelector('#playAgainBtn');
         const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
 
@@ -650,84 +702,68 @@ export class SimpleGameOver {
                 // Fallback to empty leaderboard
                 this.showEmptyFullScreenLeaderboard();
             }
-        });    }    async submitScore(score, playerName) {
-        try {
-            console.log('🚀 Submitting score to new backend:', score, playerName);
-            
-            const scoreData = {
-                score: score,
+        });    }
+
+    async submitScore(score, playerName) {
+        // FORCE SCORE SUBMISSION - NO GENTLE HANDLING!
+        console.log('🔥 FORCING score submission');
+        
+        const response = await fetch(`${this.apiBase}/api/scores`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 player_id: this.playerId,
-                replay_hash: `replay_${Date.now()}_${this.playerId}`,
+                score: score,
+                replay_hash: `${this.playerId}_${Date.now()}_${score}`,
                 metrics: {
-                    player_name: playerName,
-                    gameTime: Date.now(),
-                    apm: 120, // Placeholder - would be calculated from actual gameplay
-                    pps: 2.0  // Placeholder - would be calculated from actual gameplay
+                    game: 'neon_drop',
+                    duration: 0,
+                    player_name: playerName
                 },
-                timestamp: Date.now(),
-                entry_fee: 2.50 // Pay-per-attempt entry fee
-            };
+                timestamp: Date.now()
+            })        });        if (!response.ok) {
+            const errorText = await response.text();
+            console.log('🔥 API Response:', response.status, errorText);
             
-            const response = await fetch(`${this.apiBase}/api/scores`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(scoreData)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Score submission failed: ${response.status}`);
+            // Check for specific duplicate submission error
+            if (errorText.includes('Duplicate submission')) {
+                console.log('⚠️ Duplicate submission detected by API - saving locally instead');
+                this.saveScoreToLocalStorage(score, playerName);
+                return { verified: false, reason: 'Duplicate submission - saved locally', savedLocally: true };
             }
             
-            const result = await response.json();
-            console.log('✅ Score submitted successfully:', result);
-            
-            // Store the new response data
-            this.playerRank = result.rank;
-            this.currentPrizePool = result.current_prize_pool;
-            this.transactionId = result.transaction_id;
-            
-            return result;
-            
-        } catch (error) {
-            console.error('❌ Score submission error:', error);
-            throw error;
+            throw new Error(`SCORE SUBMISSION FAILED: ${response.status} - ${response.statusText} - ${errorText}`);
         }
+
+        const result = await response.json();
+        
+        // Also check for duplicate in successful response
+        if (result.verified === false && result.reason === 'Duplicate submission') {
+            console.log('⚠️ API returned duplicate submission - saving locally instead');
+            this.saveScoreToLocalStorage(score, playerName);
+            return { ...result, savedLocally: true };
+        }
+        
+        console.log('✅ FORCED Score submission SUCCESS:', result);
+        return result;
     }
 
-    async fetchLeaderboard(period = 'current-cycle', limit = 100) {
-        try {
-            console.log('📊 Fetching leaderboard from new backend:', period);
-            
-            const url = new URL(`${this.apiBase}/api/leaderboard`);
-            url.searchParams.set('period', period);
-            url.searchParams.set('limit', limit.toString());
-            url.searchParams.set('game', 'neon_drop');
-            
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                throw new Error(`Leaderboard fetch failed: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            console.log('✅ Leaderboard fetched successfully:', data);
-            
-            // Store the enhanced leaderboard data
-            this.leaderboardData = data;
-            this.currentCycle = data.cycle;
-            this.cycleEnd = data.cycle_end;
-            this.currentPrizePool = data.current_prize_pool;
-            this.isSaturday = data.is_saturday;
-            this.bountyBossInfo = data.bounty_boss;
-            
-            return data;
-            
-        } catch (error) {
-            console.error('❌ Leaderboard fetch error:', error);
-            throw error;
+    async fetchLeaderboard(period = 'daily', limit = 100) {
+        // FORCE LEADERBOARD FETCH - NO GENTLE FALLBACKS!
+        console.log('🔥 FORCING leaderboard fetch from:', `${this.apiBase}/api/leaderboard`);
+        
+        const response = await fetch(`${this.apiBase}/api/leaderboard`);
+        
+        if (!response.ok) {
+            throw new Error(`LEADERBOARD FETCH FAILED: ${response.status} - ${response.statusText}`);
         }
+
+        const data = await response.json();
+        console.log('📊 FORCED Leaderboard fetch SUCCESS:', data);
+        this.leaderboardData = data;
+        return data;
     }
 
     async getPlayerRank() {
@@ -763,7 +799,9 @@ export class SimpleGameOver {
         
         console.log('🏆 FORCED Player rank SUCCESS:', rank);
         return rank;
-    }    async getTotalPlayers() {
+    }
+
+    async getTotalPlayers() {
         // FORCE TOTAL PLAYERS FETCH - NO GENTLE FALLBACKS!
         console.log('🔥 FORCING total players count fetch');
         
@@ -1065,206 +1103,253 @@ export class SimpleGameOver {
     }
 
     showBeautifulLeaderboard(leaderboardData) {
-        if (!leaderboardData || !leaderboardData.scores) {
-            this.showEmptyFullScreenLeaderboard();
-            return;
-        }
-        
-        const scores = leaderboardData.scores;
-        const cycle = leaderboardData.cycle || 'current';
-        const cycleEnd = leaderboardData.cycle_end;
-        const currentPrizePool = leaderboardData.current_prize_pool || 0;
-        const isSaturday = leaderboardData.is_saturday || false;
-        const bountyBossInfo = leaderboardData.bounty_boss;
-        
-        // Calculate time remaining in current cycle
-        let timeRemaining = '';
-        if (cycleEnd) {
-            const now = new Date();
-            const end = new Date(cycleEnd);
-            const diff = end - now;
-            if (diff > 0) {
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                timeRemaining = `${hours}h ${minutes}m remaining`;
-            }
-        }
-        
         this.container.innerHTML = `
-            <div class="full-screen-leaderboard" style="
-                background: linear-gradient(135deg, rgba(10, 10, 15, 0.98), rgba(25, 25, 45, 0.98));
+            <div class="game-over-card" style="
+                background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));
                 border-radius: 20px;
-                padding: 30px;
-                max-width: 800px;
-                width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
+                padding: 40px;
+                max-width: 600px;
+                width: 90%;
                 border: 1px solid rgba(0, 212, 255, 0.3);
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                text-align: center;
                 animation: slideIn 0.4s ease-out;
-            ">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                    <h2 style="color: #00d4ff; font-size: 28px; margin: 0; font-weight: 700;">
-                        🏆 Leaderboard
+                max-height: 80vh;
+                overflow-y: auto;
+            ">                <!-- Header -->
+                <div class="leaderboard-header" style="margin-bottom: 30px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">🏆</div>
+                    <h2 style="color: #00d4ff; font-size: 28px; margin: 0 0 5px 0; font-weight: 700;">
+                        Daily Leaderboard
                     </h2>
-                    <button id="closeLeaderboardBtn" style="
-                        background: none;
-                        border: none;
-                        color: #aaa;
-                        font-size: 24px;
-                        cursor: pointer;
-                        padding: 5px;
-                    ">✕</button>
-                </div>
-                
-                <!-- Cycle and Prize Pool Info -->
-                <div style="
-                    background: rgba(0, 212, 255, 0.1);
-                    border-radius: 15px;
-                    padding: 20px;
-                    margin-bottom: 25px;
-                    border: 1px solid rgba(0, 212, 255, 0.2);
-                ">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                        <div>
-                            <div style="color: #00d4ff; font-size: 18px; font-weight: 600; margin-bottom: 5px;">
-                                ${cycle.toUpperCase()} Cycle
-                            </div>
-                            ${timeRemaining ? `<div style="color: #aaa; font-size: 14px;">${timeRemaining}</div>` : ''}
-                        </div>
-                        
-                        <div style="text-align: right;">
-                            <div style="color: #39ff14; font-size: 18px; font-weight: 600; margin-bottom: 5px;">
-                                Prize Pool: $${currentPrizePool.toFixed(2)}
-                            </div>
-                            <div style="color: #aaa; font-size: 14px;">
-                                Entry Fee: $2.50
-                            </div>
-                        </div>
+                    <div style="color: #aaa; font-size: 16px;">
+                        ${leaderboardData.length} players competing today
                     </div>
-                    
-                    ${isSaturday && bountyBossInfo ? `
-                        <div style="
-                            background: rgba(255, 215, 0, 0.1);
-                            border-radius: 10px;
-                            padding: 15px;
-                            margin-top: 15px;
-                            border: 1px solid rgba(255, 215, 0, 0.3);
-                        ">
-                            <div style="color: #ffd700; font-size: 16px; font-weight: 600; margin-bottom: 5px;">
-                                🎯 Bounty Boss Challenge
-                            </div>
-                            <div style="color: #aaa; font-size: 14px;">
-                                Beat ${bountyBossInfo.bounty_score.toLocaleString()} to win $${bountyBossInfo.current_jackpot.toFixed(2)} jackpot!
-                            </div>
-                        </div>
-                    ` : ''}
                 </div>
-                
-                <!-- Leaderboard Table -->
-                <div style="margin-bottom: 25px;">
-                    ${scores.map((entry, index) => `
-                        <div style="
-                            display: flex;
-                            align-items: center;
-                            padding: 15px;
-                            margin-bottom: 10px;
-                            background: ${index < 3 ? 'rgba(0, 212, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)'};
-                            border-radius: 10px;
-                            border: 1px solid ${index < 3 ? 'rgba(0, 212, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'};
-                        ">
-                            <div style="
-                                width: 40px;
-                                height: 40px;
-                                border-radius: 50%;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                font-weight: 700;
-                                font-size: 16px;
-                                margin-right: 15px;
-                                background: ${this.getRankColor(index)};
-                                color: white;
-                            ">
-                                ${this.getRankEmoji(index)}
-                            </div>
-                            
-                            <div style="flex: 1;">
-                                <div style="color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 5px;">
-                                    ${this.escapeHtml(entry.display_name)}
-                                </div>
-                                <div style="color: #aaa; font-size: 12px;">
-                                    ${this.formatTimeAgo(entry.timestamp)}
-                                </div>
-                            </div>
-                            
-                            <div style="text-align: right;">
-                                <div style="color: #00d4ff; font-size: 20px; font-weight: 700;">
-                                    ${entry.score.toLocaleString()}
-                                </div>
-                                <div style="color: #aaa; font-size: 12px;">
-                                    Rank #${entry.rank}
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <!-- Actions -->
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button id="playAgainFromLeaderboardBtn" style="
-                        background: linear-gradient(135deg, #00d4ff, #0099cc);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 8px;
+
+                <!-- Global Navigation -->
+                <div class="global-nav" style="
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-bottom: 25px;
+                    padding: 15px;
+                    background: rgba(0, 0, 0, 0.2);
+                    border-radius: 10px;
+                ">
+                    <button id="navHome" style="
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        color: #aaa;
+                        padding: 8px 16px;
+                        border-radius: 6px;
                         font-size: 14px;
-                        font-weight: 600;
                         cursor: pointer;
                         transition: all 0.3s ease;
-                    ">
+                    ">🏠 Home</button>
+                    <button id="navGames" style="
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        color: #aaa;
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">🎮 Games</button>
+                    <button id="navLeaderboard" style="
+                        background: linear-gradient(135deg, #00d4ff, #0099cc);
+                        border: none;
+                        color: white;
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">🏆 Leaderboard</button>
+                    <button id="navAcademy" style="
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        color: #aaa;
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">📚 Academy</button>
+                </div>
+
+                <!-- Leaderboard List -->
+                <div class="leaderboard-list leaderboard-content" style="margin-bottom: 30px;">                    ${leaderboardData.slice(0, 20).map((entry, index) => {
+                        const isCurrentPlayer = entry.player_id === this.playerId || 
+                                              entry.playerId === this.playerId ||
+                                              (this.playerName && (entry.playerName === this.playerName || entry.player_name === this.playerName || entry.metrics?.player_name === this.playerName));
+                        const isNewScore = isCurrentPlayer && this.score && Math.abs(entry.score - this.score) < 10; // Recently submitted score
+                        return `
+                            <div class="leaderboard-item" style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                padding: 15px 20px;
+                                margin: 8px 0;
+                                background: ${isNewScore ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 153, 204, 0.2))' : 
+                                            isCurrentPlayer ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)'};
+                                border: ${isNewScore ? '2px solid #00d4ff' : 
+                                          isCurrentPlayer ? '1px solid #00d4ff' : '1px solid rgba(255, 255, 255, 0.1)'};
+                                border-radius: 10px;
+                                transition: all 0.3s ease;
+                                ${isNewScore ? 'animation: pulseHighlight 2s ease-in-out;' : ''}
+                            ">
+                                <div class="rank" style="
+                                    font-size: 18px;
+                                    font-weight: 700;
+                                    color: ${index < 3 ? '#ffd700' : '#00d4ff'};
+                                    min-width: 40px;
+                                ">
+                                    ${index < 3 ? this.getRankEmoji(index) : `#${index + 1}`}
+                                </div>
+                                <div class="player-info" style="flex: 1; margin: 0 15px; text-align: left;">
+                                    <div style="
+                                        color: ${isCurrentPlayer ? '#00d4ff' : '#fff'};
+                                        font-weight: ${isCurrentPlayer ? '600' : '400'};
+                                        font-size: 16px;
+                                        margin-bottom: 2px;
+                                    ">
+                                        ${entry.display_name || 'Anonymous'}
+                                        ${isCurrentPlayer ? ' (You)' : ''}
+                                        ${isNewScore ? ' ✨' : ''}
+                                    </div>
+                                    <div style="color: #aaa; font-size: 12px;">
+                                        ${this.formatTimeAgo(entry.timestamp)}
+                                    </div>
+                                </div>
+                                <div class="score" style="
+                                    color: ${isNewScore ? '#ffd700' : '#00d4ff'};
+                                    font-weight: 600;
+                                    font-size: 16px;
+                                ">
+                                    ${entry.score.toLocaleString()}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <!-- Actions -->
+                <div class="actions" style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button 
+                        id="playAgainBtn"
+                        style="
+                            background: linear-gradient(135deg, #00d4ff, #0099cc);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            border-radius:  10px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "
+                    >
                         🎮 Play Again
                     </button>
                     
-                    <button id="shareLeaderboardBtn" style="
-                        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">
+                    <button 
+                        id="shareScoreBtn"
+                        style="
+                            background: rgba(255, 255, 255, 0.1);
+                            color: #aaa;
+                            border: 1px solid rgba(255, 255, 255, 0.2);
+                            padding: 15px 30px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "
+                    >
                         📤 Share
                     </button>
-                    
-                    <button id="allTimeLeaderboardBtn" style="
-                        background: linear-gradient(135deg, #8a2be2, #6a0dad);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">
-                        🏛️ All-Time
-                    </button>
                 </div>
-            </div>
+            </div>            <style>
+               
+                @keyframes pulseHighlight {
+                    0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+                    50% { transform: scale(1.02); box-shadow: 0  0 30px rgba(0, 212, 255, 0.5); }
+                }
+                
+                @keyframes chicletEntrance {
+                    0% {
+                        transform: translateY(-30px) scale(0.3) rotate(10deg);
+                        opacity: 0;
+                    }
+                    60% {
+                        transform: translateY(2px) scale(1.1) rotate(-3deg);
+                        opacity: 0.8;
+                    }
+                    100% {
+                        transform: translateY(0) scale(1) rotate(0deg);
+                        opacity: 1;
+                    }
+                }
+                
+                .chiclet:hover {
+                    transform: translateY(0) scale(1.05) !important;
+                    transition: transform 0.3s ease;
+                }
+                
+                .global-nav button:hover:not([id="navLeaderboard"]) {
+                    background: rgba(255, 255, 255, 0.2) !important;
+                    color: #fff !important;
+                }
+            </style>
         `;
-        
-        this.bindLeaderboardEvents();
+
+        this.bindNavigationEvents();
+        this.bindLeaderboardActions();
+    }    bindNavigationEvents() {
+        // Global navigation
+        const navHome = this.container.querySelector('#navHome');
+        const navGames = this.container.querySelector('#navGames');
+        const navAcademy = this.container.querySelector('#navAcademy');
+        const navLeaderboard = this.container.querySelector('#navLeaderboard');
+
+        if (navHome) {
+            navHome.addEventListener('click', () => {
+                window.location.href = '/';
+            });
+        }
+
+        if (navGames) {
+            navGames.addEventListener('click', () => {
+                window.location.href = '/games/';
+            });
+        }
+
+        if (navAcademy) {
+            navAcademy.addEventListener('click', () => {
+                window.location.href = '/academy/';
+            });
+        }
+
+        if (navLeaderboard) {
+            navLeaderboard.addEventListener('click', async () => {
+                // If we're already showing leaderboard, change the button behavior
+                const isLeaderboardVisible = this.container.querySelector('.leaderboard-content');
+                if (isLeaderboardVisible) {
+                    // Already showing leaderboard, so "Play Again" instead
+                    this.hide();
+                    this.emit('play-again');
+                } else {
+                    // Show leaderboard
+                    await this.showLeaderboard();
+                }
+            });
+        }
     }
 
-    bindLeaderboardEvents() {
-        const playAgainBtn = this.container.querySelector('#playAgainFromLeaderboardBtn');
-        const shareBtn = this.container.querySelector('#shareLeaderboardBtn');
-        const closeBtn = this.container.querySelector('#closeLeaderboardBtn');
-        const allTimeBtn = this.container.querySelector('#allTimeLeaderboardBtn');
+    bindLeaderboardActions() {
+        const playAgainBtn = this.container.querySelector('#playAgainBtn');
+        const shareScoreBtn = this.container.querySelector('#shareScoreBtn');
 
         if (playAgainBtn) {
             playAgainBtn.addEventListener('click', () => {
@@ -1273,27 +1358,9 @@ export class SimpleGameOver {
             });
         }
 
-        if (shareBtn) {
-            shareBtn.addEventListener('click', () => {
+        if (shareScoreBtn) {
+            shareScoreBtn.addEventListener('click', () => {
                 this.shareScore();
-            });
-        }
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                this.hide();
-            });
-        }
-
-        if (allTimeBtn) {
-            allTimeBtn.addEventListener('click', async () => {
-                try {
-                    const allTimeData = await this.fetchLeaderboard('all-time');
-                    this.showBeautifulLeaderboard(allTimeData);
-                } catch (error) {
-                    console.error('Failed to fetch all-time leaderboard:', error);
-                    this.showToast('Failed to load all-time leaderboard');
-                }
             });
         }
     }

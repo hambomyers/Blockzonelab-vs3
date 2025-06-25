@@ -238,12 +238,12 @@ export class AudioSystem {
    }
 
    /**
-    * Line clear - Classic ascending tones with MORE POP
+    * Line clear - Classic ascending tones
     */
    playLineClearSound(lineCount) {
        const now = this.ctx.currentTime;
 
-       // Base frequencies for each line count - MORE PUNCHY
+       // Base frequencies for each line count
        const frequencies = {
            1: [400, 600, 800],
            2: [400, 600, 800, 1000],
@@ -252,7 +252,7 @@ export class AudioSystem {
        };
 
        const tones = frequencies[lineCount] || frequencies[1];
-       const noteLength = lineCount === 4 ? 0.08 : 0.06; // Slightly longer for more impact
+       const noteLength = lineCount === 4 ? 0.06 : 0.04;
 
        tones.forEach((freq, i) => {
            const delay = i * noteLength;
@@ -263,10 +263,9 @@ export class AudioSystem {
            osc.type = 'square';
            osc.frequency.setValueAtTime(freq, now + delay);
 
-           // MORE POP: Increased volume and punchier envelope
-           const volume = this.volume * (0.4 + lineCount * 0.1); // Much louder (was 0.2 + lineCount * 0.05)
+           const volume = this.volume * (0.2 + lineCount * 0.05);
            gain.gain.setValueAtTime(0, now + delay);
-           gain.gain.linearRampToValueAtTime(volume, now + delay + 0.005); // Faster attack (was 0.01)
+           gain.gain.linearRampToValueAtTime(volume, now + delay + 0.01);
            gain.gain.exponentialRampToValueAtTime(0.001, now + delay + noteLength);
 
            osc.connect(gain);
@@ -275,24 +274,6 @@ export class AudioSystem {
            osc.start(now + delay);
            osc.stop(now + delay + noteLength + 0.01);
        });
-
-       // ADDITIONAL POP: Add a bass thump for more impact
-       if (lineCount >= 2) {
-           const bassOsc = this.ctx.createOscillator();
-           const bassGain = this.ctx.createGain();
-
-           bassOsc.type = 'sine';
-           bassOsc.frequency.setValueAtTime(60, now);
-
-           bassGain.gain.setValueAtTime(this.volume * 0.3, now);
-           bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-
-           bassOsc.connect(bassGain);
-           bassGain.connect(this.ctx.destination);
-
-           bassOsc.start(now);
-           bassOsc.stop(now + 0.2);
-       }
    }
 
    /**
