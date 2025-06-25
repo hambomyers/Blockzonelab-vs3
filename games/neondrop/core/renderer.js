@@ -1146,9 +1146,103 @@ export class Renderer {
                 return;
             }
 
-            // Simple particle rendering
-            ctx.fillStyle = p.color;
-            ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+            // ENHANCED: Support for new glow effects and trail particles
+            if (p.glow) {
+                // Enhanced glow effect with custom glow property
+                const glowSize = p.size * (1.5 + (p.glowIntensity || 1) * 0.5);
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+                
+                // Parse glow effect (format: "0 0 20px #color")
+                const glowMatch = p.glow.match(/0 0 (\d+)px (.+)/);
+                if (glowMatch) {
+                    const glowRadius = parseInt(glowMatch[1]);
+                    const glowColor = glowMatch[2];
+                    const intensity = p.glowIntensity || 1;
+                    
+                    gradient.addColorStop(0, glowColor);
+                    gradient.addColorStop(0.3, glowColor + '80'); // 50% opacity
+                    gradient.addColorStop(0.7, glowColor + '40'); // 25% opacity
+                    gradient.addColorStop(1, 'transparent');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x - glowSize, y - glowSize, glowSize * 2, glowSize * 2);
+                }
+            }
+
+            // ENHANCED: Sparkle effect for special particles
+            if (p.sparkle) {
+                const sparkleSize = p.size * 0.3;
+                const sparkleAlpha = Math.sin(Date.now() * 0.01 + p.x * 0.1) * 0.5 + 0.5;
+                ctx.globalAlpha = sparkleAlpha * (p.opacity || 1);
+                
+                // Draw sparkle cross
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = 1;
+                ctx.lineCap = 'round';
+                
+                ctx.beginPath();
+                ctx.moveTo(x - sparkleSize, y);
+                ctx.lineTo(x + sparkleSize, y);
+                ctx.moveTo(x, y - sparkleSize);
+                ctx.lineTo(x, y + sparkleSize);
+                ctx.stroke();
+                
+                ctx.globalAlpha = p.opacity || 1;
+            }
+
+            // ENHANCED: Trail effect for particles with trail property
+            if (p.trail && p.prevX !== undefined && p.prevY !== undefined) {
+                const trailLength = 3;
+                const trailAlpha = (p.opacity || 1) * 0.3;
+                
+                ctx.globalAlpha = trailAlpha;
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = p.size * 0.4;
+                ctx.lineCap = 'round';
+                
+                ctx.beginPath();
+                ctx.moveTo(xOffset + p.prevX, yOffset + p.prevY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                ctx.globalAlpha = p.opacity || 1;
+            }
+
+            // ENHANCED: Main particle rendering with improved visual effects
+            if (p.type === 'glow') {
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, p.size);
+                gradient.addColorStop(0, p.color);
+                gradient.addColorStop(0.4, p.color);
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x - p.size, y - p.size, p.size * 2, p.size * 2);
+            } else if (p.type === 'spark') {
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = p.size * 0.5;
+                ctx.lineCap = 'round';
+
+                ctx.beginPath();
+                ctx.moveTo(x - p.vx * 0.1, y - p.vy * 0.1);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else {
+                // ENHANCED: Default particle with improved rendering
+                if (p.size > 3) {
+                    // Larger particles get a gradient effect
+                    const gradient = ctx.createRadialGradient(x, y, 0, x, y, p.size);
+                    gradient.addColorStop(0, p.color);
+                    gradient.addColorStop(0.7, p.color);
+                    gradient.addColorStop(1, p.color + '80'); // 50% opacity
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+                } else {
+                    // Smaller particles get simple rendering
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+                }
+            }
 
             ctx.restore();
         });
