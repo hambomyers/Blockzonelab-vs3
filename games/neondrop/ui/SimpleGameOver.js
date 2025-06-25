@@ -7,6 +7,7 @@
 // Import the real prize calculation system
 import { PrizeCalculator } from '../../../shared/economics/prize-calculator.js';
 import { sessionManager } from '../../../shared/platform/session.js';
+import { referralTracker } from '../../../shared/components/ReferralTracker.js';
 
 export class SimpleGameOver {
     constructor() {
@@ -538,8 +539,13 @@ export class SimpleGameOver {
     }
 
     async showViralChallengeLinks() {
+        // Initialize referral tracker if not already done
+        if (!referralTracker.currentUser) {
+            await referralTracker.initialize(this.playerName, this.playerName);
+        }
+        
         // Generate challenge links
-        const challengeLinks = sessionManager.generateChallengeLinks(this.score);
+        const challengeLinksHTML = referralTracker.getChallengeLinksHTML(this.score);
         
         this.container.innerHTML = `
             <div class="game-over-card" style="
@@ -560,8 +566,13 @@ export class SimpleGameOver {
                         Welcome ${this.playerName}!
                     </h2>
                     <div style="color: #aaa; font-size: 18px;">
-                        You scored ${this.score.toLocaleString()} points
+                        You scored ${this.score.toLocaleString()}
                     </div>
+                </div>
+
+                <!-- Viral Status Display -->
+                <div style="margin-bottom: 30px;">
+                    ${referralTracker.createStatusDisplay().outerHTML}
                 </div>
 
                 <!-- Viral Challenge Section -->
@@ -579,53 +590,7 @@ export class SimpleGameOver {
                         Share these links with friends. When they join, your name will glow!
                     </div>
                     
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        ${challengeLinks.map((link, index) => `
-                            <div style="
-                                background: rgba(0, 0, 0, 0.3);
-                                border: 1px solid rgba(0, 212, 255, 0.3);
-                                border-radius: 8px;
-                                padding: 12px;
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                            ">
-                                <span style="color: #00d4ff; font-size: 12px; font-family: monospace;">
-                                    Challenge ${index + 1}
-                                </span>
-                                <button 
-                                    onclick="navigator.clipboard.writeText('${link}')"
-                                    style="
-                                        background: linear-gradient(135deg, #00d4ff, #0099cc);
-                                        color: white;
-                                        border: none;
-                                        padding: 8px 16px;
-                                        border-radius: 6px;
-                                        font-size: 12px;
-                                        cursor: pointer;
-                                        transition: all 0.3s ease;
-                                    "
-                                >
-                                    📋 Copy
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <!-- Status Info -->
-                <div style="
-                    background: rgba(0, 0, 0, 0.2);
-                    border-radius: 10px;
-                    padding: 20px;
-                    margin-bottom: 30px;
-                ">
-                    <div style="color: #00d4ff; font-size: 16px; font-weight: 600; margin-bottom: 10px;">
-                        🏆 Your Status: Newcomer
-                    </div>
-                    <div style="color: #aaa; font-size: 14px;">
-                        Share challenges to unlock glowing status effects!
-                    </div>
+                    ${challengeLinksHTML}
                 </div>
 
                 <!-- Actions -->
@@ -667,11 +632,14 @@ export class SimpleGameOver {
             </div>
         `;
         
+        // Add copy functionality to challenge links
+        referralTracker.addCopyFunctionality(this.container);
+        
         // Bind events
-        this.bindViralChallengeEvents();
+        this.bindViralEvents();
     }
 
-    bindViralChallengeEvents() {
+    bindViralEvents() {
         const playAgainBtn = this.container.querySelector('#playAgainBtn');
         const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
         
@@ -684,7 +652,7 @@ export class SimpleGameOver {
         
         if (leaderboardBtn) {
             leaderboardBtn.addEventListener('click', async () => {
-                await this.showGameResults();
+                await this.showLeaderboard();
             });
         }
     }
@@ -950,7 +918,7 @@ export class SimpleGameOver {
             rank = sortedScores.length + 1;
         }
         
-        console.log('�� FORCED Player rank SUCCESS:', rank);
+        console.log('✅ FORCED Player rank SUCCESS:', rank);
         return rank;
     }
 

@@ -1051,3 +1051,153 @@
         width: 200px;
     }
 }
+
+/* ============ VIRAL STATUS SYSTEM ============ */
+
+/* Status Display */
+.viral-status-display {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-info {
+    position: relative;
+    z-index: 2;
+}
+
+.status-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.status-count {
+    font-size: 16px;
+    color: #00d4ff;
+    margin-bottom: 8px;
+}
+
+.status-progress {
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* Challenge Links */
+.challenge-links {
+    margin-top: 20px;
+}
+
+.challenge-links h3 {
+    color: #ffd700;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.link-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.link-option {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.link-option label {
+    display: block;
+    color: #00d4ff;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.link-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.link-input input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #aaa;
+    font-size: 12px;
+    font-family: monospace;
+    outline: none;
+}
+
+.link-input input:focus {
+    border-color: #00d4ff;
+    color: white;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    background: linear-gradient(135deg, #0099cc, #0077aa);
+    transform: translateY(-1px);
+}
+
+.copy-btn:active {
+    transform: translateY(0);
+}
+
+/* Viral Status Effects */
+.viral-bronze {
+    border-color: rgba(205, 127, 50, 0.5);
+}
+
+.viral-silver {
+    border-color: rgba(192, 192, 192, 0.5);
+}
+
+.viral-gold {
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .link-input {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .copy-btn {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .viral-status-display {
+        padding: 15px;
+    }
+    
+    .status-name {
+        font-size: 20px;
+    }
+}
