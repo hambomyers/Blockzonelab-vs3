@@ -113,6 +113,9 @@ export class GuidePanel {    constructor() {
             // Expand size and position
             this.container.style.left = this.container.dataset.expandedLeft + 'px';
             this.container.style.width = this.container.dataset.expandedWidth + 'px';
+            
+            // Setup toggle event listener after content is added
+            this.setupTwoPlayerToggle();
         });
 
         this.container.addEventListener('mouseleave', () => {
@@ -135,6 +138,9 @@ export class GuidePanel {    constructor() {
             }
         });
 
+        // Setup toggle for mobile modal too
+        this.setupTwoPlayerToggle();
+
         // Resize handling
         window.addEventListener('resize', () => {
             const wasDesktop = !this.isMobile;
@@ -153,6 +159,43 @@ export class GuidePanel {    constructor() {
                 this.positionPanel();
             }
         });
+    }
+
+    setupTwoPlayerToggle() {
+        const toggle = document.getElementById('twoPlayerToggle');
+        const info = document.getElementById('twoPlayerInfo');
+        
+        if (!toggle) return;
+        
+        // Load saved state
+        const savedState = localStorage.getItem('neondrop_two_player_mode');
+        if (savedState === 'true') {
+            toggle.checked = true;
+            if (info) info.style.display = 'block';
+        }
+        
+        toggle.addEventListener('change', (e) => {
+            const isEnabled = e.target.checked;
+            
+            // Save state
+            localStorage.setItem('neondrop_two_player_mode', isEnabled.toString());
+            
+            // Show/hide info
+            if (info) {
+                info.style.display = isEnabled ? 'block' : 'none';
+            }
+            
+            // Emit event for game engine
+            this.emitTwoPlayerModeChange(isEnabled);
+        });
+    }
+
+    emitTwoPlayerModeChange(isEnabled) {
+        // Dispatch custom event for game engine to listen to
+        const event = new CustomEvent('twoPlayerModeChange', {
+            detail: { enabled: isEnabled }
+        });
+        document.dispatchEvent(event);
     }
 
     getContent() {
@@ -208,6 +251,22 @@ export class GuidePanel {    constructor() {
                     <li><span class="guide-key">P</span> / <span class="guide-key">ESC</span> - Pause</li>
                     <li><span class="guide-key">+/-</span> - Adjust ghost opacity</li>
                 </ul>
+            </div>
+
+            <div class="guide-section">
+                <h3>■ 2-PLAYER MODE</h3>
+                <div class="two-player-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="twoPlayerToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Local 2-Player</span>
+                </div>
+                <div class="two-player-info" id="twoPlayerInfo" style="display: none;">
+                    <p><strong>Player 1:</strong> WASD + Space</p>
+                    <p><strong>Player 2:</strong> Arrow Keys + Enter</p>
+                    <p>Split-screen competition mode</p>
+                </div>
             </div>
 
             <div class="guide-section">

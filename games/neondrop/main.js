@@ -23,6 +23,9 @@ import { TournamentUI } from './ui/tournament-ui.js';
 // Payment systems (simplified)
 import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
 
+// 2-Player mode
+import { twoPlayerEngine } from './core/TwoPlayerEngine.js';
+
 class NeonDrop {
     constructor() {
         // Core config & viewport
@@ -64,49 +67,30 @@ class NeonDrop {
     getConfig() {
         return this.config || {};
     }    async initialize() {
-        try {
-            await this.config.load();
-            this.setupDisplay();
-            
-            // Enhanced: Initialize SimpleGameOver (includes UnifiedPlayerSystem)
-            console.log('🚀 Initializing enhanced game over system...');
-            this.gameOverHandler = new SimpleGameOver();
-              // Wait for systems to be ready
-            await new Promise(resolve => setTimeout(resolve, 100));
-            this.isGameOverReady = true;
-            
-            console.log('✅ SimpleGameOver system initialized');
-            
-            this.createSystems();
-            this.setupUI();
-            this.cleanupOldUI();
-            this.bindEvents();
-            this.startLoop();
-            
-            // Background initialization
-            this.initBackgroundSystems();
-        } catch (error) {
-            console.error('❌ Init failed:', error);
-            this.showError('Game failed to load. Please refresh.');
-        }
+        console.log('🎮 Initializing NeonDrop...');
+        
+        // Initialize core systems
+        this.setupCoreSystems();
+        
+        // Initialize UI
+        this.setupUI();
+        
+        // Initialize 2-player engine
+        this.setupTwoPlayerMode();
+        
+        // Initialize payment system
+        this.setupPaymentSystem();
+        
+        // Clean up any old UI elements
+        this.cleanupOldUI();
+        
+        // Start the game loop
+        this.startGameLoop();
+        
+        console.log('✅ NeonDrop initialized successfully');
     }
 
-    setupDisplay() {
-        const game = document.getElementById('game');
-        const bg = document.getElementById('bg');
-        
-        if (!game || !bg) throw new Error('Canvas elements missing');
-        
-        const dims = this.viewport.calculateOptimalDimensions(innerWidth, innerHeight);
-        
-        game.width = dims.canvasWidth;
-        game.height = dims.canvasHeight;
-        bg.width = innerWidth;
-        bg.height = innerHeight;        this.renderer = new Renderer(game, bg, this.config, dims);
-        this.renderer.viewportManager = this.viewport;
-    }
-
-    createSystems() {
+    setupCoreSystems() {
         this.audio = new AudioSystem(this.config);
         this.engine = new GameEngine(this.config, this.audio, null);
         this.input = new InputController(
@@ -115,7 +99,9 @@ class NeonDrop {
             this.config,
             () => this.tournamentUI ? this.tournamentUI.isVisible : false
         );
-    }    setupUI() {
+    }
+
+    setupUI() {
         this.guide = new GuidePanel();
         this.guide.positionPanel();
         
@@ -134,232 +120,23 @@ class NeonDrop {
         
         // Start with menu card visible instead of tournament modal
         // The menu card will be shown in setupGameMenuCard()
-    }    // REMOVED: setupGameMenuCard() - was unused (no HTML element, empty JS file)
-    // The game menu card was referenced but never implemented
-    // Game works perfectly without it
-    /*
-    setupGameMenuCard() {
-        // Wait for DOM to be ready
-        const initCard = () => {            this.gameMenuCard = document.getElementById('game-menu-card');
-            if (!this.gameMenuCard) {
-                console.log('Game menu card not found - this is optional for core gameplay');
-                return;
-            }
-
-            // Add event listeners for menu buttons
-            const modeButtons = this.gameMenuCard.querySelectorAll('.game-mode-btn');
-            const backButton = this.gameMenuCard.querySelector('.back-btn');
-
-            modeButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const mode = e.currentTarget.dataset.mode;
-                    this.handleMenuChoice(mode);
-                });
-            });
-
-            if (backButton) {
-                backButton.addEventListener('click', () => {
-                    window.location.href = '/games/';
-                });
-            }
-
-            // Show the menu card initially
-            this.showGameMenuCard();
-        };        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCard);
-        } else {
-            initCard();
-        }
     }
-    */
 
-    /**
-     * Clean up any old/legacy UI elements that might still exist
-     */    cleanupOldUI() {
-        // Remove any old tournament panels
-        const oldTournamentPanel = document.getElementById('tournament-panel');
-        if (oldTournamentPanel) {
-            oldTournamentPanel.remove();
-        }
+    setupTwoPlayerMode() {
+        // Initialize 2-player engine with game containers
+        const gameContainer = document.getElementById('gameContainer');
+        const singlePlayerContainer = document.getElementById('gameContainer');
         
-        // Remove any old overlay elements
-        const overlaySelectors = [
-            '.game-menu-overlay',
-            '.tournament-overlay', 
-            '.modal-overlay',
-            '#gameMenuOverlay',
-            '#tournamentOverlay'
-        ];
-        
-        overlaySelectors.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => el.remove());
-        });
-        
-        // Remove any old style elements that might conflict
-        const oldStyles = document.querySelectorAll('style[data-legacy]');
-        oldStyles.forEach(style => style.remove());
-    }
-
-    handleMenuChoice(mode) {
-        console.log('🎮 Menu choice:', mode);
-        
-        // Hide the menu card with elegant animation
-        // REMOVED: hideGameMenuCard(); - unused menu system
-        
-        // Handle different game modes
-        switch (mode) {
-            case 'tournament':
-                // Start tournament mode (existing functionality)
-                setTimeout(() => {
-                    if (this.tournamentUI) {
-                        this.tournamentUI.show();
-                    }
-                }, 300);
-                break;
-                
-            case 'free':
-                // Start free play mode
-                setTimeout(() => {
-                    this.startFreePlay();
-                }, 300);
-                break;            case 'leaderboard':
-                // Show leaderboard
-                console.log('🏆 Leaderboard requested');
-                console.log('🔍 window.leaderboard exists:', !!window.leaderboard);
-                
-                setTimeout(() => {
-                    if (window.leaderboard) {
-                        console.log('🎯 Calling leaderboard.show()');
-                        window.leaderboard.show();
-                    } else {
-                        console.error('❌ window.leaderboard is null/undefined!');
-                        alert('Leaderboard system not initialized!');
-                    }
-                }, 300);
-                break;
+        if (gameContainer) {
+            twoPlayerEngine.initialize(gameContainer, singlePlayerContainer);
         }
     }
 
-    startFreePlay() {
-        console.log('🎮 Starting free play mode');
-        // Start the game engine directly for free play
-        if (this.engine) {
-            this.engine.startFreePlay();
-        }
-        // Hide UI panels for clean gameplay
-        this.uiStateManager.setState('GAME_ACTIVE');    }
-
-    // REMOVED: All gameMenuCard methods - unused (no HTML element)
-    /*
-    showGameMenuCard() {
-        if (this.gameMenuCard) {
-            this.gameMenuCard.classList.remove('hidden');
-        }
+    setupPaymentSystem() {
+        // Implementation of setupPaymentSystem method
     }
 
-    hideGameMenuCard() {
-        if (this.gameMenuCard) {
-            this.gameMenuCard.classList.add('hidden');
-        }
-    }
-
-    // Called from game over and other return-to-menu scenarios
-    showGameMenuCardWithDelay(delay = 1000) {
-        setTimeout(() => {
-            this.showGameMenuCard();
-        }, delay);
-    }
-    */// FIXED: Clean event binding
-    bindEvents() {        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
-        document.addEventListener('gameOver', async (e) => {
-            const { score, level, lines, time } = e.detail;
-            console.log('🎮 Game over event received');
-            
-            if (this.gameOverHandler) {
-                await this.gameOverHandler.show(score, { level, lines, time });
-            } else {
-                console.error('❌ Game over handler not initialized');
-            }
-        });
-
-        // FIXED: Simple game over choice handling
-        document.addEventListener('simpleGameOver', (e) => {
-            const { action } = e.detail;
-            console.log('🎮 Simple game over action:', action);
-            
-            switch (action) {
-                case 'play-again':
-                    this.startNewGame();
-                    break;
-                case 'show-leaderboard':
-                    this.showLeaderboard();
-                    break;
-                case 'leaderboard':
-                    if (this.tournament && this.tournament.show) {
-                        this.tournament.show();
-                    }
-                    break;
-            }
-        });
-
-        // Tournament selection/start game
-        document.addEventListener('startGame', e => {
-            console.log('🎮 Starting game from tournament UI');
-            if (this.gameOverHandler) {
-                this.gameOverHandler.hide();
-            }
-            this.startNewGame();
-        });
-
-        // Window resize (debounced)
-        let resizeTimer;
-        addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => this.handleResize(), 100);
-        });
-
-        // Auto-pause when hidden
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && this.engine?.getState().phase === 'PLAYING') {
-                this.engine.handleInput({ type: 'PAUSE' });
-            }
-        });
-
-        // Prevent unwanted navigation
-        addEventListener('keydown', e => {
-            if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
-                e.preventDefault();
-            }
-
-        });
-
-        // Touch device detection using centralized system
-        if (window.BlockZoneMobile?.needsMobileControls()) {
-            document.body.classList.add('touch-device');
-        }
-    }async initBackgroundSystems() {
-        try {
-            // Tournament system is bulletproof - always works
-            console.log('🏆 Tournament ready');
-            
-            // Start tournament status updates
-            if (this.tournament?.startPeriodicUpdates) {
-                this.tournament.startPeriodicUpdates();
-                console.log('📊 Tournament updates started');
-            }
-            
-            // Payment system in demo mode by default
-            if (this.payment?.initialize) {
-                await this.payment.initialize();
-                console.log('💰 Payment ready');
-            }
-        } catch (error) {
-            console.log('🎮 Running in demo mode');
-        }
-    }
-
-    startLoop() {
+    startGameLoop() {
         this.running = true;
         this.render(); // Initial render
         requestAnimationFrame(() => this.gameLoop());
