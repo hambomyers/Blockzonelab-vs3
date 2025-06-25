@@ -23,9 +23,6 @@ import { TournamentUI } from './ui/tournament-ui.js';
 // Payment systems (simplified)
 import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
 
-// 2-Player mode
-import { twoPlayerEngine } from './core/TwoPlayerEngine.js';
-
 class NeonDrop {
     constructor() {
         // Core config & viewport
@@ -135,83 +132,6 @@ class NeonDrop {
         // Use unified systems (SimpleGameOver already set in initialize)
         // Make SimpleGameOver globally accessible
         window.neonDrop.gameOverHandler = this.gameOverHandler;
-        
-        // Add 2-player toggle button
-        this.addTwoPlayerToggle();
-    }
-
-    addTwoPlayerToggle() {
-        // Create a simple, discreet 2-player toggle button
-        const toggleContainer = document.createElement('div');
-        toggleContainer.className = 'two-player-toggle-container';
-        toggleContainer.style.cssText = `
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 20px;
-            padding: 8px 16px;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-        `;
-        
-        toggleContainer.innerHTML = `
-            <span>2-Player</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="twoPlayerToggle">
-                <span class="toggle-slider"></span>
-            </label>
-        `;
-        
-        document.body.appendChild(toggleContainer);
-        
-        // Add event listener
-        const toggle = toggleContainer.querySelector('#twoPlayerToggle');
-        toggle.addEventListener('change', (e) => {
-            const isEnabled = e.target.checked;
-            localStorage.setItem('neondrop_two_player_mode', isEnabled.toString());
-            
-            // Actually enable/disable 2-player mode
-            if (isEnabled) {
-                this.enableTwoPlayerMode();
-            } else {
-                this.disableTwoPlayerMode();
-            }
-        });
-        
-        // Load saved state
-        const savedState = localStorage.getItem('neondrop_two_player_mode');
-        if (savedState === 'true') {
-            toggle.checked = true;
-            // Initialize 2-player mode if it was previously enabled
-            setTimeout(() => this.enableTwoPlayerMode(), 100);
-        }
-    }
-
-    enableTwoPlayerMode() {
-        console.log('🎮 Enabling 2-player mode...');
-        
-        // Initialize 2-player engine
-        const gameContainer = document.getElementById('gameContainer');
-        if (gameContainer) {
-            twoPlayerEngine.initialize(gameContainer, gameContainer);
-        }
-    }
-
-    disableTwoPlayerMode() {
-        console.log('🎮 Disabling 2-player mode...');
-        
-        // Disable 2-player engine
-        if (twoPlayerEngine) {
-            twoPlayerEngine.disableTwoPlayerMode();
-        }
     }
 
     cleanupOldUI() {
