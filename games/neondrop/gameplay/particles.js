@@ -14,7 +14,8 @@ import { CONSTANTS } from '../config.js';
 // Helper: Get CSS variable value in JS
 function getCSSVar(name, fallback) {
     if (typeof window !== 'undefined' && window.getComputedStyle) {
-        return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+        const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        return value || fallback;
     }
     return fallback;
 }
@@ -120,17 +121,12 @@ export class ParticleSystem {
             // Calculate progress for effects
             const progress = 1 - (p.life / p.maxLife);
 
-            // ENHANCED: Rainbow color shift with glow (FIXED: More robust color handling)
+            // ENHANCED: Rainbow color shift with glow
             if (p.rainbow) {
-                try {
-                    const hue = (p.rainbowOffset + progress * 180) % 360;
-                    p.color = `hsl(${hue}, 100%, ${70 - progress * 20}%)`;
-                    p.glow = `0 0 ${15 + progress * 10}px hsl(${hue}, 100%, 70%)`;
-                } catch (e) {
-                    // Fallback if HSL fails
-                    p.color = '#ffffff';
-                    p.glow = '0 0 15px #ffffff';
-                }
+                const hue = Math.floor((p.rainbowOffset + progress * 180) % 360);
+                const lightness = Math.floor(70 - progress * 20);
+                p.color = `hsl(${hue}, 100%, ${lightness}%)`;
+                p.glow = `0 0 ${15 + Math.floor(progress * 10)}px hsl(${hue}, 100%, 70%)`;
             }
 
             // ENHANCED: Each particle has its own fade curve with glow variation
@@ -212,48 +208,42 @@ export class ParticleSystem {
         const sizeVariation = 0.6 + Math.random() * (0.8 * (1 + intensity));
         const size = (3 + intensity * 8) * sizeVariation; // Larger base size
 
-        // ENHANCED: Visual properties with glow (FIXED: More robust color handling)
+        // ENHANCED: Visual properties with glow
         let particleColor = color;
         let glowEffect = '0 0 15px currentColor';
         
         // Use enhanced neon palette for all particles
         if (typeof color === 'string' && color[0] === '#') {
-            try {
-                // Map block color to neon palette if possible
-                if (color.toLowerCase() === '#ffd700') {
-                    const palette = NEON_PALETTE.gold();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-                else if (color.toLowerCase() === '#8a2be2') {
-                    const palette = NEON_PALETTE.purple();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-                else if (color.toLowerCase() === '#00f5ff') {
-                    const palette = NEON_PALETTE.blue();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-                else if (color.toLowerCase() === '#ff1493') {
-                    const palette = NEON_PALETTE.pink();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-                else if (color.toLowerCase() === '#39ff14') {
-                    const palette = NEON_PALETTE.green();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-                else if (color.toLowerCase() === '#ffa500') {
-                    const palette = NEON_PALETTE.orange();
-                    particleColor = palette.color;
-                    glowEffect = palette.glow;
-                }
-            } catch (e) {
-                // Fallback if palette mapping fails
-                particleColor = color;
-                glowEffect = '0 0 15px ' + color;
+            // Map block color to neon palette if possible
+            if (color.toLowerCase() === '#ffd700') {
+                const palette = NEON_PALETTE.gold();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
+            }
+            else if (color.toLowerCase() === '#8a2be2') {
+                const palette = NEON_PALETTE.purple();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
+            }
+            else if (color.toLowerCase() === '#00f5ff') {
+                const palette = NEON_PALETTE.blue();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
+            }
+            else if (color.toLowerCase() === '#ff1493') {
+                const palette = NEON_PALETTE.pink();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
+            }
+            else if (color.toLowerCase() === '#39ff14') {
+                const palette = NEON_PALETTE.green();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
+            }
+            else if (color.toLowerCase() === '#ffa500') {
+                const palette = NEON_PALETTE.orange();
+                particleColor = palette.color;
+                glowEffect = palette.glow;
             }
         }
 

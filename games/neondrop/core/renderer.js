@@ -1129,181 +1129,75 @@ export class Renderer {
     }
 
     /**
-     * Render particles with shared drawing logic
+     * Render particles with enhanced effects
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {Array} particles - Array of particle objects
      */
-    renderParticlesWithContext(ctx, particles, xOffset = 0, yOffset = 0, bounds = null) {
-        particles.forEach(p => {
-            try {
-                ctx.save();
-                ctx.globalAlpha = p.opacity || 1;
+    renderParticles(ctx, particles) {
+        if (!particles || particles.length === 0) return;
 
-                const x = xOffset + p.x;
-                const y = yOffset + p.y;
+        particles.forEach(particle => {
+            // Skip if particle is too faded
+            if (particle.opacity <= 0.01) return;
 
-                // Check bounds if provided
-                if (bounds && (x < bounds.minX || x > bounds.maxX ||
-                              y < bounds.minY || y > bounds.maxY)) {
-                    ctx.restore();
-                    return;
-                }
+            const x = Math.round(particle.x);
+            const y = Math.round(particle.y);
+            const size = Math.max(1, Math.round(particle.size * particle.opacity));
 
-                // ENHANCED: Support for new glow effects and trail particles
-                if (p.glow) {
-                    try {
-                        // Enhanced glow effect with custom glow property
-                        const glowSize = p.size * (1.5 + (p.glowIntensity || 1) * 0.5);
-                        const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
-                        
-                        // Parse glow effect (format: "0 0 20px #color")
-                        const glowMatch = p.glow.match(/0 0 (\d+)px (.+)/);
-                        if (glowMatch) {
-                            const glowRadius = parseInt(glowMatch[1]);
-                            const glowColor = glowMatch[2];
-                            const intensity = p.glowIntensity || 1;
-                            
-                            gradient.addColorStop(0, glowColor);
-                            gradient.addColorStop(0.3, glowColor + '80'); // 50% opacity
-                            gradient.addColorStop(0.7, glowColor + '40'); // 25% opacity
-                            gradient.addColorStop(1, 'transparent');
-                            
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(x - glowSize, y - glowSize, glowSize * 2, glowSize * 2);
-                        }
-                    } catch (e) {
-                        // Fallback if glow effect fails
-                        ctx.fillStyle = p.color || '#ffffff';
-                        ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
-                    }
-                }
+            // Set up context for this particle
+            ctx.save();
+            ctx.globalAlpha = particle.opacity;
 
-                // ENHANCED: Sparkle effect for special particles
-                if (p.sparkle) {
-                    try {
-                        const sparkleSize = p.size * 0.3;
-                        const sparkleAlpha = Math.sin(Date.now() * 0.01 + p.x * 0.1) * 0.5 + 0.5;
-                        ctx.globalAlpha = sparkleAlpha * (p.opacity || 1);
-                        
-                        // Draw sparkle cross
-                        ctx.strokeStyle = p.color || '#ffffff';
-                        ctx.lineWidth = 1;
-                        ctx.lineCap = 'round';
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(x - sparkleSize, y);
-                        ctx.lineTo(x + sparkleSize, y);
-                        ctx.moveTo(x, y - sparkleSize);
-                        ctx.lineTo(x, y + sparkleSize);
-                        ctx.stroke();
-                        
-                        ctx.globalAlpha = p.opacity || 1;
-                    } catch (e) {
-                        // Fallback if sparkle fails
-                        ctx.globalAlpha = p.opacity || 1;
-                    }
-                }
-
-                // ENHANCED: Trail effect for particles with trail property
-                if (p.trail && p.prevX !== undefined && p.prevY !== undefined) {
-                    try {
-                        const trailLength = 3;
-                        const trailAlpha = (p.opacity || 1) * 0.3;
-                        
-                        ctx.globalAlpha = trailAlpha;
-                        ctx.strokeStyle = p.color || '#ffffff';
-                        ctx.lineWidth = p.size * 0.4;
-                        ctx.lineCap = 'round';
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(xOffset + p.prevX, yOffset + p.prevY);
-                        ctx.lineTo(x, y);
-                        ctx.stroke();
-                        
-                        ctx.globalAlpha = p.opacity || 1;
-                    } catch (e) {
-                        // Fallback if trail fails
-                        ctx.globalAlpha = p.opacity || 1;
-                    }
-                }
-
-                // ENHANCED: Main particle rendering with improved visual effects
-                if (p.type === 'glow') {
-                    try {
-                        const gradient = ctx.createRadialGradient(x, y, 0, x, y, p.size);
-                        gradient.addColorStop(0, p.color || '#ffffff');
-                        gradient.addColorStop(0.4, p.color || '#ffffff');
-                        gradient.addColorStop(1, 'transparent');
-
-                        ctx.fillStyle = gradient;
-                        ctx.fillRect(x - p.size, y - p.size, p.size * 2, p.size * 2);
-                    } catch (e) {
-                        // Fallback if glow type fails
-                        ctx.fillStyle = p.color || '#ffffff';
-                        ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
-                    }
-                } else if (p.type === 'spark') {
-                    try {
-                        ctx.strokeStyle = p.color || '#ffffff';
-                        ctx.lineWidth = p.size * 0.5;
-                        ctx.lineCap = 'round';
-
-                        ctx.beginPath();
-                        ctx.moveTo(x - p.vx * 0.1, y - p.vy * 0.1);
-                        ctx.lineTo(x, y);
-                        ctx.stroke();
-                    } catch (e) {
-                        // Fallback if spark type fails
-                        ctx.fillStyle = p.color || '#ffffff';
-                        ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
-                    }
-                } else {
-                    // ENHANCED: Default particle with improved rendering
-                    try {
-                        if (p.size > 3) {
-                            // Larger particles get a gradient effect
-                            const gradient = ctx.createRadialGradient(x, y, 0, x, y, p.size);
-                            gradient.addColorStop(0, p.color || '#ffffff');
-                            gradient.addColorStop(0.7, p.color || '#ffffff');
-                            gradient.addColorStop(1, (p.color || '#ffffff') + '80'); // 50% opacity
-                            
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
-                        } else {
-                            // Smaller particles get simple rendering
-                            ctx.fillStyle = p.color || '#ffffff';
-                            ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
-                        }
-                    } catch (e) {
-                        // Ultimate fallback
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(x - 2, y - 2, 4, 4);
-                    }
-                }
-
-                ctx.restore();
-            } catch (e) {
-                // If anything fails, just skip this particle
-                try { ctx.restore(); } catch (e2) {}
+            // ENHANCED: Apply glow effect
+            if (particle.glow && particle.glowIntensity > 0.1) {
+                ctx.shadowColor = particle.color;
+                ctx.shadowBlur = 15 * particle.glowIntensity;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
             }
+
+            // ENHANCED: Draw particle with proper color handling
+            ctx.fillStyle = particle.color || '#ffffff';
+            ctx.beginPath();
+            
+            // ENHANCED: Different shapes for variety
+            if (particle.sparkle) {
+                // Sparkle effect - draw a small cross
+                const sparkleSize = size * 0.5;
+                ctx.moveTo(x - sparkleSize, y);
+                ctx.lineTo(x + sparkleSize, y);
+                ctx.moveTo(x, y - sparkleSize);
+                ctx.lineTo(x, y + sparkleSize);
+                ctx.strokeStyle = particle.color || '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            } else {
+                // Regular particle - draw circle
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // ENHANCED: Draw trail if particle has trail effect
+            if (particle.trail && particle.prevX !== undefined && particle.prevY !== undefined) {
+                const trailLength = 3;
+                const trailOpacity = particle.opacity * 0.3;
+                
+                ctx.globalAlpha = trailOpacity;
+                ctx.shadowBlur = 8 * particle.glowIntensity;
+                
+                for (let i = 1; i <= trailLength; i++) {
+                    const trailX = particle.prevX + (x - particle.prevX) * (i / trailLength);
+                    const trailY = particle.prevY + (y - particle.prevY) * (i / trailLength);
+                    const trailSize = size * (1 - i / trailLength);
+                    
+                    ctx.beginPath();
+                    ctx.arc(Math.round(trailX), Math.round(trailY), Math.max(1, trailSize), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            ctx.restore();
         });
-    }
-
-    renderParticles(particles) {
-        if (particles.length === 0) return;
-
-        const bounds = {
-            minX: 0,
-            maxX: this.dimensions.canvasWidth,
-            minY: 0,
-            maxY: this.dimensions.canvasHeight
-        };
-
-        this.renderParticlesWithContext(
-            this.ctx,
-            particles,
-            this.dimensions.boardX,
-            this.dimensions.boardY,
-            bounds
-        );
     }
 
     renderParticlesOverflow(particles) {
@@ -1322,12 +1216,7 @@ export class Renderer {
 
         if (overflowParticles.length === 0) return;
 
-        this.renderParticlesWithContext(
-            this.bgCtx,
-            overflowParticles,
-            gameRect.left + this.dimensions.boardX,
-            gameRect.top + this.dimensions.boardY
-        );
+        this.renderParticles(this.bgCtx, overflowParticles);
     }
 
     renderGrid() {
