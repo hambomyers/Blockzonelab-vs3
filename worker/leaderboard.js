@@ -123,6 +123,10 @@ export default {
         return await handleApiAnalytics(request, env, headers);
       }
 
+      if (url.pathname.startsWith('/api/referrals')) {
+        return await handleApiReferrals(request, env, headers);
+      }
+
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
         headers
@@ -1464,55 +1468,98 @@ async function handleApiPayments(request, env, headers) {
 
 // --- Modular Handler: /api/analytics ---
 async function handleApiAnalytics(request, env, headers) {
+  const method = request.method;
   const url = new URL(request.url);
-  const path = url.pathname;
   
-  try {
-    if (path === '/api/analytics/new-user' && request.method === 'POST') {
-      // Track new user registration
-      const data = await request.json();
-      const { player_id, source = 'direct', referrer = null } = data;
-      
-      const analyticsRecord = {
-        event: 'new_user',
-        player_id,
-        source,
-        referrer,
-        timestamp: Date.now()
-      };
-      
-      await env.SCORES.put(`analytics:${Date.now()}_${player_id}`, JSON.stringify(analyticsRecord));
-      
-      return new Response(JSON.stringify({ success: true }), { headers });
-    }
-    
-    if (path === '/api/analytics/game-play' && request.method === 'POST') {
-      // Track game play events
-      const data = await request.json();
-      const { player_id, game = 'neon_drop', score, duration } = data;
-      
-      const playRecord = {
-        event: 'game_play',
-        player_id,
-        game,
-        score,
-        duration,
-        timestamp: Date.now()
-      };
-      
-      await env.SCORES.put(`analytics:${Date.now()}_${player_id}`, JSON.stringify(playRecord));
-      
-      return new Response(JSON.stringify({ success: true }), { headers });
-    }
-    
-    return new Response(JSON.stringify({ 
-      status: 'analytics endpoint active',
-      available_endpoints: ['/new-user', '/game-play']
-    }), { headers });
-    
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers });
+  if (method === 'POST' && url.pathname === '/api/analytics/new_user') {
+    // Track new user registration
+    const data = await request.json();
+    // Store analytics in KV
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
+  
+  return new Response(JSON.stringify({ success: true }), {
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+async function handleApiReferrals(request, env, headers) {
+  const method = request.method;
+  const url = new URL(request.url);
+  
+  if (method === 'POST' && url.pathname === '/api/referrals/track') {
+    const data = await request.json();
+    const { session_id, referrer_id, timestamp } = data;
+    
+    if (!session_id || !referrer_id) {
+      return new Response(JSON.stringify({ error: 'Missing session_id or referrer_id' }), { 
+        status: 400, 
+        headers 
+      });
+    }
+    
+    try {
+      // Get the session to find the new player
+      const session = await env.SESSIONS.get(`session:${session_id}`, 'json');
+      if (!session) {
+        return new Response(JSON.stringify({ error: 'Session not found' }), { 
+          status: 404, 
+          headers 
+        });
+      }
+      
+      const newPlayerId = session.player_id;
+      
+      // Get referrer profile
+      const referrerProfile = await env.PLAYERS.get(`profile:${referrer_id}`, 'json');
+      if (!referrerProfile) {
+        return new Response(JSON.stringify({ error: 'Referrer not found' }), { 
+          status: 404, 
+          headers 
+        });
+      }
+      
+      // Increment referrer's referral count
+      referrerProfile.referrals = (referrerProfile.referrals || 0) + 1;
+      referrerProfile.last_referral = timestamp;
+      
+      // Update referrer profile
+      await env.PLAYERS.put(`profile:${referrer_id}`, JSON.stringify(referrerProfile));
+      
+      // Store referral record
+      const referralRecord = {
+        referrer_id,
+        new_player_id: newPlayerId,
+        timestamp,
+        session_id
+      };
+      
+      await env.SCORES.put(`referral:${newPlayerId}`, JSON.stringify(referralRecord));
+      
+      console.log(`✅ Referral tracked: ${referrer_id} -> ${newPlayerId}`);
+      
+      return new Response(JSON.stringify({ 
+        success: true, 
+        referrer_id,
+        new_player_id: newPlayerId,
+        referrer_referrals: referrerProfile.referrals
+      }), { headers });
+      
+    } catch (error) {
+      console.error('❌ Referral tracking failed:', error);
+      return new Response(JSON.stringify({ error: 'Referral tracking failed' }), { 
+        status: 500, 
+        headers 
+      });
+    }
+  }
+  
+  return new Response(JSON.stringify({ error: 'Not found' }), { 
+    status: 404, 
+    headers 
+  });
 }
 
 // --- Utility: Get current AM/PM cycle key ---

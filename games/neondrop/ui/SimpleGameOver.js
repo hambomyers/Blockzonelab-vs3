@@ -533,7 +533,160 @@ export class SimpleGameOver {
             console.log('⚠️ API not available, continuing anyway');
         }
         
-        await this.showGameResults();
+        // Show viral challenge links for new players
+        await this.showViralChallengeLinks();
+    }
+
+    async showViralChallengeLinks() {
+        // Generate challenge links
+        const challengeLinks = sessionManager.generateChallengeLinks(this.score);
+        
+        this.container.innerHTML = `
+            <div class="game-over-card" style="
+                background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 500px;
+                width: 90%;
+                border: 1px solid rgba(0, 212, 255, 0.3);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                animation: slideIn 0.4s ease-out;
+            ">
+                <!-- Welcome Message -->
+                <div style="margin-bottom: 30px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
+                    <h2 style="color: #00d4ff; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">
+                        Welcome ${this.playerName}!
+                    </h2>
+                    <div style="color: #aaa; font-size: 18px;">
+                        You scored ${this.score.toLocaleString()} points
+                    </div>
+                </div>
+
+                <!-- Viral Challenge Section -->
+                <div style="
+                    background: rgba(255, 215, 0, 0.1);
+                    border: 1px solid rgba(255, 215, 0, 0.3);
+                    border-radius: 15px;
+                    padding: 25px;
+                    margin-bottom: 30px;
+                ">
+                    <div style="color: #ffd700; font-size: 20px; font-weight: 600; margin-bottom: 15px;">
+                        🚀 Create Your First Challenges!
+                    </div>
+                    <div style="color: #aaa; font-size: 14px; margin-bottom: 20px;">
+                        Share these links with friends. When they join, your name will glow!
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${challengeLinks.map((link, index) => `
+                            <div style="
+                                background: rgba(0, 0, 0, 0.3);
+                                border: 1px solid rgba(0, 212, 255, 0.3);
+                                border-radius: 8px;
+                                padding: 12px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            ">
+                                <span style="color: #00d4ff; font-size: 12px; font-family: monospace;">
+                                    Challenge ${index + 1}
+                                </span>
+                                <button 
+                                    onclick="navigator.clipboard.writeText('${link}')"
+                                    style="
+                                        background: linear-gradient(135deg, #00d4ff, #0099cc);
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 16px;
+                                        border-radius: 6px;
+                                        font-size: 12px;
+                                        cursor: pointer;
+                                        transition: all 0.3s ease;
+                                    "
+                                >
+                                    📋 Copy
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Status Info -->
+                <div style="
+                    background: rgba(0, 0, 0, 0.2);
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin-bottom: 30px;
+                ">
+                    <div style="color: #00d4ff; font-size: 16px; font-weight: 600; margin-bottom: 10px;">
+                        🏆 Your Status: Newcomer
+                    </div>
+                    <div style="color: #aaa; font-size: 14px;">
+                        Share challenges to unlock glowing status effects!
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions" style="display: flex; gap: 15px; justify-content: center;">
+                    <button 
+                        id="playAgainBtn"
+                        style="
+                            background: linear-gradient(135deg, #00d4ff, #0099cc);
+                            color: white;
+                            border: none;
+                            padding: 15px 25px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "
+                    >
+                        🎮 Play Again
+                    </button>
+                    
+                    <button 
+                        id="leaderboardBtn"
+                        style="
+                            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+                            color: white;
+                            border: none;
+                            padding: 15px 25px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "
+                    >
+                        🏆 Leaderboard
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Bind events
+        this.bindViralChallengeEvents();
+    }
+
+    bindViralChallengeEvents() {
+        const playAgainBtn = this.container.querySelector('#playAgainBtn');
+        const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
+        
+        if (playAgainBtn) {
+            playAgainBtn.addEventListener('click', () => {
+                this.hide();
+                this.emit('play-again');
+            });
+        }
+        
+        if (leaderboardBtn) {
+            leaderboardBtn.addEventListener('click', async () => {
+                await this.showGameResults();
+            });
+        }
     }
 
     async showGameResults(tournamentSuccess = false) {
@@ -797,7 +950,7 @@ export class SimpleGameOver {
             rank = sortedScores.length + 1;
         }
         
-        console.log('🏆 FORCED Player rank SUCCESS:', rank);
+        console.log('�� FORCED Player rank SUCCESS:', rank);
         return rank;
     }
 

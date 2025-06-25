@@ -18,11 +18,21 @@ class SessionManager {
         if (this.initialized) return;
         
         try {
+            // Check for referral in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const referrerId = urlParams.get('ref');
+            
             // Try to get existing session
             this.session = await this.getSession();
             this.profile = this.getProfile();
             this.initialized = true;
             console.log('✅ Session manager initialized:', this.session?.player_id);
+            
+            // Handle referral if this is a new player
+            if (referrerId && this.session?.is_new) {
+                await this.handleReferral(referrerId);
+                console.log('✅ Referral tracked for new player:', referrerId);
+            }
         } catch (error) {
             console.error('❌ Failed to initialize session manager:', error);
             // Create anonymous session as fallback
@@ -201,6 +211,57 @@ class SessionManager {
         if (migrated) {
             console.log('✅ Old data migration completed');
         }
+    }
+
+    // Handle referral tracking
+    async handleReferral(referrerId) {
+        if (!this.session || !referrerId) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/referrals/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: this.session.session_id,
+                    referrer_id: referrerId,
+                    timestamp: Date.now()
+                })
+            });
+            
+            if (response.ok) {
+                console.log('✅ Referral tracked:', referrerId);
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not track referral:', error);
+        }
+    }
+
+    // Get referral status for display
+    getReferralStatus() {
+        const profile = this.getProfile();
+        if (!profile) return { tier: 'newcomer', referrals: 0 };
+        
+        const referrals = profile.referrals || 0;
+        
+        if (referrals >= 51) return { tier: 'legend', referrals, glow: 'gold', effects: ['animation'] };
+        if (referrals >= 21) return { tier: 'viral_star', referrals, glow: 'purple', effects: ['sparkles'] };
+        if (referrals >= 6) return { tier: 'influencer', referrals, glow: 'blue' };
+        return { tier: 'newcomer', referrals };
+    }
+
+    // Generate challenge links for viral sharing
+    generateChallengeLinks(score) {
+        if (!this.session) return [];
+        
+        const playerId = this.getPlayerId();
+        const displayName = this.getDisplayName();
+        const baseUrl = window.location.origin;
+        
+        return [
+            `${baseUrl}/challenge/${displayName}/${score}?ref=${playerId}`,
+            `${baseUrl}/challenge/${displayName}/${score}/2?ref=${playerId}`,
+            `${baseUrl}/challenge/${displayName}/${score}/3?ref=${playerId}`
+        ];
     }
 }
 
