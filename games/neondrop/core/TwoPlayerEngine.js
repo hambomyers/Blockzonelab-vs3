@@ -62,6 +62,15 @@ export class TwoPlayerEngine {
             this.singlePlayerContainer.style.display = 'none';
         }
         
+        // Hide any existing game elements
+        const existingGame = document.getElementById('game');
+        const existingBg = document.getElementById('bg');
+        if (existingGame) existingGame.style.display = 'none';
+        if (existingBg) existingBg.style.display = 'none';
+        
+        // Hide guide panels and UI elements for clean 2-player experience
+        this.hideUIElements();
+        
         // Create 2-player layout
         this.createTwoPlayerLayout();
         
@@ -89,8 +98,59 @@ export class TwoPlayerEngine {
             this.singlePlayerContainer.style.display = 'block';
         }
         
+        // Show existing game elements
+        const existingGame = document.getElementById('game');
+        const existingBg = document.getElementById('bg');
+        if (existingGame) existingGame.style.display = 'block';
+        if (existingBg) existingBg.style.display = 'block';
+        
+        // Show UI elements again
+        this.showUIElements();
+        
         // Remove 2-player layout
         this.removeTwoPlayerLayout();
+    }
+
+    /**
+     * Hide UI elements for clean 2-player experience
+     */
+    hideUIElements() {
+        // Hide guide panel
+        const guidePanel = document.querySelector('.guide-panel');
+        if (guidePanel) guidePanel.style.display = 'none';
+        
+        // Hide stats panel
+        const statsPanel = document.querySelector('.stats-panel');
+        if (statsPanel) statsPanel.style.display = 'none';
+        
+        // Hide mobile guide button
+        const guideButton = document.querySelector('.guide-mobile-button');
+        if (guideButton) guideButton.style.display = 'none';
+        
+        // Hide 2-player toggle button
+        const toggleContainer = document.querySelector('.two-player-toggle-container');
+        if (toggleContainer) toggleContainer.style.display = 'none';
+    }
+
+    /**
+     * Show UI elements when returning to single player
+     */
+    showUIElements() {
+        // Show guide panel
+        const guidePanel = document.querySelector('.guide-panel');
+        if (guidePanel) guidePanel.style.display = 'flex';
+        
+        // Show stats panel
+        const statsPanel = document.querySelector('.stats-panel');
+        if (statsPanel) statsPanel.style.display = 'flex';
+        
+        // Show mobile guide button
+        const guideButton = document.querySelector('.guide-mobile-button');
+        if (guideButton) guideButton.style.display = 'block';
+        
+        // Show 2-player toggle button
+        const toggleContainer = document.querySelector('.two-player-toggle-container');
+        if (toggleContainer) toggleContainer.style.display = 'flex';
     }
 
     /**
@@ -108,6 +168,8 @@ export class TwoPlayerEngine {
             height: 100%;
             display: flex;
             background: #000;
+            padding: 20px;
+            box-sizing: border-box;
         `;
         
         // Create player 1 container (left side)
@@ -117,6 +179,10 @@ export class TwoPlayerEngine {
             flex: 1;
             position: relative;
             border-right: 2px solid #00d4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
         `;
         
         // Create player 2 container (right side)
@@ -125,6 +191,10 @@ export class TwoPlayerEngine {
         this.player2Container.style.cssText = `
             flex: 1;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
         `;
         
         // Add player labels
@@ -190,8 +260,34 @@ export class TwoPlayerEngine {
             font-weight: 600;
         `;
         
+        // Exit button
+        const exitButton = document.createElement('button');
+        exitButton.className = 'exit-2player-btn';
+        exitButton.innerHTML = 'Exit 2-Player';
+        exitButton.style.cssText = `
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        `;
+        
+        exitButton.addEventListener('click', () => {
+            this.disableTwoPlayerMode();
+        });
+        
         this.player1Container.appendChild(player1Label);
         this.player2Container.appendChild(player2Label);
+        this.twoPlayerContainer.appendChild(exitButton);
     }
 
     /**
@@ -216,15 +312,28 @@ export class TwoPlayerEngine {
         bgCanvas.id = `bg-${playerId}`;
         gameCanvas.id = `game-${playerId}`;
         
+        // Calculate 75% size for 2-player mode
+        const containerWidth = container.clientWidth - 20; // Account for padding
+        const containerHeight = container.clientHeight - 60; // Account for label and padding
+        const gameSize = Math.min(containerWidth, containerHeight) * 0.75;
+        
+        // Set canvas sizes
+        bgCanvas.width = gameSize;
+        bgCanvas.height = gameSize;
+        gameCanvas.width = gameSize;
+        gameCanvas.height = gameSize;
+        
         // Set canvas styles
         [bgCanvas, gameCanvas].forEach(canvas => {
             canvas.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+                width: ${gameSize}px;
+                height: ${gameSize}px;
                 display: block;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: crisp-edges;
             `;
         });
         
@@ -232,12 +341,28 @@ export class TwoPlayerEngine {
         container.appendChild(bgCanvas);
         container.appendChild(gameCanvas);
         
-        // Create game engine
-        const gameEngine = new GameEngine();
+        // Create game engine with proper config
+        const config = {
+            get: (key) => {
+                const defaults = {
+                    'game.tickRate': 16.67,
+                    'graphics.starfield': false,
+                    'audio.enabled': true
+                };
+                return defaults[key] || null;
+            },
+            load: () => Promise.resolve()
+        };
+        
+        const gameEngine = new GameEngine(config, null, null);
         gameEngine.playerId = playerId;
         
-        // Create renderer
-        const renderer = new Renderer(gameCanvas, bgCanvas);
+        // Create renderer with custom dimensions
+        const renderer = new Renderer(gameCanvas, bgCanvas, config, {
+            canvasWidth: gameSize,
+            canvasHeight: gameSize,
+            blockSize: Math.floor(gameSize / 20) // Scale block size to canvas
+        });
         
         // Create input controller with player-specific controls
         const inputController = new InputController();

@@ -146,14 +146,14 @@ class NeonDrop {
         toggleContainer.className = 'two-player-toggle-container';
         toggleContainer.style.cssText = `
             position: absolute;
-            bottom: 20px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 100;
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid rgba(0, 212, 255, 0.3);
             border-radius: 20px;
             padding: 8px 16px;
@@ -178,17 +178,39 @@ class NeonDrop {
             const isEnabled = e.target.checked;
             localStorage.setItem('neondrop_two_player_mode', isEnabled.toString());
             
-            // Emit event for 2-player engine
-            const event = new CustomEvent('twoPlayerModeChange', {
-                detail: { enabled: isEnabled }
-            });
-            document.dispatchEvent(event);
+            // Actually enable/disable 2-player mode
+            if (isEnabled) {
+                this.enableTwoPlayerMode();
+            } else {
+                this.disableTwoPlayerMode();
+            }
         });
         
         // Load saved state
         const savedState = localStorage.getItem('neondrop_two_player_mode');
         if (savedState === 'true') {
             toggle.checked = true;
+            // Initialize 2-player mode if it was previously enabled
+            setTimeout(() => this.enableTwoPlayerMode(), 100);
+        }
+    }
+
+    enableTwoPlayerMode() {
+        console.log('🎮 Enabling 2-player mode...');
+        
+        // Initialize 2-player engine
+        const gameContainer = document.getElementById('gameContainer');
+        if (gameContainer) {
+            twoPlayerEngine.initialize(gameContainer, gameContainer);
+        }
+    }
+
+    disableTwoPlayerMode() {
+        console.log('🎮 Disabling 2-player mode...');
+        
+        // Disable 2-player engine
+        if (twoPlayerEngine) {
+            twoPlayerEngine.disableTwoPlayerMode();
         }
     }
 

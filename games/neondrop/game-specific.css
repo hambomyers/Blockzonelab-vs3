@@ -43,11 +43,13 @@ html, body {
     height: 100vh;
     overflow: hidden;
     background: #000;
+    padding-bottom: 80px; /* Make room for 2-player toggle button */
+    box-sizing: border-box;
 }
 
 #bg, #game {
     position: absolute;
-    top: 0;
+    top: -40px; /* Move canvases UP to make room for button */
     left: 0;
     display: block;
     image-rendering: pixelated;
