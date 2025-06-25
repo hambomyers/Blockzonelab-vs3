@@ -142,7 +142,7 @@ async function handleApiScores(request, env, headers) {
   } catch (e) {
     return new Response(JSON.stringify({ verified: false, reason: 'Invalid JSON' }), { status: 400, headers });
   }
-  const { score, replay_hash, metrics, player_id, timestamp, entry_fee = 2.50 } = data;
+  const { score, replay_hash, metrics, player_id, timestamp, entry_fee = 0.25 } = data;
   if (!player_id || typeof score !== 'number') {
     return new Response(JSON.stringify({ verified: false, reason: 'Missing player_id or score' }), { status: 400, headers });
   }
@@ -524,7 +524,9 @@ async function handlePlayerRegistration(request, env, headers) {
     created_at: Date.now(),
     last_activity: Date.now(),
     current_high_score: 0,
-    verified: tier === 'social' || tier === 'web3'
+    streak: 0,
+    streak_updated: Date.now(),
+    payment_history: []
   };
 
   // Store in PLAYERS namespace

@@ -99,7 +99,7 @@ export class ChampionshipUI {
             name: this.cycles[cycle].name,
             type: 'daily',
             status: 'active',
-            entry_fee: 2.50,
+            entry_fee: 0.25,
             prize_pool: 0,
             max_players: 1000,
             current_players: 0,
@@ -112,7 +112,7 @@ export class ChampionshipUI {
     async showChampionshipInterface() {
         const cycle = this.currentTournament.cycle || 'am';
         const timeRemaining = this.getTimeRemaining();
-        const entryFee = this.currentTournament.entry_fee || 2.50;
+        const entryFee = this.currentTournament.entry_fee || 0.25;
         
         this.container.innerHTML = `
             <div class="championship-card" style="
@@ -372,7 +372,7 @@ export class ChampionshipUI {
         
         // Check if player has sufficient balance
         const balance = await window.BlockZoneWeb3.getBalance();
-        const entryFee = this.currentTournament.entry_fee || 2.50;
+        const entryFee = this.currentTournament.entry_fee || 0.25;
         
         if (parseFloat(balance) < entryFee) {
             this.showInsufficientBalance(entryFee);

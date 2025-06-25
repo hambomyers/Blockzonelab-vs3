@@ -76,24 +76,23 @@ export class PrizeCalculator {
   }
 
   // Preview prizes for different entry scenarios
-  previewPrizes(playerCount, entryFee = 2.50) {
-    const scenarios = [];
+  previewPrizes(playerCount, entryFee = 0.25) {
+    const totalPool = playerCount * entryFee;
+    const platformFee = totalPool * 0.10;
+    const prizePool = totalPool * 0.90;
     
-    for (let players = 5; players <= playerCount; players += 5) {
-      const revenue = players * entryFee;
-      const calc = this.calculatePrizes(revenue);
-      scenarios.push({
-        players,
-        revenue,
-        ...calc
-      });
-    }
-    
-    return scenarios;
+    return {
+      totalPool: totalPool.toFixed(2),
+      platformFee: platformFee.toFixed(2),
+      prizePool: prizePool.toFixed(2),
+      firstPlace: (prizePool * 0.50).toFixed(2),
+      secondPlace: (prizePool * 0.30).toFixed(2),
+      thirdPlace: (prizePool * 0.20).toFixed(2)
+    };
   }
 
   // Get current tournament prize preview
-  getCurrentPrizePreview(currentEntries, entryFee = 2.50) {
+  getCurrentPrizePreview(currentEntries, entryFee = 0.25) {
     if (currentEntries < 5) {
       return {
         status: 'insufficient_players',

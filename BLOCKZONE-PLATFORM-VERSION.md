@@ -16,14 +16,14 @@ This is a **COMPLETE PLATFORM REFACTOR** - transforming BlockZone Lab from a sim
 
 #### **Revenue System #1: Championship Cycles**
 - Two 12-hour championships daily (12 AM-12 PM GMT, 12 PM-12 AM GMT)
-- $2.50 USDC.E entry fee per attempt
+- $0.25 USDC.E entry fee per attempt (quarters)
 - 90% to winners, 10% platform fee
 - Real-time leaderboards with instant Sonic Labs validation
 - Professional tournament interface with Apple-inspired design
 
 #### **Revenue System #2: Friend Challenges**
 - Viral challenge links: `blockzonelab.com/challenge/[username]/[score]`
-- Head-to-head battles for quarters
+- Head-to-head battles for quarters ($0.25 to $5.00)
 - One-tap Apple Pay/Google Pay integration
 - Social sharing with auto-generated victory content
 - Challenge creation interface with multiple game types
@@ -77,7 +77,7 @@ This is a **COMPLETE PLATFORM REFACTOR** - transforming BlockZone Lab from a sim
 ### Championship System
 - **Morning Championship:** 12:00 AM - 12:00 PM GMT
 - **Evening Championship:** 12:00 PM - 12:00 AM GMT
-- **Entry Fee:** $2.50 USDC.E per attempt
+- **Entry Fee:** $0.25 USDC.E per attempt (quarters)
 - **Prize Pool:** 90% to winners, 10% platform
 - **Real-time Updates:** Live leaderboards and instant results
 

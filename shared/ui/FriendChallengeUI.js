@@ -160,11 +160,16 @@ export class FriendChallengeUI {
                             color: #fff;
                             font-size: 16px;
                         ">
-                            <option value="0.25">25¢ (1 Quarter)</option>
-                            <option value="0.50">50¢ (2 Quarters)</option>
+                            <option value="0.25">$0.25 (1 Quarter)</option>
+                            <option value="0.50">$0.50 (2 Quarters)</option>
+                            <option value="0.75">$0.75 (3 Quarters)</option>
                             <option value="1.00">$1.00 (4 Quarters)</option>
+                            <option value="1.25">$1.25 (5 Quarters)</option>
+                            <option value="1.50">$1.50 (6 Quarters)</option>
+                            <option value="1.75">$1.75 (7 Quarters)</option>
+                            <option value="2.00">$2.00 (8 Quarters)</option>
+                            <option value="2.25">$2.25 (9 Quarters)</option>
                             <option value="2.50">$2.50 (10 Quarters)</option>
-                            <option value="5.00">$5.00 (20 Quarters)</option>
                         </select>
                     </div>
                     
