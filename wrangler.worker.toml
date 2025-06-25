@@ -2,6 +2,9 @@ name = "blockzone-api"
 main = "./worker/leaderboard.js"
 compatibility_date = "2023-12-01"
 
+# Pages configuration
+pages_build_output_dir = "."
+
 [[kv_namespaces]]
 binding = "PLAYERS"
 id = "afdca5fda8b343b99541432574cfa5c3"

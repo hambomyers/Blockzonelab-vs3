@@ -1,8 +1,7 @@
 {
-  "name": "blockzone-lab",
-  "version": "2.0.0",
-  "type": "module",
-  "description": "BlockZone Lab Gaming Platform - Version 2 with Integrated Backend API",
+  "name": "blockzone-lab-platform",
+  "version": "2.0.0-BLOCKZONE-PLATFORM-RELEASE",
+  "description": "BlockZone Lab Professional Gaming Platform v2.0.0 - Championship cycles and viral friend challenges with USDC.E payments on Sonic Labs blockchain",
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
@@ -12,13 +11,39 @@
     "test-api": "powershell -Command \"Invoke-WebRequest -Uri 'https://blockzone-api.hambomyers.workers.dev/api/leaderboard' -Method GET\""
   },
   "keywords": [
-    "blockchain",
-    "gaming",
-    "web3",
+    "blockzone-lab",
+    "gaming-platform",
+    "blockchain-games",
+    "usdc-payments",
+    "sonic-labs",
+    "championship-cycles",
+    "friend-challenges",
     "neon-drop",
-    "leaderboard",
-    "cloudflare-workers"
+    "professional-gaming"
   ],
-  "author": "BlockZone Lab",
-  "license": "MIT"
+  "author": "BlockZone Lab Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hambomyers/BlockZoneLabWEBSITE.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "platform": {
+    "version": "2.0.0-BLOCKZONE-PLATFORM-RELEASE",
+    "created": "2025-01-25",
+    "features": [
+      "championship-cycles",
+      "friend-challenges", 
+      "usdc-payments",
+      "sonic-labs-integration",
+      "professional-ui-ux",
+      "mobile-optimization"
+    ],
+    "revenue-systems": [
+      "championship-entry-fees",
+      "friend-challenge-battles"
+    ]
+  }
 }

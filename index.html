@@ -1,11 +1,21 @@
 <!DOCTYPE html>
+<!-- 
+  BLOCKZONE LAB PLATFORM v2.0.0 - PROFESSIONAL GAMING PLATFORM
+  VERSION: 2.0.0-BLOCKZONE-PLATFORM-RELEASE
+  CREATED: 2025-01-25 (BlockZone Lab Platform Phase 1)
+  FEATURES: Championship cycles, friend challenges, professional UI/UX
+  
+  This is the NEW BlockZone Lab platform version - completely refactored
+  for professional gaming platform with two main revenue systems.
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BlockZone Lab - Professional Gaming Platform</title>
+    <title>BlockZone Lab - Professional Gaming Platform v2.0.0</title>
       <!-- CRITICAL: Mobile Detection First (Inline for Performance) -->    <script>
         // Industry-standard mobile detection with keyboard detection (like Axie Infinity, Gods Unchained)
+        // BLOCKZONE LAB PLATFORM v2.0.0 - Enhanced mobile detection
         window.BlockZoneMobile = {
             // Cached values for performance
             _isMobile: window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -88,24 +98,42 @@
         <p class="hero-subtitle">
             Professional tournaments with 90/10 fee structure on Sonic Labs blockchain
         </p>
-          <!-- Professional Centered Cards - Fully Clickable -->
+          <!-- Professional Centered Cards - Two Primary Buttons -->
         <div class="grid grid-2">
-            <a href="games/" class="card card--hover card--glow">
+            <button id="championshipBtn" class="card card--hover card--glow" style="cursor: pointer; border: none; background: none; padding: 0;">
                 <div class="card__header">
-                    <div class="card__title">🏆 Gaming Hub</div>
-                    <div class="card__subtitle">Professional Tournaments</div>
+                    <div class="card__title">🏆 CHAMPIONSHIP</div>
+                    <div class="card__subtitle">Pay Quarters Per Attempt</div>
                 </div>
                 
                 <div class="card__content">
-                    <p>Compete in professional NeonDrop tournaments. $2.50 entry, $200+ daily prizes with 90% to winners.</p>
+                    <p>Two 12-hour championships daily. $2.50 entry, $200+ daily prizes with 90% to winners.</p>
                 </div>
                 
                 <div class="card__footer">
-                    <span class="btn btn--primary">Enter Tournament</span>
+                    <span class="btn btn--primary">Enter Championship</span>
                 </div>
-            </a>
+            </button>
 
-            <a href="academy/" class="card card--hover card--neon">
+            <button id="challengeFriendBtn" class="card card--hover card--neon" style="cursor: pointer; border: none; background: none; padding: 0;">
+                <div class="card__header">
+                    <div class="card__title">⚡ CHALLENGE FRIEND</div>
+                    <div class="card__subtitle">Create Viral Challenge Links</div>
+                </div>
+                
+                <div class="card__content">
+                    <p>Battle specific friends for quarters. Share challenge links and compete head-to-head.</p>
+                </div>
+                
+                <div class="card__footer">
+                    <span class="btn btn--outline">Challenge Friend</span>
+                </div>
+            </button>
+        </div>
+        
+        <!-- Educational Platform Card -->
+        <div style="margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <a href="academy/" class="card card--hover" style="text-decoration: none; display: block;">
                 <div class="card__header">
                     <div class="card__title">📚 Academy</div>
                     <div class="card__subtitle">Professional Education</div>
@@ -134,6 +162,38 @@
     <!-- PWA Installation & Mobile Framework (mobile detection already inline) -->
     <script src="/pwa/install-prompt.js"></script>
     <script src="/shared/responsive/mobile-game-framework.js"></script>
+    
+    <!-- Platform Systems - BLOCKZONE LAB PLATFORM v2.0.0 -->
+    <script type="module">
+        // BLOCKZONE LAB PLATFORM v2.0.0 - Professional Gaming Platform
+        // VERSION: 2.0.0-BLOCKZONE-PLATFORM-RELEASE
+        // CREATED: 2025-01-25 (BlockZone Lab Platform Phase 1)
+        // FEATURES: Championship cycles, friend challenges, Web3 integration
+        
+        // Import platform systems - NEW BLOCKZONE PLATFORM ARCHITECTURE
+        import { ChampionshipUI } from '/shared/ui/ChampionshipUI.js';
+        import { FriendChallengeUI } from '/shared/ui/FriendChallengeUI.js';
+        import { BlockZoneWeb3 } from '/shared/web3/blockzone-web3.js';
+        
+        // Initialize platform - BLOCKZONE LAB v2.0.0
+        window.BlockZoneWeb3 = new BlockZoneWeb3();
+        window.championshipUI = new ChampionshipUI();
+        window.friendChallengeUI = new FriendChallengeUI();
+        
+        // Bind championship button - NEW REVENUE SYSTEM #1
+        document.getElementById('championshipBtn').addEventListener('click', () => {
+            window.championshipUI.show();
+        });
+        
+        // Bind challenge friend button - NEW REVENUE SYSTEM #2
+        document.getElementById('challengeFriendBtn').addEventListener('click', () => {
+            window.friendChallengeUI.show();
+        });
+        
+        console.log('🚀 BlockZone Lab Platform v2.0.0 initialized with Championship & Friend Challenge systems');
+        console.log('🏆 Revenue System #1: Championship cycles with $2.50 entry fees');
+        console.log('⚡ Revenue System #2: Viral friend challenges with quarters-based battles');
+    </script>
 
 </body>
 </html>
