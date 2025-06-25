@@ -5,3 +5,13 @@ FORCE_REFRESH=enabled
 
 # This file triggers a fresh deployment and forces cache invalidation
 # Change this timestamp to force a complete refresh of all cached assets
+
+BLOCKZONE LAB PLATFORM v2.0.0 - PARTICLE SYSTEM FIX
+Deploy timestamp: 2024-12-19
+Latest commit: bf58f48 - Fix particle system: Revert to simple working particles and add more pop sound
+
+Changes:
+- Fixed particle rendering errors (color parsing issues)
+- Simplified particle system to clean, working version
+- Enhanced line clear sound with more pop
+- Removed complex glow effects that were causing errors
