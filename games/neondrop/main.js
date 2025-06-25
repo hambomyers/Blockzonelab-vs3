@@ -64,33 +64,53 @@ class NeonDrop {
         return this.engine && this.engine.getState ? this.engine.getState() : {};
     }
 
-    getConfig() {
-        return this.config || {};
-    }    async initialize() {
-        console.log('🎮 Initializing NeonDrop...');
-        
-        // Initialize core systems
-        this.setupCoreSystems();
-        
-        // Initialize UI
-        this.setupUI();
-        
-        // Initialize 2-player engine
-        this.setupTwoPlayerMode();
-        
-        // Initialize payment system
-        this.setupPaymentSystem();
-        
-        // Clean up any old UI elements
-        this.cleanupOldUI();
-        
-        // Start the game loop
-        this.startGameLoop();
-        
-        console.log('✅ NeonDrop initialized successfully');
+    async initialize() {
+        try {
+            await this.config.load();
+            this.setupDisplay();
+            
+            // Enhanced: Initialize SimpleGameOver (includes UnifiedPlayerSystem)
+            console.log('🚀 Initializing enhanced game over system...');
+            this.gameOverHandler = new SimpleGameOver();
+            
+            // Wait for systems to be ready
+            await new Promise(resolve => setTimeout(resolve, 100));
+            this.isGameOverReady = true;
+            
+            console.log('✅ SimpleGameOver system initialized');
+            
+            this.createSystems();
+            this.setupUI();
+            this.cleanupOldUI();
+            this.bindEvents();
+            this.startLoop();
+            
+            // Background initialization
+            this.initBackgroundSystems();
+        } catch (error) {
+            console.error('❌ Init failed:', error);
+            this.showError('Game failed to load. Please refresh.');
+        }
     }
 
-    setupCoreSystems() {
+    setupDisplay() {
+        const game = document.getElementById('game');
+        const bg = document.getElementById('bg');
+        
+        if (!game || !bg) throw new Error('Canvas elements missing');
+        
+        const dims = this.viewport.calculateOptimalDimensions(innerWidth, innerHeight);
+        
+        game.width = dims.canvasWidth;
+        game.height = dims.canvasHeight;
+        bg.width = innerWidth;
+        bg.height = innerHeight;
+        
+        this.renderer = new Renderer(game, bg, this.config, dims);
+        this.renderer.viewportManager = this.viewport;
+    }
+
+    createSystems() {
         this.audio = new AudioSystem(this.config);
         this.engine = new GameEngine(this.config, this.audio, null);
         this.input = new InputController(
@@ -111,32 +131,94 @@ class NeonDrop {
         // Beautiful tournament UI (keep for tournament mode)
         this.tournamentUI = new TournamentUI();
         this.tournamentUI.setTournament(this.tournament);
-          // Use unified systems (SimpleGameOver already set in initialize)
+        
+        // Use unified systems (SimpleGameOver already set in initialize)
         // Make SimpleGameOver globally accessible
         window.neonDrop.gameOverHandler = this.gameOverHandler;
-          
-        // FIXED: Skip UI state manager - using event-based system instead
-        // this.uiStateManager.initialize(this.tournamentUI, document.getElementById('game'), this.gameOverHandler);
         
-        // Start with menu card visible instead of tournament modal
-        // The menu card will be shown in setupGameMenuCard()
+        // Add 2-player toggle button
+        this.addTwoPlayerToggle();
     }
 
-    setupTwoPlayerMode() {
-        // Initialize 2-player engine with game containers
-        const gameContainer = document.getElementById('gameContainer');
-        const singlePlayerContainer = document.getElementById('gameContainer');
+    addTwoPlayerToggle() {
+        // Create a simple, discreet 2-player toggle button
+        const toggleContainer = document.createElement('div');
+        toggleContainer.className = 'two-player-toggle-container';
+        toggleContainer.style.cssText = `
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        `;
         
-        if (gameContainer) {
-            twoPlayerEngine.initialize(gameContainer, singlePlayerContainer);
+        toggleContainer.innerHTML = `
+            <span>2-Player</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="twoPlayerToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        `;
+        
+        document.body.appendChild(toggleContainer);
+        
+        // Add event listener
+        const toggle = toggleContainer.querySelector('#twoPlayerToggle');
+        toggle.addEventListener('change', (e) => {
+            const isEnabled = e.target.checked;
+            localStorage.setItem('neondrop_two_player_mode', isEnabled.toString());
+            
+            // Emit event for 2-player engine
+            const event = new CustomEvent('twoPlayerModeChange', {
+                detail: { enabled: isEnabled }
+            });
+            document.dispatchEvent(event);
+        });
+        
+        // Load saved state
+        const savedState = localStorage.getItem('neondrop_two_player_mode');
+        if (savedState === 'true') {
+            toggle.checked = true;
         }
     }
 
-    setupPaymentSystem() {
-        // Implementation of setupPaymentSystem method
+    cleanupOldUI() {
+        // Remove any old tournament panels
+        const oldTournamentPanel = document.getElementById('tournament-panel');
+        if (oldTournamentPanel) {
+            oldTournamentPanel.remove();
+        }
+        
+        // Remove any old overlay elements
+        const overlaySelectors = [
+            '.game-menu-overlay',
+            '.tournament-overlay', 
+            '.modal-overlay',
+            '#gameMenuOverlay',
+            '#tournamentOverlay'
+        ];
+        
+        overlaySelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => el.remove());
+        });
+        
+        // Remove any old style elements that might conflict
+        const oldStyles = document.querySelectorAll('style[data-legacy]');
+        oldStyles.forEach(style => style.remove());
     }
 
-    startGameLoop() {
+    startLoop() {
         this.running = true;
         this.render(); // Initial render
         requestAnimationFrame(() => this.gameLoop());
@@ -319,6 +401,100 @@ class NeonDrop {
             this.tournamentUI.show();
         } else {
             console.warn('⚠️ No leaderboard system available');
+        }
+    }
+
+    getConfig() {
+        return this.config || {};
+    }
+
+    bindEvents() {
+        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
+        document.addEventListener('gameOver', async (e) => {
+            const { score, level, lines, time } = e.detail;
+            console.log('🎮 Game over event received');
+            
+            if (this.gameOverHandler) {
+                await this.gameOverHandler.show(score, { level, lines, time });
+            } else {
+                console.error('❌ Game over handler not initialized');
+            }
+        });
+
+        // FIXED: Simple game over choice handling
+        document.addEventListener('simpleGameOver', (e) => {
+            const { action } = e.detail;
+            console.log('🎮 Simple game over action:', action);
+            
+            switch (action) {
+                case 'play-again':
+                    this.startNewGame();
+                    break;
+                case 'show-leaderboard':
+                    this.showLeaderboard();
+                    break;
+                case 'leaderboard':
+                    if (this.tournament && this.tournament.show) {
+                        this.tournament.show();
+                    }
+                    break;
+            }
+        });
+
+        // Tournament selection/start game
+        document.addEventListener('startGame', e => {
+            console.log('🎮 Starting game from tournament UI');
+            if (this.gameOverHandler) {
+                this.gameOverHandler.hide();
+            }
+            this.startNewGame();
+        });
+
+        // Window resize (debounced)
+        let resizeTimer;
+        addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => this.handleResize(), 100);
+        });
+
+        // Auto-pause when hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.engine?.getState().phase === 'PLAYING') {
+                this.engine.handleInput({ type: 'PAUSE' });
+            }
+        });
+
+        // Prevent unwanted navigation
+        addEventListener('keydown', e => {
+            if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+
+        // Touch device detection using centralized system
+        if (window.BlockZoneMobile?.needsMobileControls()) {
+            document.body.classList.add('touch-device');
+        }
+    }
+
+    async initBackgroundSystems() {
+        try {
+            // Tournament system is bulletproof - always works
+            console.log('🏆 Tournament ready');
+            
+            // Start tournament status updates
+            if (this.tournament?.startPeriodicUpdates) {
+                this.tournament.startPeriodicUpdates();
+                console.log('📊 Tournament updates started');
+            }
+            
+            // Payment system in demo mode by default
+            if (this.payment?.initialize) {
+                await this.payment.initialize();
+                console.log('💰 Payment ready');
+            }
+        } catch (error) {
+            console.log('🎮 Running in demo mode');
         }
     }
 }
