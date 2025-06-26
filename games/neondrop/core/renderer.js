@@ -134,10 +134,7 @@ export class Renderer {
 
         // Render game layers
         this.renderBoard(state);
-
-        // ADD THIS: Render edge glow
         this.renderEdgeGlow(state);
-
         this.renderActivePieces(state);
 
         if (shakeActive) {
@@ -369,13 +366,9 @@ export class Renderer {
             this.renderCurrentPiece(state);
         }
 
-        // Death piece overlay - FIXED: Show during game over sequence phase 0
-        if (state.phase === 'GAME_OVER_SEQUENCE' && 
-            state.gameOverSequencePhase === 0 && 
-            state.current) {
-            // Don't call renderDeathPiece here - it's handled in renderGameOverSequence
-            // This prevents double rendering
-        }
+        // Death piece overlay - FIXED: Only show during game over sequence phase 0
+        // The blinking death piece is now handled in renderGameOverSequence
+        // This prevents double rendering
     }
 
     renderGhostPiece(state) {
@@ -871,168 +864,136 @@ export class Renderer {
     }
 
     /**
-     * FIXED: Enhanced renderGameOverSequence with proper death piece blinking
+     * Render game over sequence
      */
     renderGameOverSequence(state) {
-        // Check if SimpleGameOver UI is active
-        const gameOverUI = document.querySelector('.game-over-card');
-        const isSimpleGameOverActive = gameOverUI && gameOverUI.style.display !== 'none';
+        const now = Date.now();
+        const gameOverElapsed = now - state.gameOverStartTime;
         
-        // FIXED: Always show death piece blinking during game over sequence
-        if (state.gameOverSequencePhase === 0 && state.current) {
-            // Calculate elapsed time since game over started
-            const elapsed = Date.now() - (state.gameOverStartTime || Date.now());
-            
-            // Phase 0: Death piece blinking (0-3 seconds)
-            this.renderDeathPieceBlinking(state, elapsed);
-            
-            // Add subtle "GAME OVER" text that fades in
-            const fadeInDuration = 3000; // 3 seconds
-            const fadeProgress = Math.min(1, elapsed / fadeInDuration);
-            
-            if (fadeProgress > 0) {
-                const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
-                const centerY = this.dimensions.boardY + this.dimensions.boardHeight / 2;
+        // Phase 0: Death piece blinking (4 seconds - 4 blinks)
+        if (state.gameOverSequencePhase === 0) {
+            // Render faster blinking death piece (4 blinks in 4 seconds)
+            if (state.current) {
+                const blinkSpeed = 1.0; // 1-second cycle (1 Hz) for 4 blinks in 4 seconds
+                const blinkAlpha = Math.sin(now * 0.001 * blinkSpeed * Math.PI) * 0.5 + 0.5;
+                
+                // Add fade out at the end of phase 0
+                const phaseProgress = Math.min(1, gameOverElapsed / 4000);
+                const fadeOut = phaseProgress > 0.8 ? (1 - phaseProgress) / 0.2 : 1; // Fade out in last 20%
                 
                 this.ctx.save();
-                this.ctx.globalAlpha = fadeProgress * 0.7;
-                this.ctx.font = `bold ${this.dimensions.blockSize * 1.5}px 'Orbitron', monospace`;
-                this.ctx.fillStyle = '#FF0066';
-                this.ctx.textAlign = 'center';
-                this.ctx.shadowColor = '#FF0066';
-                this.ctx.shadowBlur = 20;
-                this.ctx.fillText('GAME OVER', centerX, centerY - this.dimensions.blockSize * 2);
+                this.ctx.globalAlpha = blinkAlpha * fadeOut;
+                this.renderDeathPiece(state.current);
                 this.ctx.restore();
             }
+            return;
         }
-        // Phase 1+: Only show minimal overlay if SimpleGameOver is not active
-        else if (state.gameOverSequencePhase >= 1 && !isSimpleGameOverActive) {
-            this.renderMinimalGameOver(state);
+        
+        // Phase 1: Dramatic distortion with melting effect (5 seconds)
+        if (state.gameOverSequencePhase === 1) {
+            const distortionElapsed = now - state.distortionStartTime;
+            const distortionProgress = Math.min(1, distortionElapsed / 5000); // 5 seconds
+            
+            // Add fade out at the end of distortion phase
+            const fadeOut = distortionProgress > 0.8 ? (1 - distortionProgress) / 0.2 : 1; // Fade out in last 20%
+            
+            // Apply dramatic distortion effect with fade out
+            this.renderDramaticDistortion(state, distortionProgress, fadeOut);
+            
+            // Render large red "Game Over" text that extends to board edges with fade out
+            this.renderLargeGameOverText(state, distortionProgress, fadeOut);
         }
     }
-
+    
     /**
-     * FIXED: Render death piece with proper blinking timing
+     * Render dramatic distortion with subtle melting effect
      */
-    renderDeathPieceBlinking(state, elapsed) {
-        if (!state.current) return;
+    renderDramaticDistortion(state, progress, fadeOut = 1.0) {
+        const boardX = this.dimensions.boardX;
+        const boardY = this.dimensions.boardY;
+        const boardWidth = this.dimensions.boardWidth;
+        const boardHeight = this.dimensions.boardHeight;
         
-        // FIXED: Use deterministic blinking based on elapsed time (1 second cycle)
-        const blinkCycle = 1000; // 1 second
-        const blinkProgress = (elapsed % blinkCycle) / blinkCycle;
+        // Create a temporary canvas for the distortion effect
+        const tempCanvas = this.getTempCanvas(boardWidth, boardHeight);
+        const tempCtx = tempCanvas.getContext('2d');
         
-        // Use sine wave for smooth blinking (0.2 to 1.0 opacity)
-        const opacity = Math.sin(blinkProgress * Math.PI * 2) * 0.4 + 0.6;
+        // Draw the current board state to temp canvas
+        tempCtx.drawImage(this.canvas, boardX, boardY, boardWidth, boardHeight, 0, 0, boardWidth, boardHeight);
         
-        // Only render pieces that are above the visible board (negative Y)
-        state.current.shape.forEach((row, dy) => {
-            row.forEach((cell, dx) => {
-                if (!cell) return;
-
-                const boardX = state.current.gridX + dx;
-                const boardY = state.current.gridY + dy;
-
-                // FIXED: Only render pieces above the board AND within bounds
-                if (boardY < 0 && boardX >= 0 && boardX < CONSTANTS.BOARD.WIDTH) {
-                    const pixelX = this.dimensions.boardX + boardX * this.dimensions.blockSize;
-                    const pixelY = this.dimensions.boardY + boardY * this.dimensions.blockSize;
-
-                    this.ctx.save();
-                    this.ctx.globalAlpha = opacity;
-
-                    // Draw with bright red color for the blinking death piece
-                    this.chicletRenderer.drawBlock(
-                        this.ctx, pixelX, pixelY, '#FF0000', boardY, boardX
-                    );
-                    
-                    this.ctx.restore();
-                }
-            });
-        });
-    }
-
-    /**
-     * FIXED: Enhanced renderMinimalGameOver for non-SimpleGameOver cases
-     */
-    renderMinimalGameOver(state) {
-        // Render the board first
-        this.renderBoard(state);
+        // Apply subtle melting effect
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.5 * fadeOut; // Apply fade out to distortion opacity
         
-        // Slowly blinking death piece (2 second cycle)
-        if (state.current) {
-            const elapsed = Date.now() - (state.gameOverStartTime || Date.now());
-            const blinkCycle = 2000; // 2 seconds
-            const blinkProgress = (elapsed % blinkCycle) / blinkCycle;
-            const opacity = Math.sin(blinkProgress * Math.PI) * 0.4 + 0.4; // 0.0 to 0.8 range
-
-            this.ctx.save();
-            this.ctx.globalAlpha = opacity;
-            this.renderDeathPiece(state.current);
-            this.ctx.restore();
+        // Create more dramatic melting effect
+        const meltIntensity = 0.2 + (progress * 0.4); // 20% to 60% melting (more dramatic)
+        const time = Date.now() * 0.0005; // Slower animation
+        
+        // Apply gentle downward melting effect
+        for (let y = 0; y < boardHeight; y += 4) { // Larger step for smoother effect
+            const meltOffset = Math.sin(y * 0.01 + time) * meltIntensity * 20;
+            const dripEffect = Math.sin(y * 0.02 + time * 2) * meltIntensity * 12;
+            
+            this.ctx.drawImage(
+                tempCanvas,
+                0, y, boardWidth, 4,
+                boardX + meltOffset, boardY + y + dripEffect, boardWidth, 4
+            );
         }
-
-        // Frosted glass overlay with neon borders
-        const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
-        const centerY = this.dimensions.boardY + this.dimensions.boardHeight / 2;
-        const overlayWidth = this.dimensions.boardWidth * 0.8;
-        const overlayHeight = this.dimensions.boardHeight * 0.6;
-        const overlayX = centerX - overlayWidth / 2;
-        const overlayY = centerY - overlayHeight / 2;
-
-        // Semi-transparent frosted glass background
-        this.ctx.save();
-        this.ctx.globalAlpha = 0.15;
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(overlayX, overlayY, overlayWidth, overlayHeight);
+        
+        // Add subtle darkening overlay for privacy glass effect
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.25 * fadeOut})`; // Apply fade out to darkness
+        this.ctx.fillRect(boardX, boardY, boardWidth, boardHeight);
+        
         this.ctx.restore();
-
-        // Neon border glow
-        const borderGlow = Math.sin(Date.now() * 0.003) * 0.3 + 0.7;
+    }
+    
+    /**
+     * Render large red "Game Over" text that extends to board edges
+     */
+    renderLargeGameOverText(state, progress, fadeOut = 1.0) {
+        const boardX = this.dimensions.boardX;
+        const boardY = this.dimensions.boardY;
+        const boardWidth = this.dimensions.boardWidth;
+        const boardHeight = this.dimensions.boardHeight;
+        
+        // Calculate text position to extend to board edges
+        const centerX = boardX + boardWidth / 2;
+        const centerY = boardY + boardHeight / 2;
+        
         this.ctx.save();
-        this.ctx.strokeStyle = '#FF0066';
-        this.ctx.lineWidth = 3;
-        this.ctx.shadowColor = '#FF0066';
-        this.ctx.shadowBlur = 15 * borderGlow;
-        this.ctx.strokeRect(overlayX, overlayY, overlayWidth, overlayHeight);
-        this.ctx.restore();
-
-        // Inner border
-        this.ctx.save();
-        this.ctx.strokeStyle = '#00FFFF';
-        this.ctx.lineWidth = 1;
-        this.ctx.shadowColor = '#00FFFF';
-        this.ctx.shadowBlur = 8;
-        this.ctx.strokeRect(overlayX + 2, overlayY + 2, overlayWidth - 4, overlayHeight - 4);
-        this.ctx.restore();
-
-        // Game Over text with neon glow
-        this.ctx.save();
-        this.ctx.font = `bold ${this.dimensions.blockSize * 1.2}px 'Orbitron', monospace`;
-        this.ctx.fillStyle = '#FFFFFF';
+        
+        // Smooth fade in over the first 2 seconds, then maintain full opacity, then fade out
+        const textAlpha = Math.min(1, progress * 0.5) * fadeOut; // Full opacity by 2 seconds, then fade out
+        this.ctx.globalAlpha = textAlpha;
+        
+        // Much larger red "Game Over" text that extends to board edges
+        const fontSize = Math.min(boardWidth * 0.25, boardHeight * 0.15); // Scale to board size
+        this.ctx.font = `bold ${fontSize}px monospace`;
+        this.ctx.fillStyle = '#FF0000';
         this.ctx.textAlign = 'center';
-        this.ctx.shadowColor = '#FF0066';
-        this.ctx.shadowBlur = 20;
-        this.ctx.fillText('GAME OVER', centerX, centerY - this.dimensions.blockSize * 1.5);
-        this.ctx.restore();
-
-        // Score with subtle glow
-        this.ctx.save();
-        this.ctx.font = `${this.dimensions.blockSize * 0.8}px 'Orbitron', monospace`;
-        this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.textAlign = 'center';
-        this.ctx.shadowColor = '#00FFFF';
-        this.ctx.shadowBlur = 8;
-        this.ctx.fillText(`SCORE: ${state.score.toLocaleString()}`, centerX, centerY);
-        this.ctx.restore();
-
-        // Continue prompt with pulsing effect
-        const promptAlpha = Math.sin(Date.now() * 0.004) * 0.3 + 0.7;
-        this.ctx.save();
-        this.ctx.globalAlpha = promptAlpha;
-        this.ctx.font = `${this.dimensions.blockSize * 0.6}px 'Orbitron', monospace`;
-        this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText('Press SPACE to continue', centerX, centerY + this.dimensions.blockSize * 1.5);
+        this.ctx.textBaseline = 'middle';
+        
+        // Add dramatic shadow and glow
+        this.ctx.shadowColor = '#FF0000';
+        this.ctx.shadowBlur = fontSize * 0.3 + Math.sin(Date.now() * 0.01) * 10;
+        this.ctx.shadowOffsetX = fontSize * 0.05;
+        this.ctx.shadowOffsetY = fontSize * 0.05;
+        
+        // Position text in the center of the board
+        this.ctx.fillText('GAME OVER', centerX, centerY);
+        
+        // Add pulsing effect
+        const pulse = Math.sin(Date.now() * 0.008) * 0.3 + 0.7;
+        this.ctx.globalAlpha = textAlpha * pulse * 0.6;
+        this.ctx.shadowBlur = fontSize * 0.5;
+        this.ctx.fillText('GAME OVER', centerX, centerY);
+        
+        // Add additional glow layers for AAA quality
+        this.ctx.globalAlpha = textAlpha * pulse * 0.3;
+        this.ctx.shadowBlur = fontSize * 0.8;
+        this.ctx.fillText('GAME OVER', centerX, centerY);
+        
         this.ctx.restore();
     }
 

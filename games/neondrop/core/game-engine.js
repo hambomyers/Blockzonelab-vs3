@@ -421,21 +421,35 @@ export class GameEngine {
      * FIXED: Game over sequence with proper SimpleGameOver integration
      */
     updateGameOverSequence(deltaTime) {
-        const elapsed = Date.now() - this.state.gameOverStartTime;
+        const now = Date.now();
+        const gameOverElapsed = now - this.state.gameOverStartTime;
         
-        // Phase 0: Death piece blinking (0-3 seconds)
+        // Phase 0: Death piece blinking (4 seconds - 4 blinks)
         if (this.state.gameOverSequencePhase === 0) {
-            if (elapsed >= 3000) {
+            // After 4 seconds of blinking, start distortion phase
+            if (gameOverElapsed > 4000) {
                 this.state.gameOverSequencePhase = 1;
-                // FIXED: Trigger SimpleGameOver UI properly
-                this.triggerSimpleGameOverUI();
+                this.state.distortionStartTime = now;
+                console.log('🎭 Starting dramatic distortion phase');
             }
         }
         
-        // Phase 1: Show SimpleGameOver UI (3+ seconds)
-        else if (this.state.gameOverSequencePhase === 1) {
+        // Phase 1: Dramatic distortion with melting effect (5 seconds)
+        if (this.state.gameOverSequencePhase === 1) {
+            const distortionElapsed = now - this.state.distortionStartTime;
+            
+            // After 5 seconds of distortion, trigger SimpleGameOver UI
+            if (distortionElapsed > 5000) {
+                this.state.gameOverSequencePhase = 2;
+                this.triggerSimpleGameOverUI();
+                console.log('🎮 Transitioning to SimpleGameOver UI');
+            }
+        }
+        
+        // Phase 2: Show SimpleGameOver UI
+        else if (this.state.gameOverSequencePhase === 2) {
             // Move to final phase
-            this.state.gameOverSequencePhase = 2;
+            this.state.gameOverSequencePhase = 3;
             this.state.gameState = GameState.GAME_OVER;
             this.state.phase = 'GAME_OVER';
         }
@@ -637,6 +651,7 @@ export class GameEngine {
         this.state.gameMode = mode;
         this.state.gameState = GameState.MENU_TO_COUNTDOWN;
         this.state.startTime = Date.now();
+        this.state.countdownTimer = 3000; // FIXED: Set countdown timer to 3 seconds
         this.startTransition('fade-in', 300);
 
         // Reset deterministic systems
@@ -705,12 +720,7 @@ export class GameEngine {
         // Reset scoring system
         this.scoring.reset();
 
-        // Transition to playing state
-        setTimeout(() => {
-            if (!this.gameOverTriggered) { // Extra safety check
-                this.state.gameState = GameState.PLAYING;
-            }
-        }, 300);
+        // FIXED: Remove the immediate transition to PLAYING - let countdown handle it
     }
 
     /**

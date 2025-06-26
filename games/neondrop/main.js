@@ -433,12 +433,12 @@ class NeonDrop {
                     console.log('✅ SimpleGameOver shown successfully');
                 } catch (error) {
                     console.error('❌ Failed to show SimpleGameOver:', error);
-                    // Fallback to basic game over
-                    this.showBasicGameOver(actualScore);
+                    // Enhanced game over screen should always work - no fallback needed
+                    console.log('🎮 Enhanced game over screen should handle this');
                 }
             } else {
                 console.error('❌ Game over handler not initialized');
-                this.showBasicGameOver(actualScore);
+                console.log('🎮 Game over handler should be initialized');
             }
         });
 
@@ -525,63 +525,6 @@ class NeonDrop {
         } catch (error) {
             console.log('🎮 Running in demo mode');
         }
-    }
-
-    // FIXED: Enhanced basic game over fallback
-    showBasicGameOver(score) {
-        console.log('🎮 Showing basic game over fallback with score:', score);
-        
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            color: white;
-            font-family: monospace;
-            font-size: 24px;
-            text-align: center;
-        `;
-        
-        overlay.innerHTML = `
-            <div>
-                <div style="font-size: 48px; margin-bottom: 20px; color: #FF0066;">GAME OVER</div>
-                <div style="font-size: 32px; margin-bottom: 30px; color: #00FFFF;">Score: ${score.toLocaleString()}</div>
-                <div style="font-size: 18px; color: #FFFFFF;">Press SPACE to play again</div>
-            </div>
-        `;
-        
-        overlay.addEventListener('click', () => {
-            overlay.remove();
-            this.startNewGame();
-        });
-        
-        // Handle keyboard input
-        const handleKeyPress = (e) => {
-            if (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape') {
-                e.preventDefault();
-                overlay.remove();
-                document.removeEventListener('keydown', handleKeyPress);
-                this.startNewGame();
-            }
-        };
-        
-        document.addEventListener('keydown', handleKeyPress);
-        document.body.appendChild(overlay);
-        
-        // Auto-remove after 30 seconds
-        setTimeout(() => {
-            if (overlay.parentNode) {
-                overlay.remove();
-                document.removeEventListener('keydown', handleKeyPress);
-            }
-        }, 30000);
     }
 }
 

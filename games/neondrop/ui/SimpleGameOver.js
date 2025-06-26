@@ -150,99 +150,161 @@ export class SimpleGameOver {
             await this.showNameCapture();
         }
         
-        // Animate in
+        // AAA Quality: Much longer, more dramatic fade-in animation
         requestAnimationFrame(() => {
+            this.container.style.transition = 'opacity 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             this.container.style.opacity = '1';
         });
     }
 
     async showGameOverCard() {
-        console.log('🎮 Showing basic game over card for returning player');
-        
-        // Submit score first
-        try {
-            await this.submitScore(this.score, this.playerName);
-        } catch (error) {
-            console.error('❌ Score submission failed:', error);
-            // Save to local storage as backup when API fails
-            this.saveScoreToLocalStorage(this.score, this.playerName);
-        }
+        console.log('🎮 Showing enhanced game over card with animated NeonDrop logo');
         
         this.container.innerHTML = `
             <div class="game-over-card" style="
-                background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));
-                border-radius: 20px;
-                padding: 40px;
-                max-width: 450px;
-                width: 90%;
-                border: 1px solid rgba(0, 212, 255, 0.3);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                display: grid;
+                grid-template-rows: auto auto auto;
+                gap: 20px;
+                place-items: center;
                 text-align: center;
-                animation: slideIn 0.4s ease-out;
+                background: rgba(0, 0, 0, 0.9);
+                border: 2px solid rgba(0, 212, 255, 0.5);
+                border-radius: 15px;
+                padding: 10px 30px 30px 30px;
+                max-width: 600px;
+                margin: 0 auto;
+                box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+                backdrop-filter: blur(10px);
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+                transition: all 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             ">
-                <h2 style="color: #00d4ff; font-size: 32px; margin: 0 0 30px 0; font-weight: 700;">
-                    Game Over
-                </h2>
                 
-                <div style="font-size: 64px; margin-bottom: 20px;">🎮</div>
+                <!-- Logo Section - At the very top -->
+                <div class="logo-section" style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    min-height: 120px;
+                    padding-top: 10px;
+                ">
+                    <canvas id="logoCanvas" width="480" height="120" style="
+                        display: block;
+                        margin: 0 auto;
+                    "></canvas>
+                </div>
                 
-                <div style="margin-bottom: 30px;">
-                    <div style="color: #00d4ff; font-size: 48px; font-weight: 900; margin-bottom: 10px;">
-                        ${this.score.toLocaleString()}
+                <!-- Score Display - Automatically Centered -->
+                <div class="score-section" style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                    background: rgba(0, 212, 255, 0.1);
+                    border: 1px solid rgba(0, 212, 255, 0.3);
+                    border-radius: 10px;
+                    padding: 20px;
+                ">
+                    <div style="color: #00d4ff; font-size: 24px; margin: 0 0 10px 0;">
+                        Final Score
                     </div>
-                    <div style="color: #aaa; font-size: 18px;">
-                        Great job, ${this.playerName}!
+                    <div style="color: #ffffff; font-size: 36px; font-weight: bold;">
+                        ${this.score.toLocaleString()}
                     </div>
                 </div>
                 
-                <!-- Actions -->
-                <div class="actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button 
-                        id="playAgainBtn"
-                        style="
-                            background: linear-gradient(135deg, #00d4ff, #0099cc);
-                            color: white;
-                            border: none;
-                            padding: 15px 30px;
-                            border-radius: 10px;
-                            font-size: 16px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.3s ease;
-                            min-width: 120px;
-                        "
-                    >
+                <!-- Navigation Grid - Automatically Centered -->
+                <div class="navigation-section" style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 15px;
+                    width: 100%;
+                ">
+                    <button id="playAgainBtn" style="
+                        background: linear-gradient(135deg, #00d4ff, #0099cc);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 15px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 212, 255, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0, 212, 255, 0.3)'">
                         🎮 Play Again
                     </button>
                     
-                    <button 
-                        id="leaderboardBtn"
-                        style="
-                            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-                            color: white;
-                            border: none;
-                            padding: 15px 30px;
-                            border-radius: 10px;
-                            font-size: 16px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.3s ease;
-                            min-width: 120px;
-                        "
-                    >
+                    <button id="leaderboardBtn" style="
+                        background: linear-gradient(135deg, #8A2BE2, #9932CC);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 15px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(138, 43, 226, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(138, 43, 226, 0.3)'">
                         🏆 Leaderboard
+                    </button>
+                    
+                    <button id="academyBtn" style="
+                        background: linear-gradient(135deg, #FFD700, #FFA500);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 15px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 215, 0, 0.3)'">
+                        📚 Academy
+                    </button>
+                    
+                    <button id="shareBtn" style="
+                        background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 15px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 107, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.3)'">
+                        📤 Share Score
                     </button>
                 </div>
             </div>
         `;
         
+        // Render the animated NeonDrop logo
+        this.renderNeonDropLogo();
+        
         // Bind button events
-        this.bindGameOverCardEvents();
+        this.bindEnhancedGameOverCardEvents();
+        
+        // CINEMATIC FADE-IN: Trigger the beautiful fade-in animation
+        setTimeout(() => {
+            const card = this.container.querySelector('.game-over-card');
+            if (card) {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0) scale(1)';
+            }
+        }, 100); // Small delay to ensure DOM is ready
     }
 
-    bindGameOverCardEvents() {
+    bindEnhancedGameOverCardEvents() {
         const playAgainBtn = this.container.querySelector('#playAgainBtn');
         const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
+        const academyBtn = this.container.querySelector('#academyBtn');
+        const shareBtn = this.container.querySelector('#shareBtn');
         
         if (playAgainBtn) {
             playAgainBtn.addEventListener('click', () => {
@@ -257,6 +319,197 @@ export class SimpleGameOver {
                 await this.showFullScreenLeaderboard();
             });
         }
+        
+        if (academyBtn) {
+            academyBtn.addEventListener('click', () => {
+                window.location.href = '/academy/';
+            });
+        }
+        
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                this.shareScore();
+            });
+        }
+    }
+
+    renderNeonDropLogo() {
+        const canvas = this.container.querySelector('#logoCanvas');
+        if (!canvas) {
+            console.error('Logo canvas not found');
+            return;
+        }
+        
+        const ctx = canvas.getContext('2d');
+        const blockSize = 48; // TWICE as big (was 24px)
+        const spacing = 48; // TWICE the spacing (was 24px)
+        
+        // Clear canvas with transparent background
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // SIMPLIFIED: CSS Grid handles centering automatically
+        // Just center the logo within the canvas itself
+        const totalBlocks = 10; // 4 NEON + 2 spacer + 4 DROP
+        const totalWidth = totalBlocks * blockSize;
+        const startX = (canvas.width - totalWidth) / 2;
+        const startY = (canvas.height - blockSize) / 2;
+        
+        // NEON (left 4 blocks) - EXACT same as renderer.js but bigger
+        for (let i = 0; i < 4; i++) {
+            const x = startX + (i * blockSize);
+            this.renderTitleLetter(ctx, 'NEON'[i], x, startY, '#FFFF00', blockSize);
+        }
+        
+        // DROP (right 4 blocks) - EXACT same as renderer.js but bigger
+        for (let i = 0; i < 4; i++) {
+            const x = startX + ((i + 6) * blockSize); // 6 = 4 NEON + 2 spacer
+            this.renderTitleLetter(ctx, 'DROP'[i], x, startY, '#8A2BE2', blockSize);
+        }
+        
+        // Add production-style roll-in animation
+        this.addLogoRollInAnimation(canvas);
+    }
+    
+    addLogoRollInAnimation(canvas) {
+        // Start with logo above the screen
+        canvas.style.transform = 'translateY(-200px) rotateX(90deg)';
+        canvas.style.opacity = '0';
+        canvas.style.transition = 'none';
+        
+        // Force a reflow
+        canvas.offsetHeight;
+        
+        // Production roll-in animation
+        canvas.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        canvas.style.transform = 'translateY(0) rotateX(0deg)';
+        canvas.style.opacity = '1';
+        
+        // Add subtle bounce at the end
+        setTimeout(() => {
+            canvas.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            canvas.style.transform = 'translateY(-5px) scale(1.02)';
+            
+            setTimeout(() => {
+                canvas.style.transform = 'translateY(0) scale(1)';
+            }, 300);
+        }, 1200);
+    }
+    
+    renderTitleLetter(ctx, letter, x, y, color, size) {
+        // EXACT same implementation as renderer.js
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = size;
+        tempCanvas.height = size;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        tempCtx.clearRect(0, 0, size, size);
+        
+        // FIXED: Pass isNeon parameter based on color
+        const isNeon = color === '#FFFF00';
+        this.drawChicletBlock(tempCtx, 0, 0, size, color, isNeon);
+        
+        tempCtx.save();
+        tempCtx.globalCompositeOperation = 'destination-out';
+        tempCtx.font = `bold ${size * 1.2}px Bungee, monospace`;
+        tempCtx.textAlign = 'center';
+        tempCtx.textBaseline = 'middle';
+        tempCtx.fillText(letter, size / 2, size / 2 + size * 0.1);
+        tempCtx.restore();
+        
+        // CHANGED: Much thinner stroke - EXACT same as renderer.js
+        tempCtx.strokeStyle = '#000000';
+        tempCtx.lineWidth = 1;
+        tempCtx.font = `bold ${size * 1.2}px Bungee, monospace`;
+        tempCtx.textAlign = 'center';
+        tempCtx.textBaseline = 'middle';
+        tempCtx.strokeText(letter, size / 2, size / 2 + size * 0.1);
+        
+        ctx.drawImage(tempCanvas, x, y);
+    }
+    
+    drawChicletBlock(ctx, x, y, size, color, isNeon) {
+        // Save context
+        ctx.save();
+        
+        // Create gradient matching CSS exactly
+        let gradient;
+        if (isNeon) {
+            // NEON: Yellow gradient like CSS
+            gradient = ctx.createLinearGradient(x, y, x + size, y + size);
+            gradient.addColorStop(0, '#FFFF00');
+            gradient.addColorStop(0.5, '#FFD700');
+            gradient.addColorStop(1, '#FFA500');
+        } else {
+            // DROP: Purple gradient like CSS
+            gradient = ctx.createLinearGradient(x, y, x + size, y + size);
+            gradient.addColorStop(0, '#8A2BE2');
+            gradient.addColorStop(0.5, '#9932CC');
+            gradient.addColorStop(1, '#DA70D6');
+        }
+        
+        // Draw main block with gradient
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+        
+        // Add inset shadows like CSS
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+        
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowOffsetX = -2;
+        ctx.shadowOffsetY = -2;
+        ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+        
+        // Add outer glow like CSS
+        ctx.shadowColor = isNeon ? 'rgba(255, 255, 0, 0.5)' : 'rgba(138, 43, 226, 0.5)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+        
+        // Reset shadows
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        // Add subtle border
+        ctx.strokeStyle = isNeon ? '#FFD700' : '#9932CC';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 1, y + 1, size - 2, size - 2);
+        
+        // Restore context
+        ctx.restore();
+    }
+    
+    adjustBrightness(color, factor) {
+        const hex = color.replace('#', '');
+        const r = Math.min(255, parseInt(hex.substr(0, 2), 16) * factor);
+        const g = Math.min(255, parseInt(hex.substr(2, 2), 16) * factor);
+        const b = Math.min(255, parseInt(hex.substr(4, 2), 16) * factor);
+        return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
+    }
+    
+    addLogoGlowEffect(canvas) {
+        // Add pulsing glow animation
+        let pulse = 0;
+        const animate = () => {
+            pulse = (pulse + 0.03) % (Math.PI * 2);
+            const glowIntensity = Math.sin(pulse) * 0.2 + 0.8;
+            
+            // Add pulsing glow overlay without redrawing the entire logo
+            const ctx = canvas.getContext('2d');
+            ctx.save();
+            ctx.globalCompositeOperation = 'screen';
+            ctx.fillStyle = `rgba(0, 212, 255, ${0.08 * glowIntensity})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+            
+            requestAnimationFrame(animate);
+        };
+        animate();
     }
 
     async showNameCapture() {
