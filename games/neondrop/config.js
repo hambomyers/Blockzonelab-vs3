@@ -74,6 +74,21 @@ export class Config {
            FLOAT_CHANCE: 0.07,
            FLOAT_MAX_UP_MOVES: 7,
            SPECIAL_WEIGHT: 0.5,
+           // Dynamic FLOAT frequency: increases 10-25% based on unlocked pieces AND game progress
+           FLOAT_DYNAMIC_BOOST: {
+               BASE_BOOST: 0.10,    // 10% minimum increase from advanced pieces
+               MAX_BOOST: 0.15,     // 15% maximum increase from advanced pieces
+               PROGRESS_BOOST: 0.10, // 10% maximum increase from game progress
+               ADVANCED_PIECES: ['DOT', 'CORNER', 'PIPE', 'STAR', 'ZIGZAG', 'BRIDGE', 'DIAMOND', 'TWINS'],
+               PROGRESSION_MILESTONES: [
+                   { pieces: 0, boost: 0.00 },    // Start: no boost
+                   { pieces: 50, boost: 0.02 },   // Early game: 2% boost
+                   { pieces: 100, boost: 0.04 },  // Mid-early: 4% boost
+                   { pieces: 200, boost: 0.06 },  // Mid game: 6% boost
+                   { pieces: 350, boost: 0.08 },  // Mid-late: 8% boost
+                   { pieces: 500, boost: 0.10 }   // Late game: 10% boost
+               ]
+           },
            UNLOCK_THRESHOLDS: {
                'PLUS': 2000,
                'U': 4000,
@@ -120,7 +135,7 @@ export class Config {
 
        // Audio
        AUDIO: {
-           MASTER_VOLUME_DEFAULT: 0.3,
+           MASTER_VOLUME_DEFAULT: 0.8,
            SOUND_COOLDOWN: 50
        },
 

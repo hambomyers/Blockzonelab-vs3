@@ -10,18 +10,31 @@ import { InputController } from './core/input-controller.js';
 import { AudioSystem } from './core/audio-system.js';
 import { ViewportManager } from './core/viewport-manager.js';
 
-// Game configuration and elegant game over
+// Configuration
 import { Config } from './config.js';
-import { SimpleGameOver } from './ui/SimpleGameOver.js'; // Pure elegance
 
-// Essential UI components
-import { GuidePanel } from './ui/guide-panel.js';
+// UI Systems
 import { UIStateManager } from './ui/ui-state-manager.js';
+import { GuidePanel } from './ui/guide-panel.js';
 import { StatsPanel } from './ui/stats-panel.js';
 import { TournamentUI } from './ui/tournament-ui.js';
+import { SimpleGameOver } from './ui/SimpleGameOver.js'; // Re-enabled for money-involved gaming
+// DISABLED: Using frosted glass effect in renderer instead
+// import { SimpleGameOver } from './ui/SimpleGameOver.js'; // Pure elegance
 
-// Payment systems (simplified)
+// Gameplay systems
+import { ParticleSystem } from './gameplay/particles.js';
+import { ScoringSystem } from './gameplay/scoring.js';
+import { ChicletRenderer } from './gameplay/chiclet.js';
+import { createStarfieldRenderer } from './gameplay/starfield.js';
+
+// Shared systems
+import { sessionManager } from '../../shared/platform/session.js';
 import { USDCPaymentSystem } from '../../shared/economics/usdc-payment.js';
+import { PrizeCalculator } from '../../shared/economics/prize-calculator.js';
+import { ReferralTracker } from '../../shared/components/ReferralTracker.js';
+import { ViralStatusSystem } from '../../shared/components/ViralStatusSystem.js';
+import { StyleSelector } from '../../shared/components/StyleSelector.js';
 
 class NeonDrop {
     constructor() {
@@ -48,8 +61,9 @@ class NeonDrop {
         
         // State
         this.running = false;
-        this.lastTime = performance.now();
+        this.lastTime = 0;
         this.accumulator = 0;
+        this.isGameOverReady = false;
         
         // Setup globals
         window.neonDrop = this;
@@ -62,32 +76,36 @@ class NeonDrop {
     }
 
     async initialize() {
+        console.log('🌐 NeonDrop initializing...');
+        
+        // Initialize core systems
+        await this.setupDisplay();
+        this.createSystems();
+        this.setupUI();
+        this.cleanupOldUI();
+        
+        // FIXED: Initialize SimpleGameOver with better error handling
         try {
-            await this.config.load();
-            this.setupDisplay();
-            
-            // Enhanced: Initialize SimpleGameOver (includes UnifiedPlayerSystem)
-            console.log('🚀 Initializing enhanced game over system...');
             this.gameOverHandler = new SimpleGameOver();
-            
-            // Wait for systems to be ready
-            await new Promise(resolve => setTimeout(resolve, 100));
-            this.isGameOverReady = true;
-            
             console.log('✅ SimpleGameOver system initialized');
             
-            this.createSystems();
-            this.setupUI();
-            this.cleanupOldUI();
-            this.bindEvents();
-            this.startLoop();
-            
-            // Background initialization
-            this.initBackgroundSystems();
+            // Make globally accessible
+            window.neonDrop.gameOverHandler = this.gameOverHandler;
         } catch (error) {
-            console.error('❌ Init failed:', error);
-            this.showError('Game failed to load. Please refresh.');
+            console.error('❌ Failed to initialize SimpleGameOver:', error);
+            this.gameOverHandler = null;
         }
+        
+        // Initialize background systems
+        await this.initBackgroundSystems();
+        
+        // Start the game loop
+        this.startLoop();
+        
+        // Bind events last
+        this.bindEvents();
+        
+        console.log('🎮 NeonDrop ready');
     }
 
     setupDisplay() {
@@ -195,7 +213,8 @@ class NeonDrop {
         try {
             this.engine?.tick(deltaTime);
         } catch (error) {
-            console.warn('Update error:', error);
+            console.error('❌ Update error:', error);
+            // Don't let update errors crash the game loop
         }
     }
 
@@ -211,8 +230,10 @@ class NeonDrop {
                 stars: []
             };
             
-            this.renderer.render(state, particles, starfield);        } catch (error) {
-            console.warn('Render error:', error);
+            this.renderer.render(state, particles, starfield);
+        } catch (error) {
+            console.warn('⚠️ Render error:', error);
+            // Don't let render errors crash the game loop
         }
     }
 
@@ -222,21 +243,33 @@ class NeonDrop {
         return true; // Simplified - let the gameLoop handle throttling
     }
 
+    // FIXED: Handle action with proper game over state checking
     handleAction(action) {
         if (!this.engine) return;
         
         // Initialize audio on first interaction
         if (!this.audio.initialized) {
             this.audio.init();
-        }        // Ensure input system is ready when starting a game
+        }
+        
+        // Ensure input system is ready when starting a game
         if (action.type === 'START_GAME') {
             console.log('🎮 Starting game - beginning gameplay session');
-            // FIXED: Direct game engine interaction instead of UI state manager
+            
+            // Reset game over state before starting
+            if (this.engine.gameOverTriggered) {
+                console.log('🔄 Resetting game over state before new game');
+                this.engine.gameOverTriggered = false;
+            }
+            
+            // FIXED: Direct game engine interaction
             if (this.engine) {
                 this.engine.startFreePlay();
             }
+            return;
         }
         
+        // Pass action to engine
         this.engine.handleInput(action);
     }
 
@@ -298,51 +331,73 @@ class NeonDrop {
         console.log('🛑 NeonDrop shutdown');
     }
 
-    // FIXED: Clean game start
+    // FIXED: Clean game start with proper state reset
     async startNewGame() {
         console.log('🎮 Starting new game');
         
-        if (this.gameOverHandler) {
+        // NEW: Check lockout system before starting
+        if (this.engine && !this.engine.canStartNewGame()) {
+            console.log('🚫 New game blocked by lockout system');
+            return;
+        }
+        
+        // Hide game over UI if active
+        if (this.gameOverHandler && this.gameOverHandler.isVisible) {
             this.gameOverHandler.hide();
         }
         
+        // Reset engine state completely
         if (this.engine) {
+            // Reset the game over flag
+            this.engine.gameOverTriggered = false;
+            
+            // Return to menu first to clear state
             this.engine.returnToMenu();
+            
+            // Brief delay for clean state transition
+            setTimeout(() => {
+                if (this.engine) {
+                    this.engine.startFreePlay();
+                    console.log('🎮 Game started successfully');
+                }
+            }, 100);
         }
-        
-        // Brief delay for smooth transition
-        setTimeout(() => {
-            if (this.engine) {
-                this.engine.startFreePlay();
-            }
-        }, 300);
     }
 
     // FIXED: Clean menu return
     returnToMenu() {
         console.log('🔄 Returning to menu');
         
-        if (this.gameOverHandler) {
+        // Hide game over UI if active
+        if (this.gameOverHandler && this.gameOverHandler.isVisible) {
             this.gameOverHandler.hide();
         }
         
         if (this.engine) {
+            // Reset the game over flag
+            this.engine.gameOverTriggered = false;
             this.engine.returnToMenu();
         }
-        
-        // REMOVED: showGameMenuCardWithDelay(500); - unused menu system
     }
 
+    // FIXED: Show leaderboard with error handling
     showLeaderboard() {
         console.log('🏆 Showing leaderboard');
         
-        // Use tournament system if available
-        if (this.tournament?.show) {
-            this.tournament.show();
-        } else if (this.tournamentUI?.show) {
-            this.tournamentUI.show();
-        } else {
-            console.warn('⚠️ No leaderboard system available');
+        try {
+            // Use tournament system if available
+            if (this.tournament?.show) {
+                this.tournament.show();
+            } else if (this.tournamentUI?.show) {
+                this.tournamentUI.show();
+            } else if (this.gameOverHandler?.showLeaderboard) {
+                // Fallback to SimpleGameOver leaderboard
+                this.gameOverHandler.showLeaderboard();
+            } else {
+                console.warn('⚠️ No leaderboard system available');
+            }
+        } catch (error) {
+            console.error('❌ Failed to show leaderboard:', error);
         }
     }
 
@@ -351,44 +406,61 @@ class NeonDrop {
     }
 
     bindEvents() {
-        // FIXED: Game over event - routes to SimpleGameOver (frictionless flow)
+        // FIXED: Game over event - ensure proper score passing
         document.addEventListener('gameOver', async (e) => {
             const { score, level, lines, time } = e.detail;
-            console.log('🎮 Game over event received');
+            console.log('🎮 Game over event received - Score:', score);
+            
+            // FIXED: Ensure we have the actual score from the engine
+            let actualScore = score || this.engine?.getState()?.score || 0;
+            
+            // Additional validation - get score directly from engine if event score is 0
+            if (actualScore === 0 && this.engine) {
+                const engineState = this.engine.getState();
+                const engineScore = engineState.score || 0;
+                console.log('🎮 Engine state score:', engineScore);
+                
+                if (engineScore > 0) {
+                    actualScore = engineScore;
+                }
+            }
+            
+            console.log('🎮 Final score for game over:', actualScore);
             
             if (this.gameOverHandler) {
-                await this.gameOverHandler.show(score, { level, lines, time });
+                try {
+                    await this.gameOverHandler.show(actualScore, { level, lines, time });
+                    console.log('✅ SimpleGameOver shown successfully');
+                } catch (error) {
+                    console.error('❌ Failed to show SimpleGameOver:', error);
+                    // Fallback to basic game over
+                    this.showBasicGameOver(actualScore);
+                }
             } else {
                 console.error('❌ Game over handler not initialized');
+                this.showBasicGameOver(actualScore);
             }
         });
 
-        // FIXED: Simple game over choice handling
+        // Simple game over choice handling
         document.addEventListener('simpleGameOver', (e) => {
             const { action } = e.detail;
-            console.log('🎮 Simple game over action:', action);
+            console.log('🎮 Game over action:', action);
             
             switch (action) {
                 case 'play-again':
                     this.startNewGame();
                     break;
                 case 'show-leaderboard':
-                    this.showLeaderboard();
-                    break;
                 case 'leaderboard':
-                    if (this.tournament && this.tournament.show) {
-                        this.tournament.show();
-                    }
+                    this.showLeaderboard();
                     break;
             }
         });
 
         // Tournament selection/start game
         document.addEventListener('startGame', e => {
-            console.log('🎮 Starting game from tournament UI');
-            if (this.gameOverHandler) {
-                this.gameOverHandler.hide();
-            }
+            console.log('🎮 Starting game from UI');
             this.startNewGame();
         });
 
@@ -411,9 +483,24 @@ class NeonDrop {
             if ((e.key === 'Backspace' || e.key === ' ') && e.target === document.body) {
                 e.preventDefault();
             }
+            
+            // FIXED: Handle SPACE key for game over continue - check lockout system
+            const gameState = this.engine?.getState();
+            if (e.key === ' ' && gameState && 
+                (gameState.phase === 'GAME_OVER' || gameState.phase === 'GAME_OVER_SEQUENCE')) {
+                e.preventDefault();
+                
+                // NEW: Check if new game can be started (lockout system)
+                if (this.engine && this.engine.canStartNewGame()) {
+                    console.log('🎮 Starting new game after lockout period');
+                    this.startNewGame();
+                } else {
+                    console.log('🚫 New game blocked by lockout system');
+                }
+            }
         });
 
-        // Touch device detection using centralized system
+        // Touch device detection
         if (window.BlockZoneMobile?.needsMobileControls()) {
             document.body.classList.add('touch-device');
         }
@@ -438,6 +525,63 @@ class NeonDrop {
         } catch (error) {
             console.log('🎮 Running in demo mode');
         }
+    }
+
+    // FIXED: Enhanced basic game over fallback
+    showBasicGameOver(score) {
+        console.log('🎮 Showing basic game over fallback with score:', score);
+        
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            color: white;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+        `;
+        
+        overlay.innerHTML = `
+            <div>
+                <div style="font-size: 48px; margin-bottom: 20px; color: #FF0066;">GAME OVER</div>
+                <div style="font-size: 32px; margin-bottom: 30px; color: #00FFFF;">Score: ${score.toLocaleString()}</div>
+                <div style="font-size: 18px; color: #FFFFFF;">Press SPACE to play again</div>
+            </div>
+        `;
+        
+        overlay.addEventListener('click', () => {
+            overlay.remove();
+            this.startNewGame();
+        });
+        
+        // Handle keyboard input
+        const handleKeyPress = (e) => {
+            if (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape') {
+                e.preventDefault();
+                overlay.remove();
+                document.removeEventListener('keydown', handleKeyPress);
+                this.startNewGame();
+            }
+        };
+        
+        document.addEventListener('keydown', handleKeyPress);
+        document.body.appendChild(overlay);
+        
+        // Auto-remove after 30 seconds
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.remove();
+                document.removeEventListener('keydown', handleKeyPress);
+            }
+        }, 30000);
     }
 }
 

@@ -64,7 +64,7 @@ export class Renderer {
                 stage: 1
             },
             unlock: { alpha: 0, message: '' },
-            combo: { scale: 1, count: 0 }
+            combo: { scale: 1, count: 0, alpha: 0 }
         };
 
         // Transition effects
@@ -361,17 +361,20 @@ export class Renderer {
             this.renderGhostPiece(state);
         }
 
-        // Current piece
+        // Current piece - FIXED: Hide during game over sequence but show death piece
         const hideCurrentPiece = state.phase === 'GAME_OVER' ||
-                               state.phase === 'GAME_OVER_SEQUENCE';
+                               (state.phase === 'GAME_OVER_SEQUENCE' && state.gameOverSequencePhase > 0);
 
         if (!hideCurrentPiece) {
             this.renderCurrentPiece(state);
         }
 
-        // Death piece overlay
-        if (state.phase === 'GAME_OVER' && state.current) {
-            this.renderDeathPiece(state.current);
+        // Death piece overlay - FIXED: Show during game over sequence phase 0
+        if (state.phase === 'GAME_OVER_SEQUENCE' && 
+            state.gameOverSequencePhase === 0 && 
+            state.current) {
+            // Don't call renderDeathPiece here - it's handled in renderGameOverSequence
+            // This prevents double rendering
         }
     }
 
@@ -493,9 +496,11 @@ export class Renderer {
     }
 
     /**
-     * Render pieces that overflow above board on game over
+     * FIXED: Enhanced renderDeathPiece for better visualization
      */
     renderDeathPiece(piece) {
+        if (!piece) return;
+        
         piece.shape.forEach((row, dy) => {
             row.forEach((cell, dx) => {
                 if (!cell) return;
@@ -503,24 +508,18 @@ export class Renderer {
                 const boardX = piece.gridX + dx;
                 const boardY = piece.gridY + dy;
 
-                // Only render pieces above the board
-                if (boardY < 0) {
+                // FIXED: Only render pieces above the board (negative Y) and within horizontal bounds
+                if (boardY < 0 && boardX >= 0 && boardX < CONSTANTS.BOARD.WIDTH) {
                     const pixelX = this.dimensions.boardX + boardX * this.dimensions.blockSize;
                     const pixelY = this.dimensions.boardY + boardY * this.dimensions.blockSize;
 
-                    // Use faster pulse (1 second cycle) and piece's actual color
-                    const pulse = Math.sin(Date.now() * 0.006283) * 0.4 + 0.6;
-                    this.ctx.globalAlpha = pulse;
-
-                    // Draw with piece's color instead of red
+                    // Use current global alpha (set by caller for blinking effect)
                     this.chicletRenderer.drawBlock(
-                        this.ctx, pixelX, pixelY, piece.color, boardY, boardX
+                        this.ctx, pixelX, pixelY, '#FF0000', boardY, boardX
                     );
                 }
             });
         });
-
-        this.ctx.globalAlpha = 1;
     }
 
     renderUI(state) {
@@ -722,12 +721,13 @@ export class Renderer {
             case 'GAME_OVER_SEQUENCE':
             case 'GAME_OVER':
             case 'GAME_OVER_TO_MENU':
-                // Clean game over - just render the board normally
-                // Our GameOverSequence overlay will handle the UI
-                this.renderBoard(state);
+                // FIXED: Use our new game over sequence rendering
+                this.renderGameOverSequence(state);
                 break;
         }
-    }    renderMenu(state) {
+    }
+
+    renderMenu(state) {
         this.dimBoard(0.7);
 
         // Render the beautiful NEON DROP title
@@ -870,22 +870,97 @@ export class Renderer {
         this.ctx.restore();
     }
 
+    /**
+     * FIXED: Enhanced renderGameOverSequence with proper death piece blinking
+     */
     renderGameOverSequence(state) {
-        // Simple unified game over - just render the current state with death piece
-        this.renderMinimalGameOver(state, 0);
+        // Check if SimpleGameOver UI is active
+        const gameOverUI = document.querySelector('.game-over-card');
+        const isSimpleGameOverActive = gameOverUI && gameOverUI.style.display !== 'none';
+        
+        // FIXED: Always show death piece blinking during game over sequence
+        if (state.gameOverSequencePhase === 0 && state.current) {
+            // Calculate elapsed time since game over started
+            const elapsed = Date.now() - (state.gameOverStartTime || Date.now());
+            
+            // Phase 0: Death piece blinking (0-3 seconds)
+            this.renderDeathPieceBlinking(state, elapsed);
+            
+            // Add subtle "GAME OVER" text that fades in
+            const fadeInDuration = 3000; // 3 seconds
+            const fadeProgress = Math.min(1, elapsed / fadeInDuration);
+            
+            if (fadeProgress > 0) {
+                const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
+                const centerY = this.dimensions.boardY + this.dimensions.boardHeight / 2;
+                
+                this.ctx.save();
+                this.ctx.globalAlpha = fadeProgress * 0.7;
+                this.ctx.font = `bold ${this.dimensions.blockSize * 1.5}px 'Orbitron', monospace`;
+                this.ctx.fillStyle = '#FF0066';
+                this.ctx.textAlign = 'center';
+                this.ctx.shadowColor = '#FF0066';
+                this.ctx.shadowBlur = 20;
+                this.ctx.fillText('GAME OVER', centerX, centerY - this.dimensions.blockSize * 2);
+                this.ctx.restore();
+            }
+        }
+        // Phase 1+: Only show minimal overlay if SimpleGameOver is not active
+        else if (state.gameOverSequencePhase >= 1 && !isSimpleGameOverActive) {
+            this.renderMinimalGameOver(state);
+        }
     }
 
-    renderMinimalGameOver(state, elapsed) {
-        // Clean black background
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    /**
+     * FIXED: Render death piece with proper blinking timing
+     */
+    renderDeathPieceBlinking(state, elapsed) {
+        if (!state.current) return;
+        
+        // FIXED: Use deterministic blinking based on elapsed time (1 second cycle)
+        const blinkCycle = 1000; // 1 second
+        const blinkProgress = (elapsed % blinkCycle) / blinkCycle;
+        
+        // Use sine wave for smooth blinking (0.2 to 1.0 opacity)
+        const opacity = Math.sin(blinkProgress * Math.PI * 2) * 0.4 + 0.6;
+        
+        // Only render pieces that are above the visible board (negative Y)
+        state.current.shape.forEach((row, dy) => {
+            row.forEach((cell, dx) => {
+                if (!cell) return;
 
-        // Render darkened board (0.3 opacity for very subtle visibility)
+                const boardX = state.current.gridX + dx;
+                const boardY = state.current.gridY + dy;
+
+                // FIXED: Only render pieces above the board AND within bounds
+                if (boardY < 0 && boardX >= 0 && boardX < CONSTANTS.BOARD.WIDTH) {
+                    const pixelX = this.dimensions.boardX + boardX * this.dimensions.blockSize;
+                    const pixelY = this.dimensions.boardY + boardY * this.dimensions.blockSize;
+
+                    this.ctx.save();
+                    this.ctx.globalAlpha = opacity;
+
+                    // Draw with bright red color for the blinking death piece
+                    this.chicletRenderer.drawBlock(
+                        this.ctx, pixelX, pixelY, '#FF0000', boardY, boardX
+                    );
+                    
+                    this.ctx.restore();
+                }
+            });
+        });
+    }
+
+    /**
+     * FIXED: Enhanced renderMinimalGameOver for non-SimpleGameOver cases
+     */
+    renderMinimalGameOver(state) {
+        // Render the board first
         this.renderBoard(state);
-        this.dimBoard(0.7);
-
+        
         // Slowly blinking death piece (2 second cycle)
         if (state.current) {
+            const elapsed = Date.now() - (state.gameOverStartTime || Date.now());
             const blinkCycle = 2000; // 2 seconds
             const blinkProgress = (elapsed % blinkCycle) / blinkCycle;
             const opacity = Math.sin(blinkProgress * Math.PI) * 0.4 + 0.4; // 0.0 to 0.8 range
@@ -896,17 +971,68 @@ export class Renderer {
             this.ctx.restore();
         }
 
-        // Clean score display - centered, elegant
+        // Frosted glass overlay with neon borders
         const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
-        const scoreY = this.dimensions.boardY - this.dimensions.blockSize * 2;
+        const centerY = this.dimensions.boardY + this.dimensions.boardHeight / 2;
+        const overlayWidth = this.dimensions.boardWidth * 0.8;
+        const overlayHeight = this.dimensions.boardHeight * 0.6;
+        const overlayX = centerX - overlayWidth / 2;
+        const overlayY = centerY - overlayHeight / 2;
 
+        // Semi-transparent frosted glass background
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.15;
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(overlayX, overlayY, overlayWidth, overlayHeight);
+        this.ctx.restore();
+
+        // Neon border glow
+        const borderGlow = Math.sin(Date.now() * 0.003) * 0.3 + 0.7;
+        this.ctx.save();
+        this.ctx.strokeStyle = '#FF0066';
+        this.ctx.lineWidth = 3;
+        this.ctx.shadowColor = '#FF0066';
+        this.ctx.shadowBlur = 15 * borderGlow;
+        this.ctx.strokeRect(overlayX, overlayY, overlayWidth, overlayHeight);
+        this.ctx.restore();
+
+        // Inner border
+        this.ctx.save();
+        this.ctx.strokeStyle = '#00FFFF';
+        this.ctx.lineWidth = 1;
+        this.ctx.shadowColor = '#00FFFF';
+        this.ctx.shadowBlur = 8;
+        this.ctx.strokeRect(overlayX + 2, overlayY + 2, overlayWidth - 4, overlayHeight - 4);
+        this.ctx.restore();
+
+        // Game Over text with neon glow
+        this.ctx.save();
+        this.ctx.font = `bold ${this.dimensions.blockSize * 1.2}px 'Orbitron', monospace`;
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.textAlign = 'center';
+        this.ctx.shadowColor = '#FF0066';
+        this.ctx.shadowBlur = 20;
+        this.ctx.fillText('GAME OVER', centerX, centerY - this.dimensions.blockSize * 1.5);
+        this.ctx.restore();
+
+        // Score with subtle glow
         this.ctx.save();
         this.ctx.font = `${this.dimensions.blockSize * 0.8}px 'Orbitron', monospace`;
         this.ctx.fillStyle = '#FFFFFF';
         this.ctx.textAlign = 'center';
-        this.ctx.shadowColor = '#FFFFFF';
+        this.ctx.shadowColor = '#00FFFF';
         this.ctx.shadowBlur = 8;
-        this.ctx.fillText(`SCORE: ${state.score.toLocaleString()}`, centerX, scoreY);
+        this.ctx.fillText(`SCORE: ${state.score.toLocaleString()}`, centerX, centerY);
+        this.ctx.restore();
+
+        // Continue prompt with pulsing effect
+        const promptAlpha = Math.sin(Date.now() * 0.004) * 0.3 + 0.7;
+        this.ctx.save();
+        this.ctx.globalAlpha = promptAlpha;
+        this.ctx.font = `${this.dimensions.blockSize * 0.6}px 'Orbitron', monospace`;
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('Press SPACE to continue', centerX, centerY + this.dimensions.blockSize * 1.5);
         this.ctx.restore();
     }
 
@@ -1097,32 +1223,40 @@ export class Renderer {
             this.animations.unlock.alpha = Math.max(0, this.animations.unlock.alpha - 0.05);
         }
 
-        // Combo notification - also skip during game over
+        // Combo notification - positioned below board like unlock notifications
         if (state.combo > 1 &&
             state.phase !== 'GAME_OVER' &&
             state.phase !== 'GAME_OVER_SEQUENCE') {
+            
+            // Reset combo animation when combo changes
             if (this.animations.combo.count !== state.combo) {
                 this.animations.combo.count = state.combo;
                 this.animations.combo.scale = 2;
+                this.animations.combo.alpha = 1.0; // Start fully visible
             }
 
+            // Animate scale and alpha
             this.animations.combo.scale = Math.max(1, this.animations.combo.scale * 0.95);
+            this.animations.combo.alpha = Math.max(0, this.animations.combo.alpha - 0.02); // Gradual fade
 
             const centerX = this.dimensions.boardX + this.dimensions.boardWidth / 2;
-            const comboY = this.dimensions.boardY + this.dimensions.boardHeight * 0.6;
+            // Position below board like unlock notifications
+            const comboY = this.dimensions.boardY + this.dimensions.boardHeight + this.dimensions.blockSize * 2 + 5;
 
             this.ctx.save();
-            this.ctx.translate(centerX, comboY);
-            this.ctx.scale(this.animations.combo.scale, this.animations.combo.scale);
-
-            this.ctx.font = `bold ${this.dimensions.blockSize}px monospace`;
+            this.ctx.globalAlpha = this.animations.combo.alpha;
+            this.ctx.font = `bold ${this.dimensions.blockSize * 0.75}px monospace`;
             this.ctx.fillStyle = '#FFD700';
             this.ctx.textAlign = 'center';
-            this.ctx.globalAlpha = Math.min(1, this.animations.combo.scale);
+            this.ctx.shadowColor = '#FFD700';
+            this.ctx.shadowBlur = 10;
 
-            this.ctx.fillText(`${state.combo}x COMBO!`, 0, 0);
-
+            this.ctx.fillText(`${state.combo}x COMBO!`, centerX, comboY);
             this.ctx.restore();
+        } else {
+            // Reset combo animation when no combo
+            this.animations.combo.count = 0;
+            this.animations.combo.alpha = 0;
         }
     }
 
@@ -1328,7 +1462,7 @@ export class Renderer {
             stage: 1
         };
         this.animations.unlock = { alpha: 0, message: '' };
-        this.animations.combo = { scale: 1, count: 0 };
+        this.animations.combo = { scale: 1, count: 0, alpha: 0 };
 
         this.transitionEffects = {
             blur: 0,
@@ -1612,8 +1746,6 @@ export class Renderer {
             return true;
         });
     }
-
-
 
     renderPracticeIndicator() {
         this.ctx.save();

@@ -280,10 +280,14 @@ export class InputController {
                 btn.classList.remove('active');
             });
         });
-    }    /**
+    }
+
+    /**
      * Keyboard key down handler
      */
     onKeyDown(e) {
+        console.log('🎮 Key pressed:', e.code); // Debug log
+        
         // Prevent key repeat
         if (this.keys.has(e.code)) return;
 
@@ -305,6 +309,8 @@ export class InputController {
 
         // Convert to action
         const action = this.keyToAction(e.code);
+        console.log('🎮 Key converted to action:', action); // Debug log
+        
         if (!action) return;
 
         // Process action
@@ -397,12 +403,17 @@ export class InputController {
             }
         }
 
-        // 4. Only capture keys if we're actually in gameplay phases
+        // 4. Get the actual game state and check if we're in gameplay
         const state = this.getState();
-        const gameplayPhases = ['PLAYING', 'LOCKING', 'PAUSED', 'MENU', 'GAME_OVER'];
+        console.log('🎮 Current game state:', state.phase); // Debug log
         
         // Allow game controls during these phases
-        return gameplayPhases.includes(state.phase);
+        const gameplayPhases = ['PLAYING', 'LOCKING', 'PAUSED', 'MENU', 'GAME_OVER', 'COUNTDOWN'];
+        
+        const shouldCapture = gameplayPhases.includes(state.phase);
+        console.log('🎮 Should capture game keys:', shouldCapture); // Debug log
+        
+        return shouldCapture;
     }
 
     /**
@@ -689,6 +700,8 @@ export class InputController {
      * Handle gameplay input
      */
     handleGameplayInput(action) {
+        console.log('🎮 Handling gameplay input:', action); // Debug log
+        
         // Convert SPACE to hard drop during gameplay
         if (action.type === 'SPACE') {
             action = { type: 'HARD_DROP' };
@@ -702,6 +715,7 @@ export class InputController {
                     this.cooldowns.pause = false;
                 }, this.cooldowns.pauseTime);
 
+                console.log('🎮 Sending PAUSE action'); // Debug log
                 this.onAction({ type: 'PAUSE' });
             }
             return;
@@ -716,6 +730,7 @@ export class InputController {
         }
 
         // Pass other actions through
+        console.log('🎮 Sending action to game engine:', action); // Debug log
         this.onAction(action);
     }
 

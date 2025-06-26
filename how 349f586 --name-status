@@ -1,0 +1,14 @@
+[33mcommit 349f5860367c5eabace1ea2c02ca44e58d815ec5[m
+Author: Hamilton <Hambomyers@gmail.com>
+Date:   Wed Jun 25 07:17:04 2025 -0400
+
+     Add viral status system with 3-tier social bling - Bronze (1-5), Silver (6-30), Gold (31+) with style options for Silver/Gold - Includes referral tracking, challenge links, and visual effects - No rainbows, clean arcade aesthetic
+
+M	academy/index.html
+M	assets/css/components.css
+M	games/index.html
+M	games/neondrop/ui/SimpleGameOver.js
+M	index.html
+A	shared/components/ReferralTracker.js
+A	shared/components/StyleSelector.js
+A	shared/components/ViralStatusSystem.js
