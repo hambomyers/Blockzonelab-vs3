@@ -144,6 +144,7 @@ export class GameEngine {
             // Timing
             lockTimer: 0,
             clearTimer: 0,
+            countdownTimer: 0,
             gravitySpeed: 1000,
             gravityAccumulator: 0,
 
@@ -338,7 +339,9 @@ export class GameEngine {
 
         if (progress >= 1) {
             this.state.gameState = GameState.COUNTDOWN;
+            this.state.countdownTimer = 3000;
             this.transitions.active = false;
+            console.log('🎬 Starting countdown: 3, 2, 1...');
         }
     }
 
@@ -642,19 +645,16 @@ export class GameEngine {
      * Start game
      */
     startGame(mode = 'practice') {
-        // Reset game over tracking
-        this.gameOverTriggered = false;
+        console.log('🎮 Starting game in mode:', mode);
         
-        // NEW: Reset game over lockout
-        this.resetGameOverLockout();
-        
+        // Reset state
+        this.state = this.createInitialState();
         this.state.gameMode = mode;
-        this.state.gameState = GameState.MENU_TO_COUNTDOWN;
         this.state.startTime = Date.now();
-        this.state.countdownTimer = 3000; // FIXED: Set countdown timer to 3 seconds
-        this.startTransition('fade-in', 300);
-
-        // Reset deterministic systems
+        
+        // Reset systems
+        this.particleSystem.clear();
+        this.scoring.reset();
         this.inputLog = [];
         this.gameLog = {
             seed: this.rng.seed,
@@ -666,61 +666,24 @@ export class GameEngine {
             frameStates: [],
             stateChanges: []
         };
-
-        // Reset 7-bag randomizer
-        this.bagRandomizer = {
-            currentBag: [],
-            nextBag: [],
-            bagHistory: [],
-            bagCount: 0
-        };
-
-        this.recordStateSnapshot('game_start');
-
-        // Initialize game state
-        this.state.board = Array(CONSTANTS.BOARD.HEIGHT).fill().map(() =>
-            Array(CONSTANTS.BOARD.WIDTH).fill(null)
-        );
-
-        this.state.score = 0;
-        this.state.lines = 0;
-        this.state.level = 1;
-        this.state.combo = 0;
-        this.state.gravitySpeed = 1000;
-        this.state.gravityAccumulator = 0;
-
-        this.state.currentPiece = null;
-        this.state.nextPiece = null;
-        this.state.heldPiece = null;
-        this.state.canHold = true;
-
-        this.state.unlockedPieces = [...CONSTANTS.PIECES.STARTING];
-        this.state.lastUnlockScore = 0;
-
-        this.state.statistics = {
-            piecesPlaced: 0,
-            maxCombo: 0,
-            floatUsed: 0
-        };
-
-        // Generate first pieces
-        this.state.nextPiece = this.generatePiece();
-        this.state.currentPiece = this.generatePiece();
-        this.state.currentPosition = {
-            x: this.state.currentPiece.spawn.x,
-            y: this.state.currentPiece.spawn.y
-        };
-
-        // Initialize spawn state
-        this.state.spawnTimer = 0;
-        this.state.isSpawning = true;
-        this.state.pieceSpawnTime = Date.now();
-        this.state.shadowValid = false;
-
-        // Reset scoring system
-        this.scoring.reset();
-
-        // FIXED: Remove the immediate transition to PLAYING - let countdown handle it
+        
+        // Initialize bag randomizer
+        this.fillBag();
+        this.fillBag();
+        
+        // Spawn first piece
+        this.spawnNextPiece();
+        
+        // Start countdown
+        this.state.gameState = GameState.MENU_TO_COUNTDOWN;
+        this.startTransition('countdown', 1000);
+        
+        // Emit game started event for navigation
+        window.dispatchEvent(new CustomEvent('gameStarted', { 
+            detail: { mode, timestamp: Date.now() } 
+        }));
+        
+        console.log('✅ Game started successfully');
     }
 
     /**
@@ -1079,6 +1042,12 @@ export class GameEngine {
             return;
         }
 
+        // FIXED: Handle first spawn where nextPiece is null
+        if (!this.state.nextPiece) {
+            console.log('🌟 First spawn - generating initial piece');
+            this.state.nextPiece = this.generatePiece();
+        }
+
         console.log(`🌟 Spawning next piece: ${this.state.nextPiece.type}`);
 
         // Simple spawning - let the lock check handle game over
@@ -1115,53 +1084,42 @@ export class GameEngine {
      * FIXED: Game over with more detailed logging
      */
     gameOver() {
-        // CRITICAL: Immediately set the flag to prevent race conditions
-        if (this.gameOverTriggered) {
-            console.log('🚫 Game over already triggered - ignoring duplicate call');
-            return;
-        }
-        
+        if (this.gameOverTriggered) return;
         this.gameOverTriggered = true;
         
-        // NEW: Activate game over lockout
-        this.gameOverLockout = {
-            active: true,
-            startTime: Date.now(),
-            duration: 3000, // 3 seconds minimum lockout
-            canStartNewGame: false
-        };
+        console.log('💀 Game Over triggered');
         
-        console.log('💀💀💀 GAME OVER TRIGGERED! 💀💀💀');
-        console.log(`📊 Final Score: ${this.state.score}`);
-        console.log('🔒 Game over lockout activated - preventing input bypass');
-        
-        // IMMEDIATELY lock the game state
-        this.state.gameState = GameState.GAME_OVER_SEQUENCE;
-        this.state.phase = 'GAME_OVER_SEQUENCE';
-        this.state.gameOverSequencePhase = 0;
+        // Record final state
+        this.state.finalScore = this.state.score;
         this.state.gameOverStartTime = Date.now();
-        this.state.deathPieceBlinkStart = Date.now();
         
-        // Stop all timers and movement
-        this.state.lockTimer = 0;
-        this.state.isLocking = false;
-        this.state.gravityAccumulator = 0;
+        // Log final game state
+        this.recordStateSnapshot('game_over', {
+            finalScore: this.state.score,
+            finalLines: this.state.lines,
+            finalLevel: this.state.level,
+            playTime: Date.now() - this.state.startTime
+        });
         
-        console.log('💀 Game over sequence started - death piece should be blinking');
-        
-        // Record final state and update stats...
+        // Update game log
         this.gameLog.finalScore = this.state.score;
+        this.gameLog.finalState = this.getState();
         
-        const highScore = this.config.get('game.highScore') || 0;
-        const isNewHighScore = this.state.score > highScore;
-        if (isNewHighScore) {
-            this.config.set('game.highScore', this.state.score);
-            console.log('🏆 NEW HIGH SCORE!');
-        }
-
-        this.config.incrementStat('game.gamesPlayed');
-        this.config.incrementStat('game.totalScore', this.state.score);
-        this.config.incrementStat('game.totalLines', this.state.lines);
+        // Start game over sequence
+        this.state.gameState = GameState.GAME_OVER_SEQUENCE;
+        this.state.gameOverSequencePhase = 0;
+        
+        // Emit game ended event for navigation
+        window.dispatchEvent(new CustomEvent('gameEnded', { 
+            detail: { 
+                score: this.state.score,
+                lines: this.state.lines,
+                level: this.state.level,
+                timestamp: Date.now() 
+            } 
+        }));
+        
+        console.log('✅ Game over sequence started');
     }
 
     /**

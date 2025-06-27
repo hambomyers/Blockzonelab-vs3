@@ -1406,3 +1406,190 @@
         width: 100%;
     }
 }
+
+/* Universal Navigation Bar Animations */
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+    }
+}
+
+@keyframes navPulse {
+    0% {
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4);
+    }
+    100% {
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+    }
+}
+
+/* Navigation bar hover effects */
+#universalNavigation:hover {
+    animation: navPulse 2s ease-in-out infinite;
+}
+
+/* Mobile optimizations for navigation */
+@media (max-width: 768px) {
+    #universalNavigation {
+        bottom: 10px !important;
+        padding: 8px 12px !important;
+        gap: 4px !important;
+    }
+    
+    #universalNavigation .nav-item {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        min-width: 60px !important;
+    }
+    
+    #universalNavigation .nav-item span:last-child {
+        display: none; /* Hide labels on mobile, show only icons */
+    }
+}
+
+/* Safe area support for mobile devices */
+@supports (padding: max(0px)) {
+    #universalNavigation {
+        bottom: max(20px, env(safe-area-inset-bottom) + 10px) !important;
+    }
+}
+
+/* ===== SIDE PANEL NAVIGATION SYSTEM ===== */
+
+#sidePanelNavigation {
+    /* Base styles are set inline for performance */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#sidePanelNavigation .nav-item {
+    position: relative;
+    overflow: visible;
+}
+
+#sidePanelNavigation .nav-item:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 153, 204, 0.2)) !important;
+    border: 1px solid rgba(0, 212, 255, 0.5) !important;
+}
+
+#sidePanelNavigation .nav-item.nav-active {
+    background: linear-gradient(135deg, #00d4ff, #0099cc) !important;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4) !important;
+    border: 1px solid rgba(0, 212, 255, 0.8) !important;
+}
+
+#sidePanelNavigation .nav-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#sidePanelNavigation .expand-toggle:hover {
+    background: rgba(0, 212, 255, 0.1) !important;
+    border-color: rgba(0, 212, 255, 0.6) !important;
+    transform: scale(1.1);
+}
+
+/* Mobile adaptations */
+@media (max-width: 768px) {
+    #sidePanelNavigation {
+        height: 80px !important;
+        width: 100% !important;
+        top: auto !important;
+        bottom: 0 !important;
+        right: auto !important;
+        left: 0 !important;
+        flex-direction: row !important;
+        padding: 0 20px !important;
+        border-left: none !important;
+        border-top: 1px solid rgba(0, 212, 255, 0.3) !important;
+        box-shadow: 0 -8px 32px rgba(0, 212, 255, 0.1) !important;
+    }
+    
+    #sidePanelNavigation .side-panel-header {
+        display: none !important;
+    }
+    
+    #sidePanelNavigation .nav-items {
+        flex-direction: row !important;
+        gap: 20px !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+    }
+    
+    #sidePanelNavigation .nav-item {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    #sidePanelNavigation .side-panel-footer {
+        display: none !important;
+    }
+}
+
+/* Game-specific adaptations */
+.game-page #sidePanelNavigation {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.game-page #sidePanelNavigation:hover {
+    opacity: 1;
+}
+
+/* Ensure content doesn't overlap with side panel */
+body {
+    padding-right: 60px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-right: 0;
+        padding-bottom: 80px;
+    }
+}
+
+/* Animation for side panel entrance */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* ===== REMOVE OLD FLOATING NAVIGATION STYLES ===== */
+
+#universalNavigation {
+    display: none !important;
+}
+
+/* ===== EXISTING COMPONENT STYLES ===== */

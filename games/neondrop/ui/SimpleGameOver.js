@@ -236,6 +236,21 @@ export class SimpleGameOver {
                         🎮 Play Again
                     </button>
                     
+                    <button id="challengeBtn" style="
+                        background: linear-gradient(135deg, #FF1493, #FF69B4);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 15px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 20, 147, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 20, 147, 0.3)'">
+                        ⚡ Challenge Friends
+                    </button>
+                    
                     <button id="leaderboardBtn" style="
                         background: linear-gradient(135deg, #8A2BE2, #9932CC);
                         color: white;
@@ -251,7 +266,7 @@ export class SimpleGameOver {
                         🏆 Leaderboard
                     </button>
                     
-                    <button id="academyBtn" style="
+                    <button id="homeBtn" style="
                         background: linear-gradient(135deg, #FFD700, #FFA500);
                         color: white;
                         border: none;
@@ -263,7 +278,7 @@ export class SimpleGameOver {
                         transition: all 0.3s ease;
                         box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
                     " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 215, 0, 0.3)'">
-                        📚 Academy
+                        🏠 Home
                     </button>
                     
                     <button id="shareBtn" style="
@@ -302,14 +317,21 @@ export class SimpleGameOver {
 
     bindEnhancedGameOverCardEvents() {
         const playAgainBtn = this.container.querySelector('#playAgainBtn');
+        const challengeBtn = this.container.querySelector('#challengeBtn');
         const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
-        const academyBtn = this.container.querySelector('#academyBtn');
+        const homeBtn = this.container.querySelector('#homeBtn');
         const shareBtn = this.container.querySelector('#shareBtn');
         
         if (playAgainBtn) {
             playAgainBtn.addEventListener('click', () => {
                 this.hide();
                 this.emit('play-again');
+            });
+        }
+        
+        if (challengeBtn) {
+            challengeBtn.addEventListener('click', () => {
+                this.showChallengeModal();
             });
         }
         
@@ -320,9 +342,9 @@ export class SimpleGameOver {
             });
         }
         
-        if (academyBtn) {
-            academyBtn.addEventListener('click', () => {
-                window.location.href = '/academy/';
+        if (homeBtn) {
+            homeBtn.addEventListener('click', () => {
+                window.location.href = '/';
             });
         }
         
@@ -2020,5 +2042,559 @@ export class SimpleGameOver {
         });
         
         console.log('✅ All localStorage player data cleared!');
+    }
+
+    showChallengeModal() {
+        console.log('⚡ Showing challenge modal with social media integration');
+        
+        // Create overlay for challenge modal
+        const overlay = document.createElement('div');
+        overlay.id = 'challengeOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        
+        overlay.innerHTML = `
+            <div class="challenge-modal" style="
+                background: rgba(0, 0, 0, 0.95);
+                border: 2px solid rgba(255, 20, 147, 0.6);
+                border-radius: 20px;
+                padding: 30px;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 20px 40px rgba(255, 20, 147, 0.3);
+                backdrop-filter: blur(15px);
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
+            ">
+                
+                <!-- NeonDrop Logo Header -->
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    padding: 10px;
+                ">
+                    <div style="
+                        background: linear-gradient(135deg, #00d4ff, #FF1493);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        font-size: 28px;
+                        font-weight: bold;
+                        text-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+                    ">
+                        ⚡ CHALLENGE FRIENDS ⚡
+                    </div>
+                </div>
+                
+                <!-- Score Display -->
+                <div style="
+                    background: rgba(255, 20, 147, 0.1);
+                    border: 1px solid rgba(255, 20, 147, 0.3);
+                    border-radius: 15px;
+                    padding: 20px;
+                    margin-bottom: 25px;
+                ">
+                    <div style="color: #FF1493; font-size: 18px; margin-bottom: 10px;">
+                        Your Score: ${this.score.toLocaleString()}
+                    </div>
+                    <div style="color: #ffffff; font-size: 14px; opacity: 0.8;">
+                        Challenge your friends to beat this score!
+                    </div>
+                </div>
+                
+                <!-- Shareable Link Display -->
+                <div style="
+                    background: rgba(0, 212, 255, 0.1);
+                    border: 1px solid rgba(0, 212, 255, 0.3);
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin-bottom: 25px;
+                ">
+                    <div style="color: #00d4ff; font-size: 14px; margin-bottom: 8px; font-weight: bold;">
+                        🔗 Challenge Link:
+                    </div>
+                    <div id="shareableLink" style="
+                        color: #ffffff;
+                        font-size: 12px;
+                        word-break: break-all;
+                        background: rgba(0, 0, 0, 0.3);
+                        padding: 8px;
+                        border-radius: 5px;
+                        font-family: monospace;
+                    ">
+                        Loading...
+                    </div>
+                </div>
+                
+                <!-- Challenge Tiers -->
+                <div style="margin-bottom: 25px;">
+                    <div style="color: #ffffff; font-size: 16px; margin-bottom: 15px; font-weight: bold;">
+                        Choose Challenge Tier:
+                    </div>
+                    
+                    <div style="display: grid; gap: 12px;">
+                        <button id="quickChallengeBtn" style="
+                            background: linear-gradient(135deg, #00d4ff, #0099cc);
+                            color: white;
+                            border: none;
+                            border-radius: 12px;
+                            padding: 15px;
+                            font-size: 16px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 212, 255, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0, 212, 255, 0.3)'">
+                            💰 Quick Challenge - $1.00
+                        </button>
+                        
+                        <button id="highRollerBtn" style="
+                            background: linear-gradient(135deg, #FFD700, #FFA500);
+                            color: white;
+                            border: none;
+                            border-radius: 12px;
+                            padding: 15px;
+                            font-size: 16px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 215, 0, 0.3)'">
+                            🎰 High Roller - $5.00
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Social Media Sharing -->
+                <div style="margin-bottom: 25px;">
+                    <div style="color: #ffffff; font-size: 16px; margin-bottom: 15px; font-weight: bold;">
+                        Share Challenge:
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button id="shareTwitterBtn" style="
+                            background: linear-gradient(135deg, #1DA1F2, #0D8BD9);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            🐦 X (Twitter)
+                        </button>
+                        
+                        <button id="shareTikTokBtn" style="
+                            background: linear-gradient(135deg, #000000, #25F4EE);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            🎵 TikTok
+                        </button>
+                        
+                        <button id="shareIMessageBtn" style="
+                            background: linear-gradient(135deg, #34C759, #30D158);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            💬 iMessage
+                        </button>
+                        
+                        <button id="shareWhatsAppBtn" style="
+                            background: linear-gradient(135deg, #25D366, #128C7E);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            📱 WhatsApp
+                        </button>
+                        
+                        <button id="shareInstagramBtn" style="
+                            background: linear-gradient(135deg, #E4405F, #C13584);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            📷 Instagram
+                        </button>
+                        
+                        <button id="shareDiscordBtn" style="
+                            background: linear-gradient(135deg, #7289DA, #5865F2);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            💬 Discord
+                        </button>
+                        
+                        <button id="shareEmailBtn" style="
+                            background: linear-gradient(135deg, #EA4335, #D93025);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            📧 Email
+                        </button>
+                        
+                        <button id="copyLinkBtn" style="
+                            background: linear-gradient(135deg, #6C757D, #495057);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            padding: 12px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            📋 Copy Link
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Close Button -->
+                <button id="closeChallengeBtn" style="
+                    background: rgba(255, 255, 255, 0.1);
+                    color: #ffffff;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 10px;
+                    padding: 12px 24px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                    ✕ Close
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        // Animate in
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            const modal = overlay.querySelector('.challenge-modal');
+            if (modal) {
+                modal.style.transform = 'scale(1)';
+            }
+        }, 10);
+        
+        // Bind challenge modal events
+        this.bindChallengeModalEvents(overlay);
+    }
+
+    bindChallengeModalEvents(overlay) {
+        const quickChallengeBtn = overlay.querySelector('#quickChallengeBtn');
+        const highRollerBtn = overlay.querySelector('#highRollerBtn');
+        const shareTwitterBtn = overlay.querySelector('#shareTwitterBtn');
+        const shareTikTokBtn = overlay.querySelector('#shareTikTokBtn');
+        const shareIMessageBtn = overlay.querySelector('#shareIMessageBtn');
+        const shareWhatsAppBtn = overlay.querySelector('#shareWhatsAppBtn');
+        const shareInstagramBtn = overlay.querySelector('#shareInstagramBtn');
+        const shareDiscordBtn = overlay.querySelector('#shareDiscordBtn');
+        const shareEmailBtn = overlay.querySelector('#shareEmailBtn');
+        const copyLinkBtn = overlay.querySelector('#copyLinkBtn');
+        const closeChallengeBtn = overlay.querySelector('#closeChallengeBtn');
+        
+        // Challenge tier buttons
+        if (quickChallengeBtn) {
+            quickChallengeBtn.addEventListener('click', () => {
+                this.createChallenge('quick', 1.00);
+            });
+        }
+        
+        if (highRollerBtn) {
+            highRollerBtn.addEventListener('click', () => {
+                this.createChallenge('high-roller', 5.00);
+            });
+        }
+        
+        // Social media sharing
+        if (shareTwitterBtn) {
+            shareTwitterBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('twitter');
+            });
+        }
+        
+        if (shareTikTokBtn) {
+            shareTikTokBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('tiktok');
+            });
+        }
+        
+        if (shareIMessageBtn) {
+            shareIMessageBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('imessage');
+            });
+        }
+        
+        if (shareWhatsAppBtn) {
+            shareWhatsAppBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('whatsapp');
+            });
+        }
+        
+        if (shareInstagramBtn) {
+            shareInstagramBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('instagram');
+            });
+        }
+        
+        if (shareDiscordBtn) {
+            shareDiscordBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('discord');
+            });
+        }
+        
+        if (shareEmailBtn) {
+            shareEmailBtn.addEventListener('click', () => {
+                this.shareToSocialMedia('email');
+            });
+        }
+        
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener('click', () => {
+                const linkDisplay = overlay.querySelector('#shareableLink');
+                if (linkDisplay && linkDisplay.textContent !== 'Loading...') {
+                    this.copyToClipboard(linkDisplay.textContent);
+                    this.showToast('📋 Challenge link copied to clipboard!');
+                } else {
+                    this.showToast('⚠️ Please create a challenge first!');
+                }
+            });
+        }
+        
+        // Close button
+        if (closeChallengeBtn) {
+            closeChallengeBtn.addEventListener('click', () => {
+                this.closeChallengeModal(overlay);
+            });
+        }
+        
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                this.closeChallengeModal(overlay);
+            }
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeChallengeModal(overlay);
+            }
+        });
+    }
+
+    async createChallenge(tier, stake) {
+        console.log(`⚡ Creating ${tier} challenge with $${stake} stake`);
+        
+        // Generate challenge ID
+        const challengeId = `challenge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Create challenge data
+        const challengeData = {
+            id: challengeId,
+            tier: tier,
+            stake: stake,
+            score: this.score,
+            playerName: this.playerName || 'Anonymous',
+            playerId: this.playerId,
+            timestamp: Date.now(),
+            status: 'active',
+            replayData: this.getReplayData() // Get current game replay
+        };
+        
+        // Save challenge to localStorage for demo
+        const challenges = JSON.parse(localStorage.getItem('neonDropChallenges') || '[]');
+        challenges.push(challengeData);
+        localStorage.setItem('neonDropChallenges', JSON.stringify(challenges));
+        
+        // Generate shareable link
+        const shareableLink = `${window.location.origin}/test-challenge-ui.html?challenge=${challengeId}`;
+        
+        // Store shareable link
+        localStorage.setItem(`challenge_${challengeId}_link`, shareableLink);
+        
+        // Update the shareable link display in the modal
+        const linkDisplay = document.querySelector('#shareableLink');
+        if (linkDisplay) {
+            linkDisplay.textContent = shareableLink;
+        }
+        
+        // Show success message
+        this.showToast(`🎯 ${tier.replace('-', ' ').toUpperCase()} Challenge Created! Stake: $${stake}`);
+        
+        console.log('✅ Challenge created:', challengeData);
+        console.log('🔗 Shareable link:', shareableLink);
+        
+        return challengeData;
+    }
+
+    getReplayData() {
+        // Get replay data from game engine if available
+        if (window.neonDrop?.gameEngine?.getReplayData) {
+            return window.neonDrop.gameEngine.getReplayData();
+        }
+        
+        // Fallback: create basic replay data
+        return {
+            score: this.score,
+            timestamp: Date.now(),
+            duration: Math.floor(Math.random() * 300) + 60, // Random duration 1-6 minutes
+            moves: Math.floor(Math.random() * 500) + 100 // Random move count
+        };
+    }
+
+    shareToSocialMedia(platform) {
+        const challengeId = `challenge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const shareableLink = `${window.location.origin}/test-challenge-ui.html?challenge=${challengeId}`;
+        
+        const score = this.score.toLocaleString();
+        const playerName = this.playerName || 'Anonymous';
+        
+        let shareText = '';
+        let shareUrl = '';
+        
+        switch (platform) {
+            case 'twitter':
+                shareText = `🎮 Just scored ${score} in NeonDrop! Think you can beat me? Challenge accepted! ⚡ #NeonDrop #GamingChallenge #BlockZoneLab`;
+                shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareableLink)}`;
+                break;
+                
+            case 'tiktok':
+                shareText = `🎮 NeonDrop Challenge: ${score} points! Can you beat this? ⚡ #NeonDrop #GamingChallenge #BlockZoneLab`;
+                // TikTok doesn't have direct sharing URL, so we'll copy to clipboard
+                this.copyToClipboard(`${shareText}\n\n${shareableLink}`);
+                this.showToast('📋 Challenge link copied! Paste it in TikTok');
+                return;
+                
+            case 'imessage':
+                shareText = `🎮 NeonDrop Challenge! I just scored ${score} points! Think you can beat me? ⚡\n\n${shareableLink}`;
+                // iMessage sharing - works on iOS/macOS
+                if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                    shareUrl = `sms:&body=${encodeURIComponent(shareText)}`;
+                } else {
+                    // Fallback to clipboard
+                    this.copyToClipboard(shareText);
+                    this.showToast('📋 Challenge copied! Open iMessage and paste');
+                    return;
+                }
+                break;
+                
+            case 'whatsapp':
+                shareText = `🎮 NeonDrop Challenge! I just scored ${score} points! Think you can beat me? ⚡\n\n${shareableLink}`;
+                shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+                break;
+                
+            case 'instagram':
+                shareText = `🎮 NeonDrop Challenge: ${score} points! Think you can beat me? ⚡ #NeonDrop #GamingChallenge #BlockZoneLab`;
+                // Instagram doesn't have direct sharing URL, so we'll copy to clipboard
+                this.copyToClipboard(`${shareText}\n\n${shareableLink}`);
+                this.showToast('📋 Challenge link copied! Paste it in Instagram');
+                return;
+                
+            case 'discord':
+                shareText = `🎮 **NeonDrop Challenge!** I just scored **${score}** points! Think you can beat me? ⚡\n\n🔗 Challenge Link: ${shareableLink}\n\n#NeonDrop #GamingChallenge`;
+                // Discord doesn't have direct sharing URL, so we'll copy to clipboard
+                this.copyToClipboard(shareText);
+                this.showToast('📋 Challenge message copied! Paste it in Discord');
+                return;
+                
+            case 'email':
+                shareText = `🎮 NeonDrop Challenge!\n\nI just scored ${score} points in NeonDrop! Think you can beat me?\n\nChallenge Link: ${shareableLink}\n\nGood luck! ⚡`;
+                shareUrl = `mailto:?subject=NeonDrop Challenge - ${score} points!&body=${encodeURIComponent(shareText)}`;
+                break;
+                
+            case 'copy':
+                this.copyToClipboard(shareableLink);
+                this.showToast('📋 Challenge link copied to clipboard!');
+                return;
+        }
+        
+        // Open social media share URL
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+    }
+
+    copyToClipboard(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+    }
+
+    closeChallengeModal(overlay) {
+        if (overlay) {
+            overlay.style.opacity = '0';
+            const modal = overlay.querySelector('.challenge-modal');
+            if (modal) {
+                modal.style.transform = 'scale(0.8)';
+            }
+            
+            setTimeout(() => {
+                if (overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            }, 300);
+        }
     }
 }

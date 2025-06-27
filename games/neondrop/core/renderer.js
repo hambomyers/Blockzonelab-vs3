@@ -571,6 +571,11 @@ export class Renderer {
     }
 
     renderScore(state) {
+        // FIXED: Hide score during countdown states
+        if (state.phase === 'COUNTDOWN' || state.phase === 'COUNTDOWN_TO_PLAYING' || state.phase === 'MENU_TO_COUNTDOWN') {
+            return; // Don't render score during countdown
+        }
+
         const scoreZone = this.dimensions.zones.score;
 
         this.ctx.font = `${this.dimensions.blockSize * 0.6}px monospace`;

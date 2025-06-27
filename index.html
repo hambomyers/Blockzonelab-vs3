@@ -62,6 +62,9 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     
+    <!-- Universal Navigation Bar -->
+    <script type="module" src="shared/components/NavigationBar.js"></script>
+    
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
@@ -241,7 +244,7 @@
                 position: relative;
                 overflow: hidden;
                 animation: challengeGlow 3s ease-in-out infinite alternate;
-            ">
+            " onclick="window.open('/test-challenge-ui.html', '_blank')">
                 <!-- Animated background effect -->
                 <div style="
                     position: absolute;
@@ -258,16 +261,16 @@
                 
                 <div class="card__header">
                     <div class="card__title" style="color: #ff00aa; text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);">
-                        ⚡ CHALLENGE FRIEND
+                        ⚡ TIERED CHALLENGES
                     </div>
                     <div class="card__subtitle" style="color: #ff00aa;">
-                        Create Viral Challenge Links
+                        $1 Quick & $5 High Roller
                     </div>
                 </div>
                 
                 <div class="card__content">
                     <p style="color: #fff; font-weight: 500;">
-                        Battle specific friends for quarters. Share challenge links and compete head-to-head.
+                        Create challenges with tiered stakes. $1 Quick Challenges or $5 High Roller battles with 4x speed replays.
                     </p>
                 </div>
                 
@@ -278,7 +281,7 @@
                         box-shadow: 0 0 20px rgba(255, 0, 170, 0.3);
                         animation: buttonPulse 2s ease-in-out infinite alternate;
                     ">
-                        ⚡ Challenge Friend
+                        🎯 Try Challenge System
                     </span>
                 </div>
             </button>
@@ -340,12 +343,13 @@
         
         // Bind challenge friend button - NEW REVENUE SYSTEM #2
         document.getElementById('challengeFriendBtn').addEventListener('click', () => {
-            window.friendChallengeUI.show();
+            // Open tiered challenge system in new tab
+            window.open('/test-challenge-ui.html', '_blank');
         });
         
-        console.log('🚀 BlockZone Lab Platform v2.0.0 initialized with Championship & Friend Challenge systems');
+        console.log('🚀 BlockZone Lab Platform v2.0.0 initialized with Championship & Tiered Challenge systems');
         console.log('🏆 Revenue System #1: Championship cycles with $0.25 entry fees');
-        console.log('⚡ Revenue System #2: Viral friend challenges with quarters-based battles');
+        console.log('⚡ Revenue System #2: Tiered challenges with $1 Quick & $5 High Roller options');
     </script>
 
 </body>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonDrop Challenge System - UI Test</title>
+    <link rel="stylesheet" href="assets/css/01-variables.css">
+    <link rel="stylesheet" href="assets/css/02-base.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/utilities.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+    <link rel="stylesheet" href="games/neondrop/game-specific.css">
+    
+    <!-- Universal Navigation Bar -->
+    <script type="module" src="shared/components/NavigationBar.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-header h1 {
+            color: #00d4ff;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            color: #ffffff;
+            opacity: 0.8;
+            font-size: 18px;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .test-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .test-btn:hover {
+            background: linear-gradient(135deg, #00e6ff 0%, #00b3e6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .test-btn.secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        .test-btn.secondary:hover {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #00d4ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .demo-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .demo-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .demo-card h3 {
+            color: #ffffff;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .demo-card p {
+            color: #ffffff;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            color: #ffffff;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: "✅ ";
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1 class="neondrop-logo">NeonDrop Challenge System</h1>
+            <p>Professional Tiered Challenge UI - Frontend Template</p>
+        </div>
+
+        <div class="test-buttons">
+            <button class="test-btn" onclick="showChallengeCreator()">Create Challenge</button>
+            <button class="test-btn secondary" onclick="showChallengeViewer()">View Challenge</button>
+            <button class="test-btn secondary" onclick="showSuccessModal()">Success Modal</button>
+            <button class="test-btn secondary" onclick="showErrorModal()">Error Modal</button>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Challenge System Features</h2>
+            <div class="demo-content">
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 40px; height: 40px; margin: 0 auto 15px; display: block;"></div>
+                    <h3>⚡ Quick Challenge</h3>
+                    <p>Perfect for casual players and quick matches</p>
+                    <ul class="feature-list">
+                        <li>$1.00 stake amount</li>
+                        <li>$1.80 winner prize</li>
+                        <li>24-hour time limit</li>
+                        <li>Low barrier to entry</li>
+                    </ul>
+                </div>
+
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 40px; height: 40px; margin: 0 auto 15px; display: block; background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);"></div>
+                    <h3>👑 High Roller Challenge</h3>
+                    <p>For serious players and bigger rewards</p>
+                    <ul class="feature-list">
+                        <li>$5.00 stake amount</li>
+                        <li>$9.00 winner prize</li>
+                        <li>24-hour time limit</li>
+                        <li>Higher stakes, higher rewards</li>
+                    </ul>
+                </div>
+
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 40px; height: 40px; margin: 0 auto 15px; display: block; background: linear-gradient(135deg, #ff00aa 0%, #cc0088 100%);"></div>
+                    <h3>🎬 Replay System</h3>
+                    <p>Watch challenge replays at 4x speed</p>
+                    <ul class="feature-list">
+                        <li>4x speed replay videos</li>
+                        <li>Frame-by-frame analysis</li>
+                        <li>Challenge verification</li>
+                        <li>Transparent gameplay</li>
+                    </ul>
+                </div>
+
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 40px; height: 40px; margin: 0 auto 15px; display: block; background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);"></div>
+                    <h3>💰 Smart Economics</h3>
+                    <p>Optimized for player engagement and revenue</p>
+                    <ul class="feature-list">
+                        <li>10% platform fee</li>
+                        <li>80% winner payout</li>
+                        <li>10% creator bonus</li>
+                        <li>Sustainable model</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📊 Revenue Projections</h2>
+            <div class="demo-content">
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 30px; height: 30px; margin: 0 auto 10px; display: block;"></div>
+                    <h3>Quick Challenges</h3>
+                    <p><strong>Projected Daily Volume:</strong> 100 challenges</p>
+                    <p><strong>Platform Revenue:</strong> $100/day</p>
+                    <p><strong>Monthly Revenue:</strong> $3,000</p>
+                </div>
+
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 30px; height: 30px; margin: 0 auto 10px; display: block; background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);"></div>
+                    <h3>High Roller Challenges</h3>
+                    <p><strong>Projected Daily Volume:</strong> 20 challenges</p>
+                    <p><strong>Platform Revenue:</strong> $100/day</p>
+                    <p><strong>Monthly Revenue:</strong> $3,000</p>
+                </div>
+
+                <div class="demo-card">
+                    <div class="chiclet-piece" style="width: 30px; height: 30px; margin: 0 auto 10px; display: block; background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);"></div>
+                    <h3>Combined Revenue</h3>
+                    <p><strong>Total Daily Revenue:</strong> $200</p>
+                    <p><strong>Total Monthly Revenue:</strong> $6,000</p>
+                    <p><strong>Annual Projection:</strong> $72,000</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎮 Game Integration</h2>
+            <div class="demo-content">
+                <div class="demo-card">
+                    <h3>⚡ From Game Over Screen</h3>
+                    <p>Challenges can be created directly from the NeonDrop game over screen</p>
+                    <ul class="feature-list">
+                        <li>Seamless integration</li>
+                        <li>One-click challenge creation</li>
+                        <li>Social media sharing</li>
+                        <li>Instant friend challenges</li>
+                    </ul>
+                    <button class="test-btn" style="margin-top: 15px;" onclick="simulateGameOverChallenge()">
+                        Simulate Game Over Challenge
+                    </button>
+                </div>
+
+                <div class="demo-card">
+                    <h3>🔗 URL Challenge Links</h3>
+                    <p>Shareable challenge links with automatic loading</p>
+                    <ul class="feature-list">
+                        <li>Direct challenge access</li>
+                        <li>Social media integration</li>
+                        <li>Automatic challenge loading</li>
+                        <li>Cross-platform sharing</li>
+                    </ul>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 8px; font-size: 12px; color: #00d4ff;">
+                        Try: ?challenge=demo_challenge_123
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>📱 Social Media Ready</h3>
+                    <p>Optimized for viral sharing across platforms</p>
+                    <ul class="feature-list">
+                        <li>X (Twitter) integration</li>
+                        <li>TikTok challenge sharing</li>
+                        <li>Instagram story format</li>
+                        <li>Discord server integration</li>
+                    </ul>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToTwitter()">🐦 X</button>
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToTikTok()">🎵 TikTok</button>
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToIMessage()">💬 iMessage</button>
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToWhatsApp()">📱 WhatsApp</button>
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToDiscord()">💬 Discord</button>
+                        <button class="test-btn" style="padding: 8px 12px; font-size: 12px;" onclick="shareToEmail()">📧 Email</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock game engine and blockchain for testing
+        const mockGameEngine = {
+            state: {
+                score: 15420
+            },
+            getCompleteGameLog: () => ({
+                finalScore: 15420,
+                duration: 180000,
+                frameStates: []
+            })
+        };
+
+        const mockBlockchain = {
+            getCurrentAddress: () => "0x1234...5678",
+            getBalance: () => 100.00,
+            createChallenge: async () => true,
+            getChallenge: async () => null,
+            updateChallenge: async () => true
+        };
+
+        // Import challenge components
+        import('./games/neondrop/ui/ChallengeCreator.js')
+            .then(module => {
+                window.ChallengeCreator = module.ChallengeCreator;
+            })
+            .catch(err => {
+                console.error('Failed to load ChallengeCreator:', err);
+            });
+
+        import('./games/neondrop/ui/ChallengeViewer.js')
+            .then(module => {
+                window.ChallengeViewer = module.ChallengeViewer;
+            })
+            .catch(err => {
+                console.error('Failed to load ChallengeViewer:', err);
+            });
+
+        function showChallengeCreator() {
+            const creator = new ChallengeCreator(mockGameEngine, mockBlockchain);
+            const ui = creator.createChallengeUI();
+            document.body.appendChild(ui);
+        }
+
+        function showChallengeViewer() {
+            const viewer = new ChallengeViewer(mockGameEngine, mockBlockchain);
+            
+            // Create a mock challenge
+            const mockChallenge = {
+                id: "test_challenge_123",
+                tier: "quick",
+                creator: "0x1234...5678",
+                targetScore: 15420,
+                stake: 1.00,
+                winnerPrize: 1.80,
+                endTime: Date.now() + (24 * 60 * 60 * 1000),
+                status: "active",
+                challengers: [],
+                attempts: {},
+                createdAt: Date.now(),
+                gameLog: { finalScore: 15420 },
+                replayData: { videoUrl: "#", frameData: [] }
+            };
+
+            // Store mock challenge
+            localStorage.setItem(`challenge_${mockChallenge.id}`, JSON.stringify(mockChallenge));
+            
+            // Load and display
+            viewer.loadChallenge(mockChallenge.id).then(ui => {
+                document.body.appendChild(ui);
+            });
+        }
+
+        function showSuccessModal() {
+            const creator = new ChallengeCreator(mockGameEngine, mockBlockchain);
+            const mockResult = {
+                challenge: {
+                    id: "test_123",
+                    tier: "quick",
+                    targetScore: 15420,
+                    stake: 1.00,
+                    winnerPrize: 1.80
+                },
+                shareLink: "https://blockzonelab.com/challenge/test_123",
+                replayVideo: "#"
+            };
+            creator.showChallengeCreated(mockResult);
+        }
+
+        function showErrorModal() {
+            const viewer = new ChallengeViewer(mockGameEngine, mockBlockchain);
+            const errorUI = viewer.createErrorView("This challenge has expired or doesn't exist.");
+            document.body.appendChild(errorUI);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('challenge-creator') || 
+                e.target.classList.contains('challenge-created') ||
+                e.target.classList.contains('challenge-accepted') ||
+                e.target.classList.contains('challenge-error')) {
+                e.target.remove();
+            }
+        });
+
+        // Game Integration Functions
+        function simulateGameOverChallenge() {
+            // Simulate a challenge created from game over screen
+            const mockScore = Math.floor(Math.random() * 20000) + 5000;
+            const challengeId = `gameover_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            const mockChallenge = {
+                id: challengeId,
+                tier: "quick",
+                creator: "Player-ABC1",
+                targetScore: mockScore,
+                stake: 1.00,
+                winnerPrize: 1.80,
+                endTime: Date.now() + (24 * 60 * 60 * 1000),
+                status: "active",
+                createdAt: Date.now(),
+                gameLog: { finalScore: mockScore },
+                replayData: { videoUrl: "#", frameData: [] }
+            };
+
+            // Store challenge
+            localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(mockChallenge));
+            
+            // Show success message
+            alert(`🎯 Challenge created from game over screen!\nScore: ${mockScore.toLocaleString()}\nChallenge ID: ${challengeId}`);
+            
+            // Auto-load the challenge
+            const viewer = new ChallengeViewer(mockGameEngine, mockBlockchain);
+            viewer.loadChallenge(challengeId).then(ui => {
+                document.body.appendChild(ui);
+            });
+        }
+
+        function shareToTwitter() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 Just scored ${score} in NeonDrop! Think you can beat me? Challenge accepted! ⚡ #NeonDrop #GamingChallenge #BlockZoneLab`;
+            const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function shareToTikTok() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 NeonDrop Challenge: ${score} points! Can you beat this? ⚡ #NeonDrop #GamingChallenge #BlockZoneLab\n\n${window.location.href}`;
+            
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText);
+                alert('📋 Challenge link copied! Paste it in TikTok');
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('📋 Challenge link copied! Paste it in TikTok');
+            }
+        }
+
+        function shareToIMessage() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 NeonDrop Challenge! I just scored ${score} points! Think you can beat me? ⚡\n\n${window.location.href}`;
+            
+            // iMessage sharing - works on iOS/macOS
+            if (navigator.userAgent.includes('Mac') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                const shareUrl = `sms:&body=${encodeURIComponent(shareText)}`;
+                window.open(shareUrl, '_blank');
+            } else {
+                // Fallback to clipboard
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText);
+                    alert('📋 Challenge copied! Open iMessage and paste');
+                } else {
+                    alert('📋 Challenge copied! Open iMessage and paste\n\n' + shareText);
+                }
+            }
+        }
+
+        function shareToWhatsApp() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 NeonDrop Challenge! I just scored ${score} points! Think you can beat me? ⚡\n\n${window.location.href}`;
+            const shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function shareToDiscord() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 **NeonDrop Challenge!** I just scored **${score}** points! Think you can beat me? ⚡\n\n🔗 Challenge Link: ${window.location.href}\n\n#NeonDrop #GamingChallenge`;
+            
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText);
+                alert('📋 Challenge message copied! Paste it in Discord');
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('📋 Challenge message copied! Paste it in Discord');
+            }
+        }
+
+        function shareToEmail() {
+            const score = mockGameEngine.state.score.toLocaleString();
+            const shareText = `🎮 NeonDrop Challenge!\n\nI just scored ${score} points in NeonDrop! Think you can beat me?\n\nChallenge Link: ${window.location.href}\n\nGood luck! ⚡`;
+            const shareUrl = `mailto:?subject=NeonDrop Challenge - ${score} points!&body=${encodeURIComponent(shareText)}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        // URL Parameter Handling
+        function checkForChallengeParameter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const challengeId = urlParams.get('challenge');
+            
+            if (challengeId) {
+                console.log('🔗 Loading challenge from URL parameter:', challengeId);
+                
+                // Try to load the challenge
+                const viewer = new ChallengeViewer(mockGameEngine, mockBlockchain);
+                viewer.loadChallenge(challengeId).then(ui => {
+                    document.body.appendChild(ui);
+                }).catch(error => {
+                    console.error('Failed to load challenge:', error);
+                    // Show error modal
+                    const errorUI = viewer.createErrorView("This challenge has expired or doesn't exist.");
+                    document.body.appendChild(errorUI);
+                });
+            }
+        }
+
+        // Auto-check for challenge parameter on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for modules to load
+            setTimeout(checkForChallengeParameter, 1000);
+        });
+    </script>
+</body>
+</html> 
