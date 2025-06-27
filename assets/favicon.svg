@@ -144,5 +144,5 @@
   </g>
   
   <!-- Dark green BZL letters on top -->
-  <text x="8" y="7.5" class="bubble-text" fill="#0A1A0A">BZL</text>
+  <text x="8" y="7.5" class="bubble-text" fill="#0A1A0A" stroke="#FFFFFF" stroke-width="0.1">BZL</text>
 </svg>

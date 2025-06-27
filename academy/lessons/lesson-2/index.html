@@ -234,6 +234,24 @@
             pointer-events: none;
         }
 
+        /* Ensure Navigation Bar is visible */
+        #sidePanelNavigation {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            height: 100vh !important;
+            width: 60px !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(20px) !important;
+            border-left: 1px solid rgba(0, 212, 255, 0.3) !important;
+            z-index: 10000 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            padding: 20px 0 !important;
+            box-shadow: -8px 0 32px rgba(0, 212, 255, 0.1) !important;
+        }
+
         /* Money Lab - Futuristic Interface */
         .cyber-lab {
             max-width: 1400px;
@@ -1643,6 +1661,23 @@
         window.openModal = openModal;
         window.closeModal = closeModal;
         window.showAchievement = showAchievement;
+    </script>
+    
+    <!-- Navigation Bar -->
+    <script type="module" src="../../../shared/components/NavigationBar.js"></script>
+    <script>
+        // Debug: Check if NavigationBar loaded
+        setTimeout(() => {
+            console.log('Checking NavigationBar...');
+            const nav = document.getElementById('sidePanelNavigation');
+            if (nav) {
+                console.log('✅ NavigationBar found:', nav);
+                nav.style.display = 'flex';
+                nav.style.zIndex = '10000';
+            } else {
+                console.log('❌ NavigationBar not found');
+            }
+        }, 1000);
     </script>
 </body>
 </html>
