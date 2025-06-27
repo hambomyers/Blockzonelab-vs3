@@ -1415,6 +1415,16 @@
             
             document.getElementById('scoreVerdict').textContent = verdict;
             showAchievement(`🎯 Neural analysis complete: ${percentage}% cognitive alignment!`, 5000);
+            
+            // Dispatch quiz completion event for navigation tracking
+            window.dispatchEvent(new CustomEvent('quizCompleted', {
+                detail: {
+                    score: score,
+                    totalQuestions: neuralQuestions.length,
+                    percentage: percentage,
+                    lessonNumber: 2
+                }
+            }));
         }
 
         function resetQuiz() {
