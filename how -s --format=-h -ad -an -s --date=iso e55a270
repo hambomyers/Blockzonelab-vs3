@@ -1,0 +1,17 @@
+*   [33mc16bb7d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'main' of https://github.com/hambomyers/Blockzonelab-vs3
+[31m|[m[32m\[m  
+[31m|[m * [33m076abb6[m Fix: Add cache-busting parameters to force fresh deployment
+[31m|[m * [33m3725c49[m Fix: Add debugging for startFreePlay method and force fresh deployment
+[31m|[m * [33m15e74fe[m Fix: Always show correct player name after session upgrade; ready for group testing on live domain
+[31m|[m * [33m4979def[m  Complete Web3 Gaming Experience: Beautiful identity prompt, viral status system with glowing effects, enhanced game over screen with challenge links, and referral tracking
+[31m|[m * [33mce2f632[m  Add detailed logging to session creation to debug backend connectivity issues
+[31m|[m * [33md4ff036[m  Bulletproof session manager: ensure backend session creation before any upgrades, add retry logic and better error handling
+[31m|[m * [33m28246cf[m Fix identity system to use wallet suffix format - names now saved as Username-ABCD
+[31m|[m * [33mcd5ee44[m Fix missing CSS file reference - remove 03-game.css that doesn't exist
+[31m|[m * [33m811d007[m Make identity system bulletproof - force prompt for anonymous users, add Enter key support, better error handling
+* [32m|[m [33me55a270[m feat: Implement AAA-quality game over sequence for NeonDrop
+* [32m|[m [33m46a93f3[m feat: Major NeonDrop improvements - AAA production quality
+[32m|[m[32m/[m  
+* [33m1f440f3[m Add identity restoration system - automatically restore Hambo identity and prompt for name if anonymous
+* [33me0bdc57[m Remove all 2-player mode code - back to clean single player
+* [33m009a8ab[m Complete rewrite: Desktop-only 2-player mode with clean split-screen games
