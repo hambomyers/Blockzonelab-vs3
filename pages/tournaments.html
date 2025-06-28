@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournaments - BlockZone Lab</title>
+    <link rel="stylesheet" href="../assets/css/variables.css">
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand"><span>✧</span> BlockZone Lab</a>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/pages/business-model.html" class="nav-link">Business</a></li>
+                <li><a href="/pages/whitepaper.html" class="nav-link">Whitepaper</a></li>
+                <li><a href="/pages/user-profile.html" class="nav-link">Profile</a></li>
+                <li><a href="/pages/tournaments.html" class="nav-link active">Tournaments</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container section-sm">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1>🏆 Tournament Dashboard</h1>
+            <p class="text-muted">Compete in championships and create friend challenges</p>
+        </div>
+
+        <!-- Active Championships -->
+        <div class="card card-business mb-6">
+            <h3>🎮 Active Championships</h3>
+            <div id="activeChampionships" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Championships will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Upcoming Championships -->
+        <div class="card card-business mb-6">
+            <h3>📅 Upcoming Championships</h3>
+            <div id="scheduledChampionships" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Scheduled championships will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Create Challenge -->
+        <div class="card card-business mb-6">
+            <h3>🔗 Create Friend Challenge</h3>
+            <form id="challengeForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="gameSelect" class="label">Game</label>
+                        <select id="gameSelect" class="input w-full" required>
+                            <option value="">Select a game</option>
+                            <option value="neondrop">Neon Drop</option>
+                            <option value="blockzone">BlockZone</option>
+                            <option value="cryptorunner">Crypto Runner</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="challengeFee" class="label">Entry Fee</label>
+                        <select id="challengeFee" class="input w-full" required>
+                            <option value="1.00">$1.00 (Quick Challenge)</option>
+                            <option value="5.00">$5.00 (High Roller)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Create Challenge</button>
+            </form>
+        </div>
+
+        <!-- Active Challenges -->
+        <div class="card card-business mb-6">
+            <h3>⚡ Active Challenges</h3>
+            <div id="activeChallenges" class="space-y-4">
+                <!-- Active challenges will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="card card-business">
+            <h3>🏅 Global Leaderboard</h3>
+            <div id="globalLeaderboard" class="space-y-2">
+                <!-- Leaderboard will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Challenge Modal -->
+    <div id="challengeModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 Challenge Created!</h3>
+                <button class="modal-close" onclick="closeChallengeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Share this link with your friends to challenge them:</p>
+                <div class="input-group">
+                    <input type="text" id="challengeLink" class="input" readonly>
+                    <button onclick="copyChallengeLink()" class="btn btn-secondary">Copy</button>
+                </div>
+                <div class="mt-4">
+                    <button onclick="shareChallenge()" class="btn btn-primary w-full">Share Challenge</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/platform/user-manager.js"></script>
+    <script src="../shared/platform/tournament-manager.js"></script>
+    <script src="../assets/js/tournaments.js"></script>
+</body>
+</html> 

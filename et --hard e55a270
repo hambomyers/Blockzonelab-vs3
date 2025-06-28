@@ -1,5 +1,0 @@
-c16bb7d 2025-06-26 18:14:23 -0400 Merge branch 'main' of https://github.com/hambomyers/Blockzonelab-vs3
-e55a270 2025-06-26 18:12:04 -0400 feat: Implement AAA-quality game over sequence for NeonDrop
-46a93f3 2025-06-26 15:33:35 -0400 feat: Major NeonDrop improvements - AAA production quality
-076abb6 2025-06-25 17:26:27 -0400 Fix: Add cache-busting parameters to force fresh deployment
-3725c49 2025-06-25 17:25:54 -0400 Fix: Add debugging for startFreePlay method and force fresh deployment

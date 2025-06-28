@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - BlockZone Lab</title>
+    <link rel="stylesheet" href="../assets/css/variables.css">
+    <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <!-- Professional Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span>✧</span> BlockZone Lab
+            </a>
+            
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/games/" class="nav-link">Games</a></li>
+                <li><a href="/pages/tournaments.html" class="nav-link">Tournaments</a></li>
+                <li><a href="/academy/" class="nav-link">Academy</a></li>
+                <li><a href="/pages/user-profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="/pages/business-model.html" class="nav-link">Business</a></li>
+                <li><a href="/pages/whitepaper.html" class="nav-link">Whitepaper</a></li>
+            </ul>
+            
+            <button class="navbar-toggle" id="navbarToggle">
+                <span>☰</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container section-sm">
+        <div class="content-header">
+            <h1 class="page-title">User Profile</h1>
+            <p class="page-subtitle">Customize your gaming identity and manage your wallet</p>
+        </div>
+
+        <div class="content-body">
+            <!-- Authentication Section -->
+            <div id="auth-section" class="auth-card">
+                <div class="auth-header">
+                    <h2>Welcome to BlockZone Lab</h2>
+                    <p>Create your account and get your free crypto wallet</p>
+                </div>
+                <form id="emailLoginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="emailInput" class="form-label">Email Address</label>
+                        <input type="email" id="emailInput" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large w-full">
+                        <span class="btn-icon">🚀</span>
+                        Create Account & Wallet
+                    </button>
+                </form>
+                <div class="auth-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔐</span>
+                        <span class="feature-text">Secure wallet automatically created</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎮</span>
+                        <span class="feature-text">Start playing games immediately</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💰</span>
+                        <span class="feature-text">Earn crypto rewards</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile-section" class="profile-card" style="display:none;">
+                <div class="profile-header">
+                    <div class="profile-avatar-section">
+                        <img id="avatarPreview" src="" alt="Your Avatar" class="profile-avatar">
+                        <div class="avatar-actions">
+                            <button type="button" id="changeAvatarBtn" class="btn btn-secondary btn-sm">
+                                <span class="btn-icon">🎨</span>
+                                Change Avatar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileName">Welcome!</h2>
+                        <p id="profileEmail" class="text-muted"></p>
+                    </div>
+                </div>
+
+                <!-- Wallet Card -->
+                <div class="wallet-card">
+                    <div class="wallet-header">
+                        <span class="wallet-icon">💰</span>
+                        <h3>Your Crypto Wallet</h3>
+                    </div>
+                    <div class="wallet-details">
+                        <div class="wallet-item">
+                            <span class="wallet-label">Address:</span>
+                            <span id="walletAddress" class="wallet-value font-mono"></span>
+                        </div>
+                        <div class="wallet-item">
+                            <span class="wallet-label">Balance:</span>
+                            <span id="walletBalance" class="wallet-balance">0 USDC.E</span>
+                        </div>
+                    </div>
+                    <div class="wallet-actions">
+                        <button type="button" class="btn btn-outline btn-sm">
+                            <span class="btn-icon">📋</span>
+                            Copy Address
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm">
+                            <span class="btn-icon">📊</span>
+                            View History
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Form -->
+                <form id="profileForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="displayName" class="form-label">Display Name</label>
+                        <input type="text" id="displayName" class="form-input" placeholder="Enter your display name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea id="bio" class="form-textarea" placeholder="Tell us about yourself..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-icon">💾</span>
+                            Save Profile
+                        </button>
+                        <button type="button" id="logoutBtn" class="btn btn-ghost">
+                            <span class="btn-icon">🚪</span>
+                            Logout
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Next Steps -->
+                <div class="next-steps">
+                    <h3>What's Next?</h3>
+                    <div class="steps-grid">
+                        <a href="/games/" class="step-card">
+                            <span class="step-icon">🎮</span>
+                            <h4>Play Games</h4>
+                            <p>Jump into Neon Drop and start earning</p>
+                        </a>
+                        <a href="/pages/tournaments.html" class="step-card">
+                            <span class="step-icon">🏆</span>
+                            <h4>Join Tournaments</h4>
+                            <p>Compete for prizes and glory</p>
+                        </a>
+                        <a href="/academy/" class="step-card">
+                            <span class="step-icon">📚</span>
+                            <h4>Learn Crypto</h4>
+                            <p>Master blockchain fundamentals</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Avatar Selection Modal -->
+            <div id="avatarModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Choose Your Avatar</h3>
+                        <button type="button" id="closeAvatarModal" class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="avatar-categories">
+                            <button type="button" class="category-btn active" data-category="all">All</button>
+                            <button type="button" class="category-btn" data-category="gaming">Gaming</button>
+                            <button type="button" class="category-btn" data-category="crypto">Crypto</button>
+                            <button type="button" class="category-btn" data-category="anime">Anime</button>
+                            <button type="button" class="category-btn" data-category="abstract">Abstract</button>
+                        </div>
+                        <div class="avatar-search">
+                            <input type="text" id="avatarSearch" class="form-input" placeholder="Search avatars...">
+                        </div>
+                        <div class="avatar-grid" id="avatarGrid">
+                            <!-- Avatars will be loaded here -->
+                        </div>
+                        <div class="avatar-upload-section">
+                            <label for="photoUpload" class="upload-btn">
+                                <span class="upload-icon">📷</span>
+                                <span>Upload Your Photo</span>
+                            </label>
+                            <input type="file" id="photoUpload" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profileStatus" class="status-message"></div>
+    </main>
+
+    <!-- Universal Side Panel Navigation -->
+    <script type="module">
+        import { NavigationBar } from '../shared/components/NavigationBar.js';
+        new NavigationBar();
+    </script>
+
+    <script src="../shared/platform/user-manager.js"></script>
+    <script src="../assets/js/user-profile.js"></script>
+</body>
+</html> 

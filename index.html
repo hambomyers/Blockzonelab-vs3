@@ -1,356 +1,363 @@
 <!DOCTYPE html>
 <!-- 
-  BLOCKZONE LAB PLATFORM v2.0.0 - PROFESSIONAL GAMING PLATFORM
-  VERSION: 2.0.0-BLOCKZONE-PLATFORM-RELEASE
-  CREATED: 2025-01-25 (BlockZone Lab Platform Phase 1)
-  FEATURES: Championship cycles, friend challenges, professional UI/UX
+  BLOCKZONE LAB - PROFESSIONAL BUSINESS PLATFORM v1.0
+  Phase 1: Business Foundation - Grant-Ready Landing Page
+  VERSION: 1.0.0-PHASE-1-BUSINESS-FOUNDATION
+  CREATED: 2025-01-25 (BlockZone Lab Professional Restructure)
   
-  This is the NEW BlockZone Lab platform version - completely refactored
-  for professional gaming platform with two main revenue systems.
+  This is the NEW professional business landing page for grant applications
+  and investor presentations. All existing functionality is preserved.
 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BlockZone Lab - Professional Gaming Platform v2.0.0</title>
-      <!-- CRITICAL: Mobile Detection First (Inline for Performance) -->    <script>
-        // Industry-standard mobile detection with keyboard detection (like Axie Infinity, Gods Unchained)
-        // BLOCKZONE LAB PLATFORM v2.0.0 - Enhanced mobile detection
-        window.BlockZoneMobile = {
-            // Cached values for performance
-            _isMobile: window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-            _isTablet: window.innerWidth > 768 && window.innerWidth <= 1024 && 'ontouchstart' in window,
-            _hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
-            _isPWA: window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true,
-            _hasPhysicalKeyboard: null, // Will be detected dynamically
-            
-            // Function API for compatibility
-            isMobile() { return this._isMobile; },
-            isTablet() { return this._isTablet; },
-            hasTouch() { return this._hasTouch; },
-            isPWA() { return this._isPWA; },            hasPhysicalKeyboard() { 
-                // Simple detection: assume keyboard on desktop OS or large screens
-                return !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth > 1024;
-            },
-            needsMobileControls() {
-                // Show mobile controls only on touch devices without keyboards
-                return (this._isMobile || this._isTablet) && !this.hasPhysicalKeyboard();
-            },
-            getScreenSize() {
-                const w = window.innerWidth;
-                return w <= 480 ? 'small' : w <= 768 ? 'medium' : w <= 1024 ? 'large' : 'xlarge';            }
-        };
-        
-        // Set CSS custom properties immediately for layout
-        document.documentElement.style.setProperty('--is-mobile', window.BlockZoneMobile._isMobile ? '1' : '0');
-        document.documentElement.style.setProperty('--has-touch', window.BlockZoneMobile._hasTouch ? '1' : '0');
-        document.documentElement.style.setProperty('--has-keyboard', window.BlockZoneMobile.hasPhysicalKeyboard() ? '1' : '0');
-        document.documentElement.style.setProperty('--needs-mobile-controls', window.BlockZoneMobile.needsMobileControls() ? '1' : '0');
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockZone Lab - Where Gaming Meets Blockchain Education</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#d4af37">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BlockZone Lab">
-      <!-- Professional CSS Architecture -->
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="BlockZone Lab: Professional blockchain gaming platform with integrated education. Championship cycles, friend challenges, and micro-payments on Sonic Labs.">
+    <meta name="keywords" content="blockchain gaming, cryptocurrency education, Sonic Labs, USDC payments, gaming platform">
+    <meta name="author" content="BlockZone Lab">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="BlockZone Lab - Professional Gaming Platform">
+    <meta property="og:description" content="Viral gaming platform with micro-payments and educational content on Sonic Labs blockchain">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blockzonelab.com">
+    <meta property="og:image" content="/assets/images/branding/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BlockZone Lab - Professional Gaming Platform">
+    <meta name="twitter:description" content="Viral gaming platform with micro-payments and educational content">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="assets/css/variables.css">
     <link rel="stylesheet" href="assets/css/design-system.css">
-    <link rel="stylesheet" href="assets/css/utilities.css">
     <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/blockzone-system.css">
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/mobile.css">
-    
-    <!-- Universal Navigation Bar -->
-    <script type="module" src="shared/components/NavigationBar.js"></script>
     
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
     
-    <!-- NEW PLATFORM v2.0.0 ANIMATIONS -->
-    <style>
-        @keyframes neonPulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.6; }
-        }
-        
-        @keyframes championshipGlow {
-            0% { 
-                box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-                transform: scale(1);
-            }
-            100% { 
-                box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
-                transform: scale(1.02);
-            }
-        }
-        
-        @keyframes challengeGlow {
-            0% { 
-                box-shadow: 0 0 20px rgba(255, 0, 170, 0.3);
-                transform: scale(1);
-            }
-            100% { 
-                box-shadow: 0 0 40px rgba(255, 0, 170, 0.6);
-                transform: scale(1.02);
-            }
-        }
-        
-        @keyframes buttonPulse {
-            0% { 
-                box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-                transform: translateY(0);
-            }
-            100% { 
-                box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
-                transform: translateY(-2px);
-            }
-        }
-        
-        /* Enhanced hover effects */
-        #championshipBtn:hover {
-            animation: championshipGlow 1s ease-in-out infinite alternate !important;
-            transform: scale(1.05) !important;
-        }
-        
-        #challengeFriendBtn:hover {
-            animation: challengeGlow 1s ease-in-out infinite alternate !important;
-            transform: scale(1.05) !important;
-        }
-        
-        /* NEW FEATURES announcement animation */
-        @keyframes announcementPulse {
-            0% { 
-                border-color: rgba(0, 212, 255, 0.3);
-                box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-            }
-            100% { 
-                border-color: rgba(255, 0, 170, 0.5);
-                box-shadow: 0 0 30px rgba(255, 0, 170, 0.3);
-            }
-        }
-        
-        /* Apply announcement animation */
-        .hero > div:first-of-type {
-            animation: announcementPulse 3s ease-in-out infinite alternate;
-        }
-    </style>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#00ffff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BlockZone Lab">
 </head>
-<body class="portal-container">
-    <!-- Professional Starfield Background -->
-    <div class="starfield">
-        <div class="stars"></div>
-    </div>    <!-- Professional Header -->
-    <header class="portal-header">
-        <nav class="portal-nav">
-            <a href="index.html" class="logo">
+<body>
+    <!-- Professional Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
                 <span>✧</span> BlockZone Lab
             </a>
-            <div class="nav-links">
-                <a href="#" class="active">Home</a>
-                <a href="academy/">Academy</a>
-                <a href="games/">Games</a>
+            
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link active">Home</a></li>
+                <li><a href="/pages/business-model.html" class="nav-link">Business</a></li>
+                <li><a href="/pages/whitepaper.html" class="nav-link">Whitepaper</a></li>
+                <li><a href="/pages/user-profile.html" class="nav-link">Profile</a></li>
+                <li><a href="/pages/tournaments.html" class="nav-link">Tournaments</a></li>
+            </ul>
+            
+            <div class="navbar-actions">
+                <a href="/pages/partnerships.html" class="btn btn-secondary btn-sm">Partner With Us</a>
+                <a href="/pages/whitepaper.html" class="btn btn-primary btn-sm">View Whitepaper</a>
             </div>
-            <div class="wallet-status" id="walletStatus">
-                <span>Connect Wallet</span>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Professional Main Section -->
-    <main class="hero">
-        <div class="hero-badge">🏆 PROFESSIONAL GAMING PLATFORM v2.0.0</div>
-        <h1 class="hero-title">Win Real USDC Playing Games</h1>
-        <p class="hero-subtitle">
-            Professional tournaments with 90/10 fee structure on Sonic Labs blockchain
-        </p>
-        
-        <!-- NEW PLATFORM FEATURES ANNOUNCEMENT -->
-        <div style="
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 170, 0.1));
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-            animation: neonPulse 2s ease-in-out infinite alternate;
-        ">
-            <h2 style="color: #00d4ff; font-size: 24px; margin-bottom: 10px; font-weight: 700;">
-                🚀 NEW PLATFORM FEATURES AVAILABLE!
-            </h2>
-            <p style="color: #fff; font-size: 16px; margin: 0;">
-                Championship Cycles & Friend Challenges - Click the buttons below to explore!
-            </p>
+            
+            <button class="navbar-toggle" id="navbarToggle">
+                <span>☰</span>
+            </button>
         </div>
-        
-        <!-- Professional Centered Cards - Two Primary Buttons -->
-        <div class="grid grid-2">
-            <button id="championshipBtn" class="card card--hover card--glow" style="
-                cursor: pointer; 
-                border: none; 
-                background: none; 
-                padding: 0;
-                position: relative;
-                overflow: hidden;
-                animation: championshipGlow 3s ease-in-out infinite alternate;
-            ">
-                <!-- Animated background effect -->
-                <div style="
-                    position: absolute;
-                    top: -2px;
-                    left: -2px;
-                    right: -2px;
-                    bottom: -2px;
-                    background: linear-gradient(45deg, #00d4ff, #0099cc, #00d4ff);
-                    border-radius: 20px;
-                    z-index: -1;
-                    opacity: 0.3;
-                    animation: neonPulse 2s ease-in-out infinite alternate;
-                "></div>
-                
-                <div class="card__header">
-                    <div class="card__title" style="color: #00d4ff; text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);">
-                        🏆 CHAMPIONSHIP
-                    </div>
-                    <div class="card__subtitle" style="color: #00d4ff;">
-                        Pay Quarters Per Attempt
-                    </div>
-                </div>
-                
-                <div class="card__content">
-                    <p style="color: #fff; font-weight: 500;">
-                        Two 12-hour championships daily. $0.25 entry, $200+ daily prizes with 90% to winners.
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                🏆 PROFESSIONAL GAMING PLATFORM v1.0
+            </div>
+            
+            <h1 class="hero-title">
+                Where Gaming Meets<br>
+                <span class="text-accent">Blockchain Education</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Viral gaming platform with micro-payments and educational content.<br>
+                Built on Sonic Labs blockchain with 400,000+ TPS and 1-second finality.
+            </p>
+            
+            <div class="hero-actions">
+                <a href="/pages/business-model.html" class="btn btn-primary btn-lg">
+                    View Business Model
+                </a>
+                <a href="/pages/whitepaper.html" class="btn btn-secondary btn-lg">
+                    Read Whitepaper
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Dual Revenue Streams</h2>
+                <p class="lead">Sustainable business model combining gaming and education</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Championship Cycles</h3>
+                    <p class="feature-description">
+                        12-hour competitions with 25¢ USDC.E entry fees. 
+                        90% of prize pools distributed to winners, 10% platform fee.
                     </p>
                 </div>
                 
-                <div class="card__footer">
-                    <span class="btn btn--primary" style="
-                        background: linear-gradient(135deg, #00d4ff, #0099cc);
-                        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-                        animation: buttonPulse 2s ease-in-out infinite alternate;
-                    ">
-                        🎮 Enter Championship
-                    </span>
-                </div>
-            </button>
-
-            <button id="challengeFriendBtn" class="card card--hover card--neon" style="
-                cursor: pointer; 
-                border: none; 
-                background: none; 
-                padding: 0;
-                position: relative;
-                overflow: hidden;
-                animation: challengeGlow 3s ease-in-out infinite alternate;
-            " onclick="window.open('/test-challenge-ui.html', '_blank')">
-                <!-- Animated background effect -->
-                <div style="
-                    position: absolute;
-                    top: -2px;
-                    left: -2px;
-                    right: -2px;
-                    bottom: -2px;
-                    background: linear-gradient(45deg, #ff00aa, #cc0088, #ff00aa);
-                    border-radius: 20px;
-                    z-index: -1;
-                    opacity: 0.3;
-                    animation: neonPulse 2s ease-in-out infinite alternate;
-                "></div>
-                
-                <div class="card__header">
-                    <div class="card__title" style="color: #ff00aa; text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);">
-                        ⚡ TIERED CHALLENGES
-                    </div>
-                    <div class="card__subtitle" style="color: #ff00aa;">
-                        $1 Quick & $5 High Roller
-                    </div>
-                </div>
-                
-                <div class="card__content">
-                    <p style="color: #fff; font-weight: 500;">
-                        Create challenges with tiered stakes. $1 Quick Challenges or $5 High Roller battles with 4x speed replays.
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3 class="feature-title">Friend Challenges</h3>
+                    <p class="feature-description">
+                        Viral challenge links driving organic growth. 
+                        Players create and share custom challenges with friends.
                     </p>
                 </div>
                 
-                <div class="card__footer">
-                    <span class="btn btn--outline" style="
-                        background: linear-gradient(135deg, #ff00aa, #cc0088);
-                        color: white;
-                        box-shadow: 0 0 20px rgba(255, 0, 170, 0.3);
-                        animation: buttonPulse 2s ease-in-out infinite alternate;
-                    ">
-                        🎯 Try Challenge System
-                    </span>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">Blockchain Education</h3>
+                    <p class="feature-description">
+                        Interactive learning platform integrated with gaming. 
+                        Educational content monetized through premium subscriptions.
+                    </p>
                 </div>
-            </button>
+            </div>
         </div>
-        
-        <!-- Educational Platform Card -->
-        <div style="margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-            <a href="academy/" class="card card--hover" style="text-decoration: none; display: block;">
-                <div class="card__header">
-                    <div class="card__title">📚 Academy</div>
-                    <div class="card__subtitle">Professional Education</div>
+    </section>
+
+    <!-- Market Opportunity -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Market Opportunity</h2>
+                <p class="lead">Massive addressable market in gaming and blockchain education</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">$180B</span>
+                    <span class="stat-label">Global Gaming Market</span>
                 </div>
                 
-                <div class="card__content">
-                    <p>Master blockchain technology through professional courses and interactive lessons.</p>
+                <div class="stat-card">
+                    <span class="stat-number">$10B</span>
+                    <span class="stat-label">Blockchain Gaming Growth</span>
                 </div>
                 
-                <div class="card__footer">
-                    <span class="btn btn--outline">Start Learning</span>
+                <div class="stat-card">
+                    <span class="stat-number">90%</span>
+                    <span class="stat-label">Prize Pool Distribution</span>
                 </div>
-            </a>
+                
+                <div class="stat-card">
+                    <span class="stat-number">400K+</span>
+                    <span class="stat-label">TPS on Sonic Labs</span>
+                </div>
+            </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Partnership Section -->
-    <section class="sonic-partnership">
-        <div class="partnership-content">
-            <h2 class="partnership-title">Built on Sonic Labs Technology</h2>
-            <p class="partnership-description">
-                Professional gaming platform with revolutionary 90/10 fee structure
-            </p>
-        </div>    </section>
+    <!-- Technology Stack -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Built on Sonic Labs</h2>
+                <p class="lead">Enterprise-grade blockchain infrastructure</p>
+            </div>
+            
+            <div class="grid grid-3">
+                <div class="card card-business text-center">
+                    <h3>400,000+ TPS</h3>
+                    <p>High-performance transaction processing</p>
+                </div>
+                
+                <div class="card card-business text-center">
+                    <h3>1-Second Finality</h3>
+                    <p>Near-instant transaction confirmation</p>
+                </div>
+                
+                <div class="card card-business text-center">
+                    <h3>90% Fee Sharing</h3>
+                    <p>Generous revenue sharing with developers</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- PWA Installation & Mobile Framework (mobile detection already inline) -->
-    <script src="/pwa/install-prompt.js"></script>
-    <script src="/shared/responsive/mobile-game-framework.js"></script>
-    
-    <!-- Platform Systems - BLOCKZONE LAB PLATFORM v2.0.0 -->
-    <script type="module">
-        // BLOCKZONE LAB PLATFORM v2.0.0 - Professional Gaming Platform
-        // VERSION: 2.0.0-BLOCKZONE-PLATFORM-RELEASE
-        // CREATED: 2025-01-25 (BlockZone Lab Platform Phase 1)
-        // FEATURES: Championship cycles, friend challenges, Web3 integration
-        
-        // Import platform systems - NEW BLOCKZONE PLATFORM ARCHITECTURE
-        import { ChampionshipUI } from '/shared/ui/ChampionshipUI.js';
-        import { FriendChallengeUI } from '/shared/ui/FriendChallengeUI.js';
-        import { BlockZoneWeb3 } from '/shared/web3/blockzone-web3.js';
-        
-        // Initialize platform - BLOCKZONE LAB v2.0.0
-        window.BlockZoneWeb3 = new BlockZoneWeb3();
-        window.championshipUI = new ChampionshipUI();
-        window.friendChallengeUI = new FriendChallengeUI();
-        
-        // Bind championship button - NEW REVENUE SYSTEM #1
-        document.getElementById('championshipBtn').addEventListener('click', () => {
-            window.championshipUI.show();
+    <!-- Current Platform Status -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Current Platform Status</h2>
+                <p class="lead">Live platform with proven functionality</p>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="card card-glow">
+                    <h3>🎮 Neon Drop Game</h3>
+                    <p>Fully functional arcade-style game with leaderboards, friend challenges, and championship cycles. Players can earn USDC through competitive gameplay.</p>
+                    <a href="/games/neondrop/" class="btn btn-neon-cyan">Play Now</a>
+                </div>
+                
+                <div class="card card-glow">
+                    <h3>📚 Blockchain Academy</h3>
+                    <p>Comprehensive educational platform with interactive lessons covering blockchain fundamentals, cryptocurrency, and Web3 technology.</p>
+                    <a href="/academy/" class="btn btn-neon-lime">Start Learning</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Opportunity -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2>Partnership & Investment Opportunities</h2>
+                <p class="lead">Seeking strategic partners and grants to accelerate platform development</p>
+            </div>
+            
+            <div class="grid grid-3">
+                <div class="card card-business">
+                    <h3>Grant Funding</h3>
+                    <p>Seeking grants from Sonic Labs Innovator Fund and other blockchain development programs.</p>
+                </div>
+                
+                <div class="card card-business">
+                    <h3>Strategic Partnerships</h3>
+                    <p>Collaborating with gaming studios, educational institutions, and blockchain companies.</p>
+                </div>
+                
+                <div class="card card-business">
+                    <h3>Platform Expansion</h3>
+                    <p>Scaling to support multiple games, advanced educational content, and mobile applications.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="/pages/partnerships.html" class="btn btn-primary btn-xl">
+                    Explore Partnership Opportunities
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>BlockZone Lab</h3>
+                    <p>Professional blockchain gaming platform with integrated education. Built on Sonic Labs for maximum performance and scalability.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <p><a href="/games/">Games</a></p>
+                    <p><a href="/academy/">Academy</a></p>
+                    <p><a href="/pages/technology.html">Technology</a></p>
+                    <p><a href="/pages/roadmap.html">Roadmap</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Business</h3>
+                    <p><a href="/pages/business-model.html">Business Model</a></p>
+                    <p><a href="/pages/whitepaper.html">Whitepaper</a></p>
+                    <p><a href="/pages/partnerships.html">Partnerships</a></p>
+                    <p><a href="/pages/team.html">Team</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <p><a href="/pages/privacy.html">Privacy Policy</a></p>
+                    <p><a href="/pages/terms.html">Terms of Service</a></p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 BlockZone Lab. All rights reserved. Built on Sonic Labs blockchain.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        document.getElementById('navbarToggle').addEventListener('click', function() {
+            document.querySelector('.navbar-nav').classList.toggle('active');
         });
-        
-        // Bind challenge friend button - NEW REVENUE SYSTEM #2
-        document.getElementById('challengeFriendBtn').addEventListener('click', () => {
-            // Open tiered challenge system in new tab
-            window.open('/test-challenge-ui.html', '_blank');
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-        
-        console.log('🚀 BlockZone Lab Platform v2.0.0 initialized with Championship & Tiered Challenge systems');
-        console.log('🏆 Revenue System #1: Championship cycles with $0.25 entry fees');
-        console.log('⚡ Revenue System #2: Tiered challenges with $1 Quick & $5 High Roller options');
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards and stats
+        document.querySelectorAll('.feature-card, .stat-card, .card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Performance optimization: Lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
     </script>
-
 </body>
 </html>

@@ -113,19 +113,23 @@ export class AudioSystem {
        const gain = this.ctx.createGain();
        osc.type = 'sine';
        
-       // Progressive frequency increase
-       const baseFreq = 400;
-       const freqIncrease = 100;
-       osc.frequency.setValueAtTime(baseFreq + (lines * freqIncrease), now);
+       // Use 2-line clear frequency as the template (600 Hz)
+       // This is the "sweet spot" frequency that sounds perfect
+       const templateFreq = 600;
+       osc.frequency.setValueAtTime(templateFreq, now);
        
-       // Progressive volume increase: 1 line = 1.0x, 2 lines = 1.5x, 3 lines = 2.2x, 4 lines = 3.0x
-       const volumeMultipliers = [1.0, 1.5, 2.2, 3.0];
-       const volumeMultiplier = volumeMultipliers[Math.min(lines - 1, 3)];
+       // Progressive volume increase based on lines cleared
+       // 1 line = 0.8x, 2 lines = 1.0x (template), 3 lines = 1.3x, 4 lines = 1.6x
+       const volumeMultipliers = [0, 0.8, 1.0, 1.3, 1.6];
+       const volumeMultiplier = volumeMultipliers[Math.min(lines, 4)];
        gain.gain.setValueAtTime(this.volume * volumeMultiplier, now);
        
-       // Shorter, punchier sound for more impact
-       const duration = 0.015 + (lines * 0.005); // Slightly longer for more lines
+       // Use the 2-line clear duration as template (0.025 seconds)
+       // Slightly longer for more lines to emphasize the achievement
+       const templateDuration = 0.025;
+       const duration = templateDuration + (lines * 0.002); // Tiny increase per line
        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+       
        osc.connect(gain);
        gain.connect(this.ctx.destination);
        osc.start(now);
