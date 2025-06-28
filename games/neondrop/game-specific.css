@@ -2145,3 +2145,163 @@ body {
     }
 }
 
+/* Game-specific styles for Neon Drop */
+
+/* Game Header */
+.game-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--neon-cyan);
+    padding: 0.5rem 1rem;
+}
+
+.game-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.game-nav .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.game-nav .nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.game-nav .nav-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.game-nav .nav-links a:hover,
+.game-nav .nav-links a.active {
+    color: var(--neon-cyan);
+}
+
+.user-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+.user-avatar {
+    font-size: 1.2rem;
+}
+
+.user-name {
+    color: var(--neon-cyan);
+    font-weight: 500;
+}
+
+/* Tournament Info Panel */
+.tournament-info {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 999;
+    max-width: 250px;
+}
+
+.info-card {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    font-family: 'Inter', sans-serif;
+}
+
+.info-card h3 {
+    color: var(--neon-cyan);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.info-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Error Container */
+.error-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid var(--neon-red);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    max-width: 400px;
+    z-index: 10000;
+}
+
+.error-container h2 {
+    color: var(--neon-red);
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', monospace;
+}
+
+.error-container p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .game-nav {
+        padding: 0 0.5rem;
+    }
+    
+    .game-nav .nav-links {
+        gap: 1rem;
+    }
+    
+    .game-nav .nav-links a {
+        font-size: 0.8rem;
+    }
+    
+    .tournament-info {
+        position: fixed;
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        max-width: none;
+    }
+    
+    .info-card {
+        padding: 0.75rem;
+    }
+    
+    .info-card h3 {
+        font-size: 0.9rem;
+    }
+    
+    .info-card p {
+        font-size: 0.75rem;
+    }
+}
+

@@ -3,15 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academy - BlockZone Lab</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="BlockZone Lab Academy - Professional blockchain education platform. Master computing, economics, blockchain, smart contracts, DeFi, and Sonic Labs with hands-on learning.">
+    <meta name="keywords" content="blockchain education, cryptocurrency courses, smart contracts, DeFi, Sonic Labs, blockchain academy, crypto learning">
+    <meta name="author" content="BlockZone Lab">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="BlockZone Lab Academy - Professional Blockchain Education">
+    <meta property="og:description" content="Master blockchain technology with professional courses. Learn computing, economics, smart contracts, DeFi, and Sonic Labs.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blockzonelab.com/academy/">
+    <meta property="og:image" content="https://blockzonelab.com/assets/favicon.svg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BlockZone Lab Academy - Professional Blockchain Education">
+    <meta name="twitter:description" content="Master blockchain technology with professional courses. Learn computing, economics, smart contracts, DeFi, and Sonic Labs.">
+    <meta name="twitter:image" content="https://blockzonelab.com/assets/favicon.svg">
+    
+    <title>Academy - Professional Blockchain Education | BlockZone Lab</title>
     
     <!-- Professional CSS Architecture -->
     <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/utilities.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     
+    <!-- Academy-specific styles -->
+    <link rel="stylesheet" href="shared/academy-main.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    
     <!-- Universal Navigation Bar -->
     <script type="module" src="../shared/components/NavigationBar.js"></script>
+    
+    <!-- User Management Integration -->
+    <script type="module" src="../shared/platform/user-manager.js"></script>
+    <script type="module" src="../shared/platform/session.js"></script>
 </head>
 <body class="portal-container">
     <!-- Professional Starfield Background -->
@@ -29,9 +64,10 @@
                 <a href="../index.html">Home</a>
                 <a href="#" class="active">Academy</a>
                 <a href="../games/">Games</a>
+                <a href="../pages/tournaments.html">Tournaments</a>
             </div>
-            <div class="wallet-status" id="walletStatus">
-                <span>Connect Wallet</span>
+            <div class="user-status" id="userStatus">
+                <span>Loading...</span>
             </div>
         </nav>
     </header>
@@ -44,11 +80,18 @@
             Professional courses designed for real-world application and career advancement
         </p>
 
-        <!-- Professional Course Grid - Fully Clickable -->        <div class="grid grid-3">
+        <!-- Professional Course Grid - Fully Clickable -->
+        <div class="grid grid-3">
             <a href="lessons/lesson-1/" class="card card--hover card--glow card--compact">
                 <div class="card__header">
                     <div class="card__title">💻 Computing & Binary</div>
                     <div class="card__subtitle">Foundation Course</div>
+                    <div class="progress-indicator" data-lesson="1">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -64,6 +107,12 @@
                 <div class="card__header">
                     <div class="card__title">💰 Money & Scarcity</div>
                     <div class="card__subtitle">Economic Theory</div>
+                    <div class="progress-indicator" data-lesson="2">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -79,6 +128,12 @@
                 <div class="card__header">
                     <div class="card__title">⛓️ Blockchain Fundamentals</div>
                     <div class="card__subtitle">Core Technology</div>
+                    <div class="progress-indicator" data-lesson="3">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -88,10 +143,18 @@
                 <div class="card__footer">
                     <span class="btn btn--primary">Explore</span>
                 </div>
-            </a>            <a href="lessons/lesson-4/" class="card card--hover card--neon card--compact">
+            </a>
+
+            <a href="lessons/lesson-4/" class="card card--hover card--neon card--compact">
                 <div class="card__header">
                     <div class="card__title">📜 Smart Contracts</div>
                     <div class="card__subtitle">Advanced Programming</div>
+                    <div class="progress-indicator" data-lesson="4">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -107,6 +170,12 @@
                 <div class="card__header">
                     <div class="card__title">🔄 DeFi & DEXes</div>
                     <div class="card__subtitle">Financial Applications</div>
+                    <div class="progress-indicator" data-lesson="5">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -122,6 +191,12 @@
                 <div class="card__header">
                     <div class="card__title">⚡ Sonic Labs</div>
                     <div class="card__subtitle">Cutting-Edge Platform</div>
+                    <div class="progress-indicator" data-lesson="6">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% Complete</span>
+                    </div>
                 </div>
                 
                 <div class="card__content">
@@ -198,12 +273,117 @@
                     <strong>Earn Rewards:</strong> Complete courses to earn tournament entries and prizes
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <strong>Cutting-Edge:</strong> Latest developments in blockchain and DeFi technology
+                    <div class="feature-icon">📈</div>
+                    <strong>Progress Tracking:</strong> Monitor your learning journey with detailed analytics
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <strong>Blockchain Integration:</strong> Real blockchain interactions and transactions
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎮</div>
+                    <strong>Gaming Integration:</strong> Apply knowledge in competitive gaming tournaments
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- User Progress Section -->
+    <section class="user-progress" id="userProgress" style="display: none;">
+        <div class="progress-content">
+            <h2 class="progress-title">Your Learning Progress</h2>
+            <div class="overall-progress">
+                <div class="progress-circle">
+                    <div class="progress-circle-fill" id="overallProgressFill"></div>
+                    <div class="progress-circle-text" id="overallProgressText">0%</div>
+                </div>
+                <div class="progress-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="completedLessons">0</span>
+                        <span class="stat-label">Lessons Completed</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="totalHours">0</span>
+                        <span class="stat-label">Hours Invested</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="certificatesEarned">0</span>
+                        <span class="stat-label">Certificates</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Management Integration Script -->
+    <script type="module">
+        import { UserManager } from '../shared/platform/user-manager.js';
+        import { SessionManager } from '../shared/platform/session.js';
+        
+        // Initialize user system
+        const userManager = new UserManager();
+        const sessionManager = new SessionManager();
+        
+        // Update user status
+        const updateUserStatus = () => {
+            const userStatus = document.getElementById('userStatus');
+            const currentUser = sessionManager.getCurrentUser();
+            
+            if (currentUser) {
+                userStatus.innerHTML = `
+                    <span class="user-avatar">${currentUser.avatar || '👤'}</span>
+                    <span class="user-name">${currentUser.displayName || 'Student'}</span>
+                `;
+                
+                // Show progress section for logged-in users
+                document.getElementById('userProgress').style.display = 'block';
+                updateProgressIndicators(currentUser);
+            } else {
+                userStatus.innerHTML = '<a href="../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+            }
+        };
+        
+        // Update progress indicators
+        const updateProgressIndicators = (user) => {
+            const progressData = user.academyProgress || {};
+            let totalProgress = 0;
+            let completedLessons = 0;
+            
+            // Update individual lesson progress
+            for (let i = 1; i <= 6; i++) {
+                const lessonProgress = progressData[`lesson${i}`] || 0;
+                const progressIndicator = document.querySelector(`[data-lesson="${i}"]`);
+                
+                if (progressIndicator) {
+                    const progressFill = progressIndicator.querySelector('.progress-fill');
+                    const progressText = progressIndicator.querySelector('.progress-text');
+                    
+                    progressFill.style.width = `${lessonProgress}%`;
+                    progressText.textContent = `${lessonProgress}% Complete`;
+                    
+                    totalProgress += lessonProgress;
+                    if (lessonProgress >= 100) completedLessons++;
+                }
+            }
+            
+            // Update overall progress
+            const overallProgress = Math.round(totalProgress / 6);
+            const overallProgressFill = document.getElementById('overallProgressFill');
+            const overallProgressText = document.getElementById('overallProgressText');
+            
+            if (overallProgressFill && overallProgressText) {
+                overallProgressFill.style.transform = `rotate(${overallProgress * 3.6}deg)`;
+                overallProgressText.textContent = `${overallProgress}%`;
+            }
+            
+            // Update stats
+            document.getElementById('completedLessons').textContent = completedLessons;
+            document.getElementById('totalHours').textContent = Math.round(totalProgress / 10);
+            document.getElementById('certificatesEarned').textContent = completedLessons;
+        };
+        
+        // Initialize on load
+        updateUserStatus();
+    </script>
 </body>
 </html>

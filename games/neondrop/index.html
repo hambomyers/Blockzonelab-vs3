@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>    <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Neon Drop - Professional Block Puzzle Tournament Game. Compete for USDC prizes with 90% fee sharing. Built on Sonic Labs with 400K+ TPS performance.">
+    <meta name="keywords" content="blockchain gaming, puzzle game, USDC prizes, Sonic Labs, tournament, skill-based gaming">
+    <meta name="author" content="BlockZone Lab">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Neon Drop - BlockZone Lab Tournament Game">
+    <meta property="og:description" content="Compete for USDC prizes in this professional block puzzle tournament. 90% fee sharing on Sonic Labs.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blockzonelab.com/games/neondrop/">
+    <meta property="og:image" content="https://blockzonelab.com/assets/favicon.svg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Neon Drop - BlockZone Lab Tournament Game">
+    <meta name="twitter:description" content="Compete for USDC prizes in this professional block puzzle tournament. 90% fee sharing on Sonic Labs.">
+    <meta name="twitter:image" content="https://blockzonelab.com/assets/favicon.svg">
     
     <!-- Professional CSS Architecture -->    
     <link rel="stylesheet" href="../../assets/css/01-variables.css">
@@ -8,21 +29,30 @@
     <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/utilities.css">
     <link rel="stylesheet" href="../../assets/css/components.css">
-    <!-- REMOVED blockzone-system.css due to panel positioning conflicts -->
     <link rel="stylesheet" href="../../assets/css/mobile.css">
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Neon Drop - Block Puzzle Challenge">
-    <meta name="mobile-web-app-capable" content="yes">    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Neon Drop - BlockZone Lab</title>
-      <!-- Comprehensive Favicon Setup - Works Across All Browsers -->
-    <link rel="icon" href="/favicon.ico" sizes="any"><!-- 32×32 -->
+    <!-- Game-specific styles -->
+    <link rel="stylesheet" href="game-specific.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Bungee&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#00d4ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Comprehensive Favicon Setup -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon.svg">
     <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon.svg">
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon.svg">
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#000000"">
+    
+    <title>Neon Drop Tournament - BlockZone Lab</title>
 
     <!-- Instant Mobile Detection (Performance Critical) -->
     <script>
@@ -53,27 +83,36 @@
         document.documentElement.style.setProperty('--has-touch', window.BlockZoneMobile._hasTouch ? '1' : '0');
         document.documentElement.style.setProperty('--has-keyboard', window.BlockZoneMobile.hasPhysicalKeyboard() ? '1' : '0');
         document.documentElement.style.setProperty('--needs-mobile-controls', window.BlockZoneMobile.needsMobileControls() ? '1' : '0');
-    </script>    <!-- Professional CSS Architecture -->    <link rel="stylesheet" href="../../assets/css/design-system.css">
-    <link rel="stylesheet" href="../../assets/css/utilities.css">    <link rel="stylesheet" href="../../assets/css/components.css">
-    <!-- REMOVED blockzone-system.css due to panel positioning conflicts -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css">
-      <!-- Game-specific styles (minimal) -->
-    <link rel="stylesheet" href="game-specific.css">
+    </script>
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Bungee&display=swap" rel="stylesheet">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00d4ff">
-
     <!-- Universal Navigation Bar -->
     <script type="module" src="../../shared/components/NavigationBar.js"></script>
+    
+    <!-- User Management Integration -->
+    <script type="module" src="../../shared/platform/user-manager.js"></script>
+    <script type="module" src="../../shared/platform/session.js"></script>
 </head>
 
-<body class="game-page">    <!-- Game Container -->
+<body class="game-page">
+    <!-- Professional Header for Tournament Context -->
+    <header class="game-header">
+        <nav class="game-nav">
+            <a href="../../index.html" class="logo">
+                <span>✧</span> BlockZone Lab
+            </a>
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../academy/">Academy</a>
+                <a href="../" class="active">Games</a>
+                <a href="../../pages/tournaments.html">Tournaments</a>
+            </div>
+            <div class="user-status" id="userStatus">
+                <span>Loading...</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Game Container -->
     <div id="gameContainer">
         <!-- Game Canvas -->
         <canvas id="bg"></canvas>
@@ -101,20 +140,58 @@
     <!-- UI Container -->
     <div id="ui-container"></div>
 
+    <!-- Tournament Info Panel -->
+    <div class="tournament-info">
+        <div class="info-card">
+            <h3>🎮 Neon Drop Tournament</h3>
+            <p>Entry Fee: $2.50 USDC</p>
+            <p>Prize Pool: 90% to Winners</p>
+            <p>Daily Prizes: $200+</p>
+        </div>
+    </div>
+
     <!-- Game Engine (Module) -->
-    <script type="module">        // Register service worker (DISABLED FOR TESTING)
-        /*
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js', { scope: './' })
-                .then(reg => console.log('🔧 SW registered'))
-                .catch(err => console.log('⚠️ SW registration failed (non-critical):', err));
-        }
-        */
-        console.log('🚫 Service Worker DISABLED for testing');        // Load game (main functionality) - Simple import for testing
-        console.log('🔄 Loading game with simple import...');
+    <script type="module">
+        // Register service worker (DISABLED FOR TESTING)
+        console.log('🚫 Service Worker DISABLED for testing');
+        
+        // Initialize user management
+        import { UserManager } from '../../shared/platform/user-manager.js';
+        import { SessionManager } from '../../shared/platform/session.js';
+        
+        // Initialize user system
+        const userManager = new UserManager();
+        const sessionManager = new SessionManager();
+        
+        // Update user status
+        const updateUserStatus = () => {
+            const userStatus = document.getElementById('userStatus');
+            const currentUser = sessionManager.getCurrentUser();
+            
+            if (currentUser) {
+                userStatus.innerHTML = `
+                    <span class="user-avatar">${currentUser.avatar || '👤'}</span>
+                    <span class="user-name">${currentUser.displayName || 'Player'}</span>
+                `;
+            } else {
+                userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+            }
+        };
+        
+        // Update status on load
+        updateUserStatus();
+        
+        // Load game (main functionality)
+        console.log('🔄 Loading game with enhanced integration...');
         import('./main.js').catch(e => {
             console.error('Failed to load game:', e);
-            document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px; font-family: Inter, sans-serif;">Game failed to load. Please refresh the page.</div>';
+            document.body.innerHTML = `
+                <div class="error-container">
+                    <h2>Game Loading Error</h2>
+                    <p>Please refresh the page or try again later.</p>
+                    <a href="../../index.html" class="btn btn--primary">Return Home</a>
+                </div>
+            `;
         });
     </script>
 </body>
