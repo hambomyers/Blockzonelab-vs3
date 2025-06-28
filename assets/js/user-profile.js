@@ -440,7 +440,7 @@ function initializeUserProfile() {
             }
             
             try {
-                showStatus('Creating your account and wallet...');
+                showProfileSectionStatus('Creating your account and wallet...', 'success');
                 
                 // Login will auto-register if user doesn't exist
                 const result = await window.userManager.login({ email });
@@ -470,7 +470,7 @@ function initializeUserProfile() {
                 
             } catch (err) {
                 console.error('Login failed:', err);
-                showStatus('Login failed: ' + err.message, true);
+                showProfileSectionStatus('Login failed: ' + err.message, 'error');
             }
         });
     }
