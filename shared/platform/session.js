@@ -153,8 +153,8 @@ class SessionManager {
         return this.session?.player_id || this.getProfile()?.player_id;
     }
 
-    // Get current display name
-    getDisplayName() {
+    // Get current BlockZone name
+    getPlayerName() {
         return this.profile?.display_name || this.getProfile()?.display_name || 'Anonymous';
     }
 
@@ -249,7 +249,7 @@ class SessionManager {
         }
         
         // If no Hambo found, check if current session is anonymous and prompt for name
-        if (this.getDisplayName() === 'Anonymous') {
+        if (this.getPlayerName() === 'Anonymous') {
             console.log('🤔 No Hambo identity found, current user is anonymous');
             this.showIdentityPrompt();
         }
@@ -268,8 +268,8 @@ class SessionManager {
         prompt.innerHTML = `
             <div class="identity-prompt-content">
                 <h3>Welcome to BlockZone Lab!</h3>
-                <p>What should we call you?</p>
-                <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="20">
+                <p>BlockZone name?</p>
+                <input type="text" id="player-name-input" placeholder="Enter your BlockZone name" maxlength="20">
                 <div class="identity-prompt-buttons">
                     <button id="save-name-btn">Save Name</button>
                     <button id="skip-name-btn">Skip for now</button>
@@ -417,13 +417,13 @@ class SessionManager {
         if (!this.session) return [];
         
         const playerId = this.getPlayerId();
-        const displayName = this.getDisplayName();
+        const playerName = this.getPlayerName();
         const baseUrl = window.location.origin;
         
         return [
-            `${baseUrl}/challenge/${displayName}/${score}?ref=${playerId}`,
-            `${baseUrl}/challenge/${displayName}/${score}/2?ref=${playerId}`,
-            `${baseUrl}/challenge/${displayName}/${score}/3?ref=${playerId}`
+            `${baseUrl}/challenge/${playerName}/${score}?ref=${playerId}`,
+            `${baseUrl}/challenge/${playerName}/${score}/2?ref=${playerId}`,
+            `${baseUrl}/challenge/${playerName}/${score}/3?ref=${playerId}`
         ];
     }
 }

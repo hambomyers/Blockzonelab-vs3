@@ -40,7 +40,7 @@ export class SimpleGameOver {
             await sessionManager.migrateOldData();
             
             this.playerId = sessionManager.getPlayerId();
-            this.playerName = sessionManager.getDisplayName();
+            this.playerName = sessionManager.getPlayerName();
             
             console.log('✅ Session initialized:', this.playerId, this.playerName);
         } catch (error) {
@@ -106,7 +106,7 @@ export class SimpleGameOver {
         return match ? match[1].slice(-4).toUpperCase() : 'ANON';
     }
 
-    // Create the display name: "Username-WXYZ"
+    // Create the BlockZone name: "Username-WXYZ"
     createDisplayName(username) {
         if (!username || username.trim() === '') {
             return null; // Require username - no anonymous players
@@ -564,9 +564,9 @@ export class SimpleGameOver {
                     </p>
                     
                     <div style="margin-bottom: 15px;">                        <div style="color: #888; font-size: 14px; margin-bottom: 5px;">
-                            Your display name will be: <span id="namePreview" style="color: #00d4ff; font-weight: bold;">[Username]-${this.getWalletDisplaySuffix()}</span>
-                        </div>
+                        Your BlockZone name will be: <span id="namePreview" style="color: #00d4ff; font-weight: bold;">[Username]-${this.getWalletDisplaySuffix()}</span>
                     </div>
+                </div>
                     
                     <input 
                         type="text" 
@@ -764,7 +764,7 @@ export class SimpleGameOver {
             
             // Update local references
             this.playerId = sessionManager.getPlayerId();
-            this.playerName = sessionManager.getDisplayName();
+            this.playerName = sessionManager.getPlayerName();
             
             console.log('✅ Session upgraded with player name:', this.playerName);
         } catch (error) {
