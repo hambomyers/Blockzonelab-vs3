@@ -20,6 +20,7 @@ const bioInput = document.getElementById('bio');
 const avatarPreview = document.getElementById('avatarPreview');
 const logoutBtn = document.getElementById('logoutBtn');
 const profileStatus = document.getElementById('profileStatus');
+const profileFormStatus = document.getElementById('profileFormStatus');
 const emailInput = document.getElementById('emailInput');
 const walletAddressSpan = document.getElementById('walletAddress');
 const walletBalanceSpan = document.getElementById('walletBalance');
@@ -160,6 +161,18 @@ function showStatus(msg, isError = false, duration = 3000) {
         // Auto-hide after duration
         setTimeout(() => {
             profileStatus.classList.remove('show');
+        }, duration);
+    }
+}
+
+function showFormStatus(msg, type = 'info', duration = 3000) {
+    if (profileFormStatus) {
+        profileFormStatus.textContent = msg;
+        profileFormStatus.className = `form-status-message show ${type}`;
+        
+        // Auto-hide after duration
+        setTimeout(() => {
+            profileFormStatus.classList.remove('show');
         }, duration);
     }
 }
@@ -456,7 +469,7 @@ function initializeUserProfile() {
             if (!currentUserId) return;
             
             if (!window.userManager) {
-                showStatus('User manager not loaded. Please refresh the page.', true);
+                showFormStatus('User manager not loaded. Please refresh the page.', 'error');
                 return;
             }
             
@@ -467,14 +480,14 @@ function initializeUserProfile() {
             };
             try {
                 await window.userManager.updateProfile(currentUserId, profileUpdates);
-                showStatus('Profile updated successfully!');
+                showFormStatus('Profile updated successfully!', 'success');
                 
                 // Update profile name display
                 if (profileName) {
                     profileName.textContent = profileUpdates.displayName || 'Welcome!';
                 }
             } catch (err) {
-                showStatus('Failed to update profile: ' + err.message, true);
+                showFormStatus('Failed to update profile: ' + err.message, 'error');
             }
         });
     }
