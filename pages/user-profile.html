@@ -46,6 +46,49 @@
             border: 1px solid rgba(0, 212, 255, 0.3);
             color: #00d4ff;
         }
+        
+        /* Profile section status message styling */
+        .profile-section-status {
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+        
+        .profile-section-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .profile-section-status.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+        }
+        
+        .profile-section-status.error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff0000;
+        }
+        
+        .profile-section-status.info {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+        
+        .profile-section-status.warning {
+            background: rgba(255, 255, 0, 0.1);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            color: #ffff00;
+        }
     </style>
 </head>
 <body>
@@ -114,6 +157,9 @@
 
             <!-- Profile Section -->
             <div id="profile-section" class="profile-card" style="display:none;">
+                <!-- Status message container at the top of profile section -->
+                <div id="profileSectionStatus" class="profile-section-status"></div>
+                
                 <div class="profile-header">
                     <div class="profile-avatar-section">
                         <img id="avatarPreview" src="" alt="Your Avatar" class="profile-avatar">

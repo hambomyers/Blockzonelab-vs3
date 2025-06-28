@@ -21,6 +21,7 @@ const avatarPreview = document.getElementById('avatarPreview');
 const logoutBtn = document.getElementById('logoutBtn');
 const profileStatus = document.getElementById('profileStatus');
 const profileFormStatus = document.getElementById('profileFormStatus');
+const profileSectionStatus = document.getElementById('profileSectionStatus');
 const emailInput = document.getElementById('emailInput');
 const walletAddressSpan = document.getElementById('walletAddress');
 const walletBalanceSpan = document.getElementById('walletBalance');
@@ -173,6 +174,18 @@ function showFormStatus(msg, type = 'info', duration = 3000) {
         // Auto-hide after duration
         setTimeout(() => {
             profileFormStatus.classList.remove('show');
+        }, duration);
+    }
+}
+
+function showProfileSectionStatus(msg, type = 'info', duration = 5000) {
+    if (profileSectionStatus) {
+        profileSectionStatus.textContent = msg;
+        profileSectionStatus.className = `profile-section-status show ${type}`;
+        
+        // Auto-hide after duration
+        setTimeout(() => {
+            profileSectionStatus.classList.remove('show');
         }, duration);
     }
 }
@@ -443,7 +456,7 @@ function initializeUserProfile() {
                     const shortWallet = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
                     
                     showProfileSection(result.user.profile, result.user);
-                    showStatus(`Welcome! Your wallet: ${shortWallet}`);
+                    showProfileSectionStatus(`Welcome! Your wallet: ${shortWallet}`, 'success');
                     
                     // Show wallet info in console for debugging
                     console.log(`🎉 User logged in: ${email}`);
@@ -451,7 +464,7 @@ function initializeUserProfile() {
                     console.log(`💎 Balance: ${result.user.walletBalance} USDC.E`);
                 } else {
                     showProfileSection(result.user.profile, result.user);
-                    showStatus('Welcome! Wallet creation in progress...');
+                    showProfileSectionStatus('Wallet creation in progress...', 'info');
                     console.log(`🎉 User logged in: ${email}`);
                 }
                 
