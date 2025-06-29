@@ -136,11 +136,24 @@ export class ChallengeViewer {
                     </div>
                 </div>
 
-                <div class="challenge-description">
-                    <p class="description-text">
-                        <strong>${tierConfig.description}</strong><br>
+                <div class="challenge-info">
+                    <h3>🎯 Challenge Details</h3>
+                    <p>
+                        <strong>Target Score: ${challenge.targetScore.toLocaleString()}</strong><br>
                         Can you beat this score and claim the prize?
                     </p>
+                    
+                    <!-- NEW: Fair piece sequence explanation -->
+                    <div class="fair-play-info">
+                        <h4>🎮 Fair Play Guarantee</h4>
+                        <p>Both players receive the <strong>exact same piece sequence</strong> up to the target score, ensuring a completely fair skill-based challenge!</p>
+                        <ul class="fair-play-details">
+                            <li>✅ Same piece order as the challenger</li>
+                            <li>✅ Same difficulty progression</li>
+                            <li>✅ Random pieces after target score</li>
+                            <li>✅ Pure skill determines the winner</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="replay-section">
@@ -375,11 +388,18 @@ export class ChallengeViewer {
         const modals = document.querySelectorAll('.challenge-accepted, .challenge-created');
         modals.forEach(modal => modal.remove());
 
+        // Prepare challenge data for game engine
+        const challengeData = {
+            targetScore: this.currentChallenge.targetScore,
+            pieceSequence: this.currentChallenge.pieceSequence || []
+        };
+
         // Start new game with challenge context
         this.gameEngine.startNewGame({
             challengeMode: true,
             targetScore: this.currentChallenge.targetScore,
-            challengeId: this.currentChallenge.id
+            challengeId: this.currentChallenge.id,
+            challengeData: challengeData // Pass the piece sequence
         });
     }
 

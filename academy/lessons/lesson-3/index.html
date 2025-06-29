@@ -3,186 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson 3: Blockchain Fundamentals - The Academy</title>
-    <link rel="stylesheet" href="../../../assets/css/design-system.css">
-    <link rel="stylesheet" href="../../../assets/css/utilities.css">
-    <link rel="stylesheet" href="../../../assets/css/components.css">
-    <link rel="stylesheet" href="../../../assets/css/blockzone-system.css">
+    <title>Blockchain Fundamentals - BlockZone Academy</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Master the fundamentals of blockchain technology. Learn about blocks, hashing, consensus mechanisms, and how distributed ledgers work.">
+    <meta name="keywords" content="blockchain, fundamentals, blocks, hashing, consensus, distributed ledger, cryptocurrency">
+    <meta name="author" content="BlockZone Lab">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Blockchain Fundamentals - BlockZone Academy">
+    <meta property="og:description" content="Master the fundamentals of blockchain technology. Learn about blocks, hashing, consensus mechanisms, and how distributed ledgers work.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/academy/lessons/lesson-3/">
+    <meta property="og:image" content="/assets/icons/icon-512.svg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blockchain Fundamentals - BlockZone Academy">
+    <meta name="twitter:description" content="Master the fundamentals of blockchain technology. Learn about blocks, hashing, consensus mechanisms, and how distributed ledgers work.">
+    <meta name="twitter:image" content="/assets/icons/icon-512.svg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono:wght@400&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/mobile.css">
+    
+    <!-- Academy Styles -->
+    <link rel="stylesheet" href="/academy/shared/academy-main.css">
+    
+    <!-- Lesson-specific styles -->
     <style>
-        /* Academy Enhanced Styles */
-        :root {
-            --academy-primary: #00f5ff;
-            --academy-accent: #ffd700;
-            --academy-dark: #1a1d29;
-            --academy-card: rgba(37, 40, 54, 0.95);
-            --academy-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --academy-success: #00ff88;
-            --academy-error: #ff4757;
-            --academy-warning: #ff8c00;
+        /* Lesson-specific customizations */
+        .lesson-hero {
+            background: linear-gradient(135deg, 
+                rgba(255, 0, 110, 0.1) 0%, 
+                rgba(157, 78, 221, 0.05) 50%, 
+                rgba(0, 255, 255, 0.1) 100%);
+            border-bottom: 2px solid rgba(255, 0, 110, 0.3);
         }
-
-        .academy-page {
-            background: linear-gradient(135deg, var(--academy-dark) 0%, #2d314a 100%);
-            min-height: 100vh;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            position: relative;
-            overflow-x: hidden;
+        
+        .lesson-progress {
+            background: rgba(255, 0, 110, 0.05);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
         }
-
-        .academy-page::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23ffd700" opacity="0.1"/></svg>');
-            animation: academyDrift 30s linear infinite;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        @keyframes academyDrift {
-            from { transform: translateY(0) rotate(0deg); }
-            to { transform: translateY(-100vh) rotate(360deg); }
-        }
-
-        /* Navigation */
-        .main-nav {
-            background: rgba(26, 29, 41, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .nav-container {
+        
+        .lesson-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 2rem;
+        }
+        
+        .lesson-section {
+            background: rgba(26, 29, 41, 0.8);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lesson-navigation {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin: 3rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 0, 110, 0.05);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 15px;
         }
-
-        .logo {
-            font-size: 1.5rem;
+        
+        .nav-button {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: var(--terminal-black);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Orbitron', monospace;
             font-weight: 700;
-            color: var(--academy-accent);
             text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-
-        .progress-counter {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--academy-card);
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 0, 110, 0.3);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .lesson-complete-badge {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: var(--terminal-black);
             padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            color: var(--academy-accent);
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 6rem 2rem 2rem;
-        }
-
-        /* Lesson Hero */
-        .lesson-hero-premium {
-            background: linear-gradient(135deg, rgba(26, 29, 41, 0.95), rgba(212, 175, 55, 0.08));
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 2rem;
-            margin-bottom: 3rem;
-            padding: 3rem 2rem;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .lesson-hero-premium::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-            animation: heroGlow 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes heroGlow {
-            0% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
-            100% { transform: rotate(10deg) scale(1.2); opacity: 0.1; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
-        }
-
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, var(--academy-accent));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
-        }
-
-        .hero-quote {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem 2rem;
-            margin: 2rem auto;
-            max-width: 600px;
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-        }
-
-        /* Interactive Blockchain Visualizer */
-        .blockchain-visualizer {
-            background: linear-gradient(135deg, rgba(26, 29, 41, 0.92), rgba(212, 175, 55, 0.05));
-            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-left: 1rem;
+        }
+        
+        .interactive-element {
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            background: rgba(255, 0, 110, 0.15);
+            border-color: var(--neon-pink);
+            transform: translateY(-2px);
+        }
+        
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid var(--neon-pink);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-pink);
+            overflow-x: auto;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 255, 255, 0.1));
+            border-left: 4px solid var(--neon-purple);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .blockchain-visualizer {
+            background: rgba(255, 0, 110, 0.05);
+            border: 2px solid rgba(255, 0, 110, 0.3);
+            border-radius: 15px;
             padding: 2rem;
             margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visualizer-title {
             text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--academy-accent);
         }
-
+        
         .blockchain-container {
             display: flex;
             gap: 1rem;
@@ -190,402 +171,73 @@
             padding: 1rem 0;
             scroll-behavior: smooth;
             min-height: 200px;
+            justify-content: center;
         }
-
+        
         .block {
             min-width: 200px;
             background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(212, 175, 55, 0.3);
+            border: 2px solid rgba(255, 0, 110, 0.3);
             border-radius: 1rem;
             padding: 1.5rem;
             position: relative;
-            transition: var(--academy-transition);
-            cursor: pointer;
-            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
-
+        
         .block:hover {
             transform: translateY(-5px);
-            border-color: var(--academy-accent);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 20px rgba(255, 0, 110, 0.2);
         }
-
-        .block.genesis {
-            border-color: #00ff88;
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .block.pending {
-            border-color: #ff8c00;
-            border-style: dashed;
-            background: rgba(255, 140, 0, 0.05);
-        }
-
+        
         .block-header {
-            font-weight: 700;
-            color: var(--academy-accent);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--neon-pink);
+            margin-bottom: 1rem;
         }
-
-        .block-data {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-        }
-
+        
         .block-hash {
-            font-family: 'Fira Code', monospace;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.8rem;
-            color: #00f5ff;
+            color: rgba(255, 255, 255, 0.7);
             word-break: break-all;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
         }
-
-        .chain-connection {
+        
+        .block-connection {
             position: absolute;
             right: -1rem;
             top: 50%;
-            transform: translateY(-50%);
             width: 2rem;
             height: 2px;
-            background: var(--academy-accent);
-            z-index: 1;
+            background: var(--neon-pink);
+            transform: translateY(-50%);
         }
-
-        .chain-connection::after {
+        
+        .block-connection::after {
             content: '→';
             position: absolute;
-            right: -1rem;
+            right: -0.5rem;
             top: -0.5rem;
-            color: var(--academy-accent);
+            color: var(--neon-pink);
             font-weight: bold;
-            font-size: 1.2rem;
         }
-
-        /* Mining Simulator */
-        .mining-simulator {
-            background: var(--academy-card);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
+        
+        .block:last-child .block-connection {
+            display: none;
         }
-
-        .mining-title {
-            font-size: 1.5rem;
-            color: var(--academy-accent);
-            margin-bottom: 1rem;
-        }
-
-        .mining-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-
-        .mining-button {
-            padding: 1rem 2rem;
-            background: var(--academy-accent);
-            color: var(--academy-dark);
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--academy-transition);
-        }
-
-        .mining-button:hover {
-            background: #f4d03f;
-            transform: translateY(-2px);
-        }
-
-        .mining-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .mining-status {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0.5rem;
-            font-family: 'Fira Code', monospace;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mining-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .mining-stat {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--academy-accent);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.25rem;
-        }
-
-        .hash-animation {
-            display: inline-block;
-            animation: hashFlicker 0.1s infinite;
-        }
-
-        @keyframes hashFlicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Consensus Mechanism Demo */
-        .consensus-demo {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .consensus-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-            transition: var(--academy-transition);
-            cursor: pointer;
-        }
-
-        .consensus-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--academy-accent);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-        }
-
-        .consensus-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .consensus-title {
-            color: var(--academy-accent);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .consensus-description {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .consensus-metrics {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--academy-accent);
-            font-weight: 600;
-        }
-
-        /* Network Visualization */
-        .network-section {
-            margin: 3rem 0;
-        }
-
-        .network-canvas {
-            width: 100%;
-            height: 400px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            display: block;
-        }
-
-        .network-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        /* Hash Function Demonstrator */
-        .hash-demo {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .hash-demo h3 {
-            color: var(--academy-accent);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .hash-input-group {
-            margin-bottom: 1rem;
-        }
-
-        .hash-input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--academy-accent);
-            font-weight: 500;
-        }
-
-        .hash-input {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 0.5rem;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .hash-input:focus {
-            outline: none;
-            border-color: var(--academy-accent);
-        }
-
-        .hash-output {
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 0.5rem;
-            font-family: 'Fira Code', monospace;
-            word-break: break-all;
-            color: #00f5ff;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Quiz System */
-        .quiz-premium {
-            background: var(--academy-card);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 2rem;
-            padding: 3rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .quiz-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--academy-accent);
-            margin-bottom: 1rem;
-        }
-
-        .quiz-progress {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin: 1.5rem 0;
-            overflow: hidden;
-        }
-
-        .quiz-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--academy-accent), #f4d03f);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .question-text {
-            font-size: 1.4rem;
-            color: #ffffff;
-            margin: 2rem 0;
-            line-height: 1.6;
-        }
-
-        .options-container {
-            display: grid;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .option-button {
-            padding: 1.2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            color: #ffffff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--academy-transition);
-            text-align: left;
-        }
-
-        .option-button:hover:not(:disabled) {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .option-button.correct {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: rgb(34, 197, 94);
-        }
-
-        .option-button.incorrect {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgb(239, 68, 68);
-        }
-
-        .quiz-button {
-            padding: 1rem 2rem;
-            background: var(--academy-accent);
-            color: var(--academy-dark);
-            border: none;
-            border-radius: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--academy-transition);
-        }
-
-        .quiz-button:hover {
-            background: #f4d03f;
-            transform: translateY(-2px);
-        }
-
-        .quiz-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Responsive Design */
+        
         @media (max-width: 768px) {
-            .main-content {
-                padding: 6rem 1rem 2rem;
+            .lesson-content {
+                padding: 1rem;
+            }
+            
+            .lesson-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-button {
+                width: 100%;
+                text-align: center;
             }
             
             .blockchain-container {
@@ -593,758 +245,434 @@
                 align-items: center;
             }
             
-            .mining-controls {
-                flex-direction: column;
-                align-items: center;
+            .block {
+                min-width: 100%;
+                max-width: 300px;
             }
             
-            .consensus-demo {
-                grid-template-columns: 1fr;
+            .block-connection {
+                display: none;
             }
-            
-            .network-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* Ensure Navigation Bar is visible */
-        #sidePanelNavigation {
-            position: fixed !important;
-            top: 0 !important;
-            right: 0 !important;
-            height: 100vh !important;
-            width: 60px !important;
-            background: rgba(0, 0, 0, 0.9) !important;
-            backdrop-filter: blur(20px) !important;
-            border-left: 1px solid rgba(0, 212, 255, 0.3) !important;
-            z-index: 10000 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            padding: 20px 0 !important;
-            box-shadow: -8px 0 32px rgba(0, 212, 255, 0.1) !important;
         }
     </style>
 </head>
-<body class="academy-page">
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="../../index.html" class="logo">
-                <span>✧</span> The Academy
-            </a>
-            <div class="progress-counter">
-                <span>🎓</span>
-                <span id="lessonProgress">0</span>
-                <span>% Complete</span>
+<body>
+    <!-- Professional Header -->
+    <header class="platform-header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="/" class="logo">
+                    <span class="logo-text">BLOCKZONE</span>
+                    <span class="logo-accent">LAB</span>
+                </a>
+                <nav class="main-nav">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/academy/" class="nav-link active">Academy</a>
+                    <a href="/games/" class="nav-link">Games</a>
+                    <a href="/pages/tournaments.html" class="nav-link">Tournaments</a>
+                    <a href="/pages/business-model.html" class="nav-link">Business</a>
+                </nav>
             </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Lesson Hero -->
-        <div class="lesson-hero-premium">
-            <div class="hero-content">
-                <div class="hero-icon">⛓️</div>
-                <h1 class="hero-title">Blockchain Fundamentals</h1>
-                <p class="hero-subtitle">Understanding the revolutionary technology that powers decentralized networks</p>
-                
-                <div class="hero-quote">
-                    <p>"The blockchain is an incorruptible digital ledger of economic transactions that can be programmed to record not just financial transactions but virtually everything of value." — Don & Alex Tapscott</p>
+            <div class="header-right">
+                <div id="user-status" class="user-status">
+                    <span class="status-text">Loading...</span>
                 </div>
             </div>
         </div>
+    </header>
 
-        <!-- Interactive Blockchain Visualizer -->
-        <section class="blockchain-visualizer">
-            <h2 class="visualizer-title">🔗 Interactive Blockchain Explorer</h2>
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
-                Click on blocks to explore their contents and see how each block references the previous one
-            </p>
-            
-            <div class="blockchain-container" id="blockchainContainer">
-                <!-- Blocks will be generated by JavaScript -->
-            </div>
-            
-            <div class="mining-simulator">
-                <h3 class="mining-title">⚡ Mining Simulator</h3>
-                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">
-                    Experience how new blocks are mined and added to the blockchain
-                </p>
-                
-                <div class="mining-controls">
-                    <button class="mining-button" id="mineButton">Start Mining</button>
-                    <button class="mining-button" id="addTransaction">Add Transaction</button>
-                    <button class="mining-button" id="resetChain">Reset Chain</button>
+    <!-- Lesson Hero Section -->
+    <section class="lesson-hero">
+        <div class="lesson-content">
+            <div class="lesson-progress">
+                <div class="progress-header">
+                    <h1>Blockchain Fundamentals</h1>
+                    <div class="progress-info">
+                        <span class="lesson-number">Lesson 3</span>
+                        <span class="estimated-time">25-30 minutes</span>
+                        <span id="completion-status" class="completion-status"></span>
+                    </div>
                 </div>
-                
-                <div class="mining-status" id="miningStatus">
-                    Ready to mine... Click "Start Mining" to begin!
-                </div>
-                
-                <div class="mining-stats">
-                    <div class="mining-stat">
-                        <div class="stat-value" id="difficulty">4</div>
-                        <div class="stat-label">Difficulty (leading zeros)</div>
-                    </div>
-                    <div class="mining-stat">
-                        <div class="stat-value" id="hashRate">0</div>
-                        <div class="stat-label">Hash Rate (hashes/sec)</div>
-                    </div>
-                    <div class="mining-stat">
-                        <div class="stat-value" id="nonce">0</div>
-                        <div class="stat-label">Current Nonce</div>
-                    </div>
-                    <div class="mining-stat">
-                        <div class="stat-value" id="blockTime">0</div>
-                        <div class="stat-label">Time to Mine (sec)</div>
-                    </div>
+                <div class="progress-bar">
+                    <div id="lesson-progress-bar" class="progress-fill" style="width: 0%"></div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Consensus Mechanisms -->
-        <section style="margin: 3rem 0;">
-            <h2 style="text-align: center; font-size: 2.5rem; color: var(--academy-accent); margin-bottom: 2rem;">
-                🏛️ Consensus Mechanisms
-            </h2>
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-                Explore different methods networks use to agree on the state of the blockchain
-            </p>
+    <!-- Main Lesson Content -->
+    <main class="lesson-content">
+        <div class="lesson-section">
+            <h2>What is a Blockchain?</h2>
+            <p>A blockchain is a distributed, decentralized digital ledger that records transactions across a network of computers. Each transaction is grouped into a "block" and linked to the previous block, creating an immutable chain of data.</p>
             
-            <div class="consensus-demo">
-                <div class="consensus-card" onclick="exploreConsensus('pow')">
-                    <div class="consensus-icon">⚡</div>
-                    <h3 class="consensus-title">Proof of Work</h3>
-                    <p class="consensus-description">
-                        Miners compete to solve cryptographic puzzles. First to solve gets to add the next block and earn rewards.
-                    </p>
-                    <div class="consensus-metrics">
-                        <span>Energy: High</span>
-                        <span>Security: Very High</span>
-                    </div>
-                </div>
-                
-                <div class="consensus-card" onclick="exploreConsensus('pos')">
-                    <div class="consensus-icon">🏆</div>
-                    <h3 class="consensus-title">Proof of Stake</h3>
-                    <p class="consensus-description">
-                        Validators are chosen to create new blocks based on their stake (ownership) in the network.
-                    </p>
-                    <div class="consensus-metrics">
-                        <span>Energy: Low</span>
-                        <span>Security: High</span>
-                    </div>
-                </div>
-                
-                <div class="consensus-card" onclick="exploreConsensus('dpos')">
-                    <div class="consensus-icon">🗳️</div>
-                    <h3 class="consensus-title">Delegated Proof of Stake</h3>
-                    <p class="consensus-description">
-                        Token holders vote for delegates who validate transactions and maintain the network.
-                    </p>
-                    <div class="consensus-metrics">
-                        <span>Energy: Very Low</span>
-                        <span>Speed: Very High</span>
-                    </div>
-                </div>
+            <div class="highlight-box">
+                <h3>🎯 Learning Objectives</h3>
+                <ul>
+                    <li>Understand the structure and components of a blockchain</li>
+                    <li>Learn about cryptographic hashing and its role</li>
+                    <li>Explore consensus mechanisms and validation</li>
+                    <li>Master the concept of distributed ledgers</li>
+                </ul>
             </div>
-        </section>
+        </div>
 
-        <!-- Network Topology Explorer -->
-        <section class="network-section">
+        <div class="lesson-section">
+            <h2>The Building Blocks</h2>
+            <p>Every blockchain consists of these fundamental components:</p>
+            <ul>
+                <li><strong>Blocks:</strong> Containers that hold transaction data</li>
+                <li><strong>Hashes:</strong> Unique digital fingerprints for each block</li>
+                <li><strong>Nodes:</strong> Computers that maintain the network</li>
+                <li><strong>Consensus:</strong> Agreement mechanism for validating transactions</li>
+            </ul>
+            
             <div class="blockchain-visualizer">
-                <h2 style="text-align: center; color: var(--academy-accent); margin-bottom: 2rem;">
-                    🌐 Network Topology Explorer
-                </h2>
-                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
-                    Visualize how blockchain nodes connect and communicate
-                </p>
-                
-                <canvas class="network-canvas" id="networkCanvas" width="800" height="400"></canvas>
-                
-                <div class="network-controls">
-                    <button class="mining-button" onclick="simulateNetwork('centralized')">Centralized</button>
-                    <button class="mining-button" onclick="simulateNetwork('decentralized')">Decentralized</button>
-                    <button class="mining-button" onclick="simulateNetwork('distributed')">Distributed</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Hash Function Demonstrator -->
-        <section class="hash-demo">
-            <h3>🔐 Hash Function Demonstrator</h3>
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
-                See how small changes in input create completely different hash outputs
-            </p>
-            
-            <div style="max-width: 600px; margin: 0 auto;">
-                <div class="hash-input-group">
-                    <label>Input:</label>
-                    <input type="text" class="hash-input" id="hashInput" placeholder="Type anything here..." 
-                           oninput="updateHash()">
-                </div>
-                
-                <div class="hash-input-group">
-                    <label>SHA-256 Hash:</label>
-                    <div class="hash-output" id="hashOutput">
-                        Type something to see the hash...
+                <h3>🔗 Interactive Blockchain Visualizer</h3>
+                <p>Watch how blocks are created and linked together:</p>
+                <div class="blockchain-container" id="blockchain-container">
+                    <div class="block">
+                        <div class="block-header">Block #1 (Genesis)</div>
+                        <div class="block-hash">0000000000000000000000000000000000000000000000000000000000000000</div>
+                        <div class="block-connection"></div>
+                    </div>
+                    <div class="block">
+                        <div class="block-header">Block #2</div>
+                        <div class="block-hash">a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234</div>
+                        <div class="block-connection"></div>
+                    </div>
+                    <div class="block">
+                        <div class="block-header">Block #3</div>
+                        <div class="block-hash">f1e2d3c4b5a6789012345678901234567890fedcba1234567890fedcba1234</div>
+                        <div class="block-connection"></div>
+                    </div>
+                    <div class="block">
+                        <div class="block-header">Block #4</div>
+                        <div class="block-hash">9a8b7c6d5e4f321098765432109876543210abcdef09876543210abcdef098</div>
                     </div>
                 </div>
-                
-                <div style="text-align: center; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-top: 1rem;">
-                    Notice how even tiny changes (like adding a single character) completely change the hash!
-                </div>
+                <button id="add-block" class="nav-button">Add New Block</button>
             </div>
-        </section>
+        </div>
 
-        <!-- Quiz Section -->
-        <section class="quiz-premium">
-            <h2 class="quiz-title">🎯 Test Your Blockchain Knowledge</h2>
-            <div class="quiz-progress">
-                <div class="quiz-progress-fill" id="quizProgress"></div>
-            </div>
-            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">
-                Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">5</span>
-            </p>
+        <div class="lesson-section">
+            <h2>Cryptographic Hashing</h2>
+            <p>Hashing is the process of converting data into a fixed-size string of characters. It's crucial for blockchain security:</p>
             
-            <div id="quizContainer">
-                <div class="question-text" id="questionText">
-                    What is the primary purpose of a hash function in blockchain?
-                </div>
-                
-                <div class="options-container" id="optionsContainer">
-                    <button class="option-button" onclick="selectAnswer(0)">To encrypt sensitive data</button>
-                    <button class="option-button" onclick="selectAnswer(1)">To create a unique fingerprint for data</button>
-                    <button class="option-button" onclick="selectAnswer(2)">To compress large files</button>
-                    <button class="option-button" onclick="selectAnswer(3)">To speed up transactions</button>
-                </div>
-                
-                <button class="quiz-button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">
-                    Next Question
+            <div class="code-block">
+// Simple hash function example
+function simpleHash(input) {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+    return hash.toString(16).padStart(8, '0');
+}
+
+// Example usage
+const blockData = "Transaction: Alice sends 10 BTC to Bob";
+const blockHash = simpleHash(blockData);
+console.log("Block Hash:", blockHash);
+            </div>
+            
+            <div class="interactive-element">
+                <h3>🔐 Hash Calculator</h3>
+                <p>Try creating your own hash:</p>
+                <input type="text" id="hash-input" placeholder="Enter text to hash" class="form-input">
+                <button id="calculate-hash" class="nav-button">Calculate Hash</button>
+                <p id="hash-result"></p>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>Consensus Mechanisms</h2>
+            <p>Consensus mechanisms ensure all nodes agree on the state of the blockchain:</p>
+            
+            <div class="highlight-box">
+                <h3>Popular Consensus Mechanisms</h3>
+                <ul>
+                    <li><strong>Proof of Work (PoW):</strong> Miners solve complex puzzles to validate blocks</li>
+                    <li><strong>Proof of Stake (PoS):</strong> Validators are chosen based on their stake in the network</li>
+                    <li><strong>Delegated Proof of Stake (DPoS):</strong> Token holders vote for delegates to validate</li>
+                    <li><strong>Proof of Authority (PoA):</strong> Pre-approved validators maintain the network</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>Key Takeaways</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Immutability:</strong> Once recorded, data cannot be altered</li>
+                    <li><strong>Transparency:</strong> All transactions are publicly visible</li>
+                    <li><strong>Decentralization:</strong> No single point of control</li>
+                    <li><strong>Security:</strong> Cryptographic protection against tampering</li>
+                    <li><strong>Consensus:</strong> Network-wide agreement on valid transactions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Lesson Navigation -->
+        <div class="lesson-navigation">
+            <a href="/academy/lessons/lesson-2/" id="prev-lesson" class="nav-button">
+                ← Previous Lesson: The Money Revolution
+            </a>
+            <div class="lesson-actions">
+                <button id="mark-complete" class="nav-button">
+                    Mark as Complete
                 </button>
             </div>
-            
-            <div id="quizResults" style="display: none;">
-                <h3 style="color: var(--academy-accent);">Quiz Complete!</h3>
-                <div id="finalScore" style="font-size: 2rem; margin: 1rem 0;"></div>
-                <div id="scoreMessage" style="margin: 1rem 0;"></div>
-                <button class="quiz-button" onclick="restartQuiz()">Retake Quiz</button>
-            </div>
-        </section>
+            <a href="/academy/lessons/lesson-4/" id="next-lesson" class="nav-button">
+                Next Lesson: Smart Contracts →
+            </a>
+        </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="platform-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>BlockZone Lab</h3>
+                <p>Revolutionizing crypto education through gamification</p>
+            </div>
+            <div class="footer-section">
+                <h4>Platform</h4>
+                <a href="/academy/">Academy</a>
+                <a href="/games/">Games</a>
+                <a href="/pages/tournaments.html">Tournaments</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="/pages/whitepaper.html">Whitepaper</a>
+                <a href="/pages/business-model.html">Business Model</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BlockZone Lab. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/shared/platform/core/PlatformConfig.js"></script>
+    <script src="/shared/platform/core/UserManager.js"></script>
+    <script src="/shared/platform/core/GameRegistry.js"></script>
+    <script src="/shared/platform/session.js"></script>
+    <script src="/academy/shared/academy-main.js"></script>
+    
+    <!-- Lesson-specific scripts -->
     <script>
-        // Blockchain data
-        let blockchain = [
-            {
-                index: 0,
-                timestamp: '2009-01-03',
-                data: 'Genesis Block - "Chancellor on brink of second bailout for banks"',
-                previousHash: '0',
-                hash: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-                nonce: 2083236893
-            },
-            {
-                index: 1,
-                timestamp: '2024-01-15',
-                data: 'Alice sends 10 BTC to Bob',
-                previousHash: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-                hash: '0000000000000001b6b9a13b095e96db41c4a928b97ef2d944a9b31b2cc7bdc4',
-                nonce: 1924588
-            },
-            {
-                index: 2,
-                timestamp: '2024-01-15',
-                data: 'Bob sends 5 BTC to Charlie',
-                previousHash: '0000000000000001b6b9a13b095e96db41c4a928b97ef2d944a9b31b2cc7bdc4',
-                hash: '000000000000000007abd8d2a73a57b00b4c07d8b8b8b6c4b0b1b4e1c7d0f8a2',
-                nonce: 3847291
-            }
-        ];
-
-        let miningInProgress = false;
-        let currentQuizQuestion = 0;
-        let quizScore = 0;
-
-        // Quiz questions
-        const quizQuestions = [
-            {
-                question: "What is the primary purpose of a hash function in blockchain?",
-                options: ["To encrypt sensitive data", "To create a unique fingerprint for data", "To compress large files", "To speed up transactions"],
-                correct: 1
-            },
-            {
-                question: "In Proof of Work consensus, what do miners compete to do?",
-                options: ["Validate the most transactions", "Solve cryptographic puzzles", "Stake the most tokens", "Vote for block validators"],
-                correct: 1
-            },
-            {
-                question: "What happens if someone tries to change a block in the middle of the blockchain?",
-                options: ["Nothing, changes are automatically accepted", "Only that block's hash changes", "All subsequent block hashes become invalid", "The network crashes"],
-                correct: 2
-            },
-            {
-                question: "What is a nonce in blockchain mining?",
-                options: ["A random number miners adjust to find a valid hash", "The transaction fee", "The block timestamp", "The miner's address"],
-                correct: 0
-            },
-            {
-                question: "Why is decentralization important in blockchain networks?",
-                options: ["It makes transactions faster", "It eliminates single points of failure", "It reduces energy consumption", "It makes mining easier"],
-                correct: 1
-            }
-        ];
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            renderBlockchain();
-            initializeNetworkCanvas();
-            updateQuizProgress();
-            document.getElementById('totalQuestions').textContent = quizQuestions.length;
-        });
-
-        // Render blockchain visualization
-        function renderBlockchain() {
-            const container = document.getElementById('blockchainContainer');
-            container.innerHTML = '';
-
-            blockchain.forEach((block, index) => {
-                const blockElement = document.createElement('div');
-                blockElement.className = `block ${index === 0 ? 'genesis' : ''}`;
-                blockElement.onclick = () => exploreBlock(index);
-                
-                blockElement.innerHTML = `
-                    <div class="block-header">Block #${block.index}</div>
-                    <div class="block-data"><strong>Timestamp:</strong> ${block.timestamp}</div>
-                    <div class="block-data"><strong>Data:</strong> ${block.data.substring(0, 50)}${block.data.length > 50 ? '...' : ''}</div>
-                    <div class="block-data"><strong>Nonce:</strong> ${block.nonce}</div>
-                    <div class="block-hash">${block.hash.substring(0, 20)}...</div>
-                    ${index < blockchain.length - 1 ? '<div class="chain-connection"></div>' : ''}
-                `;
-                
-                container.appendChild(blockElement);
-            });
-        }
-
-        // Explore block details
-        function exploreBlock(index) {
-            const block = blockchain[index];
-            alert(`Block #${block.index} Details:\n\nTimestamp: ${block.timestamp}\nData: ${block.data}\nPrevious Hash: ${block.previousHash}\nHash: ${block.hash}\nNonce: ${block.nonce}\n\nThis block is cryptographically linked to the previous block through the hash chain!`);
-        }
-
-        // Mining simulation
-        document.getElementById('mineButton').addEventListener('click', function() {
-            if (miningInProgress) return;
-            
-            miningInProgress = true;
-            this.disabled = true;
-            this.textContent = 'Mining...';
-            
-            const statusElement = document.getElementById('miningStatus');
-            const nonceElement = document.getElementById('nonce');
-            const hashRateElement = document.getElementById('hashRate');
-            const blockTimeElement = document.getElementById('blockTime');
-            
-            let nonce = 0;
-            let hashAttempts = 0;
-            const startTime = Date.now();
-            const difficulty = parseInt(document.getElementById('difficulty').textContent);
-            const target = '0'.repeat(difficulty);
-            
-            statusElement.innerHTML = 'Mining in progress... <span class="hash-animation">⚡</span>';
-            
-            const miningInterval = setInterval(() => {
-                nonce++;
-                hashAttempts++;
-                
-                // Simulate hash calculation
-                const mockHash = generateMockHash(nonce);
-                
-                nonceElement.textContent = nonce.toLocaleString();
-                
-                // Update hash rate every 100 attempts
-                if (hashAttempts % 100 === 0) {
-                    const elapsed = (Date.now() - startTime) / 1000;
-                    const hashRate = Math.round(hashAttempts / elapsed);
-                    hashRateElement.textContent = hashRate.toLocaleString();
-                    blockTimeElement.textContent = elapsed.toFixed(1);
-                }
-                
-                // Check if we found a valid hash (simplified)
-                if (mockHash.startsWith(target) || Math.random() < 0.0008 || nonce > 50000) {
-                    clearInterval(miningInterval);
-                    
-                    const finalTime = (Date.now() - startTime) / 1000;
-                    const newBlock = {
-                        index: blockchain.length,
-                        timestamp: new Date().toISOString().split('T')[0],
-                        data: `Transaction #${blockchain.length}: Mining reward to miner`,
-                        previousHash: blockchain[blockchain.length - 1].hash,
-                        hash: mockHash,
-                        nonce: nonce
-                    };
-                    
-                    blockchain.push(newBlock);
-                    renderBlockchain();
-                    
-                    statusElement.textContent = `✅ Block mined successfully! Found valid hash with nonce: ${nonce.toLocaleString()}`;
-                    blockTimeElement.textContent = finalTime.toFixed(1);
-                    
-                    document.getElementById('mineButton').disabled = false;
-                    document.getElementById('mineButton').textContent = 'Start Mining';
-                    miningInProgress = false;
-                }
-            }, 10);
-        });
-
-        // Generate mock hash
-        function generateMockHash(nonce) {
-            const chars = '0123456789abcdef';
-            let hash = '';
-            
-            // Create some leading zeros based on difficulty and nonce
-            const difficulty = parseInt(document.getElementById('difficulty').textContent);
-            if (nonce > 30000 && Math.random() < 0.3) {
-                hash = '0'.repeat(difficulty);
-            } else if (nonce > 10000 && Math.random() < 0.1) {
-                hash = '0'.repeat(Math.max(1, difficulty - 1));
-            } else {
-                hash = Math.random() < 0.3 ? '0' : chars[Math.floor(Math.random() * chars.length)];
+        // Lesson-specific functionality
+        class LessonManager {
+            constructor() {
+                this.lessonId = 'lesson-3';
+                this.lessonNumber = 3;
+                this.userManager = null;
+                this.blockCount = 4;
+                this.init();
             }
             
-            // Fill the rest
-            while (hash.length < 64) {
-                hash += chars[Math.floor(Math.random() * chars.length)];
+            async init() {
+                // Initialize user management
+                this.userManager = new UserManager();
+                await this.userManager.init();
+                
+                // Load lesson progress
+                await this.loadLessonProgress();
+                
+                // Setup event listeners
+                this.setupEventListeners();
+                
+                // Update navigation buttons
+                this.updateNavigation();
             }
             
-            return hash;
-        }
-
-        // Add transaction
-        document.getElementById('addTransaction').addEventListener('click', function() {
-            const transactions = [
-                'Alice sends 5 BTC to David',
-                'Bob sends 3 BTC to Eve',
-                'Charlie sends 7 BTC to Frank',
-                'David sends 2 BTC to Grace',
-                'Eve sends 4 BTC to Henry'
-            ];
-            
-            const randomTransaction = transactions[Math.floor(Math.random() * transactions.length)];
-            alert(`Transaction "${randomTransaction}" added to mempool. Click "Start Mining" to include it in the next block.`);
-        });
-
-        // Reset chain
-        document.getElementById('resetChain').addEventListener('click', function() {
-            blockchain = [blockchain[0]]; // Keep only genesis block
-            renderBlockchain();
-            document.getElementById('miningStatus').textContent = 'Blockchain reset to genesis block!';
-            document.getElementById('nonce').textContent = '0';
-            document.getElementById('hashRate').textContent = '0';
-            document.getElementById('blockTime').textContent = '0';
-        });
-
-        // Consensus mechanism exploration
-        function exploreConsensus(type) {
-            const info = {
-                pow: "Proof of Work (PoW):\n\n• Miners solve computational puzzles\n• Energy-intensive but highly secure\n• Used by Bitcoin and Ethereum (currently)\n• Rewards first miner to solve puzzle\n• Difficulty adjusts to maintain block time",
-                pos: "Proof of Stake (PoS):\n\n• Validators chosen based on stake amount\n• Energy-efficient alternative to PoW\n• Used by Ethereum 2.0 and Cardano\n• Penalties for malicious behavior\n• Lower barrier to entry than PoW",
-                dpos: "Delegated Proof of Stake (DPoS):\n\n• Token holders vote for delegates\n• Fast transaction processing\n• Used by EOS and Tron\n• Democratic governance model\n• Risk of centralization if few delegates"
-            };
-            
-            alert(info[type] || "Unknown consensus mechanism");
-        }
-
-        // Network simulation
-        function simulateNetwork(type) {
-            const canvas = document.getElementById('networkCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ffd700';
-            ctx.strokeStyle = '#ffd700';
-            ctx.lineWidth = 2;
-            
-            if (type === 'centralized') {
-                // Central node
-                ctx.beginPath();
-                ctx.arc(400, 200, 25, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // Add label
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '12px Inter';
-                ctx.textAlign = 'center';
-                ctx.fillText('Central Server', 400, 240);
-                
-                // Surrounding nodes
-                ctx.fillStyle = '#ffd700';
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i * Math.PI * 2) / 8;
-                    const x = 400 + Math.cos(angle) * 120;
-                    const y = 200 + Math.sin(angle) * 120;
-                    
-                    ctx.beginPath();
-                    ctx.arc(x, y, 12, 0, 2 * Math.PI);
-                    ctx.fill();
-                    
-                    // Connection to center
-                    ctx.beginPath();
-                    ctx.moveTo(400, 200);
-                    ctx.lineTo(x, y);
-                    ctx.stroke();
-                }
-                
-            } else if (type === 'distributed') {
-                // Grid of interconnected nodes
-                const nodes = [];
-                for (let i = 0; i < 5; i++) {
-                    for (let j = 0; j < 3; j++) {
-                        const x = 150 + i * 120;
-                        const y = 100 + j * 100;
-                        nodes.push({x, y});
+            async loadLessonProgress() {
+                try {
+                    const user = await this.userManager.getCurrentUser();
+                    if (user) {
+                        const progress = user.academyProgress || {};
+                        const lessonProgress = progress[this.lessonId] || 0;
                         
-                        ctx.beginPath();
-                        ctx.arc(x, y, 12, 0, 2 * Math.PI);
-                        ctx.fill();
-                    }
-                }
-                
-                // Connect adjacent nodes
-                for (let i = 0; i < nodes.length; i++) {
-                    const node = nodes[i];
-                    const row = Math.floor(i / 5);
-                    const col = i % 5;
-                    
-                    // Connect to right neighbor
-                    if (col < 4) {
-                        const rightNode = nodes[i + 1];
-                        ctx.beginPath();
-                        ctx.moveTo(node.x, node.y);
-                        ctx.lineTo(rightNode.x, rightNode.y);
-                        ctx.stroke();
-                    }
-                    
-                    // Connect to bottom neighbor
-                    if (row < 2) {
-                        const bottomNode = nodes[i + 5];
-                        ctx.beginPath();
-                        ctx.moveTo(node.x, node.y);
-                        ctx.lineTo(bottomNode.x, bottomNode.y);
-                        ctx.stroke();
-                    }
-                }
-                
-            } else if (type === 'decentralized') {
-                // Random network with clustering
-                const nodes = [];
-                for (let i = 0; i < 15; i++) {
-                    nodes.push({
-                        x: 100 + Math.random() * 600,
-                        y: 50 + Math.random() * 300
-                    });
-                }
-                
-                // Draw connections first
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const distance = Math.sqrt(
-                            Math.pow(nodes[i].x - nodes[j].x, 2) + 
-                            Math.pow(nodes[i].y - nodes[j].y, 2)
-                        );
+                        // Update progress bar
+                        const progressBar = document.getElementById('lesson-progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = `${lessonProgress}%`;
+                        }
                         
-                        if (distance < 150 && Math.random() > 0.6) {
-                            ctx.beginPath();
-                            ctx.moveTo(nodes[i].x, nodes[i].y);
-                            ctx.lineTo(nodes[j].x, nodes[j].y);
-                            ctx.stroke();
+                        // Update completion status
+                        const completionStatus = document.getElementById('completion-status');
+                        if (completionStatus) {
+                            if (lessonProgress >= 100) {
+                                completionStatus.innerHTML = '<span class="lesson-complete-badge">✓ Complete</span>';
+                            } else {
+                                completionStatus.textContent = `${lessonProgress}% Complete`;
+                            }
+                        }
+                        
+                        // Update mark complete button
+                        const markCompleteBtn = document.getElementById('mark-complete');
+                        if (markCompleteBtn) {
+                            if (lessonProgress >= 100) {
+                                markCompleteBtn.textContent = '✓ Completed';
+                                markCompleteBtn.disabled = true;
+                            }
                         }
                     }
+                } catch (error) {
+                    console.error('Error loading lesson progress:', error);
+                }
+            }
+            
+            setupEventListeners() {
+                const markCompleteBtn = document.getElementById('mark-complete');
+                if (markCompleteBtn) {
+                    markCompleteBtn.addEventListener('click', () => this.markLessonComplete());
                 }
                 
-                // Draw nodes
-                nodes.forEach(node => {
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI);
-                    ctx.fill();
-                });
+                // Track scroll progress
+                window.addEventListener('scroll', () => this.updateScrollProgress());
+                
+                // Setup interactive elements
+                this.setupInteractiveElements();
             }
             
-            // Add network type label
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '16px Inter';
-            ctx.textAlign = 'center';
-            ctx.fillText(`${type.charAt(0).toUpperCase() + type.slice(1)} Network`, 400, 30);
-        }
-
-        // Initialize network canvas
-        function initializeNetworkCanvas() {
-            simulateNetwork('distributed');
-        }
-
-        // Hash demonstrator
-        function updateHash() {
-            const input = document.getElementById('hashInput').value;
-            const output = document.getElementById('hashOutput');
-            
-            if (input) {
-                // Simple hash simulation (not real SHA-256)
-                output.textContent = simulateHash(input);
-            } else {
-                output.textContent = 'Type something to see the hash...';
-            }
-        }
-
-        // Simulate hash function
-        function simulateHash(input) {
-            let hash = '';
-            for (let i = 0; i < 64; i++) {
-                // Create deterministic but random-looking hash
-                const char = Math.floor((input.charCodeAt(i % input.length) + i) * 7) % 16;
-                hash += char.toString(16);
-            }
-            return hash;
-        }
-
-        // Quiz functions
-        function selectAnswer(answerIndex) {
-            const options = document.querySelectorAll('.option-button');
-            const correct = quizQuestions[currentQuizQuestion].correct;
-            
-            options.forEach(option => option.disabled = true);
-            
-            options[correct].classList.add('correct');
-            if (answerIndex !== correct) {
-                options[answerIndex].classList.add('incorrect');
-            } else {
-                quizScore++;
+            setupInteractiveElements() {
+                // Add Block Button
+                const addBlockBtn = document.getElementById('add-block');
+                if (addBlockBtn) {
+                    addBlockBtn.addEventListener('click', () => this.addNewBlock());
+                }
+                
+                // Hash Calculator
+                const calculateHashBtn = document.getElementById('calculate-hash');
+                if (calculateHashBtn) {
+                    calculateHashBtn.addEventListener('click', () => this.calculateHash());
+                }
             }
             
-            document.getElementById('nextQuestionBtn').style.display = 'inline-block';
-            updateQuizProgress();
-        }
-
-        function nextQuestion() {
-            currentQuizQuestion++;
-            
-            if (currentQuizQuestion >= quizQuestions.length) {
-                showQuizResults();
-                return;
+            addNewBlock() {
+                this.blockCount++;
+                const container = document.getElementById('blockchain-container');
+                const newBlock = document.createElement('div');
+                newBlock.className = 'block';
+                newBlock.innerHTML = `
+                    <div class="block-header">Block #${this.blockCount}</div>
+                    <div class="block-hash">${this.generateRandomHash()}</div>
+                `;
+                container.appendChild(newBlock);
             }
             
-            const question = quizQuestions[currentQuizQuestion];
-            document.getElementById('questionText').textContent = question.question;
-            document.getElementById('currentQuestionNum').textContent = currentQuizQuestion + 1;
-            
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-            
-            question.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.className = 'option-button';
-                button.textContent = option;
-                button.onclick = () => selectAnswer(index);
-                optionsContainer.appendChild(button);
-            });
-            
-            document.getElementById('nextQuestionBtn').style.display = 'none';
-            updateQuizProgress();
-        }
-
-        function updateQuizProgress() {
-            const progress = ((currentQuizQuestion + 1) / quizQuestions.length) * 100;
-            document.getElementById('quizProgress').style.width = progress + '%';
-        }
-
-        function showQuizResults() {
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('quizResults').style.display = 'block';
-            
-            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
-            document.getElementById('finalScore').textContent = `${quizScore}/${quizQuestions.length} (${percentage}%)`;
-            
-            let message = '';
-            if (percentage >= 90) {
-                message = '🏆 Excellent! You have mastered blockchain fundamentals!';
-            } else if (percentage >= 70) {
-                message = '🎯 Great job! You understand the core concepts well.';
-            } else if (percentage >= 50) {
-                message = '📚 Good effort! Review the material to strengthen your understanding.';
-            } else {
-                message = '💪 Keep studying! Practice with the interactive tools above.';
+            generateRandomHash() {
+                const chars = '0123456789abcdef';
+                let hash = '';
+                for (let i = 0; i < 64; i++) {
+                    hash += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return hash;
             }
             
-            document.getElementById('scoreMessage').textContent = message;
-            
-            // Save progress
-            localStorage.setItem('lesson3_progress', JSON.stringify({
-                completed: true,
-                score: percentage,
-                timestamp: new Date().toISOString()
-            }));
-            
-            document.getElementById('lessonProgress').textContent = percentage;
-        }
-
-        function restartQuiz() {
-            currentQuizQuestion = 0;
-            quizScore = 0;
-            document.getElementById('quizContainer').style.display = 'block';
-            document.getElementById('quizResults').style.display = 'none';
-            
-            const question = quizQuestions[0];
-            document.getElementById('questionText').textContent = question.question;
-            document.getElementById('currentQuestionNum').textContent = '1';
-            
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-            
-            question.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.className = 'option-button';
-                button.textContent = option;
-                button.onclick = () => selectAnswer(index);
-                optionsContainer.appendChild(button);
-            });
-            
-            document.getElementById('nextQuestionBtn').style.display = 'none';
-            updateQuizProgress();
-        }
-
-        // Initialize progress from localStorage
-        const savedProgress = localStorage.getItem('lesson3_progress');
-        if (savedProgress) {
-            const progress = JSON.parse(savedProgress);
-            document.getElementById('lessonProgress').textContent = progress.score || 0;
-        }
-
-        // Make functions global
-        window.exploreConsensus = exploreConsensus;
-        window.simulateNetwork = simulateNetwork;
-        window.updateHash = updateHash;
-        window.selectAnswer = selectAnswer;
-        window.nextQuestion = nextQuestion;
-        window.restartQuiz = restartQuiz;
-    </script>
-    
-    <!-- Navigation Bar -->
-    <script type="module" src="../../../shared/components/NavigationBar.js"></script>
-    <script>
-        // Debug: Check if NavigationBar loaded
-        setTimeout(() => {
-            console.log('Checking NavigationBar...');
-            const nav = document.getElementById('sidePanelNavigation');
-            if (nav) {
-                console.log('✅ NavigationBar found:', nav);
-                nav.style.display = 'flex';
-                nav.style.zIndex = '10000';
-            } else {
-                console.log('❌ NavigationBar not found');
+            calculateHash() {
+                const input = document.getElementById('hash-input').value;
+                const result = document.getElementById('hash-result');
+                
+                if (input) {
+                    const hash = this.simpleHash(input);
+                    result.innerHTML = `<strong>Hash:</strong> <span style="color: var(--neon-pink); font-family: 'Share Tech Mono', monospace;">${hash}</span>`;
+                } else {
+                    result.innerHTML = '<span style="color: #ff6b6b;">Please enter some text to hash.</span>';
+                }
             }
-        }, 1000);
+            
+            simpleHash(input) {
+                let hash = 0;
+                for (let i = 0; i < input.length; i++) {
+                    const char = input.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString(16).padStart(8, '0');
+            }
+            
+            async markLessonComplete() {
+                try {
+                    const user = await this.userManager.getCurrentUser();
+                    if (!user) {
+                        alert('Please log in to track your progress');
+                        return;
+                    }
+                    
+                    // Update progress
+                    const progress = user.academyProgress || {};
+                    progress[this.lessonId] = 100;
+                    
+                    await this.userManager.updateUser({
+                        ...user,
+                        academyProgress: progress
+                    });
+                    
+                    // Update UI
+                    await this.loadLessonProgress();
+                    
+                    // Show success message
+                    const markCompleteBtn = document.getElementById('mark-complete');
+                    if (markCompleteBtn) {
+                        markCompleteBtn.textContent = '✓ Completed!';
+                        markCompleteBtn.disabled = true;
+                    }
+                    
+                    // Trigger progress update
+                    this.triggerProgressUpdate();
+                    
+                } catch (error) {
+                    console.error('Error marking lesson complete:', error);
+                    alert('Error updating progress. Please try again.');
+                }
+            }
+            
+            updateScrollProgress() {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.body.offsetHeight - window.innerHeight;
+                const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
+                
+                // Update progress bar based on scroll
+                const progressBar = document.getElementById('lesson-progress-bar');
+                if (progressBar) {
+                    const currentProgress = parseInt(progressBar.style.width) || 0;
+                    if (scrollPercent > currentProgress) {
+                        progressBar.style.width = `${scrollPercent}%`;
+                    }
+                }
+            }
+            
+            updateNavigation() {
+                const prevBtn = document.getElementById('prev-lesson');
+                const nextBtn = document.getElementById('next-lesson');
+                
+                // Previous button is always available for lesson 3
+                if (prevBtn) prevBtn.style.display = 'block';
+                
+                // Next button is always available for lesson 3
+                if (nextBtn) nextBtn.style.display = 'block';
+            }
+            
+            triggerProgressUpdate() {
+                // Dispatch custom event for progress update
+                window.dispatchEvent(new CustomEvent('lessonProgressUpdated', {
+                    detail: {
+                        lessonId: this.lessonId,
+                        lessonNumber: this.lessonNumber,
+                        completed: true
+                    }
+                }));
+            }
+        }
+        
+        // Initialize lesson manager when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new LessonManager();
+        });
     </script>
 </body>
 </html>

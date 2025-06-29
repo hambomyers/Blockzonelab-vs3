@@ -169,31 +169,39 @@
             </a>
         </div>
 
-        <!-- Live Tournament Stats -->
-        <section class="live-stats" id="liveStats">
-            <h2 class="section-title">Live Tournament Statistics</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🏆</div>
-                    <div class="stat-number" id="totalPrizes">$1,247</div>
-                    <div class="stat-label">Total Prizes Today</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-number" id="activePlayers">1,247</div>
-                    <div class="stat-label">Active Players</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-number" id="tournamentsCompleted">47</div>
-                    <div class="stat-label">Tournaments Completed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💎</div>
-                    <div class="stat-number" id="avgPrize">$26.53</div>
-                    <div class="stat-label">Average Prize</div>
+        <!-- Live Stats Section -->
+        <section id="liveStats" class="live-stats-section" style="display: none;">
+            <div class="container">
+                <h2>📊 Live Tournament Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalPlayers">0</div>
+                            <div class="stat-label">Active Players</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalPrizePool">$0</div>
+                            <div class="stat-label">Total Prize Pool</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="avgPrize">$0</div>
+                            <div class="stat-label">Avg Prize</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Daily Addiction Dashboard -->
+        <section id="addictionDashboard" class="addiction-section" style="display: none;">
+            <!-- Content will be dynamically inserted by JavaScript -->
         </section>
 
         <!-- Game Features Section -->
@@ -245,29 +253,43 @@
 
     <!-- User Management Integration Script -->
     <script type="module">
-        import { UserManager } from '../shared/platform/user-manager.js';
-        import { SessionManager } from '../shared/platform/session.js';
+        import { sessionManager } from "../shared/platform/session.js";
+        import { DailyAddictionSystem } from '../shared/platform/daily-addiction-system.js';
         
-        // Initialize user system
-        const userManager = new UserManager();
-        const sessionManager = new SessionManager();
+        // Initialize systems
+        const dailyAddiction = new DailyAddictionSystem();
         
         // Update user status
-        const updateUserStatus = () => {
+        const updateUserStatus = async () => {
             const userStatus = document.getElementById('userStatus');
-            const currentUser = sessionManager.getCurrentUser();
             
-            if (currentUser) {
-                userStatus.innerHTML = `
-                    <span class="user-avatar">${currentUser.avatar || '👤'}</span>
-                    <span class="user-name">${currentUser.displayName || 'Player'}</span>
-                `;
+            try {
+                await sessionManager.init();
+                const playerName = sessionManager.getPlayerName();
+                const playerId = sessionManager.getPlayerId();
                 
-                // Show live stats for logged-in users
-                document.getElementById('liveStats').style.display = 'block';
-                updateLiveStats();
-            } else {
+                if (playerId && playerName !== 'Anonymous') {
+                    userStatus.innerHTML = `
+                        <span class="user-avatar">👤</span>
+                        <span class="user-name">${playerName}</span>
+                    `;
+                    
+                    // Show live stats for logged-in users
+                    document.getElementById('liveStats').style.display = 'block';
+                    updateLiveStats();
+                    
+                    // Show addiction dashboard
+                    showAddictionDashboard();
+                } else {
+                    userStatus.innerHTML = '<a href="../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+                    
+                    // Show profile requirement message
+                    showProfileRequirement();
+                }
+            } catch (error) {
+                console.error('Failed to update user status:', error);
                 userStatus.innerHTML = '<a href="../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+                showProfileRequirement();
             }
         };
         
@@ -281,10 +303,51 @@
                 avgPrize: (Math.random() * 50 + 10).toFixed(2)
             };
             
-            document.getElementById('totalPrizes').textContent = `$${stats.totalPrizes}`;
-            document.getElementById('activePlayers').textContent = stats.activePlayers.toLocaleString();
-            document.getElementById('tournamentsCompleted').textContent = stats.tournamentsCompleted;
+            document.getElementById('totalPlayers').textContent = stats.activePlayers.toLocaleString();
+            document.getElementById('totalPrizePool').textContent = `$${stats.totalPrizes}`;
             document.getElementById('avgPrize').textContent = `$${stats.avgPrize}`;
+        };
+        
+        // Show addiction dashboard for logged-in users
+        const showAddictionDashboard = () => {
+            const addictionContainer = document.getElementById('addictionDashboard');
+            if (addictionContainer) {
+                addictionContainer.innerHTML = dailyAddiction.createAddictionUI();
+                addictionContainer.style.display = 'block';
+            }
+        };
+        
+        // Show profile requirement for non-logged-in users
+        const showProfileRequirement = () => {
+            const addictionContainer = document.getElementById('addictionDashboard');
+            if (addictionContainer) {
+                addictionContainer.innerHTML = `
+                    <div class="addiction-dashboard">
+                        <div class="addiction-header">
+                            <h3>🎮 Daily Gaming</h3>
+                            <p>Create a profile to unlock free daily games!</p>
+                        </div>
+                        
+                        <div class="profile-requirement-card">
+                            <div class="requirement-icon">🔐</div>
+                            <div class="requirement-content">
+                                <h4>Profile Required</h4>
+                                <p>To play free daily games and earn rewards, you need to create a profile with a crypto wallet.</p>
+                                <ul class="requirement-benefits">
+                                    <li>🎮 Play 1 free game per day</li>
+                                    <li>🔥 Build daily streaks</li>
+                                    <li>💰 Earn crypto rewards</li>
+                                    <li>🏆 Compete on leaderboards</li>
+                                </ul>
+                                <a href="../pages/user-profile.html" class="btn btn-primary btn-large">
+                                    🚀 Create Profile & Wallet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                addictionContainer.style.display = 'block';
+            }
         };
         
         // Initialize on load

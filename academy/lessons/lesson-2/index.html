@@ -3,1681 +3,609 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Money Revolution - Mind-Bending Interactive Experience</title>
+    <title>The Money Revolution - BlockZone Academy</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore the evolution of money from barter to cryptocurrency. Learn how blockchain technology is revolutionizing the financial system and creating new economic paradigms.">
+    <meta name="keywords" content="money, cryptocurrency, blockchain, economics, financial revolution, digital currency, bitcoin">
+    <meta name="author" content="BlockZone Lab">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Money Revolution - BlockZone Academy">
+    <meta property="og:description" content="Explore the evolution of money from barter to cryptocurrency and how blockchain is revolutionizing finance.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/academy/lessons/lesson-2/">
+    <meta property="og:image" content="/assets/icons/icon-512.svg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Money Revolution - BlockZone Academy">
+    <meta name="twitter:description" content="Explore the evolution of money from barter to cryptocurrency and how blockchain is revolutionizing finance.">
+    <meta name="twitter:image" content="/assets/icons/icon-512.svg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono:wght@400&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/mobile.css">
+    
+    <!-- Academy Styles -->
+    <link rel="stylesheet" href="/academy/shared/academy-main.css">
+    
+    <!-- Lesson-specific styles -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700;900&family=Rajdhani:wght@300;400;700&display=swap');
+        /* Lesson-specific customizations */
+        .lesson-hero {
+            background: linear-gradient(135deg, 
+                rgba(0, 255, 255, 0.1) 0%, 
+                rgba(157, 78, 221, 0.05) 50%, 
+                rgba(255, 0, 110, 0.1) 100%);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
         
-        :root {
-            --neon-cyan: #00ffff;
-            --neon-purple: #9d4edd;
-            --neon-pink: #ff006e;
-            --neon-yellow: #ffbe0b;
-            --dark-void: #0d1117;
-            --deep-space: #161b22;
-            --matrix-green: #00ff41;
-            --hologram-blue: #3d5af1;
-            --cyber-orange: #ff8500;
-            --quantum-violet: #7209b7;
+        .lesson-progress {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--dark-void);
-            color: white;
-            overflow-x: hidden;
-            cursor: none;
+        
+        .lesson-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
-
-        /* Custom Cursor */
-        .custom-cursor {
-            position: fixed;
+        
+        .lesson-section {
+            background: rgba(26, 29, 41, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+        }
+        
+        .nav-button {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: var(--terminal-black);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .lesson-complete-badge {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: var(--terminal-black);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-left: 1rem;
+        }
+        
+        .interactive-element {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            background: rgba(0, 255, 255, 0.15);
+            border-color: var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+        
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-cyan);
+            overflow-x: auto;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(255, 0, 110, 0.1));
+            border-left: 4px solid var(--neon-purple);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .money-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
             width: 20px;
             height: 20px;
-            background: radial-gradient(circle, var(--neon-cyan), transparent);
+            background: var(--neon-cyan);
             border-radius: 50%;
-            pointer-events: none;
-            mix-blend-mode: difference;
-            z-index: 9999;
-            transition: transform 0.1s ease;
+            transform: translateY(-50%);
         }
-
-        /* Animated Background */
-        .cyber-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, transparent 79px, rgba(0, 255, 255, 0.03) 81px, transparent 82px),
-                linear-gradient(rgba(0, 255, 255, 0.03) 0.5px, transparent 0.5px);
-            background-size: 80px 80px;
-            animation: gridMove 20s linear infinite;
-            z-index: -2;
+        
+        .crypto-simulator {
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
         }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(80px, 80px); }
-        }
-
-        /* Floating Data Particles */
-        .data-stream {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .data-particle {
-            position: absolute;
-            color: var(--matrix-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            opacity: 0.7;
-            animation: dataFlow 15s linear infinite;
-        }
-
-        @keyframes dataFlow {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% {
-                transform: translateY(-100px) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Hero Section - Mind-Bending */
-        .hero-container {
-            position: relative;
-            min-height: 100vh;
+        
+        .simulator-controls {
             display: flex;
-            align-items: center;
+            gap: 1rem;
             justify-content: center;
-            background: radial-gradient(ellipse at center, rgba(157, 78, 221, 0.1) 0%, transparent 70%);
-            perspective: 1000px;
+            margin: 1rem 0;
+            flex-wrap: wrap;
         }
-
-        .hero-content {
-            text-align: center;
-            max-width: 1200px;
-            padding: 2rem;
-            transform-style: preserve-3d;
-        }
-
-        .glitch-title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(3rem, 10vw, 8rem);
-            font-weight: 900;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink), var(--neon-yellow));
-            background-size: 300% 300%;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 3s ease-in-out infinite, glitchEffect 0.3s ease-in-out infinite alternate;
-            text-shadow: 0 0 50px rgba(157, 78, 221, 0.5);
-            margin-bottom: 2rem;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes glitchEffect {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-2px); }
-            40% { transform: translateX(2px); }
-            60% { transform: translateX(-1px); }
-            80% { transform: translateX(1px); }
-            100% { transform: translateX(0); }
-        }
-
-        .matrix-subtitle {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.8rem;
-            color: var(--matrix-green);
-            margin-bottom: 3rem;
-            opacity: 0;
-            animation: typewriter 2s steps(40) 1s forwards;
-        }
-
-        @keyframes typewriter {
-            from { width: 0; opacity: 1; }
-            to { width: 100%; opacity: 1; }
-        }
-
-        /* Holographic Stats */
-        .holo-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-        }
-
-        .holo-card {
-            position: relative;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(157, 78, 221, 0.1));
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            transform: rotateX(10deg) rotateY(5deg);
-            transition: all 0.5s ease;
-            overflow: hidden;
-        }
-
-        .holo-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-            animation: holoSpin 4s linear infinite;
-            opacity: 0;
-        }
-
-        .holo-card:hover::before { opacity: 1; }
-        .holo-card:hover {
-            transform: rotateX(0deg) rotateY(0deg) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
-        }
-
-        @keyframes holoSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .stat-number {
-            font-family: 'Orbitron', monospace;
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--neon-cyan);
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-label {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Neural Network Background */
-        .neural-section {
-            position: relative;
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--deep-space) 0%, var(--dark-void) 100%);
-        }
-
-        .neural-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            pointer-events: none;
-        }
-
-        /* Ensure Navigation Bar is visible */
-        #sidePanelNavigation {
-            position: fixed !important;
-            top: 0 !important;
-            right: 0 !important;
-            height: 100vh !important;
-            width: 60px !important;
-            background: rgba(0, 0, 0, 0.9) !important;
-            backdrop-filter: blur(20px) !important;
-            border-left: 1px solid rgba(0, 212, 255, 0.3) !important;
-            z-index: 10000 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            padding: 20px 0 !important;
-            box-shadow: -8px 0 32px rgba(0, 212, 255, 0.1) !important;
-        }
-
-        /* Money Lab - Futuristic Interface */
-        .cyber-lab {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .lab-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5rem;
-            text-align: center;
-            background: linear-gradient(45deg, var(--neon-yellow), var(--cyber-orange));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 4rem;
-            animation: pulse 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.2); }
-        }
-
-        /* Money Converter - Holographic Interface */
-        .quantum-converter {
-            background: linear-gradient(135deg, rgba(61, 90, 241, 0.1), rgba(114, 9, 183, 0.1));
-            border: 2px solid var(--hologram-blue);
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 3rem 0;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(20px);
-        }
-
-        .quantum-converter::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-            animation: scanLine 3s ease-in-out infinite;
-        }
-
-        @keyframes scanLine {
-            0% { left: -100%; }
-            50% { left: 100%; }
-            100% { left: -100%; }
-        }
-
-        .converter-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .converter-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            color: var(--neon-cyan);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 20px currentColor;
-        }
-
-        .converter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin: 3rem 0;
-        }
-
-        .cyber-panel {
-            background: rgba(13, 17, 23, 0.8);
-            border: 1px solid var(--neon-purple);
-            border-radius: 15px;
-            padding: 2rem;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .cyber-panel:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(157, 78, 221, 0.3);
-            border-color: var(--neon-cyan);
-        }
-
-        .panel-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .panel-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            color: var(--neon-yellow);
-            margin-bottom: 1rem;
-        }
-
-        .input-field {
-            margin: 1.5rem 0;
-            position: relative;
-        }
-
-        .field-label {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            color: var(--neon-cyan);
-            margin-bottom: 0.5rem;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .cyber-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid var(--neon-purple);
+        
+        .simulator-display {
+            background: var(--terminal-black);
+            border: 1px solid var(--neon-cyan);
             border-radius: 10px;
             padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Share Tech Mono', monospace;
             color: var(--neon-cyan);
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            position: relative;
         }
-
-        .cyber-input:focus {
-            outline: none;
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            background: rgba(0, 255, 255, 0.05);
-        }
-
-        .quantum-btn {
-            background: linear-gradient(45deg, var(--neon-purple), var(--hologram-blue));
-            border: none;
-            border-radius: 10px;
-            padding: 1rem 2rem;
-            color: white;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quantum-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .quantum-btn:hover::before { left: 100%; }
-        .quantum-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(157, 78, 221, 0.4);
-        }
-
-        .result-matrix {
-            background: rgba(0, 255, 65, 0.1);
-            border: 1px solid var(--matrix-green);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            text-align: center;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            color: var(--matrix-green);
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .result-matrix::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--matrix-green);
-            animation: loadingBar 2s ease-in-out infinite;
-        }
-
-        @keyframes loadingBar {
-            0%, 100% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-        }
-
-        /* Interactive Story Nodes */
-        .story-matrix {
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid var(--quantum-violet);
-            border-radius: 20px;
-            padding: 4rem;
-            margin: 4rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .story-matrix::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--quantum-violet), transparent);
-            animation: storyPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes storyPulse {
-            0%, 100% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-        }
-
-        .story-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .story-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 3rem;
-            background: linear-gradient(45deg, var(--neon-pink), var(--quantum-violet));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .story-content {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 3rem;
-        }
-
-        .highlight-character {
-            color: var(--neon-cyan);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 10px currentColor;
-            position: relative;
-        }
-
-        .highlight-character:hover {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 20px currentColor;
-        }
-
-        /* Mind-Bending Interactive Nodes */
-        .neural-nodes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .neural-node {
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(114, 9, 183, 0.1));
-            border: 1px solid var(--neon-pink);
-            border-radius: 15px;
-            padding: 2rem;
-            cursor: pointer;
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
-            transform: perspective(1000px) rotateY(5deg);
-        }
-
-        .neural-node::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 110, 0.1), transparent);
-            animation: neuralPulse 6s linear infinite;
-            opacity: 0;
-        }
-
-        .neural-node:hover::before { opacity: 1; }
-        .neural-node:hover {
-            transform: perspective(1000px) rotateY(0deg) scale(1.05);
-            box-shadow: 0 25px 50px rgba(255, 0, 110, 0.3);
-        }
-
-        @keyframes neuralPulse {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .node-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
-            color: var(--neon-yellow);
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .node-content {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Quantum Quiz Interface */
-        .quantum-quiz {
-            background: linear-gradient(135deg, rgba(13, 17, 23, 0.95), rgba(22, 27, 34, 0.95));
-            border: 2px solid var(--hologram-blue);
-            border-radius: 25px;
-            padding: 4rem;
-            margin: 5rem 0;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(20px);
-        }
-
-        .quantum-quiz::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23003d82" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            animation: matrixFlow 20s linear infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes matrixFlow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100px); }
-        }
-
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 4rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .quiz-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 3rem;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--hologram-blue));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .progress-matrix {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            height: 12px;
-            margin: 2rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-bar {
-            background: linear-gradient(90deg, var(--neon-cyan), var(--hologram-blue));
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: progressShine 2s linear infinite;
-        }
-
-        @keyframes progressShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .question-matrix {
-            background: rgba(61, 90, 241, 0.1);
-            border: 1px solid var(--hologram-blue);
-            border-radius: 15px;
-            padding: 3rem;
-            margin: 3rem 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .question-text {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.5rem;
-            color: white;
-            margin-bottom: 3rem;
-            line-height: 1.6;
-        }
-
-        .options-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .option-quantum {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--neon-purple);
-            border-radius: 12px;
-            padding: 1.5rem;
-            color: white;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .option-quantum::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(157, 78, 221, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .option-quantum:hover::before { left: 100%; }
-        .option-quantum:hover {
-            background: rgba(157, 78, 221, 0.1);
-            border-color: var(--neon-cyan);
-            transform: translateX(10px) scale(1.02);
-        }
-
-        .option-quantum.correct {
-            background: rgba(0, 255, 65, 0.2);
-            border-color: var(--matrix-green);
-            color: var(--matrix-green);
-            animation: correctPulse 0.6s ease-in-out;
-        }
-
-        .option-quantum.incorrect {
-            background: rgba(255, 0, 0, 0.2);
-            border-color: #ff0040;
-            color: #ff0040;
-            animation: incorrectShake 0.6s ease-in-out;
-        }
-
-        @keyframes correctPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 65, 0.5); }
-        }
-
-        @keyframes incorrectShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .next-quantum {
-            background: linear-gradient(45deg, var(--neon-yellow), var(--cyber-orange));
-            border: none;
-            border-radius: 12px;
-            padding: 1.5rem 3rem;
-            color: black;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: none;
-            margin: 3rem auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .next-quantum::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .next-quantum:hover::before { left: 100%; }
-        .next-quantum:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 190, 11, 0.4);
-        }
-
-        /* Results Screen */
-        .results-matrix {
-            text-align: center;
-            display: none;
-            position: relative;
-            z-index: 2;
-        }
-
-        .final-score-display {
-            font-family: 'Orbitron', monospace;
-            font-size: 4rem;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-yellow));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 3rem 0;
-            animation: scoreGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes scoreGlow {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.3); text-shadow: 0 0 30px rgba(0, 255, 255, 0.5); }
-        }
-
-        .score-verdict {
-            font-size: 1.5rem;
-            color: white;
-            margin: 3rem 0;
-            line-height: 1.6;
-        }
-
-        .restart-quantum {
-            background: linear-gradient(45deg, var(--neon-pink), var(--quantum-violet));
-            border: none;
-            border-radius: 15px;
-            padding: 1.5rem 3rem;
-            color: white;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .restart-quantum:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 0, 110, 0.4);
-        }
-
-        /* Achievement System */
-        .achievement-popup {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, var(--quantum-violet), var(--hologram-blue));
-            color: white;
-            padding: 1.5rem 2rem;
-            border-radius: 15px;
-            font-family: 'Orbitron', monospace;
-            font-size: 1rem;
-            transform: translateX(500px);
-            transition: transform 0.5s ease;
-            z-index: 10000;
-            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.3);
-            border: 1px solid var(--neon-cyan);
-        }
-
-        .achievement-popup.show { transform: translateX(0); }
-
-        /* Modal System */
-        .modal-void {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 20000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.5s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal-void.active { opacity: 1; visibility: visible; }
-
-        .modal-quantum {
-            background: linear-gradient(135deg, var(--deep-space), var(--dark-void));
-            border: 2px solid var(--neon-cyan);
-            border-radius: 20px;
-            padding: 4rem;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transform: scale(0.8) rotateY(90deg);
-            transition: transform 0.5s ease;
-        }
-
-        .modal-void.active .modal-quantum { transform: scale(1) rotateY(0deg); }
-
-        .modal-header {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, var(--neon-yellow), var(--cyber-orange));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .modal-subtitle {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.2rem;
-            color: var(--neon-cyan);
-            margin-bottom: 2rem;
-        }
-
-        .modal-text {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: none;
-            border: none;
-            color: var(--neon-pink);
-            font-size: 3rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--neon-yellow);
-            transform: rotate(90deg);
-        }
-
-        /* Responsive Design */
+        
         @media (max-width: 768px) {
-            .glitch-title { font-size: clamp(2rem, 8vw, 5rem); }
-            .converter-grid { grid-template-columns: 1fr; }
-            .neural-nodes { grid-template-columns: 1fr; }
-            .options-grid { grid-template-columns: 1fr; }
-            .story-matrix { padding: 2rem; }
-            .quantum-converter { padding: 2rem; }
-            .quantum-quiz { padding: 2rem; }
-        }
-
-        /* Special Effects */
-        .glitch-text {
-            animation: textGlitch 0.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes textGlitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            15% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            16% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
-        }
-
-        .success-burst {
-            animation: successBurst 0.8s ease-out;
-        }
-
-        @keyframes successBurst {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); filter: brightness(1.5) saturate(1.5); }
-            100% { transform: scale(1); }
+            .lesson-content {
+                padding: 1rem;
+            }
+            
+            .lesson-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .simulator-controls {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="custom-cursor"></div>
-    <div class="cyber-grid"></div>
-    <div class="data-stream"></div>
-
-    <!-- Hero Section -->
-    <section class="hero-container">
-        <div class="hero-content">
-            <h1 class="glitch-title">THE MONEY REVOLUTION</h1>
-            <p class="matrix-subtitle">HOW INFORMATION BECAME THE NEW CURRENCY</p>
-            
-            <div class="holo-stats">
-                <div class="holo-card">
-                    <div class="stat-number">$2.5T</div>
-                    <div class="stat-label">Digital Economy Value</div>
-                </div>
-                <div class="holo-card">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Money is Digital</div>
-                </div>
-                <div class="holo-card">
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">Information Copies</div>
-                </div>
-                <div class="holo-card">
-                    <div class="stat-number">0.003s</div>
-                    <div class="stat-label">Transaction Speed</div>
+    <!-- Professional Header -->
+    <header class="platform-header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="/" class="logo">
+                    <span class="logo-text">BLOCKZONE</span>
+                    <span class="logo-accent">LAB</span>
+                </a>
+                <nav class="main-nav">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/academy/" class="nav-link active">Academy</a>
+                    <a href="/games/" class="nav-link">Games</a>
+                    <a href="/pages/tournaments.html" class="nav-link">Tournaments</a>
+                    <a href="/pages/business-model.html" class="nav-link">Business</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div id="user-status" class="user-status">
+                    <span class="status-text">Loading...</span>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Neural Network Section -->
-    <section class="neural-section">
-        <div class="neural-bg"></div>
-        <div class="cyber-lab">
-            <h2 class="lab-title">🧠 QUANTUM MONEY LABORATORY</h2>
-            
-            <div class="quantum-converter">
-                <div class="converter-header">
-                    <h3 class="converter-title">💰 DIGITAL MONEY TRANSMUTER</h3>
-                    <p style="color: var(--neon-cyan); text-align: center; margin-bottom: 2rem;">
-                        Experience the mind-bending difference between physical and digital money
-                    </p>
-                </div>
-                
-                <div class="converter-grid">
-                    <div class="cyber-panel">
-                        <div class="panel-header">
-                            <h4 class="panel-title">🏦 LEGACY MONEY SYSTEM</h4>
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">AMOUNT (USD)</label>
-                            <input type="number" id="physicalAmount" class="cyber-input" value="1000" min="0" step="0.01">
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">TRANSACTION COST</label>
-                            <input type="number" id="physicalCost" class="cyber-input" value="25.00" min="0" step="0.01">
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">TIME (MINUTES)</label>
-                            <input type="number" id="physicalTime" class="cyber-input" value="180" min="0">
-                        </div>
-                        <button class="quantum-btn" onclick="calculatePhysical()">🔬 ANALYZE LEGACY SYSTEM</button>
-                        <div id="physicalResult" class="result-matrix">Enter values to witness the inefficiency</div>
-                    </div>
-                    
-                    <div class="cyber-panel">
-                        <div class="panel-header">
-                            <h4 class="panel-title">⚡ QUANTUM MONEY SYSTEM</h4>
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">AMOUNT (USD)</label>
-                            <input type="number" id="digitalAmount" class="cyber-input" value="1000" min="0" step="0.01">
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">TRANSACTION COST</label>
-                            <input type="number" id="digitalCost" class="cyber-input" value="0.50" min="0" step="0.01">
-                        </div>
-                        <div class="input-field">
-                            <label class="field-label">TIME (SECONDS)</label>
-                            <input type="number" id="digitalTime" class="cyber-input" value="3" min="0">
-                        </div>
-                        <button class="quantum-btn" onclick="calculateDigital()">⚡ ENGAGE QUANTUM PROTOCOL</button>
-                        <div id="digitalResult" class="result-matrix">Enter values to see the future</div>
+    <!-- Lesson Hero Section -->
+    <section class="lesson-hero">
+        <div class="lesson-content">
+            <div class="lesson-progress">
+                <div class="progress-header">
+                    <h1>The Money Revolution</h1>
+                    <div class="progress-info">
+                        <span class="lesson-number">Lesson 2</span>
+                        <span class="estimated-time">20-25 minutes</span>
+                        <span id="completion-status" class="completion-status"></span>
                     </div>
                 </div>
+                <div class="progress-bar">
+                    <div id="lesson-progress-bar" class="progress-fill" style="width: 0%"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Story Matrix -->
-    <section class="story-matrix">
-        <div class="story-header">
-            <h2 class="story-title">🌌 THE QUANTUM MONEY PARADOX</h2>
+    <!-- Main Lesson Content -->
+    <main class="lesson-content">
+        <div class="lesson-section">
+            <h2>The Evolution of Money</h2>
+            <p>Money has evolved dramatically throughout human history, from simple barter systems to complex digital currencies. Understanding this evolution is crucial for grasping the revolutionary potential of blockchain technology.</p>
+            
+            <div class="highlight-box">
+                <h3>🎯 Learning Objectives</h3>
+                <ul>
+                    <li>Trace the evolution of money from barter to cryptocurrency</li>
+                    <li>Understand the problems with traditional financial systems</li>
+                    <li>Learn how blockchain solves these problems</li>
+                    <li>Explore the future of digital currency</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>The Timeline of Money</h2>
+            <div class="money-timeline">
+                <div class="timeline-item">
+                    <h3>Barter System (Prehistoric)</h3>
+                    <p>Direct exchange of goods and services. Limited by the "double coincidence of wants" problem.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Commodity Money (3000 BCE)</h3>
+                    <p>Gold, silver, and other precious metals became universal mediums of exchange.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Paper Money (7th Century CE)</h3>
+                    <p>Representative money backed by precious metals, later becoming fiat currency.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Digital Banking (1950s)</h3>
+                    <p>Electronic transfers and digital records of money movement.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Cryptocurrency (2009)</h3>
+                    <p>Bitcoin introduces decentralized, trustless digital currency.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>Problems with Traditional Money</h2>
+            <p>Traditional financial systems have several inherent problems that blockchain technology aims to solve:</p>
+            
+            <div class="code-block">
+// Traditional banking problems
+const problems = {
+    centralization: "Single points of failure",
+    censorship: "Transactions can be blocked",
+    inflation: "Money supply controlled by central banks",
+    privacy: "All transactions are monitored",
+    accessibility: "Billions lack access to banking"
+};
+            </div>
+            
+            <div class="interactive-element">
+                <h3>💡 Think About It</h3>
+                <p>How many times have you been unable to make a transaction due to bank restrictions, high fees, or technical issues?</p>
+                <p>Blockchain eliminates these problems by creating a decentralized, permissionless financial system.</p>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>The Blockchain Solution</h2>
+            <p>Blockchain technology addresses the fundamental problems of traditional money:</p>
+            
+            <div class="crypto-simulator">
+                <h3>🔗 Blockchain Transaction Simulator</h3>
+                <p>See how a blockchain transaction works:</p>
+                <div class="simulator-display" id="transaction-display">
+                    Waiting for transaction...
+                </div>
+                <div class="simulator-controls">
+                    <button id="send-transaction" class="nav-button">Send Transaction</button>
+                    <button id="mine-block" class="nav-button">Mine Block</button>
+                    <button id="verify-transaction" class="nav-button">Verify Transaction</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2>Key Innovations of Cryptocurrency</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Decentralization:</strong> No single authority controls the network</li>
+                    <li><strong>Immutability:</strong> Transactions cannot be altered once recorded</li>
+                    <li><strong>Transparency:</strong> All transactions are publicly verifiable</li>
+                    <li><strong>Security:</strong> Cryptographic protection against fraud</li>
+                    <li><strong>Accessibility:</strong> Anyone with internet can participate</li>
+                </ul>
+            </div>
         </div>
         
-        <div class="story-content">
-            <p>In the year 2008, while the world watched banks collapse and economies crumble, something extraordinary was happening in the digital realm. <span class="highlight-character" onclick="openModal('satoshi')">Satoshi Nakamoto</span> was about to unleash a truth so profound it would shatter our understanding of money forever: <em class="glitch-text">Money is pure information.</em></p>
-            
-            <p>For millennia, humans believed money needed physical form—gold, silver, paper. But what if that was all an illusion? What if the true nature of money was always information, and we just needed the right technology to reveal this hidden truth?</p>
-            
-            <p>🔮 <strong>Click the neural nodes below to explore this reality-bending revelation:</strong></p>
-        </div>
-        
-        <div class="neural-nodes">
-            <div class="neural-node" onclick="openModal('information-money')">
-                <h3 class="node-title">🧬 INFORMATION AS MONEY</h3>
-                <p class="node-content">Discover how the same quantum principles that power computers—binary information, perfect replication, instantaneous transmission—are now revolutionizing the very essence of value itself.</p>
+        <!-- Lesson Navigation -->
+        <div class="lesson-navigation">
+            <a href="/academy/lessons/lesson-1/" id="prev-lesson" class="nav-button">
+                ← Previous Lesson: The Turing Revolution
+            </a>
+            <div class="lesson-actions">
+                <button id="mark-complete" class="nav-button">
+                    Mark as Complete
+                </button>
             </div>
-            
-            <div class="neural-node" onclick="openModal('scarcity-paradox')">
-                <h3 class="node-title">🔒 THE SCARCITY PARADOX</h3>
-                <p class="node-content">Explore the mind-bending contradiction: How can something infinitely copyable become incredibly valuable? The answer lies in the mathematics of cryptographic proof.</p>
+            <a href="/academy/lessons/lesson-3/" id="next-lesson" class="nav-button">
+                Next Lesson: The Blockchain Revolution →
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="platform-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>BlockZone Lab</h3>
+                <p>Revolutionizing crypto education through gamification</p>
             </div>
-            
-            <div class="neural-node" onclick="openModal('digital-alchemy')">
-                <h3 class="node-title">⚗️ DIGITAL ALCHEMY</h3>
-                <p class="node-content">Witness how modern cryptographers achieved what ancient alchemists only dreamed of—transmuting information into unbreakable digital gold.</p>
+            <div class="footer-section">
+                <h4>Platform</h4>
+                <a href="/academy/">Academy</a>
+                <a href="/games/">Games</a>
+                <a href="/pages/tournaments.html">Tournaments</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="/pages/whitepaper.html">Whitepaper</a>
+                <a href="/pages/business-model.html">Business Model</a>
             </div>
         </div>
-    </section>
-
-    <!-- Quantum Quiz -->
-    <section class="quantum-quiz">
-        <div class="quiz-header">
-            <h2 class="quiz-title">🧠 NEURAL NETWORK CHALLENGE</h2>
-            <p style="color: var(--neon-cyan); text-align: center; font-size: 1.2rem;">
-                Test your understanding of the quantum money revolution
-            </p>
-            <div class="progress-matrix">
-                <div id="progressBar" class="progress-bar"></div>
-            </div>
-            <p style="color: white; text-align: center; font-family: 'Orbitron', monospace;">
-                NEURAL PROBE <span id="currentQ">1</span> OF <span id="totalQ">15</span>
-            </p>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BlockZone Lab. All rights reserved.</p>
         </div>
-        
-        <div id="quizInterface">
-            <div class="question-matrix">
-                <div id="questionDisplay" class="question-text">Initializing neural probe...</div>
-                <div id="optionsDisplay" class="options-grid"></div>
-            </div>
-            <button id="nextBtn" class="next-quantum" onclick="advanceQuestion()">NEXT NEURAL PROBE</button>
-        </div>
-        
-        <div id="resultsDisplay" class="results-matrix">
-            <h3 style="color: var(--neon-cyan); margin-bottom: 2rem;">NEURAL ANALYSIS COMPLETE</h3>
-            <div id="finalScoreDisplay" class="final-score-display">0/15</div>
-            <div id="scoreVerdict" class="score-verdict">Analyzing cognitive patterns...</div>
-            <button class="restart-quantum" onclick="resetQuiz()">REINITIALIZE NEURAL NETWORK</button>
-        </div>
-    </section>
+    </footer>
 
-    <!-- Achievement System -->
-    <div id="achievementDisplay" class="achievement-popup"></div>
-
-    <!-- Modal System -->
-    <div id="modalVoid" class="modal-void">
-        <div class="modal-quantum">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h3 id="modalHeader" class="modal-header"></h3>
-            <p id="modalSubheader" class="modal-subtitle"></p>
-            <div id="modalText" class="modal-text"></div>
-        </div>
-    </div>
-
-    <script>
-        // Global Variables
-        let currentQuestion = 0;
-        let score = 0;
-        let selectedAnswer = null;
-        let cursor = document.querySelector('.custom-cursor');
-
-        // Enhanced Quiz Questions (15 mind-bending questions)
-        const neuralQuestions = [
-            {
-                question: "What percentage of money today exists only as digital information in computer networks?",
-                options: ["About 50%", "About 75%", "About 90%", "Over 99%"],
-                correct: 3,
-                explanation: "Over 99% of money today exists purely as digital information in bank databases—physical cash is nearly extinct."
-            },
-            {
-                question: "What was the revolutionary insight that Satoshi Nakamoto revealed about money in 2008?",
-                options: ["Money should be digital", "Money is fundamentally information", "Money should be decentralized", "Money should be anonymous"],
-                correct: 1,
-                explanation: "The revolutionary insight was that money is fundamentally just information—and information can be perfected through cryptography."
-            },
-            {
-                question: "How does Bitcoin solve the 'double-spending problem' that plagued digital money?",
-                options: ["By limiting supply", "Through cryptographic proof and public ledgers", "By government backing", "Through bank verification"],
-                correct: 1,
-                explanation: "Bitcoin uses cryptographic proof and a public ledger (blockchain) to ensure digital money can't be spent twice."
-            },
-            {
-                question: "What makes digital money fundamentally different from all previous forms of money?",
-                options: ["It's faster", "It can be copied perfectly but remains scarce", "It's cheaper", "It's more secure"],
-                correct: 1,
-                explanation: "Digital money can be copied perfectly (like all information) yet remains scarce through mathematical proof—a complete paradox!"
-            },
-            {
-                question: "How much faster can a digital transaction be compared to traditional banking?",
-                options: ["2x faster", "10x faster", "100x faster", "Over 1000x faster"],
-                correct: 3,
-                explanation: "Digital transactions can be over 1000x faster—seconds instead of days for international transfers."
-            },
-            {
-                question: "What is the 'network effect' in digital money systems?",
-                options: ["More users make it slower", "More users make it more valuable", "More users make it more expensive", "More users make it less secure"],
-                correct: 1,
-                explanation: "The network effect means digital money becomes exponentially more valuable as more people use it—like the internet itself."
-            },
-            {
-                question: "How does programmable money change the nature of transactions?",
-                options: ["Makes them faster", "Enables automatic execution of complex agreements", "Makes them cheaper", "Makes them more private"],
-                correct: 1,
-                explanation: "Programmable money can automatically execute complex agreements (smart contracts) without human intervention."
-            },
-            {
-                question: "What is 'tokenization' in the context of digital finance?",
-                options: ["Making money digital", "Converting physical assets into digital tokens", "Creating new currencies", "Encrypting transactions"],
-                correct: 1,
-                explanation: "Tokenization converts physical assets (real estate, art, etc.) into digital tokens that can be traded instantly worldwide."
-            },
-            {
-                question: "How does digital money enable 'micropayments' that were impossible before?",
-                options: ["By being cheaper", "By being instantly divisible into tiny amounts", "By being faster", "All of the above"],
-                correct: 3,
-                explanation: "Digital money enables micropayments by being cheaper, faster, and divisible into incredibly tiny amounts."
-            },
-            {
-                question: "What is DeFi (Decentralized Finance) and why is it revolutionary?",
-                options: ["Digital banking", "Financial services without banks or intermediaries", "Cryptocurrency trading", "Government digital currency"],
-                correct: 1,
-                explanation: "DeFi creates entire financial systems (lending, borrowing, trading) without traditional banks or intermediaries."
-            },
-            {
-                question: "How does digital money solve the problem of financial inclusion?",
-                options: ["Lower costs only", "No bank account required", "Global accessibility", "All of the above"],
-                correct: 3,
-                explanation: "Digital money enables financial inclusion through lower costs, no bank account requirements, and global accessibility."
-            },
-            {
-                question: "What makes stablecoins important in the digital money ecosystem?",
-                options: ["They're backed by gold", "They maintain stable value while being fully digital", "They're government issued", "They're the fastest"],
-                correct: 1,
-                explanation: "Stablecoins combine the stability of traditional currency with the power and speed of digital money."
-            },
-            {
-                question: "How does digital money change the concept of ownership?",
-                options: ["Makes it physical", "Makes it mathematically provable and instantly transferable", "Makes it government controlled", "Makes it bank dependent"],
-                correct: 1,
-                explanation: "Digital money makes ownership mathematically provable through cryptography and instantly transferable worldwide."
-            },
-            {
-                question: "What is the ultimate potential of digital money?",
-                options: ["Replace all cash", "Enable programmable economies", "Create global financial equality", "All of the above"],
-                correct: 3,
-                explanation: "Digital money has the potential to replace physical money, enable programmable economies, and create unprecedented financial equality."
-            },
-            {
-                question: "Why is the transition to digital money considered a 'revolution' rather than just an 'evolution'?",
-                options: ["It's faster", "It fundamentally changes what money IS, not just how it works", "It's cheaper", "It's more secure"],
-                correct: 1,
-                explanation: "It's a revolution because it fundamentally redefines money as pure information, changing its very essence and possibilities."
-            }
-        ];
-
-        // Modal Content
-        const modalContent = {
-            'satoshi': {
-                title: '🔮 SATOSHI NAKAMOTO',
-                subtitle: 'The Phantom Architect of the Digital Future',
-                content: `
-                    <p>Satoshi Nakamoto—a name that echoes through the quantum corridors of digital history. This mysterious figure didn't just create Bitcoin; they <strong>rewrote the laws of money itself</strong>.</p>
-                    <p style="color: var(--neon-cyan); font-style: italic; margin: 2rem 0;">"The root problem with conventional currency is all the trust that's required to make it work."</p>
-                    <p>By recognizing that money is pure information, Satoshi opened a portal to a future where value flows like data—instant, borderless, and unstoppable.</p>
-                    <p><strong>The most profound part?</strong> Satoshi disappeared, proving that revolutionary ideas don't need permanent guardians—they need mathematical truth.</p>
-                `
-            },
-            'information-money': {
-                title: '🧬 INFORMATION AS MONEY',
-                subtitle: 'The Quantum Leap from Matter to Data',
-                content: `
-                    <p>Imagine money as <strong>pure thought</strong>—weightless, instant, and infinitely malleable. This isn't science fiction; it's the reality of digital money.</p>
-                    <h4 style="color: var(--neon-yellow); margin: 2rem 0 1rem 0;">The Information Revolution:</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">💭 <strong>Thought-Speed Transactions:</strong> Money moves at the speed of information</li>
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">🔄 <strong>Perfect Replication:</strong> Digital money can be copied exactly, yet remain unique</li>
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">🌐 <strong>Quantum Entanglement:</strong> Ownership is proven by mathematical cryptography, not physical possession</li>
-                    </ul>
-                    <p style="background: rgba(0, 255, 255, 0.1); padding: 1rem; border-radius: 10px; margin-top: 2rem;">
-                        <strong>Mind-bending truth:</strong> Your bank account isn't storing money—it's storing information about money. Digital money just makes this truth transparent and unstoppable.
-                    </p>
-                `
-            },
-            'scarcity-paradox': {
-                title: '🔒 THE SCARCITY PARADOX',
-                subtitle: 'How Infinite Copies Create Finite Value',
-                content: `
-                    <p>Here's where reality gets <strong>truly bizarre</strong>: Digital information can be copied infinitely, yet digital money remains scarce. How is this possible?</p>
-                    <h4 style="color: var(--neon-pink); margin: 2rem 0 1rem 0;">The Cryptographic Magic:</h4>
-                    <p style="background: rgba(255, 0, 110, 0.1); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-                        <strong>Mathematical Scarcity:</strong> While anyone can copy the Bitcoin software, only the holder of the private key can move the actual Bitcoin. It's like having a billion identical safes, but only one key that works.
-                    </p>
-                    <p>This creates something unprecedented in human history: <em style="color: var(--neon-yellow);">digital objects that are genuinely unique and unreplicable</em>, even though they're made of pure information.</p>
-                    <p><strong>The paradox resolves like this:</strong> The information about Bitcoin can be copied infinitely, but the cryptographic proof of ownership cannot be. It's ownership without possession—a concept that would have blown the minds of every economist before 2008.</p>
-                `
-            },
-            'digital-alchemy': {
-                title: '⚗️ DIGITAL ALCHEMY',
-                subtitle: 'Transmuting Information into Unbreakable Gold',
-                content: `
-                    <p>Medieval alchemists dreamed of turning lead into gold. Modern cryptographers achieved something far more extraordinary: <strong>they turned mathematics into money</strong>.</p>
-                    <h4 style="color: var(--cyber-orange); margin: 2rem 0 1rem 0;">The New Philosopher's Stone:</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">🔢 <strong>Mathematical Limits:</strong> Only 21 million Bitcoin will ever exist—enforced by code, not kings</li>
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">🌍 <strong>Universal Access:</strong> Anyone, anywhere, can participate in this new form of digital gold</li>
-                        <li style="margin: 1rem 0; color: var(--neon-cyan);">🔮 <strong>Transparent Scarcity:</strong> Every transaction is visible, but ownership remains cryptographically private</li>
-                    </ul>
-                    <p style="background: rgba(255, 133, 0, 0.1); padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
-                        <strong>The ultimate magic:</strong> Digital money doesn't just store value—it <em>programs</em> value. Smart contracts can automatically execute when conditions are met, creating money that thinks and acts on its own.
-                    </p>
-                    <p>We've entered an age where money has become intelligent, programmable, and more powerful than any financial tool in human history.</p>
-                `
-            }
-        };
-
-        // Custom Cursor
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        // Data Stream Particles
-        function createDataStream() {
-            const stream = document.querySelector('.data-stream');
-            const dataSymbols = ['₿', '0', '1', '$', '€', '¥', '£', '∞', '∑', '∆', '◊', '⟐', '⟑', '⊕', '⊗'];
-            
-            setInterval(() => {
-                if (stream.children.length < 50) {
-                    const particle = document.createElement('div');
-                    particle.className = 'data-particle';
-                    particle.textContent = dataSymbols[Math.floor(Math.random() * dataSymbols.length)];
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 2 + 's';
-                    particle.style.fontSize = (Math.random() * 8 + 8) + 'px';
-                    stream.appendChild(particle);
-                    
-                    // Remove particle after animation
-                    setTimeout(() => {
-                        if (particle.parentNode) particle.parentNode.removeChild(particle);
-                    }, 15000);
-                }
-            }, 200);
-        }
-
-        // Money Calculator Functions
-        function calculatePhysical() {
-            const amount = parseFloat(document.getElementById('physicalAmount').value);
-            const cost = parseFloat(document.getElementById('physicalCost').value);
-            const time = parseFloat(document.getElementById('physicalTime').value);
-            
-            const totalCost = amount + cost;
-            const timeValue = (time / 60) * 50; // $50/hour opportunity cost
-            const efficiency = (amount / (amount + cost + timeValue)) * 100;
-            
-            const result = `<strong>ANALYSIS COMPLETE</strong><br>
-                          Total Cost: $${(totalCost + timeValue).toFixed(2)}<br>
-                          Efficiency: ${efficiency.toFixed(1)}%<br>
-                          Time Wasted: ${time} minutes<br>
-                          <span style="color: #ff0040;">STATUS: OBSOLETE TECHNOLOGY</span>`;
-            
-            document.getElementById('physicalResult').innerHTML = result;
-            showAchievement('🏦 Legacy system analyzed - inefficiency confirmed!');
-        }
-
-        function calculateDigital() {
-            const amount = parseFloat(document.getElementById('digitalAmount').value);
-            const cost = parseFloat(document.getElementById('digitalCost').value);
-            const time = parseFloat(document.getElementById('digitalTime').value);
-            
-            const totalCost = amount + cost;
-            const timeValue = (time / 3600) * 50; // Converting seconds to hours
-            const efficiency = (amount / (amount + cost + timeValue)) * 100;
-            
-            const result = `<strong>QUANTUM PROTOCOL ENGAGED</strong><br>
-                          Total Cost: $${(totalCost + timeValue).toFixed(2)}<br>
-                          Efficiency: ${efficiency.toFixed(1)}%<br>
-                          Time Used: ${time} seconds<br>
-                          <span style="color: var(--matrix-green);">STATUS: FUTURE ACTIVATED</span>`;
-            
-            document.getElementById('digitalResult').innerHTML = result;
-            showAchievement('⚡ Quantum money system deployed successfully!');
-        }
-
-        // Quiz Functions
-        function updateQuizDisplay() {
-            const question = neuralQuestions[currentQuestion];
-            document.getElementById('questionDisplay').textContent = question.question;
-            document.getElementById('currentQ').textContent = currentQuestion + 1;
-            
-            const optionsContainer = document.getElementById('optionsDisplay');
-            optionsContainer.innerHTML = '';
-            
-            question.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.className = 'option-quantum';
-                button.textContent = option;
-                button.onclick = () => selectOption(index);
-                optionsContainer.appendChild(button);
-            });
-            
-            const progress = ((currentQuestion + 1) / neuralQuestions.length) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        function selectOption(answerIndex) {
-            if (selectedAnswer !== null) return;
-            selectedAnswer = answerIndex;
-            
-            const buttons = document.querySelectorAll('.option-quantum');
-            const correct = neuralQuestions[currentQuestion].correct;
-            
-            buttons.forEach((button, index) => {
-                button.style.pointerEvents = 'none';
-                if (index === correct) {
-                    button.classList.add('correct');
-                } else if (index === answerIndex && answerIndex !== correct) {
-                    button.classList.add('incorrect');
-                }
-            });
-            
-            if (answerIndex === correct) {
-                score++;
-                showAchievement('🧠 Neural pathway activated! +1 Intelligence Point');
-            } else {
-                showAchievement('🔄 Recalibrating neural network...');
-            }
-            
-            setTimeout(() => {
-                const explanation = neuralQuestions[currentQuestion].explanation;
-                showAchievement(explanation, 4000);
-            }, 1500);
-            
-            document.getElementById('nextBtn').style.display = 'inline-block';
-        }
-
-        function advanceQuestion() {
-            currentQuestion++;
-            selectedAnswer = null;
-            
-            if (currentQuestion < neuralQuestions.length) {
-                updateQuizDisplay();
-                document.getElementById('nextBtn').style.display = 'none';
-            } else {
-                displayResults();
-            }
-        }
-
-        function displayResults() {
-            document.getElementById('quizInterface').style.display = 'none';
-            document.getElementById('resultsDisplay').style.display = 'block';
-            
-            const percentage = Math.round((score / neuralQuestions.length) * 100);
-            document.getElementById('finalScoreDisplay').textContent = `${score}/${neuralQuestions.length} (${percentage}%)`;
-            
-            let verdict = '';
-            if (percentage >= 95) {
-                verdict = '🌟 QUANTUM GENIUS! You have transcended traditional monetary thinking and embraced the digital future!';
-            } else if (percentage >= 85) {
-                verdict = '🚀 CRYPTO VISIONARY! You understand the revolutionary nature of information-based money!';
-            } else if (percentage >= 75) {
-                verdict = '🧠 DIGITAL PIONEER! You grasp the fundamentals of the money revolution!';
-            } else if (percentage >= 65) {
-                verdict = '📚 NEURAL CADET! Your understanding is developing - review the quantum nodes!';
-            } else {
-                verdict = '🔄 SYSTEM REBOOT REQUIRED! The money revolution is complex - reinitialize your neural network!';
-            }
-            
-            document.getElementById('scoreVerdict').textContent = verdict;
-            showAchievement(`🎯 Neural analysis complete: ${percentage}% cognitive alignment!`, 5000);
-            
-            // Dispatch quiz completion event for navigation tracking
-            window.dispatchEvent(new CustomEvent('quizCompleted', {
-                detail: {
-                    score: score,
-                    totalQuestions: neuralQuestions.length,
-                    percentage: percentage,
-                    lessonNumber: 2
-                }
-            }));
-        }
-
-        function resetQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            selectedAnswer = null;
-            
-            document.getElementById('quizInterface').style.display = 'block';
-            document.getElementById('resultsDisplay').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
-            
-            updateQuizDisplay();
-            showAchievement('🔄 Neural network reinitialized - preparing for quantum learning!');
-        }
-
-        // Achievement System
-        function showAchievement(text, duration = 3000) {
-            const achievement = document.getElementById('achievementDisplay');
-            achievement.textContent = text;
-            achievement.classList.add('show');
-            
-            setTimeout(() => {
-                achievement.classList.remove('show');
-            }, duration);
-        }
-
-        // Modal System
-        function openModal(modalId) {
-            const data = modalContent[modalId];
-            if (!data) return;
-            
-            document.getElementById('modalHeader').textContent = data.title;
-            document.getElementById('modalSubheader').textContent = data.subtitle;
-            document.getElementById('modalText').innerHTML = data.content;
-            document.getElementById('modalVoid').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            showAchievement('🔮 Quantum knowledge portal accessed!');
-        }
-
-        function closeModal() {
-            document.getElementById('modalVoid').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Neural Network Visualization
-        function createNeuralNetwork() {
-            const neuralBg = document.querySelector('.neural-bg');
-            if (!neuralBg) return;
-            
-            // Create SVG for neural network
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', '100%');
-            svg.setAttribute('height', '100%');
-            svg.style.position = 'absolute';
-            svg.style.top = '0';
-            svg.style.left = '0';
-            
-            // Create nodes and connections
-            const nodes = [];
-            for (let i = 0; i < 20; i++) {
-                const node = {
-                    x: Math.random() * 100,
-                    y: Math.random() * 100,
-                    id: i
-                };
-                nodes.push(node);
-                
-                // Create node circle
-                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', node.x + '%');
-                circle.setAttribute('cy', node.y + '%');
-                circle.setAttribute('r', '3');
-                circle.setAttribute('fill', 'var(--neon-cyan)');
-                circle.setAttribute('opacity', '0.6');
-                svg.appendChild(circle);
-            }
-            
-            // Create connections
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const distance = Math.sqrt(
-                        Math.pow(nodes[i].x - nodes[j].x, 2) + 
-                        Math.pow(nodes[i].y - nodes[j].y, 2)
-                    );
-                    
-                    if (distance < 30) {
-                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        line.setAttribute('x1', nodes[i].x + '%');
-                        line.setAttribute('y1', nodes[i].y + '%');
-                        line.setAttribute('x2', nodes[j].x + '%');
-                        line.setAttribute('y2', nodes[j].y + '%');
-                        line.setAttribute('stroke', 'var(--neon-purple)');
-                        line.setAttribute('stroke-width', '1');
-                        line.setAttribute('opacity', '0.3');
-                        svg.appendChild(line);
-                    }
-                }
-            }
-            
-            neuralBg.appendChild(svg);
-        }
-
-        // Enhanced Glitch Effects
-        function triggerGlitchEffect() {
-            const title = document.querySelector('.glitch-title');
-            title.classList.add('glitch-text');
-            setTimeout(() => {
-                title.classList.remove('glitch-text');
-            }, 500);
-        }
-
-        // Sound Effects (using Web Audio API)
-        function createAudioContext() {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            function playTone(frequency, duration, type = 'sine') {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = type;
-                
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration);
-            }
-            
-            return { playTone };
-        }
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize data stream
-            createDataStream();
-            
-            // Initialize neural network
-            createNeuralNetwork();
-            
-            // Initialize quiz
-            updateQuizDisplay();
-            document.getElementById('totalQ').textContent = neuralQuestions.length;
-            
-            // Add modal click-outside-to-close
-            document.getElementById('modalVoid').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeModal();
-                }
-            });
-            
-            // Trigger periodic glitch effects
-            setInterval(() => {
-                if (Math.random() < 0.1) { // 10% chance every interval
-                    triggerGlitchEffect();
-                }
-            }, 3000);
-            
-            // Add hover effects to stats cards
-            const statCards = document.querySelectorAll('.holo-card');
-            statCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.classList.add('success-burst');
-                    setTimeout(() => {
-                        card.classList.remove('success-burst');
-                    }, 800);
-                });
-            });
-            
-            // Initialize audio context on first user interaction
-            let audioInitialized = false;
-            document.addEventListener('click', () => {
-                if (!audioInitialized) {
-                    window.audioSystem = createAudioContext();
-                    audioInitialized = true;
-                }
-            });
-            
-            // Welcome message
-            setTimeout(() => {
-                showAchievement('🌌 Welcome to the Quantum Money Revolution! Prepare your mind for transcendence...', 4000);
-            }, 1000);
-        });
-
-        // Keyboard shortcuts for enhanced interactivity
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'Enter':
-                    if (document.getElementById('nextBtn').style.display !== 'none') {
-                        advanceQuestion();
-                    }
-                    break;
-                case 'Escape':
-                    closeModal();
-                    break;
-                case 'r':
-                case 'R':
-                    if (e.ctrlKey || e.metaKey) {
-                        e.preventDefault();
-                        resetQuiz();
-                    }
-                    break;
-            }
-        });
-
-        // Make functions globally accessible
-        window.calculatePhysical = calculatePhysical;
-        window.calculateDigital = calculateDigital;
-        window.selectOption = selectOption;
-        window.advanceQuestion = advanceQuestion;
-        window.resetQuiz = resetQuiz;
-        window.openModal = openModal;
-        window.closeModal = closeModal;
-        window.showAchievement = showAchievement;
-    </script>
+    <!-- Scripts -->
+    <script src="/shared/platform/core/PlatformConfig.js"></script>
+    <script src="/shared/platform/core/UserManager.js"></script>
+    <script src="/shared/platform/core/GameRegistry.js"></script>
+    <script src="/shared/platform/session.js"></script>
+    <script src="/academy/shared/academy-main.js"></script>
     
-    <!-- Navigation Bar -->
-    <script type="module" src="../../../shared/components/NavigationBar.js"></script>
+    <!-- Lesson-specific scripts -->
     <script>
-        // Debug: Check if NavigationBar loaded
-        setTimeout(() => {
-            console.log('Checking NavigationBar...');
-            const nav = document.getElementById('sidePanelNavigation');
-            if (nav) {
-                console.log('✅ NavigationBar found:', nav);
-                nav.style.display = 'flex';
-                nav.style.zIndex = '10000';
-            } else {
-                console.log('❌ NavigationBar not found');
+        // Lesson-specific functionality
+        class LessonManager {
+            constructor() {
+                this.lessonId = 'lesson-2';
+                this.lessonNumber = 2;
+                this.userManager = null;
+                this.init();
             }
-        }, 1000);
+            
+            async init() {
+                // Initialize user management
+                this.userManager = new UserManager();
+                await this.userManager.init();
+                
+                // Load lesson progress
+                await this.loadLessonProgress();
+                
+                // Setup event listeners
+                this.setupEventListeners();
+                
+                // Update navigation buttons
+                this.updateNavigation();
+            }
+            
+            async loadLessonProgress() {
+                try {
+                    const user = await this.userManager.getCurrentUser();
+                    if (user) {
+                        const progress = user.academyProgress || {};
+                        const lessonProgress = progress[this.lessonId] || 0;
+                        
+                        // Update progress bar
+                        const progressBar = document.getElementById('lesson-progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = `${lessonProgress}%`;
+                        }
+                        
+                        // Update completion status
+                        const completionStatus = document.getElementById('completion-status');
+                        if (completionStatus) {
+                            if (lessonProgress >= 100) {
+                                completionStatus.innerHTML = '<span class="lesson-complete-badge">✓ Complete</span>';
+                            } else {
+                                completionStatus.textContent = `${lessonProgress}% Complete`;
+                            }
+                        }
+                        
+                        // Update mark complete button
+                        const markCompleteBtn = document.getElementById('mark-complete');
+                        if (markCompleteBtn) {
+                            if (lessonProgress >= 100) {
+                                markCompleteBtn.textContent = '✓ Completed';
+                                markCompleteBtn.disabled = true;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading lesson progress:', error);
+                }
+            }
+            
+            setupEventListeners() {
+                const markCompleteBtn = document.getElementById('mark-complete');
+                if (markCompleteBtn) {
+                    markCompleteBtn.addEventListener('click', () => this.markLessonComplete());
+                }
+                
+                // Track scroll progress
+                window.addEventListener('scroll', () => this.updateScrollProgress());
+                
+                // Setup interactive elements
+                this.setupInteractiveElements();
+            }
+            
+            setupInteractiveElements() {
+                // Blockchain Simulator
+                const sendBtn = document.getElementById('send-transaction');
+                const mineBtn = document.getElementById('mine-block');
+                const verifyBtn = document.getElementById('verify-transaction');
+                
+                if (sendBtn) sendBtn.addEventListener('click', () => this.sendTransaction());
+                if (mineBtn) mineBtn.addEventListener('click', () => this.mineBlock());
+                if (verifyBtn) verifyBtn.addEventListener('click', () => this.verifyTransaction());
+            }
+            
+            sendTransaction() {
+                const display = document.getElementById('transaction-display');
+                display.textContent = 'Transaction sent to mempool...';
+                display.style.color = '#ffbe0b';
+            }
+            
+            mineBlock() {
+                const display = document.getElementById('transaction-display');
+                display.textContent = 'Block mined! Transaction confirmed.';
+                display.style.color = '#00ff41';
+            }
+            
+            verifyTransaction() {
+                const display = document.getElementById('transaction-display');
+                display.textContent = 'Transaction verified on blockchain ✓';
+                display.style.color = '#00ffff';
+            }
+            
+            async markLessonComplete() {
+                try {
+                    const user = await this.userManager.getCurrentUser();
+                    if (!user) {
+                        alert('Please log in to track your progress');
+                        return;
+                    }
+                    
+                    // Update progress
+                    const progress = user.academyProgress || {};
+                    progress[this.lessonId] = 100;
+                    
+                    await this.userManager.updateUser({
+                        ...user,
+                        academyProgress: progress
+                    });
+                    
+                    // Update UI
+                    await this.loadLessonProgress();
+                    
+                    // Show success message
+                    const markCompleteBtn = document.getElementById('mark-complete');
+                    if (markCompleteBtn) {
+                        markCompleteBtn.textContent = '✓ Completed!';
+                        markCompleteBtn.disabled = true;
+                    }
+                    
+                    // Trigger progress update
+                    this.triggerProgressUpdate();
+                    
+                } catch (error) {
+                    console.error('Error marking lesson complete:', error);
+                    alert('Error updating progress. Please try again.');
+                }
+            }
+            
+            updateScrollProgress() {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.body.offsetHeight - window.innerHeight;
+                const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
+                
+                // Update progress bar based on scroll
+                const progressBar = document.getElementById('lesson-progress-bar');
+                if (progressBar) {
+                    const currentProgress = parseInt(progressBar.style.width) || 0;
+                    if (scrollPercent > currentProgress) {
+                        progressBar.style.width = `${scrollPercent}%`;
+                    }
+                }
+            }
+            
+            updateNavigation() {
+                const prevBtn = document.getElementById('prev-lesson');
+                const nextBtn = document.getElementById('next-lesson');
+                
+                // Previous button is always available for lesson 2
+                if (prevBtn) prevBtn.style.display = 'block';
+                
+                // Next button is always available for lesson 2
+                if (nextBtn) nextBtn.style.display = 'block';
+            }
+            
+            triggerProgressUpdate() {
+                // Dispatch custom event for progress update
+                window.dispatchEvent(new CustomEvent('lessonProgressUpdated', {
+                    detail: {
+                        lessonId: this.lessonId,
+                        lessonNumber: this.lessonNumber,
+                        completed: true
+                    }
+                }));
+            }
+        }
+        
+        // Initialize lesson manager when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new LessonManager();
+        });
     </script>
 </body>
 </html>

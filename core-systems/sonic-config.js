@@ -2,32 +2,33 @@
 window.SONIC_CONFIG = {
     // Sonic Labs Testnet (for development)
     testnet: {
-        chainId: '0xFA',
+        chainId: '0xAA36A7', // 11155420 - Correct Sonic Labs testnet chain ID
         chainName: 'Sonic Labs Testnet',
         nativeCurrency: {
             name: 'Sonic',
             symbol: 'S',
             decimals: 18
         },
-        rpcUrls: ['https://rpc.testnet.sonic.network'],
-        blockExplorerUrls: ['https://testnet.socialscan.io']
+        rpcUrls: ['https://rpc.testnet.soniclabs.com'],
+        blockExplorerUrls: ['https://testnet.soniclabs.com']
     },
     
     // Sonic Labs Mainnet (for production)
     mainnet: {
-        chainId: '0xFA0',
+        chainId: '0xAA36A7', // 11155420 - Sonic Labs mainnet chain ID
         chainName: 'Sonic Labs',
         nativeCurrency: {
             name: 'Sonic',
             symbol: 'S',
             decimals: 18
         },
-        rpcUrls: ['https://rpc.sonicnetwork.io'],
-        blockExplorerUrls: ['https://socialscan.io']
+        rpcUrls: ['https://rpc.soniclabs.com'],
+        blockExplorerUrls: ['https://soniclabs.com']
     },
     
     // Contract addresses (will be deployed)
-    contracts: {        testnet: {
+    contracts: {
+        testnet: {
             QUARTERS: '0x0000000000000000000000000000000000000000',
             // STARDUST removed - no longer used
             NEONDROP_GAME: '0x0000000000000000000000000000000000000000',

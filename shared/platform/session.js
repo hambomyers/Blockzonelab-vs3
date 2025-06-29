@@ -56,9 +56,11 @@ class SessionManager {
                 
                 if (res.ok) {
                     return session;
+                } else {
+                    console.warn('⚠️ Session validation failed (status:', res.status, '), creating new session');
                 }
             } catch (error) {
-                console.warn('⚠️ Session validation failed, creating new session');
+                console.warn('⚠️ Session validation failed (network error), creating new session');
             }
         }
         
@@ -452,6 +454,9 @@ export function clearSession() {
 
 // Export the session manager instance for advanced usage
 export { sessionManager };
+
+// Export the SessionManager class
+export { SessionManager };
 
 // TODO: Add event listeners for login/logout/profile changes
 // TODO: Add support for JWT/cookie-based sessions if needed

@@ -1,5 +1,7 @@
-name = "blockzone-lab-platform"
-compatibility_date = "2025-01-25"
+# Cloudflare Workers configuration for BlockZone Lab
+name = "blockzone-lab"
+main = "worker/leaderboard.js"
+compatibility_date = "2024-01-01"
 
 # Pages configuration for automatic deployment
 pages_build_output_dir = "."
@@ -8,15 +10,21 @@ pages_build_output_dir = "."
 [vars]
 PLATFORM_VERSION = "2.0.0-BLOCKZONE-PLATFORM-RELEASE"
 ENVIRONMENT = "production"
+API_VERSION = "v1"
+MAX_SCORES_PER_GAME = "1000"
+DAILY_RESET_HOUR = "8"
+DAILY_RESET_TIMEZONE = "America/New_York"
 
 # KV namespaces for the backend API
 [[kv_namespaces]]
 binding = "PLAYERS"
-id = "afdca5fda8b343b99541432574cfa5c3"
+id = "your-players-namespace-id"
+preview_id = "your-players-preview-namespace-id"
 
 [[kv_namespaces]]
 binding = "SCORES"
-id = "8e4d3de3c359495186eabf9032d08d8f"
+id = "your-scores-namespace-id"
+preview_id = "your-scores-preview-namespace-id"
 
 [[kv_namespaces]]
 binding = "TOURNAMENTS"
@@ -24,8 +32,29 @@ id = "d4f40a571cdc49a98d5dd1d9f3a983ea"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "9472d4328eda428090494844a4cdba9b"
+id = "your-sessions-namespace-id"
+preview_id = "your-sessions-preview-namespace-id"
 
 [[kv_namespaces]]
 binding = "REWARDS"
-id = "66d8e0a1ead24a9c916bd22551cf1515" 
+id = "66d8e0a1ead24a9c916bd22551cf1515"
+
+[[kv_namespaces]]
+binding = "SYNC"
+id = "your-sync-namespace-id"
+preview_id = "your-sync-preview-namespace-id"
+
+[[kv_namespaces]]
+binding = "ADDICTION"
+id = "your-addiction-namespace-id"
+preview_id = "your-addiction-preview-namespace-id"
+
+# Routes
+[[routes]]
+pattern = "api.blockzonelab.com/*"
+zone_name = "blockzonelab.com"
+
+# Custom domains
+[[custom_domains]]
+domain = "api.blockzonelab.com"
+zone_name = "blockzonelab.com" 

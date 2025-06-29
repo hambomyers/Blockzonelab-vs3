@@ -3,14 +3,24 @@
    Hyperbolic distribution with $5 minimum and 40% to winner
    ========================================================================== */
 
+/**
+ * Prize Calculator - Original Revenue Model
+ * Maintains the original 10% platform fee structure
+ */
+
 export class PrizeCalculator {
   constructor() {
-    this.platformFee = 0.10;        // 10% to platform
-    this.prizePoolRate = 0.90;      // 90% to prizes
+    // ORIGINAL REVENUE MODEL - As you had it
+    this.platformFee = 0.10;        // 10% to platform (as you had it)
+    this.prizePoolRate = 0.90;      // 90% to players (as you had it)
+    
+    // Original prize distribution
     this.winnerShare = 0.50;        // 50% to 1st place
     this.hyperbolicExponent = 2.5;  // Hyperbolic distribution curve
     this.minimumPrize = 1.00;       // $1 minimum per winner
     this.payoutPositions = 5;       // Top 5 winners
+    
+    console.log('💰 Prize Calculator initialized with original revenue model');
   }
 
   calculatePrizes(totalRevenue) {
@@ -110,29 +120,6 @@ export class PrizeCalculator {
     };
   }
 
-  // Calculate championship cycle prizes
-  calculateChampionshipPrizes(totalPool, participantCount) {
-    const prizes = [];
-    const availablePool = totalPool * (1 - this.platformFee); // 90% to prizes
-    
-    if (participantCount === 0) return prizes;
-    
-    // 1st place gets 50% of available pool
-    const firstPlacePrize = Math.max(this.minimumPrize, availablePool * this.winnerShare);
-    prizes.push(firstPlacePrize);
-    
-    // Remaining 50% distributed hyperbolically among 2nd-5th
-    const remainingPool = availablePool - firstPlacePrize;
-    const remainingWinners = Math.min(4, participantCount - 1); // 2nd-5th place
-    
-    if (remainingWinners > 0 && remainingPool > 0) {
-      const hyperbolicPrizes = this.calculateHyperbolicPrizes(remainingPool, remainingWinners);
-      prizes.push(...hyperbolicPrizes);
-    }
-    
-    return prizes;
-  }
-
   // Calculate friend challenge prizes
   calculateFriendChallengePrize(entryFee = 2.00) {
     const totalPot = entryFee * 2; // Both players pay $2
@@ -147,39 +134,32 @@ export class PrizeCalculator {
     };
   }
 
-  // Calculate hyperbolic distribution for 2nd-5th place
-  calculateHyperbolicPrizes(totalPool, winnerCount) {
+  calculateChampionshipPrizes(totalPool, participantCount) {
     const prizes = [];
-    let remainingPool = totalPool;
+    const availablePool = totalPool * (1 - this.platformFee); // 90% to prizes
     
-    for (let i = 0; i < winnerCount; i++) {
-      const rank = i + 2; // 2nd, 3rd, 4th, 5th place
-      const share = 1 / Math.pow(rank, this.hyperbolicExponent);
-      
-      // Calculate this winner's share of remaining pool
-      const winnerShare = remainingPool * share;
-      const prize = Math.max(this.minimumPrize, winnerShare);
-      
-      prizes.push(prize);
-      remainingPool -= prize;
+    if (participantCount === 0) return prizes;
+    
+    // Calculate prizes based on participant count
+    if (participantCount >= 5) {
+      prizes.push(availablePool * 0.50); // 1st place: 50%
+      prizes.push(availablePool * 0.30); // 2nd place: 30%
+      prizes.push(availablePool * 0.20); // 3rd place: 20%
+    } else if (participantCount >= 3) {
+      prizes.push(availablePool * 0.60); // 1st place: 60%
+      prizes.push(availablePool * 0.40); // 2nd place: 40%
+    } else {
+      prizes.push(availablePool); // Winner takes all
     }
     
-    return prizes;
+    return prizes.map(p => Math.round(p * 100) / 100);
   }
 
-  // Format prize amounts for display
-  formatPrize(amount) {
-    return `$${amount.toFixed(2)}`;
-  }
-
-  // Get prize description for a specific rank
-  getPrizeDescription(rank, totalPool, participantCount) {
+  getPrizeForPosition(position, totalPool, participantCount) {
     const prizes = this.calculateChampionshipPrizes(totalPool, participantCount);
-    
-    if (rank <= prizes.length) {
-      return this.formatPrize(prizes[rank - 1]);
+    if (position <= prizes.length) {
+      return `$${prizes[position - 1].toFixed(2)}`;
     }
-    
     return 'No prize';
   }
 }

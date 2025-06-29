@@ -52,18 +52,19 @@ export class TournamentUI {    constructor() {
     updateContent() {
         this.container.innerHTML = `
             <div class="tournament-header">
-                <h3>🏆 Daily USDC Tournament</h3>
+                <h3>🏆 Daily Championship</h3>
                 <div class="tournament-timer" id="tournamentTimer">Loading...</div>
             </div>
-              <div class="tournament-info">
-                <div class="tournament-entry">Entry: $2.50 USDC | Winner Gets: <span id="prizePool">$200+</span></div>
-                <div class="tournament-description">⚡ 90% to Players • 10% Platform Fee • Daily reset at 8PM EST</div>
+            <div class="tournament-info">
+                <div class="tournament-entry">Entry: $0.25 USDC | Winner Gets: <span id="prizePool">$100+</span></div>
+                <div class="tournament-description">⚡ 90% to Players • 10% Platform Fee • Daily reset at 11:00 PM EST</div>
                 <div class="tournament-philosophy">
-                    🤝 Following <a href="https://docs.soniclabs.com/funding/fee-monetization" target="_blank" class="sonic-feem-link">Sonic's Fee Monetization</a> philosophy - value creators earn the majority
+                    🏆 One champion per day - compete for the daily crown!
                 </div>
                 <div id="tournamentParticipants">Loading participants...</div>
-            </div>            <div class="tournament-actions">
-                <button id="tournamentJoinBtn" class="tournament-join-btn">Join Tournament ($2.50)</button>
+            </div>
+            <div class="tournament-actions">
+                <button id="tournamentJoinBtn" class="tournament-join-btn">Join Championship ($0.25)</button>
                 <button id="practiceBtn" class="practice-btn">Practice Mode (Free)</button>
                 <button id="viewLeaderboardBtn" class="view-leaderboard-btn">View Leaderboard</button>
             </div>
@@ -157,12 +158,12 @@ export class TournamentUI {    constructor() {
         const timerElement = document.getElementById('tournamentTimer');
         if (!timerElement) return;
 
-        // Calculate time until next tournament (8PM EST)
+        // Calculate time until next tournament (11 PM EST)
         const now = new Date();
         const nextTournament = new Date();
-        nextTournament.setUTCHours(1, 0, 0, 0); // 8PM EST = 1AM UTC next day
+        nextTournament.setUTCHours(4, 0, 0, 0); // 11 PM EST = 4 AM UTC next day
         
-        if (now.getUTCHours() >= 1) {
+        if (now.getUTCHours() >= 4) {
             nextTournament.setUTCDate(nextTournament.getUTCDate() + 1);
         }
 
@@ -171,7 +172,7 @@ export class TournamentUI {    constructor() {
         const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-        timerElement.textContent = `Next Tournament: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timerElement.textContent = `Next Championship: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     updateParticipants() {
@@ -197,11 +198,11 @@ export class TournamentUI {    constructor() {
         if (!joinBtn) return;
 
         if (this.tournament?.isJoined?.()) {
-            joinBtn.textContent = '✓ Tournament Joined';
+            joinBtn.textContent = '✓ Championship Joined';
             joinBtn.disabled = true;
             joinBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
         } else {
-            joinBtn.textContent = 'Join Tournament ($2.50)';
+            joinBtn.textContent = 'Join Championship ($0.25)';
             joinBtn.disabled = false;
             joinBtn.style.background = '';
         }

@@ -88,8 +88,10 @@
     <!-- Universal Navigation Bar -->
     <script type="module" src="../../shared/components/NavigationBar.js"></script>
     
+    <!-- Rabby Wallet Integration for Sonic Labs -->
+    <script type="module" src="../../shared/web3/rabby-integration.js"></script>
+    
     <!-- User Management Integration -->
-    <script type="module" src="../../shared/platform/user-manager.js"></script>
     <script type="module" src="../../shared/platform/session.js"></script>
 </head>
 
@@ -143,12 +145,122 @@
     <!-- Tournament Info Panel -->
     <div class="tournament-info">
         <div class="info-card">
-            <h3>🎮 Neon Drop Tournament</h3>
-            <p>Entry Fee: $2.50 USDC</p>
+            <h3>🎮 Neon Drop Championship</h3>
+            <p>Entry Fee: 0.25 QUARTERS</p>
             <p>Prize Pool: 90% to Winners</p>
-            <p>Daily Prizes: $200+</p>
+            <p>Daily Reset: 11:00 PM EST</p>
+            <div id="wallet-status" style="margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                <p>🔗 Connect to Sonic Labs to play</p>
+                <p style="font-size: 0.8rem; color: #ccc; margin-top: 5px;">🎯 Recommended: Rabby Wallet for best experience</p>
+            </div>
+            <div style="margin-top: 15px;">
+                <button id="connectWalletBtn" class="tournament-join-btn">🔗 Connect Wallet</button>
+                <button id="getTestTokensBtn" class="bypass-btn" style="background: #00ff88; margin-top: 10px;">🪙 Get Test Tokens</button>
+            </div>
         </div>
     </div>
+
+    <!-- Rabby Wallet Integration -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const connectBtn = document.getElementById('connectWalletBtn');
+            const testTokensBtn = document.getElementById('getTestTokensBtn');
+            const walletStatus = document.getElementById('wallet-status');
+            const tournamentInfo = document.querySelector('.tournament-info');
+            
+            // Connect wallet
+            if (connectBtn) {
+                connectBtn.addEventListener('click', async function() {
+                    console.log('🔗 Connecting to Sonic Labs...');
+                    connectBtn.textContent = '🔄 Connecting...';
+                    connectBtn.disabled = true;
+                    
+                    try {
+                        const result = await window.rabbyIntegration.connectWallet();
+                        
+                        if (result.success) {
+                            const walletType = result.walletType;
+                            const isOptimal = window.rabbyIntegration.isOptimalWallet();
+                            
+                            walletStatus.innerHTML = `
+                                <p>✅ Connected: ${result.address.slice(0, 6)}...${result.address.slice(-4)}</p>
+                                <p>🌐 Network: Sonic Labs ${result.network}</p>
+                                <p style="font-size: 0.8rem; color: ${isOptimal ? '#00ff88' : '#ffaa00'}; margin-top: 5px;">
+                                    ${isOptimal ? '🎯 Optimal: Rabby Wallet' : '⚠️ Consider switching to Rabby for better experience'}
+                                </p>
+                            `;
+                            connectBtn.textContent = '🎮 Join Tournament (0.25 QUARTERS)';
+                            connectBtn.onclick = joinTournament;
+                        } else {
+                            walletStatus.innerHTML = `<p>❌ Connection failed: ${result.error}</p>`;
+                            connectBtn.textContent = '🔗 Connect Wallet';
+                            connectBtn.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('❌ Connection error:', error);
+                        walletStatus.innerHTML = `<p>❌ Connection error: ${error.message}</p>`;
+                        connectBtn.textContent = '🔗 Connect Wallet';
+                        connectBtn.disabled = false;
+                    }
+                });
+            }
+            
+            // Get test tokens
+            if (testTokensBtn) {
+                testTokensBtn.addEventListener('click', async function() {
+                    console.log('🪙 Requesting test tokens...');
+                    testTokensBtn.textContent = '🔄 Requesting...';
+                    testTokensBtn.disabled = true;
+                    
+                    try {
+                        const result = await window.rabbyIntegration.requestTestTokens();
+                        
+                        if (result.success) {
+                            alert('✅ Test tokens requested! Check your wallet in a few minutes.');
+                        } else {
+                            alert(`❌ Failed to get test tokens: ${result.error}`);
+                        }
+                    } catch (error) {
+                        console.error('❌ Test tokens error:', error);
+                        alert(`❌ Error: ${error.message}`);
+                    } finally {
+                        testTokensBtn.textContent = '🪙 Get Test Tokens';
+                        testTokensBtn.disabled = false;
+                    }
+                });
+            }
+            
+            // Join tournament
+            async function joinTournament() {
+                console.log('🎮 Joining tournament...');
+                connectBtn.textContent = '🔄 Joining...';
+                connectBtn.disabled = true;
+                
+                try {
+                    const result = await window.rabbyIntegration.joinDailyTournament();
+                    
+                    if (result.success) {
+                        alert('✅ Successfully joined tournament! You can now play.');
+                        tournamentInfo.style.display = 'none';
+                        
+                        // Start the game
+                        if (window.neonDrop && window.neonDrop.engine) {
+                            window.neonDrop.startNewGame();
+                        }
+                    } else {
+                        alert(`❌ Failed to join tournament: ${result.error}`);
+                        connectBtn.textContent = '🎮 Join Tournament (0.25 QUARTERS)';
+                        connectBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('❌ Tournament join error:', error);
+                    alert(`❌ Error: ${error.message}`);
+                    connectBtn.textContent = '🎮 Join Tournament (0.25 QUARTERS)';
+                    connectBtn.disabled = false;
+                }
+            }
+        });
+    </script>
 
     <!-- Game Engine (Module) -->
     <script type="module">
@@ -156,33 +268,55 @@
         console.log('🚫 Service Worker DISABLED for testing');
         
         // Initialize user management
-        import { UserManager } from '../../shared/platform/user-manager.js';
-        import { SessionManager } from '../../shared/platform/session.js';
-        
-        // Initialize user system
-        const userManager = new UserManager();
-        const sessionManager = new SessionManager();
+        import { sessionManager } from '../../shared/platform/session.js';
         
         // Update user status
-        const updateUserStatus = () => {
+        const updateUserStatus = async () => {
             const userStatus = document.getElementById('userStatus');
-            const currentUser = sessionManager.getCurrentUser();
             
-            if (currentUser) {
-                userStatus.innerHTML = `
-                    <span class="user-avatar">${currentUser.avatar || '👤'}</span>
-                    <span class="user-name">${currentUser.displayName || 'Player'}</span>
-                `;
-            } else {
+            try {
+                console.log('🔄 Updating user status...');
+                await sessionManager.init();
+                const playerName = sessionManager.getPlayerName();
+                const playerId = sessionManager.getPlayerId();
+                
+                console.log('✅ Session loaded:', { playerName, playerId });
+                
+                if (playerId && playerName !== 'Anonymous') {
+                    userStatus.innerHTML = `
+                        <span class="user-avatar">👤</span>
+                        <span class="user-name">${playerName}</span>
+                    `;
+                    console.log('✅ User status updated with player name');
+                } else {
+                    userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+                    console.log('✅ User status updated with connect wallet button');
+                }
+            } catch (error) {
+                console.error('❌ Failed to update user status:', error);
                 userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
             }
         };
         
-        // Update status on load
-        updateUserStatus();
+        // Update status on load with timeout
+        updateUserStatus().catch(error => {
+            console.error('❌ User status update failed:', error);
+            const userStatus = document.getElementById('userStatus');
+            userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+        });
+        
+        // Fallback timeout to prevent infinite loading
+        setTimeout(() => {
+            const userStatus = document.getElementById('userStatus');
+            if (userStatus.textContent.includes('Loading')) {
+                console.log('⏰ Loading timeout - setting fallback status');
+                userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+            }
+        }, 3000);
         
         // Load game (main functionality)
         console.log('🔄 Loading game with enhanced integration...');
+        
         import('./main.js').catch(e => {
             console.error('Failed to load game:', e);
             document.body.innerHTML = `

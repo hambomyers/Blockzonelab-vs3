@@ -317,12 +317,12 @@
 
     <!-- User Management Integration Script -->
     <script type="module">
-        import { UserManager } from '../shared/platform/user-manager.js';
-        import { SessionManager } from '../shared/platform/session.js';
+        
+        import { sessionManager } from "../shared/platform/session.js";
         
         // Initialize user system
-        const userManager = new UserManager();
-        const sessionManager = new SessionManager();
+        
+        
         
         // Update user status
         const updateUserStatus = () => {

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Daily Tournament Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tournament-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .status.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .status.inactive {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .timer {
+            font-size: 2em;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        button.joined {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .log-entry.info { background: rgba(33, 150, 243, 0.2); }
+        .log-entry.success { background: rgba(76, 175, 80, 0.2); }
+        .log-entry.warning { background: rgba(255, 193, 7, 0.2); }
+        .log-entry.error { background: rgba(244, 67, 54, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Single Daily Tournament Test</h1>
+        
+        <div class="tournament-info">
+            <div class="status" id="tournamentStatus">Loading...</div>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Entry Fee</div>
+                    <div class="info-value" id="entryFee">$0.25</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Prize Pool</div>
+                    <div class="info-value" id="prizePool">$0.00</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Participants</div>
+                    <div class="info-value" id="participants">0</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Your Score</div>
+                    <div class="info-value" id="userScore">0</div>
+                </div>
+            </div>
+            
+            <div class="timer" id="timer">Loading...</div>
+            
+            <div class="actions">
+                <button id="joinBtn">Join Championship ($0.25)</button>
+                <button id="submitScoreBtn">Submit Test Score</button>
+                <button id="refreshBtn">Refresh State</button>
+            </div>
+        </div>
+        
+        <div class="log" id="log">
+            <div class="log-entry info">System initialized...</div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Tournament Manager for testing
+        class MockTournamentManager {
+            constructor() {
+                this.tournamentState = {
+                    isActive: false,
+                    startTime: null,
+                    endTime: null,
+                    entryFee: 0.25,
+                    prizePool: 0,
+                    participants: 0,
+                    userJoined: false,
+                    userScore: 0
+                };
+                
+                this.eventListeners = new Map();
+                this.initializeMockState();
+            }
+            
+            initializeMockState() {
+                const now = Date.now();
+                const startOfDay = new Date();
+                startOfDay.setUTCHours(4, 0, 0, 0); // 11 PM EST previous day
+                
+                if (now < startOfDay.getTime()) {
+                    startOfDay.setUTCDate(startOfDay.getUTCDate() - 1);
+                }
+                
+                this.tournamentState = {
+                    isActive: true,
+                    startTime: startOfDay.getTime(),
+                    endTime: startOfDay.getTime() + (24 * 60 * 60 * 1000), // 24 hours
+                    entryFee: 0.25,
+                    prizePool: 12.50, // Mock prize pool
+                    participants: 50, // Mock participants
+                    userJoined: false,
+                    userScore: 0
+                };
+            }
+            
+            async joinDailyTournament() {
+                if (this.tournamentState.userJoined) {
+                    return false;
+                }
+                
+                this.tournamentState.userJoined = true;
+                this.tournamentState.participants++;
+                this.tournamentState.prizePool += this.tournamentState.entryFee;
+                
+                this.emit('tournamentJoined', this.tournamentState);
+                return true;
+            }
+            
+            async submitScore(score, gameHash) {
+                if (!this.tournamentState.userJoined) {
+                    return false;
+                }
+                
+                if (score > this.tournamentState.userScore) {
+                    this.tournamentState.userScore = score;
+                }
+                
+                this.emit('scoreSubmitted', { score, gameHash });
+                return true;
+            }
+            
+            getTournamentState() {
+                return { ...this.tournamentState };
+            }
+            
+            canJoinTournament() {
+                return this.tournamentState.isActive && 
+                       !this.tournamentState.userJoined && 
+                       Date.now() < this.tournamentState.endTime;
+            }
+            
+            isTournamentActive() {
+                return this.tournamentState.isActive && Date.now() < this.tournamentState.endTime;
+            }
+            
+            getTimeUntilEnd() {
+                if (!this.tournamentState.isActive) return 0;
+                return Math.max(0, this.tournamentState.endTime - Date.now());
+            }
+            
+            getTimeUntilNext() {
+                const now = Date.now();
+                const nextStart = this.tournamentState.endTime;
+                return Math.max(0, nextStart - now);
+            }
+            
+            formatTimeRemaining(milliseconds) {
+                const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+                const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+                
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            formatUSDC(amount) {
+                return `$${parseFloat(amount).toFixed(2)} USDC`;
+            }
+            
+            on(event, callback) {
+                if (!this.eventListeners.has(event)) {
+                    this.eventListeners.set(event, []);
+                }
+                this.eventListeners.get(event).push(callback);
+            }
+            
+            emit(event, data) {
+                if (this.eventListeners.has(event)) {
+                    this.eventListeners.get(event).forEach(callback => {
+                        try {
+                            callback(data);
+                        } catch (error) {
+                            console.error('Event callback error:', error);
+                        }
+                    });
+                }
+            }
+        }
+        
+        // Initialize
+        const tournamentManager = new MockTournamentManager();
+        let updateInterval;
+        
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function updateUI() {
+            const state = tournamentManager.getTournamentState();
+            
+            // Update status
+            const statusElement = document.getElementById('tournamentStatus');
+            if (state.isActive) {
+                statusElement.textContent = '🟢 ACTIVE';
+                statusElement.className = 'status active';
+            } else {
+                statusElement.textContent = '🔴 INACTIVE';
+                statusElement.className = 'status inactive';
+            }
+            
+            // Update info
+            document.getElementById('entryFee').textContent = tournamentManager.formatUSDC(state.entryFee);
+            document.getElementById('prizePool').textContent = tournamentManager.formatUSDC(state.prizePool);
+            document.getElementById('participants').textContent = state.participants;
+            document.getElementById('userScore').textContent = state.userScore;
+            
+            // Update timer
+            const timeRemaining = tournamentManager.getTimeUntilEnd();
+            if (timeRemaining > 0) {
+                document.getElementById('timer').textContent = `⏰ ${tournamentManager.formatTimeRemaining(timeRemaining)} remaining`;
+            } else {
+                document.getElementById('timer').textContent = '⏰ Tournament ended';
+            }
+            
+            // Update buttons
+            const joinBtn = document.getElementById('joinBtn');
+            if (state.userJoined) {
+                joinBtn.textContent = '✓ Championship Joined';
+                joinBtn.disabled = true;
+                joinBtn.className = 'joined';
+            } else if (tournamentManager.canJoinTournament()) {
+                joinBtn.textContent = 'Join Championship ($0.25)';
+                joinBtn.disabled = false;
+                joinBtn.className = '';
+            } else {
+                joinBtn.textContent = 'Cannot Join';
+                joinBtn.disabled = true;
+                joinBtn.className = '';
+            }
+            
+            const submitBtn = document.getElementById('submitScoreBtn');
+            submitBtn.disabled = !state.userJoined || !state.isActive;
+        }
+        
+        // Event handlers
+        document.getElementById('joinBtn').addEventListener('click', async () => {
+            const success = await tournamentManager.joinDailyTournament();
+            if (success) {
+                log('Successfully joined daily tournament!', 'success');
+            } else {
+                log('Failed to join tournament', 'error');
+            }
+            updateUI();
+        });
+        
+        document.getElementById('submitScoreBtn').addEventListener('click', async () => {
+            const testScore = Math.floor(Math.random() * 10000) + 1000;
+            const gameHash = '0x' + Math.random().toString(16).substr(2, 64);
+            
+            const success = await tournamentManager.submitScore(testScore, gameHash);
+            if (success) {
+                log(`Score submitted: ${testScore}`, 'success');
+            } else {
+                log('Failed to submit score', 'error');
+            }
+            updateUI();
+        });
+        
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            log('Refreshing tournament state...', 'info');
+            updateUI();
+        });
+        
+        // Event listeners
+        tournamentManager.on('tournamentJoined', (state) => {
+            log('Tournament joined event received', 'success');
+        });
+        
+        tournamentManager.on('scoreSubmitted', (data) => {
+            log(`Score submission event: ${data.score}`, 'success');
+        });
+        
+        // Initialize
+        log('Single Daily Tournament Test initialized', 'info');
+        updateUI();
+        
+        // Start periodic updates
+        updateInterval = setInterval(updateUI, 1000);
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,63 @@
+require("@nomicfoundation/hardhat-toolbox");
+
+// Load environment variables
+require('dotenv').config();
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  solidity: {
+    version: "0.8.19",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
+  networks: {
+    // Sonic Labs Testnet
+    "sonic-testnet": {
+      url: "https://rpc.testnet.soniclabs.com",
+      chainId: 11155420, // Sonic Labs testnet chain ID
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 20000000000, // 20 gwei
+      gas: 6000000
+    },
+    // Sonic Labs Mainnet
+    "sonic-mainnet": {
+      url: "https://rpc.soniclabs.com",
+      chainId: 11155420, // Sonic Labs mainnet chain ID
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 20000000000, // 20 gwei
+      gas: 6000000
+    },
+    // Local development
+    hardhat: {
+      chainId: 1337
+    }
+  },
+  etherscan: {
+    apiKey: {
+      sonicTestnet: process.env.SONICSCAN_API_KEY || "",
+      sonicMainnet: process.env.SONICSCAN_API_KEY || ""
+    },
+    customChains: [
+      {
+        network: "sonicTestnet",
+        chainId: 11155420,
+        urls: {
+          apiURL: "https://api.testnet.soniclabs.com/api",
+          browserURL: "https://testnet.soniclabs.com"
+        }
+      },
+      {
+        network: "sonicMainnet",
+        chainId: 11155420,
+        urls: {
+          apiURL: "https://api.soniclabs.com/api",
+          browserURL: "https://soniclabs.com"
+        }
+      }
+    ]
+  }
+}; 

@@ -1,312 +1,421 @@
 /**
- * TournamentManager - Championship cycles and challenge management
- * Phase 2: Platform Infrastructure
+ * Tournament Manager - Single Daily Tournament Model
+ * Manages the daily championship tournament and challenge system
  */
-
 class TournamentManager {
     constructor() {
-        this.activeChampionships = new Map(); // championshipId -> championship data
-        this.scheduledChampionships = []; // upcoming championships
-        this.prizePools = new Map(); // championshipId -> prize pool
-        this.leaderboards = new Map(); // championshipId -> leaderboard
-        this.activeChallenges = new Map(); // challengeId -> challenge data
-        this.challengeLinks = new Map(); // challengeId -> shareable link
+        this.dailyTournament = null;
+        this.challenges = new Map();
+        this.currentUser = null;
+        this.web3 = null;
+        this.contract = null;
+        this.isInitialized = false;
         
-        console.log('🏆 TournamentManager initialized');
-        this.initializeChampionshipSchedule();
-    }
-
-    /**
-     * Initialize championship schedule (two 12-hour periods daily)
-     */
-    initializeChampionshipSchedule() {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        // Schedule championships for the next 7 days
-        for (let day = 0; day < 7; day++) {
-            const date = new Date(today);
-            date.setDate(date.getDate() + day);
-            
-            // Morning championship: 12 AM - 12 PM GMT
-            const morningStart = new Date(date);
-            morningStart.setHours(0, 0, 0, 0);
-            this.scheduleChampionship(morningStart, 12 * 60 * 60 * 1000, 0.25); // 12 hours, $0.25 entry
-            
-            // Evening championship: 12 PM - 12 AM GMT  
-            const eveningStart = new Date(date);
-            eveningStart.setHours(12, 0, 0, 0);
-            this.scheduleChampionship(eveningStart, 12 * 60 * 60 * 1000, 0.25); // 12 hours, $0.25 entry
-        }
-    }
-
-    /**
-     * Schedule a new championship
-     */
-    scheduleChampionship(startTime, duration, entryFee) {
-        const championshipId = `champ_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const championship = {
-            id: championshipId,
-            startTime: startTime.getTime(),
-            endTime: startTime.getTime() + duration,
-            duration: duration,
-            entryFee: entryFee,
-            status: 'scheduled', // scheduled, active, ended
-            participants: new Set(),
-            totalEntries: 0,
-            totalPrizePool: 0,
-            createdAt: Date.now()
+        // Tournament state
+        this.tournamentState = {
+            isActive: false,
+            startTime: null,
+            endTime: null,
+            entryFee: 0.25, // $0.25 USDC
+            prizePool: 0,
+            participants: 0,
+            userJoined: false,
+            userScore: 0
         };
         
-        this.scheduledChampionships.push(championship);
-        this.leaderboards.set(championshipId, []);
-        this.prizePools.set(championshipId, 0);
+        // Event listeners
+        this.eventListeners = new Map();
         
-        console.log(`🏆 Championship scheduled: ${championshipId} starting ${startTime.toISOString()}`);
-        return championshipId;
+        console.log('TournamentManager: Initialized for single daily tournament model');
     }
-
+    
     /**
-     * Start a championship
+     * Initialize the tournament manager
      */
-    startChampionship(championshipId) {
-        const championship = this.scheduledChampionships.find(c => c.id === championshipId);
-        if (!championship) throw new Error('Championship not found');
-        
-        championship.status = 'active';
-        this.activeChampionships.set(championshipId, championship);
-        
-        // Remove from scheduled
-        this.scheduledChampionships = this.scheduledChampionships.filter(c => c.id !== championshipId);
-        
-        console.log(`🏆 Championship started: ${championshipId}`);
-        return championship;
+    async initialize(web3Instance, contractInstance, userAddress) {
+        try {
+            this.web3 = web3Instance;
+            this.contract = contractInstance;
+            this.currentUser = userAddress;
+            
+            // Load current tournament state
+            await this.loadDailyTournamentState();
+            
+            // Set up periodic updates
+            this.startPeriodicUpdates();
+            
+            this.isInitialized = true;
+            console.log('TournamentManager: Initialized successfully');
+            
+            // Emit initialization event
+            this.emit('initialized', this.tournamentState);
+            
+        } catch (error) {
+            console.error('TournamentManager: Initialization failed:', error);
+            throw error;
+        }
     }
-
+    
     /**
-     * Join a championship
+     * Load current daily tournament state from contract
      */
-    joinChampionship(championshipId, userId, entryFee) {
-        const championship = this.activeChampionships.get(championshipId);
-        if (!championship) throw new Error('Championship not active');
+    async loadDailyTournamentState() {
+        try {
+            if (!this.contract) {
+                console.warn('TournamentManager: Contract not available, using mock data');
+                this.setMockTournamentState();
+                return;
+            }
+            
+            // Get tournament info from contract
+            const tournamentInfo = await this.contract.methods.getDailyTournamentInfo().call();
+            
+            this.tournamentState = {
+                isActive: tournamentInfo.isActive,
+                startTime: parseInt(tournamentInfo.startTime),
+                endTime: parseInt(tournamentInfo.endTime),
+                entryFee: this.web3.utils.fromWei(tournamentInfo.entryFee, 'ether'),
+                prizePool: this.web3.utils.fromWei(tournamentInfo.prizePool, 'ether'),
+                participants: parseInt(tournamentInfo.currentParticipants),
+                userJoined: false,
+                userScore: 0
+            };
+            
+            // Check if user is participant
+            if (this.currentUser) {
+                const isParticipant = await this.contract.methods.isParticipant(this.currentUser).call();
+                this.tournamentState.userJoined = isParticipant;
+                
+                if (isParticipant) {
+                    const score = await this.contract.methods.getParticipantScore(this.currentUser).call();
+                    this.tournamentState.userScore = parseInt(score);
+                }
+            }
+            
+            console.log('TournamentManager: Tournament state loaded:', this.tournamentState);
+            
+        } catch (error) {
+            console.error('TournamentManager: Failed to load tournament state:', error);
+            this.setMockTournamentState();
+        }
+    }
+    
+    /**
+     * Set mock tournament state for development
+     */
+    setMockTournamentState() {
+        const now = Date.now();
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(4, 0, 0, 0); // 11 PM EST previous day
         
-        if (entryFee < championship.entryFee) {
-            throw new Error(`Entry fee must be at least $${championship.entryFee}`);
+        if (now < startOfDay.getTime()) {
+            startOfDay.setUTCDate(startOfDay.getUTCDate() - 1);
         }
         
-        championship.participants.add(userId);
-        championship.totalEntries++;
-        championship.totalPrizePool += entryFee * 0.9; // 90% to prize pool, 10% platform fee
-        
-        // Initialize user in leaderboard
-        const leaderboard = this.leaderboards.get(championshipId);
-        leaderboard.push({
-            userId: userId,
-            score: 0,
-            entries: 1,
-            bestScore: 0,
-            lastUpdated: Date.now()
-        });
-        
-        console.log(`👤 User ${userId} joined championship ${championshipId}`);
-        return true;
-    }
-
-    /**
-     * Submit score to championship
-     */
-    submitScore(championshipId, userId, score, gameProof = null) {
-        const championship = this.activeChampionships.get(championshipId);
-        if (!championship) throw new Error('Championship not active');
-        
-        if (!championship.participants.has(userId)) {
-            throw new Error('User not registered for championship');
-        }
-        
-        const leaderboard = this.leaderboards.get(championshipId);
-        const userEntry = leaderboard.find(entry => entry.userId === userId);
-        
-        if (!userEntry) {
-            throw new Error('User not found in leaderboard');
-        }
-        
-        // Update score (keep best score)
-        if (score > userEntry.bestScore) {
-            userEntry.bestScore = score;
-        }
-        userEntry.score = score;
-        userEntry.lastUpdated = Date.now();
-        
-        // Sort leaderboard by score (descending)
-        leaderboard.sort((a, b) => b.bestScore - a.bestScore);
-        
-        console.log(`📊 Score submitted: ${userId} scored ${score} in ${championshipId}`);
-        return userEntry;
-    }
-
-    /**
-     * End championship and distribute prizes
-     */
-    endChampionship(championshipId) {
-        const championship = this.activeChampionships.get(championshipId);
-        if (!championship) throw new Error('Championship not found');
-        
-        championship.status = 'ended';
-        const leaderboard = this.leaderboards.get(championshipId);
-        
-        // Distribute prizes (top 3 winners)
-        const winners = leaderboard.slice(0, 3);
-        const prizeDistribution = [0.5, 0.3, 0.2]; // 50%, 30%, 20%
-        
-        const prizes = winners.map((winner, index) => ({
-            userId: winner.userId,
-            position: index + 1,
-            prize: championship.totalPrizePool * prizeDistribution[index],
-            score: winner.bestScore
-        }));
-        
-        // Remove from active championships
-        this.activeChampionships.delete(championshipId);
-        
-        console.log(`🏆 Championship ended: ${championshipId}, prizes distributed to ${winners.length} winners`);
-        return { championship, prizes, leaderboard };
-    }
-
-    /**
-     * Create a friend challenge
-     */
-    createChallenge(creatorId, gameId, fee, duration = 24 * 60 * 60 * 1000) { // 24 hours default
-        const challengeId = `challenge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const challenge = {
-            id: challengeId,
-            creatorId: creatorId,
-            gameId: gameId,
-            fee: fee,
-            duration: duration,
-            startTime: Date.now(),
-            endTime: Date.now() + duration,
-            status: 'active', // active, completed, expired
-            participants: new Set([creatorId]),
-            scores: new Map(), // userId -> score
-            winner: null,
-            prizePool: fee * 0.85, // 85% to winner, 15% platform fee
-            createdAt: Date.now()
+        this.tournamentState = {
+            isActive: true,
+            startTime: startOfDay.getTime(),
+            endTime: startOfDay.getTime() + (24 * 60 * 60 * 1000), // 24 hours
+            entryFee: 0.25,
+            prizePool: 12.50, // Mock prize pool
+            participants: 50, // Mock participants
+            userJoined: false,
+            userScore: 0
         };
-        
-        this.activeChallenges.set(challengeId, challenge);
-        this.challengeLinks.set(challengeId, `/challenge/${challengeId}`);
-        
-        console.log(`🔗 Challenge created: ${challengeId} by ${creatorId}`);
-        return { challengeId, shareableLink: this.challengeLinks.get(challengeId) };
     }
-
+    
     /**
-     * Accept a friend challenge
+     * Join the daily tournament
      */
-    acceptChallenge(challengeId, challengerId) {
-        const challenge = this.activeChallenges.get(challengeId);
-        if (!challenge) throw new Error('Challenge not found');
-        
-        if (challenge.status !== 'active') {
-            throw new Error('Challenge is not active');
+    async joinDailyTournament() {
+        try {
+            if (!this.contract || !this.currentUser) {
+                console.warn('TournamentManager: Cannot join - contract or user not available');
+                return false;
+            }
+            
+            if (this.tournamentState.userJoined) {
+                console.warn('TournamentManager: User already joined tournament');
+                return false;
+            }
+            
+            if (!this.tournamentState.isActive) {
+                console.warn('TournamentManager: Tournament not active');
+                return false;
+            }
+            
+            // Convert entry fee to wei
+            const entryFeeWei = this.web3.utils.toWei(this.tournamentState.entryFee.toString(), 'ether');
+            
+            // Call contract to join tournament
+            await this.contract.methods.joinDailyTournament().send({
+                from: this.currentUser,
+                gas: 200000
+            });
+            
+            // Update local state
+            this.tournamentState.userJoined = true;
+            this.tournamentState.participants++;
+            this.tournamentState.prizePool += this.tournamentState.entryFee;
+            
+            console.log('TournamentManager: Successfully joined daily tournament');
+            
+            // Emit join event
+            this.emit('tournamentJoined', this.tournamentState);
+            
+            return true;
+            
+        } catch (error) {
+            console.error('TournamentManager: Failed to join tournament:', error);
+            return false;
         }
-        
-        if (challenge.participants.has(challengerId)) {
-            throw new Error('Already participating in challenge');
-        }
-        
-        challenge.participants.add(challengerId);
-        challenge.prizePool += challenge.fee * 0.85; // Add challenger's fee to prize pool
-        
-        console.log(`👤 User ${challengerId} accepted challenge ${challengeId}`);
-        return challenge;
     }
-
+    
     /**
-     * Submit score to challenge
+     * Submit score for daily tournament
      */
-    submitChallengeScore(challengeId, userId, score) {
-        const challenge = this.activeChallenges.get(challengeId);
-        if (!challenge) throw new Error('Challenge not found');
-        
-        if (!challenge.participants.has(userId)) {
-            throw new Error('User not participating in challenge');
+    async submitScore(score, gameHash) {
+        try {
+            if (!this.contract || !this.currentUser) {
+                console.warn('TournamentManager: Cannot submit score - contract or user not available');
+                return false;
+            }
+            
+            if (!this.tournamentState.userJoined) {
+                console.warn('TournamentManager: User not joined to tournament');
+                return false;
+            }
+            
+            if (!this.tournamentState.isActive) {
+                console.warn('TournamentManager: Tournament not active');
+                return false;
+            }
+            
+            // Call contract to submit score
+            await this.contract.methods.submitScore(score, gameHash).send({
+                from: this.currentUser,
+                gas: 200000
+            });
+            
+            // Update local state
+            if (score > this.tournamentState.userScore) {
+                this.tournamentState.userScore = score;
+            }
+            
+            console.log('TournamentManager: Score submitted successfully:', score);
+            
+            // Emit score submission event
+            this.emit('scoreSubmitted', { score, gameHash });
+            
+            return true;
+            
+        } catch (error) {
+            console.error('TournamentManager: Failed to submit score:', error);
+            return false;
         }
-        
-        challenge.scores.set(userId, score);
-        console.log(`📊 Challenge score submitted: ${userId} scored ${score} in ${challengeId}`);
-        return score;
     }
-
+    
     /**
-     * Resolve challenge and determine winner
+     * Get current tournament state
      */
-    resolveChallenge(challengeId) {
-        const challenge = this.activeChallenges.get(challengeId);
-        if (!challenge) throw new Error('Challenge not found');
+    getTournamentState() {
+        return { ...this.tournamentState };
+    }
+    
+    /**
+     * Check if user can join tournament
+     */
+    canJoinTournament() {
+        return this.tournamentState.isActive && 
+               !this.tournamentState.userJoined && 
+               Date.now() < this.tournamentState.endTime;
+    }
+    
+    /**
+     * Check if tournament is active
+     */
+    isTournamentActive() {
+        return this.tournamentState.isActive && Date.now() < this.tournamentState.endTime;
+    }
+    
+    /**
+     * Get time until tournament ends
+     */
+    getTimeUntilEnd() {
+        if (!this.tournamentState.isActive) return 0;
+        return Math.max(0, this.tournamentState.endTime - Date.now());
+    }
+    
+    /**
+     * Get time until next tournament starts
+     */
+    getTimeUntilNext() {
+        const now = Date.now();
+        const nextStart = this.tournamentState.endTime;
+        return Math.max(0, nextStart - now);
+    }
+    
+    /**
+     * Start periodic updates
+     */
+    startPeriodicUpdates() {
+        // Update every 30 seconds
+        setInterval(() => {
+            this.loadDailyTournamentState();
+        }, 30000);
         
-        if (challenge.scores.size < 2) {
-            throw new Error('Need at least 2 participants with scores');
+        // Check for tournament end every minute
+        setInterval(() => {
+            if (this.tournamentState.isActive && Date.now() >= this.tournamentState.endTime) {
+                this.handleTournamentEnd();
+            }
+        }, 60000);
+    }
+    
+    /**
+     * Handle tournament end
+     */
+    handleTournamentEnd() {
+        console.log('TournamentManager: Daily tournament ended');
+        this.tournamentState.isActive = false;
+        this.emit('tournamentEnded', this.tournamentState);
+    }
+    
+    // ============ CHALLENGE SYSTEM ============
+    
+    /**
+     * Create a new challenge
+     */
+    async createChallenge(fee, pieceSequenceHash) {
+        try {
+            if (!this.contract || !this.currentUser) {
+                console.warn('TournamentManager: Cannot create challenge - contract or user not available');
+                return null;
+            }
+            
+            // Convert fee to wei
+            const feeWei = this.web3.utils.toWei(fee.toString(), 'ether');
+            
+            // Call contract to create challenge
+            const result = await this.contract.methods.createChallenge(feeWei, pieceSequenceHash).send({
+                from: this.currentUser,
+                gas: 300000
+            });
+            
+            // Get challenge ID from event
+            const challengeId = result.events.ChallengeCreated.returnValues.challengeId;
+            
+            console.log('TournamentManager: Challenge created successfully:', challengeId);
+            
+            // Emit challenge creation event
+            this.emit('challengeCreated', { challengeId, fee, pieceSequenceHash });
+            
+            return challengeId;
+            
+        } catch (error) {
+            console.error('TournamentManager: Failed to create challenge:', error);
+            return null;
         }
-        
-        // Find winner (highest score)
-        let winner = null;
-        let highestScore = -1;
-        
-        for (const [userId, score] of challenge.scores) {
-            if (score > highestScore) {
-                highestScore = score;
-                winner = userId;
+    }
+    
+    /**
+     * Accept a challenge
+     */
+    async acceptChallenge(challengeId) {
+        try {
+            if (!this.contract || !this.currentUser) {
+                console.warn('TournamentManager: Cannot accept challenge - contract or user not available');
+                return false;
+            }
+            
+            // Get challenge details
+            const challenge = await this.contract.methods.challenges(challengeId).call();
+            
+            // Convert fee to wei
+            const feeWei = this.web3.utils.toWei(challenge.fee, 'ether');
+            
+            // Call contract to accept challenge
+            await this.contract.methods.acceptChallenge(challengeId).send({
+                from: this.currentUser,
+                value: feeWei,
+                gas: 200000
+            });
+            
+            console.log('TournamentManager: Challenge accepted successfully:', challengeId);
+            
+            // Emit challenge acceptance event
+            this.emit('challengeAccepted', { challengeId });
+            
+            return true;
+            
+        } catch (error) {
+            console.error('TournamentManager: Failed to accept challenge:', error);
+            return false;
+        }
+    }
+    
+    // ============ EVENT SYSTEM ============
+    
+    /**
+     * Add event listener
+     */
+    on(event, callback) {
+        if (!this.eventListeners.has(event)) {
+            this.eventListeners.set(event, []);
+        }
+        this.eventListeners.get(event).push(callback);
+    }
+    
+    /**
+     * Remove event listener
+     */
+    off(event, callback) {
+        if (this.eventListeners.has(event)) {
+            const listeners = this.eventListeners.get(event);
+            const index = listeners.indexOf(callback);
+            if (index > -1) {
+                listeners.splice(index, 1);
             }
         }
+    }
+    
+    /**
+     * Emit event
+     */
+    emit(event, data) {
+        if (this.eventListeners.has(event)) {
+            this.eventListeners.get(event).forEach(callback => {
+                try {
+                    callback(data);
+                } catch (error) {
+                    console.error('TournamentManager: Event callback error:', error);
+                }
+            });
+        }
+    }
+    
+    // ============ UTILITY FUNCTIONS ============
+    
+    /**
+     * Format time remaining
+     */
+    formatTimeRemaining(milliseconds) {
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
         
-        challenge.winner = winner;
-        challenge.status = 'completed';
-        
-        // Remove from active challenges
-        this.activeChallenges.delete(challengeId);
-        
-        console.log(`🏆 Challenge resolved: ${challengeId}, winner: ${winner} with score ${highestScore}`);
-        return { challenge, winner, prize: challenge.prizePool };
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
-
+    
     /**
-     * Get active championships
+     * Format USDC amount
      */
-    getActiveChampionships() {
-        return Array.from(this.activeChampionships.values());
-    }
-
-    /**
-     * Get scheduled championships
-     */
-    getScheduledChampionships() {
-        return this.scheduledChampionships;
-    }
-
-    /**
-     * Get championship leaderboard
-     */
-    getLeaderboard(championshipId) {
-        return this.leaderboards.get(championshipId) || [];
-    }
-
-    /**
-     * Get active challenges
-     */
-    getActiveChallenges() {
-        return Array.from(this.activeChallenges.values());
-    }
-
-    /**
-     * Get user's active challenges
-     */
-    getUserChallenges(userId) {
-        return Array.from(this.activeChallenges.values()).filter(challenge => 
-            challenge.participants.has(userId)
-        );
+    formatUSDC(amount) {
+        return `$${parseFloat(amount).toFixed(2)} USDC`;
     }
 }
 
-// Create global instance
-window.tournamentManager = new TournamentManager(); 
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = TournamentManager;
+} 

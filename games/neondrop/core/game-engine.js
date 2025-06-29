@@ -80,7 +80,9 @@ export class GameEngine {
             finalScore: 0,
             finalState: null,
             frameStates: [],
-            stateChanges: []
+            stateChanges: [],
+            challengeMode: false,
+            preloadedPieces: []
         };
 
         // 7-Bag Randomizer
@@ -174,7 +176,13 @@ export class GameEngine {
 
             // Game mode
             gameMode: 'practice', // or 'competitive'
-            pendingRewards: false
+            pendingRewards: false,
+
+            // Challenge mode
+            challengeMode: false,
+            challengeTargetScore: 0,
+            preloadedPieces: [],
+            piecesUsed: 0
         };
     }
 
@@ -644,13 +652,22 @@ export class GameEngine {
     /**
      * Start game
      */
-    startGame(mode = 'practice') {
-        console.log('🎮 Starting game in mode:', mode);
+    startGame(mode = 'practice', challengeData = null) {
+        console.log('🎮 Starting game in mode:', mode, challengeData ? 'with challenge data' : '');
         
         // Reset state
         this.state = this.createInitialState();
         this.state.gameMode = mode;
         this.state.startTime = Date.now();
+        
+        // Challenge mode setup
+        if (challengeData && challengeData.pieceSequence) {
+            this.state.challengeMode = true;
+            this.state.challengeTargetScore = challengeData.targetScore;
+            this.state.preloadedPieces = [...challengeData.pieceSequence];
+            this.state.piecesUsed = 0;
+            console.log(`🎯 Challenge mode: ${this.state.preloadedPieces.length} preloaded pieces, target: ${challengeData.targetScore}`);
+        }
         
         // Reset systems
         this.particleSystem.clear();
@@ -664,7 +681,9 @@ export class GameEngine {
             finalScore: 0,
             finalState: null,
             frameStates: [],
-            stateChanges: []
+            stateChanges: [],
+            challengeMode: this.state.challengeMode || false,
+            preloadedPieces: this.state.preloadedPieces || []
         };
         
         // Initialize bag randomizer
@@ -680,7 +699,7 @@ export class GameEngine {
         
         // Emit game started event for navigation
         window.dispatchEvent(new CustomEvent('gameStarted', { 
-            detail: { mode, timestamp: Date.now() } 
+            detail: { mode, challengeMode: this.state.challengeMode, timestamp: Date.now() } 
         }));
         
         console.log('✅ Game started successfully');
@@ -1237,6 +1256,26 @@ export class GameEngine {
      * Generate piece using 7-bag randomizer
      */
     generatePiece() {
+        // Challenge mode: use preloaded pieces first
+        if (this.state.challengeMode && this.state.preloadedPieces.length > 0) {
+            const preloadedPiece = this.state.preloadedPieces.shift();
+            this.state.piecesUsed++;
+            
+            // Log the preloaded piece
+            this.bagRandomizer.bagHistory.push({
+                frame: this.frameNumber,
+                pieceType: preloadedPiece,
+                bagIndex: -1, // -1 indicates preloaded piece
+                bagPosition: -1,
+                challengeMode: true,
+                piecesUsed: this.state.piecesUsed
+            });
+            
+            console.log(`🎯 Challenge piece ${this.state.piecesUsed}: ${preloadedPiece}`);
+            return this.createPiece(preloadedPiece);
+        }
+        
+        // Normal random piece generation
         const availablePieces = this.state.unlockedPieces;
         
         if (availablePieces.length === 0) {
@@ -1253,7 +1292,9 @@ export class GameEngine {
             frame: this.frameNumber,
             pieceType: pieceType,
             bagIndex: this.bagRandomizer.bagCount,
-            bagPosition: this.bagRandomizer.currentBag.length
+            bagPosition: this.bagRandomizer.currentBag.length,
+            challengeMode: this.state.challengeMode || false,
+            piecesUsed: this.state.piecesUsed || 0
         });
 
         return this.createPiece(pieceType);
@@ -1440,7 +1481,13 @@ export class GameEngine {
             // FIXED: Add game over sequence tracking for renderer
             gameOverSequencePhase: this.state.gameOverSequencePhase,
             gameOverStartTime: this.state.gameOverStartTime,
-            deathPieceBlinkStart: this.state.deathPieceBlinkStart
+            deathPieceBlinkStart: this.state.deathPieceBlinkStart,
+
+            // Challenge mode
+            challengeMode: this.state.challengeMode || false,
+            challengeTargetScore: this.state.challengeTargetScore || 0,
+            preloadedPieces: this.state.preloadedPieces || [],
+            piecesUsed: this.state.piecesUsed || 0
         };
     }
 

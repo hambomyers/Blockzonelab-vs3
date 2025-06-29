@@ -237,4 +237,9 @@ class UserManager {
 
 // Create global instance
 window.userManager = new UserManager();
-window.userManager.initialize(); 
+window.userManager.initialize();
+
+// Export the UserManager class for module imports
+export { UserManager }; 
+// Export the UserManager class for module imports
+export { UserManager };

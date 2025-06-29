@@ -464,7 +464,7 @@ function initializeUserProfile() {
                     console.log(`💎 Balance: ${result.user.walletBalance} USDC.E`);
                 } else {
                     showProfileSection(result.user.profile, result.user);
-                    showProfileSectionStatus('Wallet creation in progress...', 'info');
+                    showProfileSectionStatus('Creating your account and wallet...', 'success');
                     console.log(`🎉 User logged in: ${email}`);
                 }
                 

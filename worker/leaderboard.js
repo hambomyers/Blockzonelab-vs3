@@ -127,6 +127,14 @@ export default {
         return await handleApiReferrals(request, env, headers);
       }
 
+      if (url.pathname === '/api/sync' && request.method === 'POST') {
+        return await handleSyncUserData(request, env, headers);
+      }
+
+      if (url.pathname === '/api/addiction' && request.method === 'POST') {
+        return await handleAddictionRecordPlay(request, env, headers);
+      }
+
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
         headers
@@ -1607,3 +1615,106 @@ async function addToCurrentPrizePool(env, amount, game = 'neon_drop') {
 }
 
 // --- Enhanced leaderboard response with cycle info and prize previews ---
+
+// NEW: Cross-device sync endpoints
+async function handleSyncUserData(request, env, headers) {
+  const url = new URL(request.url);
+  
+  if (request.method === 'POST') {
+    // Store encrypted user data
+    const data = await request.json();
+    const { email, device_id, wallet_encrypted, profile_encrypted, timestamp } = data;
+    
+    if (!email || !device_id) {
+      return new Response(JSON.stringify({ error: 'Email and device_id required' }), {
+        status: 400,
+        headers
+      });
+    }
+    
+    // Store encrypted data
+    const syncKey = `sync:${email}:${device_id}`;
+    await env.SYNC.put(syncKey, JSON.stringify({
+      email,
+      device_id,
+      wallet_encrypted,
+      profile_encrypted,
+      timestamp,
+      updated_at: Date.now()
+    }));
+    
+    return new Response(JSON.stringify({ success: true }), { headers });
+    
+  } else {
+    // GET: Retrieve encrypted user data
+    const email = url.searchParams.get('email');
+    const device_id = url.searchParams.get('device_id');
+    
+    if (!email || !device_id) {
+      return new Response(JSON.stringify({ error: 'Email and device_id required' }), {
+        status: 400,
+        headers
+      });
+    }
+    
+    const syncKey = `sync:${email}:${device_id}`;
+    const syncData = await env.SYNC.get(syncKey, 'json');
+    
+    if (!syncData) {
+      return new Response(JSON.stringify({ error: 'No sync data found' }), {
+        status: 404,
+        headers
+      });
+    }
+    
+    return new Response(JSON.stringify({
+      wallet_encrypted: syncData.wallet_encrypted,
+      profile_encrypted: syncData.profile_encrypted,
+      timestamp: syncData.timestamp
+    }), { headers });
+  }
+}
+
+// NEW: Addiction system endpoints
+async function handleAddictionRecordPlay(request, env, headers) {
+  const data = await request.json();
+  const { gameId, score, date, streak, deviceId } = data;
+  
+  if (!gameId || !date) {
+    return new Response(JSON.stringify({ error: 'Game ID and date required' }), {
+      status: 400,
+      headers
+    });
+  }
+  
+  // Store addiction data
+  const addictionKey = `addiction:${gameId}:${date}:${deviceId}`;
+  await env.ADDICTION.put(addictionKey, JSON.stringify({
+    gameId,
+    score: score || 0,
+    date,
+    streak: streak || 0,
+    deviceId,
+    recorded_at: Date.now()
+  }));
+  
+  // Update global addiction stats
+  const statsKey = `addiction:stats:${date}`;
+  const currentStats = await env.ADDICTION.get(statsKey, 'json') || {
+    total_plays: 0,
+    total_score: 0,
+    unique_players: new Set(),
+    date
+  };
+  
+  currentStats.total_plays++;
+  currentStats.total_score += (score || 0);
+  currentStats.unique_players.add(deviceId);
+  
+  await env.ADDICTION.put(statsKey, JSON.stringify({
+    ...currentStats,
+    unique_players: Array.from(currentStats.unique_players)
+  }));
+  
+  return new Response(JSON.stringify({ success: true }), { headers });
+}

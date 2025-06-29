@@ -10,6 +10,11 @@ import { InputController } from './core/input-controller.js';
 import { AudioSystem } from './core/audio-system.js';
 import { ViewportManager } from './core/viewport-manager.js';
 
+// Anti-Cheat System
+import { AntiCheatMonitor } from './core/anti-cheat-monitor.js';
+import { SecureSessionManager } from './core/secure-session-manager.js';
+import { SecureInputController } from './core/secure-input-controller.js';
+
 // Configuration
 import { Config } from './config.js';
 
@@ -47,6 +52,11 @@ class NeonDrop {
         this.renderer = null;
         this.audio = null;
         this.input = null;
+        
+        // Anti-Cheat System
+        this.antiCheatMonitor = null;
+        this.secureSessionManager = null;
+        this.secureInputController = null;
         
         // UI systems
         this.guide = null;
@@ -134,6 +144,27 @@ class NeonDrop {
             this.config,
             () => this.tournamentUI ? this.tournamentUI.isVisible : false
         );
+        
+        // Initialize Anti-Cheat System
+        this.initializeAntiCheatSystem();
+    }
+
+    initializeAntiCheatSystem() {
+        try {
+            // Initialize secure session manager
+            this.secureSessionManager = new SecureSessionManager();
+            
+            // Initialize anti-cheat monitor with game engine
+            this.antiCheatMonitor = new AntiCheatMonitor(this.engine);
+            
+            // Initialize secure input controller
+            this.secureInputController = new SecureInputController();
+            
+            console.log('✅ Anti-cheat system initialized');
+        } catch (error) {
+            console.error('❌ Failed to initialize anti-cheat system:', error);
+            // Continue without anti-cheat if initialization fails
+        }
     }
 
     setupUI() {
@@ -256,6 +287,9 @@ class NeonDrop {
         if (action.type === 'START_GAME') {
             console.log('🎮 Starting game - beginning gameplay session');
             
+            // Hide tournament info panel when game starts
+            this.hideTournamentInfo();
+            
             // Reset game over state before starting
             if (this.engine.gameOverTriggered) {
                 console.log('🔄 Resetting game over state before new game');
@@ -271,6 +305,15 @@ class NeonDrop {
         
         // Pass action to engine
         this.engine.handleInput(action);
+    }
+
+    // Hide tournament info panel
+    hideTournamentInfo() {
+        const tournamentInfo = document.querySelector('.tournament-info');
+        if (tournamentInfo) {
+            tournamentInfo.style.display = 'none';
+            console.log('✅ Tournament info panel hidden');
+        }
     }
 
     handleResize() {
@@ -334,6 +377,9 @@ class NeonDrop {
     // FIXED: Clean game start with proper state reset
     async startNewGame() {
         console.log('🎮 Starting new game');
+        
+        // Hide tournament info panel when game starts
+        this.hideTournamentInfo();
         
         // NEW: Check lockout system before starting
         if (this.engine && !this.engine.canStartNewGame()) {
@@ -522,9 +568,231 @@ class NeonDrop {
                 await this.payment.initialize();
                 console.log('💰 Payment ready');
             }
+            
+            // Initialize daily addiction system
+            await this.initAddictionSystem();
+            
+            // Initialize challenge mode indicator
+            this.initChallengeModeIndicator();
+            
         } catch (error) {
             console.log('🎮 Running in demo mode');
         }
+    }
+
+    /**
+     * Initialize daily addiction system
+     */
+    async initAddictionSystem() {
+        try {
+            // Import addiction system
+            const { DailyAddictionSystem } = await import('../../shared/platform/daily-addiction-system.js');
+            this.addictionSystem = new DailyAddictionSystem();
+            
+            // Check if user can play free game
+            const canPlay = this.addictionSystem.canPlayFreeGame('neondrop');
+            
+            if (!canPlay.canPlay) {
+                this.showAddictionWarning(canPlay);
+            } else {
+                console.log('✅ Free game available for today');
+            }
+            
+        } catch (error) {
+            console.warn('⚠️ Could not initialize addiction system:', error);
+        }
+    }
+
+    /**
+     * Show addiction warning if user can't play
+     */
+    showAddictionWarning(canPlay) {
+        if (canPlay.reason === 'profile_required') {
+            // Show profile requirement modal
+            this.showProfileRequirementModal();
+        } else if (canPlay.reason === 'already_played') {
+            // Show already played message
+            this.showAlreadyPlayedMessage();
+        }
+    }
+
+    /**
+     * Show profile requirement modal
+     */
+    showProfileRequirementModal() {
+        const modal = document.createElement('div');
+        modal.className = 'addiction-modal';
+        modal.innerHTML = `
+            <div class="addiction-modal-content">
+                <div class="modal-header">
+                    <h3>🔐 Profile Required</h3>
+                    <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="requirement-icon">🎮</div>
+                    <h4>Create a Profile to Play Free Games</h4>
+                    <p>To play free daily games and earn rewards, you need to create a profile with a crypto wallet.</p>
+                    <ul class="requirement-benefits">
+                        <li>🎮 Play 1 free game per day</li>
+                        <li>🔥 Build daily streaks</li>
+                        <li>💰 Earn crypto rewards</li>
+                        <li>🏆 Compete on leaderboards</li>
+                    </ul>
+                    <div class="modal-actions">
+                        <a href="../../pages/user-profile.html" class="btn btn-primary btn-large">
+                            🚀 Create Profile & Wallet
+                        </a>
+                        <button class="btn btn-outline" onclick="this.parentElement.parentElement.parentElement.remove()">
+                            Maybe Later
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add styles
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+        
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Show already played message
+     */
+    showAlreadyPlayedMessage() {
+        const message = document.createElement('div');
+        message.className = 'already-played-message';
+        message.innerHTML = `
+            <div class="message-content">
+                <div class="message-icon">⏰</div>
+                <h4>Already Played Today</h4>
+                <p>You've already played your free game today. Come back tomorrow for another free game!</p>
+                <button class="btn btn-outline" onclick="this.parentElement.parentElement.remove()">
+                    Got it
+                </button>
+            </div>
+        `;
+        
+        // Add styles
+        message.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 24px;
+            color: white;
+            z-index: 10000;
+            max-width: 400px;
+            text-align: center;
+        `;
+        
+        document.body.appendChild(message);
+    }
+
+    /**
+     * Record game play in addiction system
+     */
+    async recordGamePlay(score) {
+        if (this.addictionSystem) {
+            await this.addictionSystem.recordGamePlay('neondrop', score);
+            console.log('🎮 Game play recorded in addiction system');
+        }
+    }
+
+    /**
+     * Initialize challenge mode indicator
+     */
+    initChallengeModeIndicator() {
+        // Listen for game state changes
+        this.engine.on('stateChanged', (state) => {
+            this.updateChallengeModeIndicator(state);
+        });
+    }
+
+    /**
+     * Update challenge mode indicator
+     */
+    updateChallengeModeIndicator(state) {
+        let indicator = document.querySelector('.challenge-mode-indicator');
+        
+        if (state.challengeMode && state.challengeTargetScore > 0) {
+            // Create or update challenge indicator
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.className = 'challenge-mode-indicator';
+                document.body.appendChild(indicator);
+            }
+            
+            indicator.innerHTML = `
+                <div class="challenge-info">
+                    <span>🎯 Challenge Mode</span>
+                    <div class="target-score">Target: ${state.challengeTargetScore.toLocaleString()}</div>
+                </div>
+            `;
+            
+            // Show piece sequence info
+            this.showPieceSequenceInfo(state);
+            
+        } else if (indicator) {
+            // Remove indicator if not in challenge mode
+            indicator.remove();
+        }
+    }
+
+    /**
+     * Show piece sequence information
+     */
+    showPieceSequenceInfo(state) {
+        if (!state.challengeMode || !state.preloadedPieces) return;
+        
+        let sequenceDisplay = document.querySelector('.piece-sequence-display');
+        
+        if (!sequenceDisplay) {
+            sequenceDisplay = document.createElement('div');
+            sequenceDisplay.className = 'piece-sequence-display';
+            document.body.appendChild(sequenceDisplay);
+        }
+        
+        const totalPieces = state.preloadedPieces.length;
+        const usedPieces = state.piecesUsed;
+        const remainingPieces = totalPieces - usedPieces;
+        
+        sequenceDisplay.innerHTML = `
+            <h5>🎮 Fair Play: Same Piece Sequence</h5>
+            <p>Using challenger's exact piece order (${usedPieces}/${totalPieces} used)</p>
+            <div class="piece-sequence-list">
+                ${state.preloadedPieces.slice(0, 10).map((piece, index) => {
+                    let className = 'piece-item';
+                    if (index < usedPieces) className += ' used';
+                    else if (index === usedPieces) className += ' current';
+                    else if (index === usedPieces + 1) className += ' next';
+                    
+                    return `<span class="${className}">${piece}</span>`;
+                }).join('')}
+                ${remainingPieces > 10 ? `<span class="piece-item">+${remainingPieces - 10} more</span>` : ''}
+            </div>
+        `;
+        
+        // Position the display
+        sequenceDisplay.style.position = 'fixed';
+        sequenceDisplay.style.top = '80px';
+        sequenceDisplay.style.right = '20px';
+        sequenceDisplay.style.zIndex = '999';
+        sequenceDisplay.style.maxWidth = '300px';
     }
 }
 

@@ -53,254 +53,381 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BlockZone Lab">
+    
+    <style>
+        /* Access Control Overlay */
+        #accessControl {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .access-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ffff;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .access-title {
+            color: #00ffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .access-subtitle {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .code-input {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .code-input input {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #00ffff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ffff;
+            font-size: 24px;
+            text-align: center;
+            border-radius: 10px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+        }
+        
+        .code-input input:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+        
+        .access-btn {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .access-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .access-error {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .access-error.show {
+            opacity: 1;
+        }
+        
+        /* Hide main content initially */
+        #mainContent {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <!-- Professional Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="/" class="navbar-brand">
-                <span>✧</span> BlockZone Lab
-            </a>
+    <!-- Access Control Overlay -->
+    <div id="accessControl">
+        <div class="access-container">
+            <div class="access-title">🔒 Access Required</div>
+            <div class="access-subtitle">Enter the 4-digit code to access BlockZone Lab</div>
             
-            <ul class="navbar-nav">
-                <li><a href="/" class="nav-link active">Home</a></li>
-                <li><a href="/pages/business-model.html" class="nav-link">Business</a></li>
-                <li><a href="/pages/whitepaper.html" class="nav-link">Whitepaper</a></li>
-                <li><a href="/pages/user-profile.html" class="nav-link">Profile</a></li>
-                <li><a href="/pages/tournaments.html" class="nav-link">Tournaments</a></li>
-            </ul>
-            
-            <div class="navbar-actions">
-                <a href="/pages/partnerships.html" class="btn btn-secondary btn-sm">Partner With Us</a>
-                <a href="/pages/whitepaper.html" class="btn btn-primary btn-sm">View Whitepaper</a>
+            <div class="code-input">
+                <input type="text" maxlength="1" class="code-digit" data-index="0">
+                <input type="text" maxlength="1" class="code-digit" data-index="1">
+                <input type="text" maxlength="1" class="code-digit" data-index="2">
+                <input type="text" maxlength="1" class="code-digit" data-index="3">
             </div>
             
-            <button class="navbar-toggle" id="navbarToggle">
-                <span>☰</span>
-            </button>
+            <button class="access-btn" onclick="checkCode()">Enter Site</button>
+            <div class="access-error" id="accessError">Incorrect code. Please try again.</div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">
-                🏆 PROFESSIONAL GAMING PLATFORM v1.0
-            </div>
-            
-            <h1 class="hero-title">
-                Where Gaming Meets<br>
-                <span class="text-accent">Blockchain Education</span>
-            </h1>
-            
-            <p class="hero-subtitle">
-                Viral gaming platform with micro-payments and educational content.<br>
-                Built on Sonic Labs blockchain with 400,000+ TPS and 1-second finality.
-            </p>
-            
-            <div class="hero-actions">
-                <a href="/pages/business-model.html" class="btn btn-primary btn-lg">
-                    View Business Model
+    <!-- Main Content (hidden until access granted) -->
+    <div id="mainContent">
+        <!-- Professional Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="/" class="navbar-brand">
+                    <span>✧</span> BlockZone Lab
                 </a>
-                <a href="/pages/whitepaper.html" class="btn btn-secondary btn-lg">
-                    Read Whitepaper
-                </a>
+                
+                <ul class="navbar-nav">
+                    <li><a href="/" class="nav-link active">Home</a></li>
+                    <li><a href="/pages/business-model.html" class="nav-link">Business</a></li>
+                    <li><a href="/pages/whitepaper.html" class="nav-link">Whitepaper</a></li>
+                    <li><a href="/pages/user-profile.html" class="nav-link">Profile</a></li>
+                    <li><a href="/pages/tournaments.html" class="nav-link">Tournaments</a></li>
+                </ul>
+                
+                <div class="navbar-actions">
+                    <a href="/pages/partnerships.html" class="btn btn-secondary btn-sm">Partner With Us</a>
+                    <a href="/pages/whitepaper.html" class="btn btn-primary btn-sm">View Whitepaper</a>
+                </div>
+                
+                <button class="navbar-toggle" id="navbarToggle">
+                    <span>☰</span>
+                </button>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- Value Proposition -->
-    <section class="section">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2>Dual Revenue Streams</h2>
-                <p class="lead">Sustainable business model combining gaming and education</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3 class="feature-title">Championship Cycles</h3>
-                    <p class="feature-description">
-                        12-hour competitions with 25¢ USDC.E entry fees. 
-                        90% of prize pools distributed to winners, 10% platform fee.
-                    </p>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    🏆 PROFESSIONAL GAMING PLATFORM v1.0
                 </div>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">🔗</div>
-                    <h3 class="feature-title">Friend Challenges</h3>
-                    <p class="feature-description">
-                        Viral challenge links driving organic growth. 
-                        Players create and share custom challenges with friends.
-                    </p>
-                </div>
+                <h1 class="hero-title">
+                    Where Gaming Meets<br>
+                    <span class="text-accent">Blockchain Education</span>
+                </h1>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">📚</div>
-                    <h3 class="feature-title">Blockchain Education</h3>
-                    <p class="feature-description">
-                        Interactive learning platform integrated with gaming. 
-                        Educational content monetized through premium subscriptions.
-                    </p>
+                <p class="hero-subtitle">
+                    Viral gaming platform with micro-payments and educational content.<br>
+                    Built on Sonic Labs blockchain with 400,000+ TPS and 1-second finality.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="/pages/business-model.html" class="btn btn-primary btn-lg">
+                        View Business Model
+                    </a>
+                    <a href="/pages/whitepaper.html" class="btn btn-secondary btn-lg">
+                        Read Whitepaper
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Market Opportunity -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2>Market Opportunity</h2>
-                <p class="lead">Massive addressable market in gaming and blockchain education</p>
+        <!-- Value Proposition -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h2>Dual Revenue Streams</h2>
+                    <p class="lead">Sustainable business model combining gaming and education</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3 class="feature-title">Championship Cycles</h3>
+                        <p class="feature-description">
+                            12-hour competitions with 25¢ USDC.E entry fees. 
+                            90% of prize pools distributed to winners, 10% platform fee.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">Friend Challenges</h3>
+                        <p class="feature-description">
+                            Viral challenge links driving organic growth. 
+                            Players create and share custom challenges with friends.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3 class="feature-title">Blockchain Education</h3>
+                        <p class="feature-description">
+                            Interactive learning platform integrated with gaming. 
+                            Educational content monetized through premium subscriptions.
+                        </p>
+                    </div>
+                </div>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number">$180B</span>
-                    <span class="stat-label">Global Gaming Market</span>
-                </div>
-                
-                <div class="stat-card">
-                    <span class="stat-number">$10B</span>
-                    <span class="stat-label">Blockchain Gaming Growth</span>
-                </div>
-                
-                <div class="stat-card">
-                    <span class="stat-number">90%</span>
-                    <span class="stat-label">Prize Pool Distribution</span>
-                </div>
-                
-                <div class="stat-card">
-                    <span class="stat-number">400K+</span>
-                    <span class="stat-label">TPS on Sonic Labs</span>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Technology Stack -->
-    <section class="section">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2>Built on Sonic Labs</h2>
-                <p class="lead">Enterprise-grade blockchain infrastructure</p>
-            </div>
-            
-            <div class="grid grid-3">
-                <div class="card card-business text-center">
-                    <h3>400,000+ TPS</h3>
-                    <p>High-performance transaction processing</p>
+        <!-- Market Opportunity -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h2>Market Opportunity</h2>
+                    <p class="lead">Massive addressable market in gaming and blockchain education</p>
                 </div>
                 
-                <div class="card card-business text-center">
-                    <h3>1-Second Finality</h3>
-                    <p>Near-instant transaction confirmation</p>
-                </div>
-                
-                <div class="card card-business text-center">
-                    <h3>90% Fee Sharing</h3>
-                    <p>Generous revenue sharing with developers</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">$180B</span>
+                        <span class="stat-label">Global Gaming Market</span>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <span class="stat-number">$10B</span>
+                        <span class="stat-label">Blockchain Gaming Growth</span>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <span class="stat-number">90%</span>
+                        <span class="stat-label">Prize Pool Distribution</span>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <span class="stat-number">400K+</span>
+                        <span class="stat-label">TPS on Sonic Labs</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Current Platform Status -->
-    <section class="section">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2>Current Platform Status</h2>
-                <p class="lead">Live platform with proven functionality</p>
-            </div>
-            
-            <div class="grid grid-2">
-                <div class="card card-glow">
-                    <h3>🎮 Neon Drop Game</h3>
-                    <p>Fully functional arcade-style game with leaderboards, friend challenges, and championship cycles. Players can earn USDC through competitive gameplay.</p>
-                    <a href="/games/neondrop/" class="btn btn-neon-cyan">Play Now</a>
+        <!-- Technology Stack -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h2>Built on Sonic Labs</h2>
+                    <p class="lead">Enterprise-grade blockchain infrastructure</p>
                 </div>
                 
-                <div class="card card-glow">
-                    <h3>📚 Blockchain Academy</h3>
-                    <p>Comprehensive educational platform with interactive lessons covering blockchain fundamentals, cryptocurrency, and Web3 technology.</p>
-                    <a href="/academy/" class="btn btn-neon-lime">Start Learning</a>
+                <div class="grid grid-3">
+                    <div class="card card-business text-center">
+                        <h3>400,000+ TPS</h3>
+                        <p>High-performance transaction processing</p>
+                    </div>
+                    
+                    <div class="card card-business text-center">
+                        <h3>1-Second Finality</h3>
+                        <p>Near-instant transaction confirmation</p>
+                    </div>
+                    
+                    <div class="card card-business text-center">
+                        <h3>90% Fee Sharing</h3>
+                        <p>Generous revenue sharing with developers</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Investment Opportunity -->
-    <section class="section">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2>Partnership & Investment Opportunities</h2>
-                <p class="lead">Seeking strategic partners and grants to accelerate platform development</p>
-            </div>
-            
-            <div class="grid grid-3">
-                <div class="card card-business">
-                    <h3>Grant Funding</h3>
-                    <p>Seeking grants from Sonic Labs Innovator Fund and other blockchain development programs.</p>
+        <!-- Current Platform Status -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h2>Current Platform Status</h2>
+                    <p class="lead">Live platform with proven functionality</p>
                 </div>
                 
-                <div class="card card-business">
-                    <h3>Strategic Partnerships</h3>
-                    <p>Collaborating with gaming studios, educational institutions, and blockchain companies.</p>
-                </div>
-                
-                <div class="card card-business">
-                    <h3>Platform Expansion</h3>
-                    <p>Scaling to support multiple games, advanced educational content, and mobile applications.</p>
+                <div class="grid grid-2">
+                    <div class="card card-glow">
+                        <h3>🎮 Neon Drop Game</h3>
+                        <p>Fully functional arcade-style game with leaderboards, friend challenges, and championship cycles. Players can earn USDC through competitive gameplay.</p>
+                        <a href="/games/neondrop/" class="btn btn-neon-cyan">Play Now</a>
+                    </div>
+                    
+                    <div class="card card-glow">
+                        <h3>📚 Blockchain Academy</h3>
+                        <p>Comprehensive educational platform with interactive lessons covering blockchain fundamentals, cryptocurrency, and Web3 technology.</p>
+                        <a href="/academy/" class="btn btn-neon-lime">Start Learning</a>
+                    </div>
                 </div>
             </div>
-            
-            <div class="text-center mt-8">
-                <a href="/pages/partnerships.html" class="btn btn-primary btn-xl">
-                    Explore Partnership Opportunities
-                </a>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>BlockZone Lab</h3>
-                    <p>Professional blockchain gaming platform with integrated education. Built on Sonic Labs for maximum performance and scalability.</p>
+        <!-- Investment Opportunity -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center mb-8">
+                    <h2>Partnership & Investment Opportunities</h2>
+                    <p class="lead">Seeking strategic partners and grants to accelerate platform development</p>
                 </div>
                 
-                <div class="footer-section">
-                    <h3>Platform</h3>
-                    <p><a href="/games/">Games</a></p>
-                    <p><a href="/academy/">Academy</a></p>
-                    <p><a href="/pages/technology.html">Technology</a></p>
-                    <p><a href="/pages/roadmap.html">Roadmap</a></p>
+                <div class="grid grid-3">
+                    <div class="card card-business">
+                        <h3>Grant Funding</h3>
+                        <p>Seeking grants from Sonic Labs Innovator Fund and other blockchain development programs.</p>
+                    </div>
+                    
+                    <div class="card card-business">
+                        <h3>Strategic Partnerships</h3>
+                        <p>Collaborating with gaming studios, educational institutions, and blockchain companies.</p>
+                    </div>
+                    
+                    <div class="card card-business">
+                        <h3>Platform Expansion</h3>
+                        <p>Scaling to support multiple games, advanced educational content, and mobile applications.</p>
+                    </div>
                 </div>
                 
-                <div class="footer-section">
-                    <h3>Business</h3>
-                    <p><a href="/pages/business-model.html">Business Model</a></p>
-                    <p><a href="/pages/whitepaper.html">Whitepaper</a></p>
-                    <p><a href="/pages/partnerships.html">Partnerships</a></p>
-                    <p><a href="/pages/team.html">Team</a></p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <p><a href="/pages/privacy.html">Privacy Policy</a></p>
-                    <p><a href="/pages/terms.html">Terms of Service</a></p>
+                <div class="text-center mt-8">
+                    <a href="/pages/partnerships.html" class="btn btn-primary btn-xl">
+                        Explore Partnership Opportunities
+                    </a>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 BlockZone Lab. All rights reserved. Built on Sonic Labs blockchain.</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3>BlockZone Lab</h3>
+                        <p>Professional blockchain gaming platform with integrated education. Built on Sonic Labs for maximum performance and scalability.</p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h3>Platform</h3>
+                        <p><a href="/games/">Games</a></p>
+                        <p><a href="/academy/">Academy</a></p>
+                        <p><a href="/pages/technology.html">Technology</a></p>
+                        <p><a href="/pages/roadmap.html">Roadmap</a></p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h3>Business</h3>
+                        <p><a href="/pages/business-model.html">Business Model</a></p>
+                        <p><a href="/pages/whitepaper.html">Whitepaper</a></p>
+                        <p><a href="/pages/partnerships.html">Partnerships</a></p>
+                        <p><a href="/pages/team.html">Team</a></p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h3>Legal</h3>
+                        <p><a href="/pages/privacy.html">Privacy Policy</a></p>
+                        <p><a href="/pages/terms.html">Terms of Service</a></p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 BlockZone Lab. All rights reserved. Built on Sonic Labs blockchain.</p>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <!-- Core JavaScript -->
     <script type="module">
@@ -364,6 +491,131 @@
             document.querySelectorAll('img[data-src]').forEach(img => {
                 imageObserver.observe(img);
             });
+        }
+    </script>
+
+    <!-- Access Control JavaScript -->
+    <script>
+        // Access Control System
+        const CORRECT_CODE = '4321';
+        let currentCode = '';
+        
+        // Initialize code input functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            
+            // Handle input events
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    
+                    // Only allow numbers
+                    if (!/^\d*$/.test(value)) {
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Update current code
+                    currentCode = getCurrentCode();
+                    
+                    // Auto-focus next input
+                    if (value && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+                
+                // Handle paste
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text');
+                    const numbers = pastedData.replace(/\D/g, '').slice(0, 4);
+                    
+                    if (numbers.length === 4) {
+                        codeInputs.forEach((input, i) => {
+                            input.value = numbers[i] || '';
+                        });
+                        currentCode = numbers;
+                    }
+                });
+            });
+            
+            // Handle Enter key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    checkCode();
+                }
+            });
+        });
+        
+        // Get current code from inputs
+        function getCurrentCode() {
+            const inputs = document.querySelectorAll('.code-digit');
+            return Array.from(inputs).map(input => input.value).join('');
+        }
+        
+        // Check if code is correct
+        function checkCode() {
+            const enteredCode = getCurrentCode();
+            const errorElement = document.getElementById('accessError');
+            
+            if (enteredCode === CORRECT_CODE) {
+                // Grant access
+                grantAccess();
+            } else {
+                // Show error
+                errorElement.classList.add('show');
+                
+                // Clear inputs after a delay
+                setTimeout(() => {
+                    clearCodeInputs();
+                    errorElement.classList.remove('show');
+                }, 2000);
+            }
+        }
+        
+        // Grant access to the site
+        function grantAccess() {
+            const accessControl = document.getElementById('accessControl');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Fade out access control
+            accessControl.style.transition = 'opacity 0.5s ease';
+            accessControl.style.opacity = '0';
+            
+            // Show main content
+            mainContent.style.display = 'block';
+            mainContent.style.opacity = '0';
+            mainContent.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                accessControl.style.display = 'none';
+                mainContent.style.opacity = '1';
+                
+                // Store access in session storage
+                sessionStorage.setItem('blockzoneAccess', 'granted');
+            }, 500);
+        }
+        
+        // Clear code inputs
+        function clearCodeInputs() {
+            const inputs = document.querySelectorAll('.code-digit');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            inputs[0].focus();
+        }
+        
+        // Check if access was already granted in this session
+        if (sessionStorage.getItem('blockzoneAccess') === 'granted') {
+            document.getElementById('accessControl').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
         }
     </script>
 </body>

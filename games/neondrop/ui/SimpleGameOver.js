@@ -941,6 +941,11 @@ export class SimpleGameOver {
         const isInTournament = tournamentSuccess || this.hasFreePlays || localStorage.getItem(`tournament_entered_${new Date().toDateString()}`);
         const tournamentRank = this.playerRank || rank;
         
+        // Record game play in addiction system
+        if (window.neonDrop?.recordGamePlay) {
+            await window.neonDrop.recordGamePlay(this.finalScore);
+        }
+        
         this.container.innerHTML = `
             <div class="game-over-card" style="
                 background: linear-gradient(135deg, rgba(15, 15, 35, 0.95), rgba(25, 25, 55, 0.95));

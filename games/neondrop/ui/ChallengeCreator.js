@@ -46,6 +46,9 @@ export class ChallengeCreator {
             throw new Error('Invalid challenge tier');
         }
 
+        // Extract piece sequence from the game log
+        const pieceSequence = this.extractPieceSequence(gameLog);
+        
         // Generate 4x speed replay video data
         const replayData = this.generateReplayData(gameLog);
         
@@ -60,6 +63,7 @@ export class ChallengeCreator {
             endTime: Date.now() + (tierConfig.timeLimit * 60 * 60 * 1000),
             gameLog: gameLog,
             replayData: replayData,
+            pieceSequence: pieceSequence,
             status: 'active',
             challengers: [],
             attempts: {},
@@ -77,6 +81,37 @@ export class ChallengeCreator {
             shareLink,
             replayVideo: replayData.videoUrl
         };
+    }
+
+    /**
+     * Extract piece sequence from game log
+     */
+    extractPieceSequence(gameLog) {
+        const pieceSequence = [];
+        
+        // Extract pieces from bag history
+        if (gameLog.bagHistory && gameLog.bagHistory.length > 0) {
+            gameLog.bagHistory.forEach(entry => {
+                if (entry.pieceType) {
+                    pieceSequence.push(entry.pieceType);
+                }
+            });
+        }
+        
+        // Also extract from frame states if available
+        if (gameLog.frameStates && gameLog.frameStates.length > 0) {
+            gameLog.frameStates.forEach(frame => {
+                if (frame.currentPiece && !pieceSequence.includes(frame.currentPiece)) {
+                    pieceSequence.push(frame.currentPiece);
+                }
+                if (frame.nextPiece && !pieceSequence.includes(frame.nextPiece)) {
+                    pieceSequence.push(frame.nextPiece);
+                }
+            });
+        }
+        
+        console.log(`🎯 Extracted ${pieceSequence.length} pieces for challenge sequence`);
+        return pieceSequence;
     }
 
     /**
