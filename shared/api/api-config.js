@@ -4,8 +4,11 @@
    ========================================================================== */
 
 export const API_CONFIG = {
-  // Production API endpoints
+  // Production API endpoints (temporarily disabled until backend is deployed)
   WORKER_URL: 'https://api.blockzonelab.com',
+  
+  // Fallback for when backend is not available
+  FALLBACK_MODE: true, // Set to true to disable API calls temporarily
   
   // API version
   API_VERSION: 'v1',

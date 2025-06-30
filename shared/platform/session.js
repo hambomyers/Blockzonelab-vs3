@@ -2,7 +2,8 @@
 // Handles session detection, creation, upgrade, and profile sync
 // Works with Cloudflare Worker backend (see /api/auth/session, /api/auth/upgrade)
 
-const API_BASE = 'https://api.blockzonelab.com';
+import apiClient from '../api/api-client.js';
+
 const SESSION_KEY = 'bzlab_session';
 const PROFILE_KEY = 'bzlab_profile';
 
@@ -46,21 +47,20 @@ class SessionManager {
         let session = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
         
         if (session && session.session_id && session.player_id) {
-            // Validate session with backend
+            // Try to validate session with backend (optional)
             try {
-                const res = await fetch(`${API_BASE}/api/auth/validate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ session_id: session.session_id })
-                });
-                
-                if (res.ok) {
+                const data = await apiClient.validateSession(session.session_id);
+                if (data.success) {
                     return session;
                 } else {
-                    console.warn('⚠️ Session validation failed (status:', res.status, '), creating new session');
+                    console.warn('⚠️ Session validation failed (status error), using local session');
                 }
             } catch (error) {
-                console.warn('⚠️ Session validation failed (network error), creating new session');
+                if (error.message === 'API_UNAVAILABLE') {
+                    console.warn('⚠️ Backend unavailable, using local session');
+                } else {
+                    console.warn('⚠️ Session validation failed (network error), using local session');
+                }
             }
         }
         
@@ -87,11 +87,11 @@ class SessionManager {
             const data = await res.json();
             if (data.success) {
                 localStorage.setItem(SESSION_KEY, JSON.stringify(data));
-                console.log('✅ Created anonymous session:', data.player_id);
+                console.log('✅ Created session with backend:', data.player_id);
                 return data;
             }
         } catch (error) {
-            console.error('❌ Failed to create session:', error);
+            console.warn('⚠️ Backend session creation failed (network/CORS error), creating local session');
         }
         
         // Fallback: create local-only session
@@ -103,6 +103,7 @@ class SessionManager {
         };
         
         localStorage.setItem(SESSION_KEY, JSON.stringify(fallbackSession));
+        console.log('✅ Created local-only session:', fallbackSession.player_id);
         return fallbackSession;
     }
 
@@ -135,13 +136,29 @@ class SessionManager {
                 this.session.player_id = data.player_id;
                 localStorage.setItem(SESSION_KEY, JSON.stringify(this.session));
                 
-                console.log('✅ Session upgraded:', upgrade_type);
+                console.log('✅ Session upgraded with backend:', upgrade_type);
                 return data.profile;
             }
             throw new Error(data.error || 'Failed to upgrade session');
         } catch (error) {
-            console.error('❌ Session upgrade failed:', error);
-            throw error;
+            console.warn('⚠️ Backend session upgrade failed (network/CORS error), upgrading locally');
+            
+            // Local fallback for session upgrade
+            const localProfile = {
+                player_id: this.session.player_id,
+                display_name: display_name || 'Player',
+                tier: upgrade_type === 'wallet' ? 'wallet' : 'social',
+                wallet_address: wallet_address || null,
+                email: email || null,
+                created_at: Date.now(),
+                local_only: true
+            };
+            
+            this.profile = localProfile;
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(localProfile));
+            
+            console.log('✅ Session upgraded locally:', upgrade_type);
+            return localProfile;
         }
     }
 
@@ -231,10 +248,14 @@ class SessionManager {
             });
             
             if (response.ok) {
-                console.log('✅ Referral tracked:', referrerId);
+                console.log('✅ Referral tracked with backend:', referrerId);
             }
         } catch (error) {
-            console.warn('⚠️ Could not track referral:', error);
+            console.warn('⚠️ Could not track referral (network/CORS error), tracking locally');
+            // Store referral locally for later sync
+            const referrals = JSON.parse(localStorage.getItem('local_referrals') || '[]');
+            referrals.push({ referrer_id: referrerId, timestamp: Date.now() });
+            localStorage.setItem('local_referrals', JSON.stringify(referrals));
         }
     }
 
