@@ -4,20 +4,51 @@
    ========================================================================== */
 
 export const API_CONFIG = {
-  // Main Cloudflare Worker API - Professional Domain
-  // TODO: Switch to https://api.blockzonelab.com once DNS propagates
-  WORKER_URL: 'https://api-blockzonelab.workers.dev',
-    // Endpoints
+  // Production API endpoints
+  WORKER_URL: 'https://api.blockzonelab.com',
+  
+  // API version
+  API_VERSION: 'v1',
+  
+  // Endpoints
   ENDPOINTS: {
-    LEADERBOARD: '/api/leaderboard',
-    SCORES: '/api/scores', 
-    PLAYERS: '/api/players',
-    TOURNAMENTS: '/api/tournaments'
+    AUTH: {
+      VALIDATE: '/api/auth/validate',
+      SESSION: '/api/auth/session',
+      LOGIN: '/api/auth/login',
+      LOGOUT: '/api/auth/logout'
+    },
+    PLAYERS: {
+      REGISTER: '/api/players/register',
+      PROFILE: '/api/players/profile',
+      UPDATE: '/api/players/update',
+      STATS: '/api/players/stats'
+    },
+    SCORES: {
+      SUBMIT: '/api/scores/submit',
+      LEADERBOARD: '/api/scores/leaderboard',
+      DAILY: '/api/scores/daily',
+      HISTORY: '/api/scores/history'
+    },
+    TOURNAMENTS: {
+      CREATE: '/api/tournaments/create',
+      JOIN: '/api/tournaments/join',
+      STATUS: '/api/tournaments/status',
+      RESULTS: '/api/tournaments/results'
+    },
+    CHALLENGES: {
+      CREATE: '/api/challenges/create',
+      ACCEPT: '/api/challenges/accept',
+      STATUS: '/api/challenges/status',
+      COMPLETE: '/api/challenges/complete'
+    }
   },
   
   // Request configuration
-  DEFAULT_HEADERS: {
-    'Content-Type': 'application/json'
+  REQUEST_CONFIG: {
+    TIMEOUT: 10000, // 10 seconds
+    RETRY_ATTEMPTS: 3,
+    RETRY_DELAY: 1000 // 1 second
   },
   
   // Default parameters

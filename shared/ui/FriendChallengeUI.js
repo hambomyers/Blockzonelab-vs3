@@ -19,7 +19,7 @@ export class FriendChallengeUI {
         this.container = null;
         this.isVisible = false;
         this.currentChallenge = null;
-        this.apiBase = 'https://api-blockzonelab.workers.dev';
+        this.apiBase = 'https://api.blockzonelab.com';
         this.prizeCalculator = new PrizeCalculator();
         
         this.createContainer();
@@ -225,7 +225,7 @@ export class FriendChallengeUI {
         const playerId = sessionManager.getPlayerId();
         const playerName = sessionManager.getDisplayName();
         
-        const response = await fetch('https://api-blockzonelab.workers.dev/api/challenges/create', {
+        const response = await fetch('https://api.blockzonelab.com/api/challenges/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

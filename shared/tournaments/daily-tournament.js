@@ -5,7 +5,7 @@
 
 export class DailyTournament {
     constructor() {
-        this.apiBase = 'https://api-blockzonelab.workers.dev/api';
+        this.apiBase = 'https://api.blockzonelab.com/api';
         this.isActive = false;        this.participants = 0;
         this.prizePool = 0;
         this.timeRemaining = '00:00:00';

@@ -2,7 +2,7 @@
 // Handles session detection, creation, upgrade, and profile sync
 // Works with Cloudflare Worker backend (see /api/auth/session, /api/auth/upgrade)
 
-const API_BASE = 'https://api-blockzonelab.workers.dev';
+const API_BASE = 'https://api.blockzonelab.com';
 const SESSION_KEY = 'bzlab_session';
 const PROFILE_KEY = 'bzlab_profile';
 

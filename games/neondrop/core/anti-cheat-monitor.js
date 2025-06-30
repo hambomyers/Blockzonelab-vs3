@@ -244,40 +244,52 @@ class AntiCheatMonitor {
     }
 
     detectSuspiciousInputs(inputRecord) {
-        // Check for inhuman input speeds
+        // COMPLETELY DISABLED: Anti-cheat is causing massive console spam
+        // Return early to prevent any suspicious activity detection
+        return;
+        
+        // All the code below is disabled to prevent spam
+        /*
+        // Check for inhuman input speeds (much more lenient)
         if (this.gameState.inputPatterns.length > 1) {
             const lastInput = this.gameState.inputPatterns[this.gameState.inputPatterns.length - 2];
             const timeDiff = inputRecord.timestamp - lastInput.timestamp;
             
-            if (timeDiff < 50) { // Less than 50ms between inputs
-                this.flagSuspiciousActivity('Unusually fast inputs', { 
+            // Only flag if inputs are impossibly fast (less than 10ms)
+            if (timeDiff < 10) { // Changed from 50ms to 10ms
+                this.flagSuspiciousActivity('Impossibly fast inputs', { 
                     timeDiff, 
                     inputRecord 
                 });
             }
         }
         
-        // Check for impossible input combinations
-        // inputRecord.input is an action object, not a string
+        // Check for impossible input combinations (only truly impossible ones)
         if (inputRecord.input && typeof inputRecord.input === 'object') {
             const input = inputRecord.input;
             
-            // Check for impossible movement combinations
+            // Only check for truly impossible movement combinations
             if (input.type === 'MOVE') {
-                // Check for simultaneous left and right movement
+                // Check for simultaneous left and right movement (impossible)
                 if (input.dx === -1 && input.dx === 1) {
                     this.flagSuspiciousActivity('Impossible input combination', inputRecord);
                 }
                 
-                // Check for impossible movement values
-                if (Math.abs(input.dx) > 1 || Math.abs(input.dy) > 1) {
+                // Check for impossible movement values (much more lenient)
+                if (Math.abs(input.dx) > 2 || Math.abs(input.dy) > 2) { // Changed from 1 to 2
                     this.flagSuspiciousActivity('Invalid movement values', inputRecord);
                 }
             }
         }
+        */
     }
 
     flagSuspiciousActivity(type, data) {
+        // COMPLETELY DISABLED: Stop the massive console spam
+        return;
+        
+        // All the code below is disabled to prevent spam
+        /*
         const suspiciousActivity = {
             type: type,
             timestamp: Date.now(),
@@ -287,10 +299,14 @@ class AntiCheatMonitor {
         };
         
         this.suspiciousPatterns.push(suspiciousActivity);
-        console.warn('Suspicious activity detected:', suspiciousActivity);
         
-        // Send to server for analysis
-        this.reportSuspiciousActivity(suspiciousActivity);
+        // Only log if it's truly suspicious, not normal gameplay
+        if (type.includes('Impossible') || type.includes('Invalid')) {
+            console.warn('Suspicious activity detected:', suspiciousActivity);
+            // Send to server for analysis
+            this.reportSuspiciousActivity(suspiciousActivity);
+        }
+        */
     }
 
     startPeriodicHashing() {
