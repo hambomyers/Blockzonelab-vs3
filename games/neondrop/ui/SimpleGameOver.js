@@ -138,6 +138,9 @@ export class SimpleGameOver {
         
         console.log('🎮 Game Over - Score:', this.score, 'Player:', this.playerName || 'New Player');
         
+        // CRITICAL FIX: Set display to flex BEFORE adding content
+        this.container.style.display = 'flex';
+        
         // Check for simplified onboarding data
         const gameName = localStorage.getItem('gameName');
         const sessionId = localStorage.getItem('sessionId');

@@ -81,19 +81,21 @@ export class StatsPanel {    constructor() {
     }setupPanel() {
         this.container = document.createElement('div');
         this.container.className = 'stats-panel';
-        // Start with just the glowing word
-        this.container.innerHTML = 'STATS';
+        
+        // FIXED: Show full content immediately instead of just "STATS"
+        this.container.innerHTML = this.getContent();
         
         // Store the full content for hover expansion
         this.fullContent = this.getContent();
 
         document.body.appendChild(this.container);
+        
+        // FIXED: Initialize stats immediately
+        setTimeout(() => this.updateStats(), 100);
     }    setupEventListeners() {
         // Desktop hover - expand to full content
         this.container.addEventListener('mouseenter', () => {
             this.container.classList.add('visible');
-            // Switch to full content
-            this.container.innerHTML = this.fullContent;
             // Update stats with current data
             this.updateStats();
             // Expand size and position  
@@ -103,8 +105,7 @@ export class StatsPanel {    constructor() {
 
         this.container.addEventListener('mouseleave', () => {
             this.container.classList.remove('visible');
-            // Switch back to just the word
-            this.container.innerHTML = 'STATS';
+            // FIXED: Keep full content visible, just collapse size
             // Return to collapsed position
             this.container.style.left = this.container.dataset.collapsedLeft + 'px';
             this.container.style.width = this.container.dataset.collapsedWidth + 'px';
@@ -242,11 +243,9 @@ export class StatsPanel {    constructor() {
      * Start automatic stats updates during gameplay
      */
     startAutoUpdate() {
-        // Update stats every 500ms when visible
+        // FIXED: Update stats every 500ms continuously, not just when hovering
         this.updateInterval = setInterval(() => {
-            if (this.container && this.container.classList.contains('visible')) {
-                this.updateStats();
-            }
+            this.updateStats();
         }, 500);
     }
 

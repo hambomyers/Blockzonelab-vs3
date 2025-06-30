@@ -1,5 +1,5 @@
 /**
-* core/audio-system.js - Enhanced audio with better drop sounds
+* core/audio-system.js - Enhanced audio with better drop sounds and preloading
 */
 
 export class AudioSystem {
@@ -9,6 +9,7 @@ export class AudioSystem {
        this.ctx = null;
        this.initialized = false;
        this.config = config;
+       this.preloadedSounds = new Map(); // Cache for preloaded sounds
    }
 
    init() {
@@ -24,8 +25,51 @@ export class AudioSystem {
            if (this.ctx.state === 'suspended') {
                this.ctx.resume();
            }
+           
+           // Preload common sounds for instant playback
+           this.preloadSounds();
        } catch (e) {
            this.enabled = false;
+       }
+   }
+
+   preloadSounds() {
+       if (!this.ctx || !this.enabled) return;
+       
+       // Preload the most common sounds
+       const sounds = [
+           { type: 'drop', frequency: 80, duration: 0.1, waveType: 'sine' },
+           { type: 'land', frequency: 120, duration: 0.15, waveType: 'sine' },
+           { type: 'rotate', frequency: 1200, duration: 0.03, waveType: 'square' }
+       ];
+       
+       sounds.forEach(sound => {
+           this.preloadSound(sound);
+       });
+   }
+
+   preloadSound(soundConfig) {
+       try {
+           const osc = this.ctx.createOscillator();
+           const gain = this.ctx.createGain();
+           
+           osc.type = soundConfig.waveType;
+           osc.frequency.setValueAtTime(soundConfig.frequency, this.ctx.currentTime);
+           
+           const volume = soundConfig.type === 'rotate' ? this.volume * 0.0375 : 
+                         soundConfig.type === 'land' ? this.volume * 1.2 : 
+                         this.volume * 0.6;
+           
+           gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+           gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + soundConfig.duration);
+           
+           osc.connect(gain);
+           gain.connect(this.ctx.destination);
+           
+           // Store the configuration for instant playback
+           this.preloadedSounds.set(soundConfig.type, soundConfig);
+       } catch (error) {
+           console.warn('Failed to preload sound:', soundConfig.type, error);
        }
    }
 

@@ -258,8 +258,22 @@ class AntiCheatMonitor {
         }
         
         // Check for impossible input combinations
-        if (inputRecord.input.includes('left') && inputRecord.input.includes('right')) {
-            this.flagSuspiciousActivity('Impossible input combination', inputRecord);
+        // inputRecord.input is an action object, not a string
+        if (inputRecord.input && typeof inputRecord.input === 'object') {
+            const input = inputRecord.input;
+            
+            // Check for impossible movement combinations
+            if (input.type === 'MOVE') {
+                // Check for simultaneous left and right movement
+                if (input.dx === -1 && input.dx === 1) {
+                    this.flagSuspiciousActivity('Impossible input combination', inputRecord);
+                }
+                
+                // Check for impossible movement values
+                if (Math.abs(input.dx) > 1 || Math.abs(input.dy) > 1) {
+                    this.flagSuspiciousActivity('Invalid movement values', inputRecord);
+                }
+            }
         }
     }
 
