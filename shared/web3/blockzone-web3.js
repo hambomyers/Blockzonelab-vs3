@@ -48,7 +48,7 @@ export class BlockZoneWeb3 {
     }
 
     async checkExistingConnection() {
-        if (window.ethereum) {
+        if (window.ethereum && window.ethereum.isMetaMask) {
             try {
                 const accounts = await window.ethereum.request({
                     method: 'eth_accounts'
@@ -64,8 +64,8 @@ export class BlockZoneWeb3 {
     }
 
     async connect() {
-        if (!window.ethereum) {
-            throw new Error('Please install MetaMask or another Web3 wallet');
+        if (!window.ethereum || !window.ethereum.isMetaMask) {
+            throw new Error('Please install MetaMask to use BlockZone Lab');
         }
 
         try {
@@ -88,7 +88,7 @@ export class BlockZoneWeb3 {
             this.network = network;
 
             // Switch to Sonic if needed
-            if (network.chainId !== 250 && network.chainId !== 4002) { // Sonic mainnet/testnet
+            if (network.chainId !== 57054) { // Sonic Blaze Testnet
                 await this.switchToSonic('testnet');
             }
 
@@ -131,10 +131,57 @@ export class BlockZoneWeb3 {
     }
 
     async switchToSonic(network = 'testnet') {
-        if (window.switchToSonic) {
-            await window.switchToSonic(network);
-        } else {
-            console.warn('Sonic network switch function not available');
+        try {
+            console.log(`🌐 Switching to Sonic Labs ${network}...`);
+            
+            const chainId = '0xDEB6'; // 57054 in hex
+            const networkConfig = {
+                testnet: {
+                    chainId: '0xDEB6',
+                    chainName: 'Sonic Blaze Testnet',
+                    nativeCurrency: {
+                        name: 'Sonic',
+                        symbol: 'S',
+                        decimals: 18
+                    },
+                    rpcUrls: ['https://rpc.sonic.oasys.games'],
+                    blockExplorerUrls: ['https://testnet.sonicscan.org']
+                },
+                mainnet: {
+                    chainId: '0xDEB6',
+                    chainName: 'Sonic Labs',
+                    nativeCurrency: {
+                        name: 'Sonic',
+                        symbol: 'S',
+                        decimals: 18
+                    },
+                    rpcUrls: ['https://rpc.sonic.oasys.games'],
+                    blockExplorerUrls: ['https://sonicscan.org']
+                }
+            };
+            
+            try {
+                // Try to switch to the network
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: chainId }]
+                });
+            } catch (error) {
+                if (error.code === 4902) {
+                    // Network not added, add it
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [networkConfig[network]]
+                    });
+                } else {
+                    throw error;
+                }
+            }
+            
+            console.log(`✅ Switched to Sonic Labs ${network}`);
+        } catch (error) {
+            console.error('❌ Network switch failed:', error);
+            throw error;
         }
     }
 
@@ -167,7 +214,7 @@ export class BlockZoneWeb3 {
                 btn.textContent = `${this.account.slice(0, 6)}...${this.account.slice(-4)}`;
                 btn.classList.add('connected');
             } else {
-                btn.textContent = 'Connect Wallet';
+                btn.textContent = 'Connect MetaMask';
                 btn.classList.remove('connected');
             }
         });
@@ -201,9 +248,9 @@ export class BlockZoneWeb3 {
     }
 
     storeScoreLocally(gameId, score) {
-        const scores = JSON.parse(localStorage.getItem('blockzone_scores') || '{}');
-        if (!scores[gameId]) scores[gameId] = [];
-        scores[gameId].push({ score, timestamp: Date.now() });
+        // Store score in localStorage for later submission
+        const scores = JSON.parse(localStorage.getItem('blockzone_scores') || '[]');
+        scores.push({ gameId, score, timestamp: Date.now() });
         localStorage.setItem('blockzone_scores', JSON.stringify(scores));
     }
 }

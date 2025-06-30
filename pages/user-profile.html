@@ -3,13 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - BlockZone Lab</title>
+    <title>Your BlockZone Profile - BlockZone Lab</title>
     <link rel="stylesheet" href="../assets/css/variables.css">
     <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     
     <style>
+        /* Enhanced user-friendly styles */
+        .auth-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .auth-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .auth-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+
+        .auth-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .email-suggestions {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1000;
+            margin-top: 4px;
+        }
+
+        .email-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            color: #333;
+        }
+
+        .email-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .email-suggestion:hover {
+            background: #f8f9fa;
+        }
+
+        .email-suggestion.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(238, 90, 36, 0.4);
+        }
+
+        .auth-features {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .wallet-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .wallet-info h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .wallet-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Profile section improvements */
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .wallet-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .wallet-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .wallet-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .wallet-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .wallet-details {
+            margin-bottom: 16px;
+        }
+
+        .wallet-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .wallet-label {
+            opacity: 0.8;
+        }
+
+        .wallet-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .wallet-balance {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .wallet-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         /* Form status message styling */
         .form-status-message {
             margin-top: 1rem;
@@ -117,16 +343,16 @@
             <div id="auth-section" class="auth-card">
                 <div class="auth-header">
                     <h2>Welcome to BlockZone Lab</h2>
-                    <p>Create your account and get your free crypto wallet</p>
+                    <p>Choose your gaming name and get your free crypto wallet</p>
                 </div>
-                <form id="emailLoginForm" class="auth-form">
+                <form id="usernameForm" class="auth-form">
                     <div class="form-group">
-                        <label for="emailInput" class="form-label">Email Address</label>
-                        <input type="email" id="emailInput" class="form-input" placeholder="Enter your email" required>
+                        <label for="usernameInput" class="form-label">BlockZone Username</label>
+                        <input type="email" id="usernameInput" class="form-input" placeholder="Enter your gaming name" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-large w-full">
                         <span class="btn-icon">🚀</span>
-                        Create Account & Wallet
+                        Create Account
                     </button>
                 </form>
                 <div class="auth-features">

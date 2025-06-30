@@ -1,6 +1,5 @@
-# Cloudflare Workers configuration for BlockZone Lab
+# Cloudflare Pages configuration for BlockZone Lab
 name = "blockzone-lab"
-main = "worker/leaderboard.js"
 compatibility_date = "2024-01-01"
 
 # Pages configuration for automatic deployment
@@ -15,16 +14,14 @@ MAX_SCORES_PER_GAME = "1000"
 DAILY_RESET_HOUR = "8"
 DAILY_RESET_TIMEZONE = "America/New_York"
 
-# KV namespaces for the backend API
+# KV namespaces for the backend API (referenced by worker)
 [[kv_namespaces]]
 binding = "PLAYERS"
-id = "your-players-namespace-id"
-preview_id = "your-players-preview-namespace-id"
+id = "afdca5fda8b343b99541432574cfa5c3"
 
 [[kv_namespaces]]
 binding = "SCORES"
-id = "your-scores-namespace-id"
-preview_id = "your-scores-preview-namespace-id"
+id = "8e4d3de3c359495186eabf9032d08d8f"
 
 [[kv_namespaces]]
 binding = "TOURNAMENTS"
@@ -32,22 +29,11 @@ id = "d4f40a571cdc49a98d5dd1d9f3a983ea"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "your-sessions-namespace-id"
-preview_id = "your-sessions-preview-namespace-id"
+id = "9472d4328eda428090494844a4cdba9b"
 
 [[kv_namespaces]]
 binding = "REWARDS"
 id = "66d8e0a1ead24a9c916bd22551cf1515"
-
-[[kv_namespaces]]
-binding = "SYNC"
-id = "your-sync-namespace-id"
-preview_id = "your-sync-preview-namespace-id"
-
-[[kv_namespaces]]
-binding = "ADDICTION"
-id = "your-addiction-namespace-id"
-preview_id = "your-addiction-preview-namespace-id"
 
 # Routes
 [[routes]]

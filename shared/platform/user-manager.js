@@ -3,12 +3,12 @@
  * Phase 2: Platform Infrastructure - Browser Compatible Version
  */
 
-class UserManager {
+export class UserManager {
     constructor() {
         this.users = new Map(); // userId -> user data
         this.sessions = new Map(); // sessionId -> userId
         this.currentUser = null;
-        console.log('👤 UserManager initialized');
+        console.log('? UserManager initialized');
     }
 
     /**
@@ -99,7 +99,7 @@ class UserManager {
         this.users.set(emailLower, user);
         this._saveUsers();
         
-        console.log(`👤 New user registered: ${emailLower} with wallet ${walletAddress}`);
+        console.log(`? New user registered: ${emailLower} with wallet ${walletAddress}`);
         return user;
     }
 
@@ -114,7 +114,7 @@ class UserManager {
         
         if (!user) {
             // Auto-register if user doesn't exist
-            console.log(`👤 Auto-registering new user: ${emailLower}`);
+            console.log(`?? Auto-registering new user: ${emailLower}`);
             const newUser = await this.register({ email: emailLower });
             
             // Create a session for the new user
@@ -122,7 +122,7 @@ class UserManager {
             this.sessions.set(sessionId, emailLower);
             this.currentUser = newUser;
             
-            console.log(`👤 New user logged in: ${emailLower} (wallet: ${newUser.wallet})`);
+            console.log(`? New User logged in: ${emailLower} (wallet: ${newUser.wallet})`);
             return { user: newUser, sessionId };
         }
         
@@ -131,7 +131,7 @@ class UserManager {
         this.sessions.set(sessionId, emailLower);
         this.currentUser = user;
         
-        console.log(`👤 User logged in: ${emailLower} (wallet: ${user.wallet})`);
+        console.log(`? User logged in: ${emailLower} (wallet: ${user.wallet})`);
         return { user, sessionId };
     }
 
@@ -185,7 +185,7 @@ class UserManager {
         this.users.set(userId, user);
         this._saveUsers();
         
-        console.log(`💰 Wallet balance updated: ${userId} ${amount > 0 ? '+' : ''}${amount} USDC.E`);
+        console.log(`?? Wallet balance updated: ${userId} ${amount > 0 ? '+' : ''}${amount} USDC.E`);
         return user.walletBalance;
     }
 
@@ -235,11 +235,7 @@ class UserManager {
     }
 }
 
-// Create global instance
-window.userManager = new UserManager();
-window.userManager.initialize();
-
-// Export the UserManager class for module imports
-export { UserManager }; 
-// Export the UserManager class for module imports
-export { UserManager };
+// Export for global use if needed
+if (typeof window !== 'undefined') {
+    window.UserManager = UserManager;
+}

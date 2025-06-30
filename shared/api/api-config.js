@@ -6,7 +6,7 @@
 export const API_CONFIG = {
   // Main Cloudflare Worker API - Professional Domain
   // TODO: Switch to https://api.blockzonelab.com once DNS propagates
-  WORKER_URL: 'https://api-blockzonelab.hambomyers.workers.dev',
+  WORKER_URL: 'https://api-blockzonelab.workers.dev',
     // Endpoints
   ENDPOINTS: {
     LEADERBOARD: '/api/leaderboard',

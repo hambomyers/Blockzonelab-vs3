@@ -5,12 +5,14 @@
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
-    "dev": "python -m http.server 8000",
+    "dev": "npx http-server . -p 3000 -c-1",
     "serve": "python -m http.server 8000",
-    "build": "echo 'BlockZone Lab Platform v2.0.0 - Build complete' && echo 'Static files ready for Cloudflare Pages deployment'",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "echo 'Deploy to your hosting platform'",
     "deploy-worker": "cd worker && wrangler deploy",
     "deploy-pages": "wrangler pages deploy .",
-    "test-api": "powershell -Command \"Invoke-WebRequest -Uri 'https://blockzone-api.hambomyers.workers.dev/api/leaderboard' -Method GET\""
+    "test": "echo 'No tests specified'",
+    "test-api": "powershell -Command \"Invoke-WebRequest -Uri 'https://api-blockzonelab.workers.dev/api/leaderboard' -Method GET\""
   },
   "keywords": [
     "blockzone-lab",
@@ -30,7 +32,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hambomyers/BlockZoneLabWEBSITE.git"
+    "url": "https://github.com/blockzone-lab/BlockZoneLabWEBSITE.git"
   },
   "engines": {
     "node": ">=14.0.0"

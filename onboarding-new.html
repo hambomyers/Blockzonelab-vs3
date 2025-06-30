@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BlockZone Lab</title>
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .onboarding-container {
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        
+        .game-name-form {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .game-name-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            border: 2px solid #00ffff;
+            background: rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .game-name-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        
+        .game-name-input::placeholder {
+            color: #888;
+        }
+        
+        .start-playing-btn {
+            width: 100%;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .start-playing-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .start-playing-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .features {
+            margin-top: 40px;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .feature-icon {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .loading-text {
+            color: #00ffff;
+            font-size: 0.9rem;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #ff4444;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div class="logo">✧ BlockZone Lab</div>
+        <div class="welcome-text">Game name?</div>
+        
+        <form class="game-name-form" id="gameNameForm">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="game-name-input" 
+                    id="gameNameInput"
+                    placeholder="Enter your game name..."
+                    maxlength="20"
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            <button type="submit" class="start-playing-btn" id="startPlayingBtn" disabled>
+                Start Playing
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Setting up your game...</div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">🎮</span>
+                <span>Start playing immediately</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">💰</span>
+                <span>Free daily games</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🏆</span>
+                <span>Compete for prizes</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple user management without external dependencies
+        class SimpleUserManager {
+            constructor() {
+                this.users = new Map();
+                this.sessions = new Map();
+                console.log('✅ SimpleUserManager initialized');
+            }
+
+            async initialize() {
+                // Load from localStorage if available
+                const savedUsers = localStorage.getItem('blockzone_users');
+                if (savedUsers) {
+                    try {
+                        const users = JSON.parse(savedUsers);
+                        this.users = new Map(Object.entries(users));
+                    } catch (e) {
+                        console.warn('Failed to load saved users:', e);
+                    }
+                }
+                return true;
+            }
+
+            _saveUsers() {
+                const usersObj = Object.fromEntries(this.users);
+                localStorage.setItem('blockzone_users', JSON.stringify(usersObj));
+            }
+
+            _generateWalletAddress() {
+                const timestamp = Date.now();
+                const random = Math.random().toString(36).substr(2, 16);
+                const seed = `${timestamp}_${random}`;
+                
+                let hash = 0;
+                for (let i = 0; i < seed.length; i++) {
+                    const char = seed.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                
+                const hexHash = Math.abs(hash).toString(16).padStart(8, '0');
+                return `0x${hexHash}${random}${timestamp.toString(16).slice(-8)}`;
+            }
+
+            async register({ email, profile = {} }) {
+                if (!email) throw new Error('Email required');
+                
+                const emailLower = email.toLowerCase();
+                
+                if (this.users.has(emailLower)) {
+                    throw new Error('User already exists');
+                }
+
+                const walletAddress = this._generateWalletAddress();
+
+                const user = {
+                    id: emailLower,
+                    wallet: walletAddress,
+                    email: emailLower,
+                    profile: {
+                        displayName: profile.displayName || '',
+                        avatar: profile.avatar || '',
+                        bio: profile.bio || '',
+                        createdAt: Date.now(),
+                        ...profile
+                    },
+                    walletBalance: 0,
+                    gameStats: {
+                        totalGames: 0,
+                        totalWins: 0,
+                        totalEarnings: 0,
+                        bestScore: 0
+                    },
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                
+                this.users.set(emailLower, user);
+                this._saveUsers();
+                
+                console.log(`✅ New user registered: ${emailLower} with wallet ${walletAddress}`);
+                return user;
+            }
+
+            async login({ email }) {
+                if (!email) throw new Error('Email required');
+                
+                const emailLower = email.toLowerCase();
+                const user = this.users.get(emailLower);
+                
+                if (!user) {
+                    console.log(`🔄 Auto-registering new user: ${emailLower}`);
+                    const newUser = await this.register({ email: emailLower });
+                    
+                    const sessionId = Math.random().toString(36).substr(2, 16);
+                    this.sessions.set(sessionId, emailLower);
+                    
+                    console.log(`✅ New User logged in: ${emailLower} (wallet: ${newUser.wallet})`);
+                    return { user: newUser, sessionId };
+                }
+                
+                const sessionId = Math.random().toString(36).substr(2, 16);
+                this.sessions.set(sessionId, emailLower);
+                
+                console.log(`✅ User logged in: ${emailLower} (wallet: ${user.wallet})`);
+                return { user, sessionId };
+            }
+        }
+
+        // Initialize user manager
+        let userManager = null;
+        
+        async function initializeUserManager() {
+            try {
+                userManager = new SimpleUserManager();
+                await userManager.initialize();
+                console.log('✅ UserManager ready');
+            } catch (error) {
+                console.error('❌ Failed to initialize UserManager:', error);
+                showError('Something went wrong. Please refresh the page.');
+            }
+        }
+        
+        function showError(message) {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.innerHTML = `
+                    <div class="error-message">❌ ${message}</div>
+                    <button onclick="location.reload()" class="start-playing-btn">
+                        Try Again
+                    </button>
+                `;
+                loading.style.display = 'block';
+            }
+        }
+        
+        // Initialize on page load
+        initializeUserManager();
+        
+        // Form handling
+        const form = document.getElementById('gameNameForm');
+        const input = document.getElementById('gameNameInput');
+        const button = document.getElementById('startPlayingBtn');
+        const loading = document.getElementById('loading');
+        
+        // Enable/disable button based on input
+        input.addEventListener('input', (e) => {
+            const value = e.target.value.trim();
+            button.disabled = value.length < 2;
+        });
+        
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const gameName = input.value.trim();
+            if (gameName.length < 2) return;
+            
+            // Show loading
+            form.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                // Wait for user manager to be ready
+                while (!userManager) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                // Create user with game name as email (simple approach)
+                const email = `${gameName.toLowerCase().replace(/[^a-z0-9]/g, '')}@blockzone.game`;
+                
+                const result = await userManager.login({ email });
+                
+                // Store session
+                localStorage.setItem('sessionId', result.sessionId);
+                localStorage.setItem('gameName', gameName);
+                
+                console.log('✅ User created:', result.user);
+                console.log('🎮 Game name:', gameName);
+                console.log('💰 Wallet:', result.user.wallet);
+                
+                // Redirect to game
+                setTimeout(() => {
+                    window.location.href = '/games/neondrop/';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Failed to create user:', error);
+                showError('Something went wrong. Please try again.');
+            }
+        });
+        
+        // Focus input on page load
+        window.addEventListener('load', () => {
+            input.focus();
+        });
+    </script>
+</body>
+</html> 

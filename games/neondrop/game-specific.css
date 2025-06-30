@@ -49,7 +49,7 @@ html, body {
 
 #bg, #game {
     position: absolute;
-    top: -40px; /* Move canvases UP to make room for button */
+    top: 0; /* Fixed: Remove negative positioning to show full game */
     left: 0;
     display: block;
     image-rendering: pixelated;

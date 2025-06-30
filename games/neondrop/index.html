@@ -88,8 +88,8 @@
     <!-- Universal Navigation Bar -->
     <script type="module" src="../../shared/components/NavigationBar.js"></script>
     
-    <!-- Rabby Wallet Integration for Sonic Labs -->
-    <script type="module" src="../../shared/web3/rabby-integration.js"></script>
+    <!-- MetaMask Integration for Sonic Labs -->
+    <script type="module" src="../../shared/web3/metamask-integration.js"></script>
     
     <!-- User Management Integration -->
     <script type="module" src="../../shared/platform/session.js"></script>
@@ -151,7 +151,7 @@
             <p>Daily Reset: 11:00 PM EST</p>
             <div id="wallet-status" style="margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px;">
                 <p>🔗 Connect to Sonic Labs to play</p>
-                <p style="font-size: 0.8rem; color: #ccc; margin-top: 5px;">🎯 Recommended: Rabby Wallet for best experience</p>
+                <p style="font-size: 0.8rem; color: #ccc; margin-top: 5px;">🦊 Recommended: MetaMask for best experience</p>
             </div>
             <div style="margin-top: 15px;">
                 <button id="connectWalletBtn" class="tournament-join-btn">🔗 Connect Wallet</button>
@@ -160,7 +160,7 @@
         </div>
     </div>
 
-    <!-- Rabby Wallet Integration -->
+    <!-- MetaMask Integration -->
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const connectBtn = document.getElementById('connectWalletBtn');
@@ -176,17 +176,17 @@
                     connectBtn.disabled = true;
                     
                     try {
-                        const result = await window.rabbyIntegration.connectWallet();
+                        const result = await window.MetaMaskIntegration.connectWallet();
                         
                         if (result.success) {
                             const walletType = result.walletType;
-                            const isOptimal = window.rabbyIntegration.isOptimalWallet();
+                            const isOptimal = window.MetaMaskIntegration.isOptimalWallet();
                             
                             walletStatus.innerHTML = `
                                 <p>✅ Connected: ${result.address.slice(0, 6)}...${result.address.slice(-4)}</p>
                                 <p>🌐 Network: Sonic Labs ${result.network}</p>
                                 <p style="font-size: 0.8rem; color: ${isOptimal ? '#00ff88' : '#ffaa00'}; margin-top: 5px;">
-                                    ${isOptimal ? '🎯 Optimal: Rabby Wallet' : '⚠️ Consider switching to Rabby for better experience'}
+                                    ${isOptimal ? '🎯 Optimal: MetaMask' : '⚠️ Consider switching to MetaMask for better experience'}
                                 </p>
                             `;
                             connectBtn.textContent = '🎮 Join Tournament (0.25 QUARTERS)';
@@ -213,7 +213,7 @@
                     testTokensBtn.disabled = true;
                     
                     try {
-                        const result = await window.rabbyIntegration.requestTestTokens();
+                        const result = await window.MetaMaskIntegration.requestTestTokens();
                         
                         if (result.success) {
                             alert('✅ Test tokens requested! Check your wallet in a few minutes.');
@@ -237,7 +237,7 @@
                 connectBtn.disabled = true;
                 
                 try {
-                    const result = await window.rabbyIntegration.joinDailyTournament();
+                    const result = await window.MetaMaskIntegration.joinDailyTournament();
                     
                     if (result.success) {
                         alert('✅ Successfully joined tournament! You can now play.');
@@ -267,6 +267,27 @@
         // Register service worker (DISABLED FOR TESTING)
         console.log('🚫 Service Worker DISABLED for testing');
         
+        // Check for onboarding first
+        const checkOnboarding = () => {
+            const sessionId = localStorage.getItem('sessionId');
+            const gameName = localStorage.getItem('gameName');
+            
+            if (!sessionId || !gameName) {
+                console.log('🔄 No onboarding detected, redirecting...');
+                window.location.href = '/onboarding.html';
+                return false;
+            }
+            
+            console.log('✅ Onboarding detected:', { sessionId, gameName });
+            return true;
+        };
+        
+        // Check onboarding before proceeding
+        if (!checkOnboarding()) {
+            // Stop execution if redirecting
+            throw new Error('Redirecting to onboarding');
+        }
+        
         // Initialize user management
         import { sessionManager } from '../../shared/platform/session.js';
         
@@ -289,12 +310,12 @@
                     `;
                     console.log('✅ User status updated with player name');
                 } else {
-                    userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
-                    console.log('✅ User status updated with connect wallet button');
+                    userStatus.innerHTML = '<a href="../../onboarding.html" class="btn btn--primary">Setup Game</a>';
+                    console.log('✅ User status updated with setup button');
                 }
             } catch (error) {
                 console.error('❌ Failed to update user status:', error);
-                userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+                userStatus.innerHTML = '<a href="../../onboarding.html" class="btn btn--primary">Setup Game</a>';
             }
         };
         
@@ -302,7 +323,7 @@
         updateUserStatus().catch(error => {
             console.error('❌ User status update failed:', error);
             const userStatus = document.getElementById('userStatus');
-            userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+            userStatus.innerHTML = '<a href="../../onboarding.html" class="btn btn--primary">Setup Game</a>';
         });
         
         // Fallback timeout to prevent infinite loading
@@ -310,7 +331,7 @@
             const userStatus = document.getElementById('userStatus');
             if (userStatus.textContent.includes('Loading')) {
                 console.log('⏰ Loading timeout - setting fallback status');
-                userStatus.innerHTML = '<a href="../../pages/user-profile.html" class="btn btn--primary">Connect Wallet</a>';
+                userStatus.innerHTML = '<a href="../../onboarding.html" class="btn btn--primary">Setup Game</a>';
             }
         }, 3000);
         

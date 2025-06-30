@@ -1,17 +1,18 @@
 /**
- * Sonic Labs Network Integration System
- * Handles wallet connection, network switching, and contract interactions
+ * MetaMask Integration for Sonic Labs
+ * Optimized for seamless Sonic Labs experience with MetaMask
  */
 
-class SonicLabsIntegration {
+class MetaMaskIntegration {
     constructor() {
         this.provider = null;
         this.signer = null;
         this.contracts = {};
         this.network = 'testnet';
         this.isConnected = false;
+        this.walletType = 'metamask';
         
-        // Contract ABIs (simplified for now)
+        // Contract ABIs
         this.contractABIs = {
             QUARTERS: [
                 "function balanceOf(address owner) view returns (uint256)",
@@ -61,10 +62,10 @@ class SonicLabsIntegration {
     }
     
     async init() {
-        console.log('🔗 Initializing Sonic Labs integration...');
+        console.log('🦊 Initializing MetaMask integration for Sonic Labs...');
         
         // Check if MetaMask is available
-        if (typeof window.ethereum !== 'undefined') {
+        if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
             console.log('✅ MetaMask detected');
             await this.setupProvider();
         } else {
@@ -100,7 +101,7 @@ class SonicLabsIntegration {
     
     async connectWallet() {
         try {
-            console.log('🔌 Connecting wallet...');
+            console.log('🔌 Connecting MetaMask...');
             
             // Request account access
             const accounts = await window.ethereum.request({
@@ -112,10 +113,21 @@ class SonicLabsIntegration {
                 this.isConnected = true;
                 
                 const address = await this.signer.getAddress();
-                console.log('✅ Wallet connected:', address);
+                console.log('✅ MetaMask connected:', address);
                 
-                // Switch to Sonic Labs testnet
-                await this.switchToSonicLabs();
+                // Check current network
+                const network = await this.provider.getNetwork();
+                console.log('🌐 Current network:', network.chainId);
+                
+                // If not on Sonic Labs, switch automatically
+                if (network.chainId !== 57054) {
+                    console.log('🔄 Not on Sonic Labs, switching automatically...');
+                    await this.switchToSonicLabs();
+                } else {
+                    // Already on Sonic Labs
+                    this.network = 'testnet';
+                    console.log('✅ Already on Sonic Labs testnet');
+                }
                 
                 // Initialize contracts
                 await this.initializeContracts();
@@ -123,11 +135,12 @@ class SonicLabsIntegration {
                 return {
                     success: true,
                     address: address,
-                    network: this.network
+                    network: this.network,
+                    walletType: this.walletType
                 };
             }
         } catch (error) {
-            console.error('❌ Wallet connection failed:', error);
+            console.error('❌ MetaMask connection failed:', error);
             return {
                 success: false,
                 error: error.message
@@ -139,11 +152,11 @@ class SonicLabsIntegration {
         try {
             console.log(`🌐 Switching to Sonic Labs ${network}...`);
             
-            const chainId = network === 'testnet' ? '0xAA36A7' : '0xAA36A7'; // 11155420 for both testnet and mainnet
+            const chainId = '0xDEB6'; // 57054 in hex
             const networkConfig = {
                 testnet: {
-                    chainId: '0xAA36A7',
-                    chainName: 'Sonic Labs Testnet',
+                    chainId: '0xDEB6',
+                    chainName: 'Sonic Blaze Testnet',
                     nativeCurrency: {
                         name: 'Sonic',
                         symbol: 'S',
@@ -153,7 +166,7 @@ class SonicLabsIntegration {
                     blockExplorerUrls: ['https://testnet.sonicscan.org']
                 },
                 mainnet: {
-                    chainId: '0xAA36A7',
+                    chainId: '0xDEB6',
                     chainName: 'Sonic Labs',
                     nativeCurrency: {
                         name: 'Sonic',
@@ -348,9 +361,9 @@ class SonicLabsIntegration {
     handleNetworkChange(chainId) {
         console.log('🌐 Network changed to:', chainId);
         // Check if it's Sonic Labs
-        if (chainId === '0xAA36A7') {
+        if (chainId === '0xDEB6' || parseInt(chainId) === 57054) {
             this.network = 'testnet';
-            this.initializeContracts();
+            console.log('✅ Now on Sonic Labs testnet');
         } else {
             console.log('⚠️ Not on Sonic Labs network');
         }
@@ -361,61 +374,74 @@ class SonicLabsIntegration {
         prompt.innerHTML = `
             <div style="
                 position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: rgba(0, 0, 0, 0.95);
-                border: 2px solid #00d4ff;
-                border-radius: 15px;
-                padding: 2rem;
-                text-align: center;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 z-index: 10000;
-                max-width: 400px;
-                color: white;
+                font-family: Arial, sans-serif;
             ">
-                <h3>🔗 Connect to Sonic Labs</h3>
-                <p>To play BlockZone games and earn rewards, you need MetaMask installed and connected to Sonic Labs Network.</p>
-                <div style="margin: 1rem 0;">
-                    <a href="https://metamask.io" target="_blank" style="
-                        background: linear-gradient(135deg, #00d4ff, #0099cc);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        text-decoration: none;
-                        display: inline-block;
-                        margin: 0.5rem;
-                    ">Install MetaMask</a>
-                    <a href="https://docs.sonic.network" target="_blank" style="
-                        background: linear-gradient(135deg, #ff6b35, #f7931e);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        text-decoration: none;
-                        display: inline-block;
-                        margin: 0.5rem;
-                    ">Learn About Sonic Labs</a>
+                <div style="
+                    background: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    text-align: center;
+                    max-width: 400px;
+                    margin: 20px;
+                ">
+                    <h2 style="color: #f6851b; margin-bottom: 20px;">🦊 MetaMask Required</h2>
+                    <p style="margin-bottom: 20px;">
+                        BlockZone Lab requires MetaMask to interact with Sonic Labs blockchain.
+                    </p>
+                    <div style="margin-bottom: 20px;">
+                        <a href="https://metamask.io/download/" target="_blank" style="
+                            background: #f6851b;
+                            color: white;
+                            padding: 12px 24px;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            display: inline-block;
+                            margin: 5px;
+                        ">Download MetaMask</a>
+                    </div>
+                    <p style="font-size: 14px; color: #666;">
+                        After installing MetaMask, refresh this page to continue.
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: #ccc;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    ">Close</button>
                 </div>
-                <button onclick="this.parentElement.remove()" style="
-                    background: #444;
-                    color: white;
-                    border: none;
-                    padding: 8px 16px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                ">Close</button>
             </div>
         `;
         document.body.appendChild(prompt);
     }
     
-    // Update contract addresses after deployment
     updateContractAddresses(addresses, network = 'testnet') {
-        this.contractAddresses[network] = addresses;
-        console.log(`📋 Updated ${network} contract addresses:`, addresses);
+        this.contractAddresses[network] = { ...this.contractAddresses[network], ...addresses };
+        console.log(`📝 Updated contract addresses for ${network}:`, addresses);
+    }
+    
+    getWalletType() {
+        return this.walletType;
+    }
+    
+    isOptimalWallet() {
+        return this.walletType === 'metamask';
     }
 }
 
-// Create global instance
-window.sonicLabs = new SonicLabsIntegration();
-
-export { SonicLabsIntegration }; 
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MetaMaskIntegration;
+} else {
+    window.MetaMaskIntegration = MetaMaskIntegration;
+} 

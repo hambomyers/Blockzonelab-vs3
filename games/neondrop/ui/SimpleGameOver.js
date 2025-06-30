@@ -138,22 +138,222 @@ export class SimpleGameOver {
         
         console.log('🎮 Game Over - Score:', this.score, 'Player:', this.playerName || 'New Player');
         
-        // Refresh tournament and player data
-        // await this.loadTournamentInfo(); // <-- Removed to fix TypeError
-        // Show container
-        this.container.style.display = 'flex';
-        if (this.playerName) {
+        // Check for simplified onboarding data
+        const gameName = localStorage.getItem('gameName');
+        const sessionId = localStorage.getItem('sessionId');
+        
+        if (gameName && sessionId) {
+            // User came from simplified onboarding - show their username.wallet format
+            await this.showSimplifiedGameOver(gameName);
+        } else if (this.playerName) {
             // Returning player - show simple game over card with their score
             await this.showGameOverCard();
         } else {
-            // New player - the magic moment
-            await this.showNameCapture();
+            // Fallback - redirect to onboarding
+            console.log('🔄 No onboarding data found, redirecting...');
+            window.location.href = '/onboarding.html';
+            return;
         }
         
         // AAA Quality: Much longer, more dramatic fade-in animation
         requestAnimationFrame(() => {
             this.container.style.transition = 'opacity 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             this.container.style.opacity = '1';
+        });
+    }
+
+    async showSimplifiedGameOver(gameName) {
+        console.log('🎮 Showing simplified game over for:', gameName);
+        
+        // Get wallet suffix from session or generate one
+        let walletSuffix = localStorage.getItem('playerWalletSuffix');
+        if (!walletSuffix) {
+            walletSuffix = this.generateWalletSuffix();
+            localStorage.setItem('playerWalletSuffix', walletSuffix);
+        }
+        
+        const displayName = `${gameName}.${walletSuffix.slice(-4)}`;
+        
+        this.container.innerHTML = `
+            <div class="game-over-card" style="
+                display: grid;
+                grid-template-rows: auto auto auto;
+                gap: 20px;
+                place-items: center;
+                text-align: center;
+                background: rgba(0, 0, 0, 0.9);
+                border: 2px solid rgba(0, 212, 255, 0.5);
+                border-radius: 15px;
+                padding: 10px 30px 30px 30px;
+                max-width: 600px;
+                margin: 0 auto;
+                box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+                backdrop-filter: blur(10px);
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+                transition: all 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            ">
+                
+                <!-- Logo Section -->
+                <div class="logo-section" style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    min-height: 120px;
+                    padding-top: 10px;
+                ">
+                    <canvas id="logoCanvas" width="480" height="120" style="
+                        display: block;
+                        margin: 0 auto;
+                    "></canvas>
+                </div>
+                
+                <!-- Score Display -->
+                <div class="score-section" style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px;
+                ">
+                    <div style="
+                        font-size: 48px;
+                        font-weight: 900;
+                        color: #00d4ff;
+                        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+                    ">
+                        ${this.score.toLocaleString()}
+                    </div>
+                    
+                    <div style="
+                        color: #fff;
+                        font-size: 18px;
+                        font-weight: 600;
+                    ">
+                        Your BlockZone Name:
+                    </div>
+                    
+                    <div style="
+                        background: linear-gradient(135deg, #00d4ff, #ff00ff);
+                        padding: 10px 20px;
+                        border-radius: 10px;
+                        color: #000;
+                        font-weight: 700;
+                        font-size: 20px;
+                        letter-spacing: 1px;
+                    ">
+                        ${displayName}
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="actions" style="
+                    display: flex;
+                    gap: 15px;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                ">
+                    <button id="playAgainBtn" style="
+                        background: linear-gradient(135deg, #00d4ff, #0099cc);
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        🎮 Play Again (Free)
+                    </button>
+                    
+                    <button id="leaderboardBtn" style="
+                        background: rgba(255, 255, 255, 0.1);
+                        color: #fff;
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        padding: 15px 30px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        🏆 Leaderboard
+                    </button>
+                    
+                    <button id="challengeBtn" style="
+                        background: linear-gradient(135deg, #ff00ff, #cc0099);
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        ⚡ Challenge ($0.25)
+                    </button>
+                </div>
+                
+                <div style="
+                    color: #888;
+                    font-size: 12px;
+                    margin-top: 20px;
+                    text-align: center;
+                ">
+                    <p>Free daily games • Paid challenges for prizes</p>
+                    <p>Your wallet: ${walletSuffix.slice(0, 6)}...${walletSuffix.slice(-4)}</p>
+                </div>
+            </div>
+        `;
+        
+        // Render logo animation
+        this.renderNeonDropLogo();
+        
+        // Bind events
+        this.bindSimplifiedGameOverEvents();
+    }
+
+    bindSimplifiedGameOverEvents() {
+        const playAgainBtn = this.container.querySelector('#playAgainBtn');
+        const leaderboardBtn = this.container.querySelector('#leaderboardBtn');
+        const challengeBtn = this.container.querySelector('#challengeBtn');
+        
+        if (playAgainBtn) {
+            playAgainBtn.addEventListener('click', () => {
+                this.hide();
+                // Start new game
+                if (window.neonDrop && window.neonDrop.startNewGame) {
+                    window.neonDrop.startNewGame();
+                }
+            });
+        }
+        
+        if (leaderboardBtn) {
+            leaderboardBtn.addEventListener('click', () => {
+                this.showLeaderboard();
+            });
+        }
+        
+        if (challengeBtn) {
+            challengeBtn.addEventListener('click', () => {
+                this.showChallengeModal();
+            });
+        }
+        
+        // Add hover effects
+        [playAgainBtn, leaderboardBtn, challengeBtn].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transform = 'translateY(-2px) scale(1.05)';
+                    btn.style.boxShadow = '0 10px 25px rgba(0, 212, 255, 0.4)';
+                });
+                
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translateY(0) scale(1)';
+                    btn.style.boxShadow = 'none';
+                });
+            }
         });
     }
 
@@ -2603,3 +2803,4 @@ export class SimpleGameOver {
         }
     }
 }
+

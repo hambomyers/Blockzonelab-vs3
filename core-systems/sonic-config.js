@@ -1,29 +1,29 @@
 // Sonic Labs Network Configuration
 window.SONIC_CONFIG = {
-    // Sonic Labs Testnet (for development)
+    // Sonic Labs Testnet (Sonic Blaze Testnet)
     testnet: {
-        chainId: '0xAA36A7', // 11155420 - Correct Sonic Labs testnet chain ID
-        chainName: 'Sonic Labs Testnet',
+        chainId: '0xDEB6', // 57054 - Correct Sonic Blaze Testnet chain ID
+        chainName: 'Sonic Blaze Testnet',
         nativeCurrency: {
             name: 'Sonic',
             symbol: 'S',
             decimals: 18
         },
-        rpcUrls: ['https://rpc.testnet.soniclabs.com'],
-        blockExplorerUrls: ['https://testnet.soniclabs.com']
+        rpcUrls: ['https://rpc.sonic.oasys.games'],
+        blockExplorerUrls: ['https://testnet.sonicscan.org']
     },
     
-    // Sonic Labs Mainnet (for production)
+    // Sonic Labs Mainnet
     mainnet: {
-        chainId: '0xAA36A7', // 11155420 - Sonic Labs mainnet chain ID
+        chainId: '0xDEB6', // 57054 - Sonic Labs mainnet chain ID
         chainName: 'Sonic Labs',
         nativeCurrency: {
             name: 'Sonic',
             symbol: 'S',
             decimals: 18
         },
-        rpcUrls: ['https://rpc.soniclabs.com'],
-        blockExplorerUrls: ['https://soniclabs.com']
+        rpcUrls: ['https://rpc.sonic.oasys.games'],
+        blockExplorerUrls: ['https://sonicscan.org']
     },
     
     // Contract addresses (will be deployed)

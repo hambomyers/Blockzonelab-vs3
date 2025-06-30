@@ -1380,7 +1380,7 @@ async function handleApiChallenges(request, env, headers) {
       await env.SCORES.put(`challenge:${challengeId}`, JSON.stringify(challenge));
       
       // Generate challenge URL
-      const challengeUrl = `https://blockzone-lab-platform.hambomyers.workers.dev/challenge/${creator_name}/${score}?id=${challengeId}`;
+      const challengeUrl = `https://blockzone-lab-platform.workers.dev/challenge/${creator_name}/${score}?id=${challengeId}`;
       
       console.log(`✅ Challenge created: ${challengeId} by ${creator_name}`);
       

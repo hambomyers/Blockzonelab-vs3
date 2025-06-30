@@ -15,26 +15,18 @@ module.exports = {
     }
   },
   networks: {
-    // Sepolia Testnet (for testing until Sonic Labs RPC is available)
-    "sepolia": {
-      url: "https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-      chainId: 11155111,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      gasPrice: 20000000000, // 20 gwei
-      gas: 6000000
-    },
-    // Sonic Labs Testnet (Sonic Blaze Testnet) - UPDATED
+    // Sonic Labs Testnet
     "sonic-testnet": {
-      url: "https://rpc.sonic.oasys.games",
-      chainId: 57054, // Updated chain ID
+      url: "https://testnet.soniclabs.com",
+      chainId: 11155420, // Sonic Labs testnet chain ID
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 20000000000, // 20 gwei
       gas: 6000000
     },
     // Sonic Labs Mainnet
     "sonic-mainnet": {
-      url: "https://rpc.sonic.oasys.games",
-      chainId: 57054, // Sonic Labs mainnet chain ID
+      url: "https://soniclabs.com",
+      chainId: 11155420, // Sonic Labs mainnet chain ID
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 20000000000, // 20 gwei
       gas: 6000000
@@ -52,18 +44,18 @@ module.exports = {
     customChains: [
       {
         network: "sonicTestnet",
-        chainId: 57054,
+        chainId: 11155420,
         urls: {
-          apiURL: "https://api.testnet.sonicscan.org/api",
-          browserURL: "https://testnet.sonicscan.org"
+          apiURL: "https://api.testnet.soniclabs.com/api",
+          browserURL: "https://testnet.soniclabs.com"
         }
       },
       {
         network: "sonicMainnet",
-        chainId: 57054,
+        chainId: 11155420,
         urls: {
-          apiURL: "https://api.sonicscan.org/api",
-          browserURL: "https://sonicscan.org"
+          apiURL: "https://api.soniclabs.com/api",
+          browserURL: "https://soniclabs.com"
         }
       }
     ]

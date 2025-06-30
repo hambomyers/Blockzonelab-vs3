@@ -18,7 +18,7 @@ export class ChampionshipUI {
         this.currentTournament = null;
         this.leaderboardData = null;
         this.playerRank = null;
-        this.apiBase = 'https://blockzone-api.hambomyers.workers.dev';
+        this.apiBase = 'https://api-blockzonelab.workers.dev';
         
         // Championship cycle tracking - NEW BLOCKZONE PLATFORM FEATURE
         this.cycles = {
